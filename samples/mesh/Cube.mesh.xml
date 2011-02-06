@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Mesh xmlns="http://assembly.interaction3d.org/mesh" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://assembly.interaction3d.org/mesh http://assembly.interaction3d.org/mesh.xsd">
+  <Vertices count="24" attributes="3">
+    <Attribute name="POSITION" size="3" type="FLOAT"/>
+    <Attribute name="NORMAL" size="3" type="FLOAT"/>
+    <Attribute name="TEXTURE" size="2" type="FLOAT"/>
+  </Vertices>
+  <Triangles type="UNSIGNED_BYTE" groups="6">
+    <Group name="NEGATIVE_X" count="2"/>
+    <Group name="POSITIVE_X" count="2"/>
+    <Group name="NEGATIVE_Y" count="2"/>
+    <Group name="POSITIVE_Y" count="2"/>
+    <Group name="NEGATIVE_Z" count="2"/>
+    <Group name="POSITIVE_Z" count="2"/>
+  </Triangles>
+</Mesh>

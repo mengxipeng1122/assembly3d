@@ -1,0 +1,29 @@
+# use glob syntax.
+syntax: glob
+
+hs_err_pid*.log
+lib/
+target/
+*target/
+build/
+*build/
+
+dist/
+*dist/
+
+
+obj
+*obj/
+
+gdb.setup
+gdbserver
+
+*~
+.DS_Store
+
+
+
+# switch to regexp syntax.
+#syntax: regexp
+#^\.pc/
+
