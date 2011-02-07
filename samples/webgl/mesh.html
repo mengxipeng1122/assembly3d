@@ -12,13 +12,13 @@ var gl, program;
 var meshes = [], textures = {};
 var images = 
 {
-	"NEGATIVE_X": "../texture/cube.left.jpg", 
-	"POSITIVE_X": "../texture/cube.right.jpg",
-	"NEGATIVE_Y": "../texture/cube.bottom.jpg", 
-	"POSITIVE_Y": "../texture/cube.top.jpg",
-	"NEGATIVE_Z": "../texture/cube.back.jpg", 
-	"POSITIVE_Z": "../texture/cube.front.jpg",
-	"Infinite": "../texture/Infinite.png"
+	"NEGATIVE_X": "../cube/left.jpg", 
+	"POSITIVE_X": "../cube/right.jpg",
+	"NEGATIVE_Y": "../cube/bottom.jpg", 
+	"POSITIVE_Y": "../cube/top.jpg",
+	"NEGATIVE_Z": "../cube/back.jpg", 
+	"POSITIVE_Z": "../cube/front.jpg",
+	"Infinite": "../infinite/diffuse.png"
 };
 
 function initGL(canvas) 
@@ -359,8 +359,8 @@ function start()
 		<h1>Mesh Viewer</h1>
 		<b>Select model:</b>&nbsp;&nbsp;<select id="model" onChange="modelChangedHandler(this)" style="min-width: 100px;">
 	 	  <!--<option value="../mesh/Assembly3D.mesh">Assembly3D</option>-->
-		  <option value="../mesh/Cube.mesh">Cube</option>
-	 	  <option value="../mesh/Infinite.mesh">Infinite</option>
+		  <option value="../cube/Cube.mesh">Cube</option>
+	 	  <option value="../infinite/Infinite.mesh">Infinite</option>
 		</select>&nbsp;&nbsp;&nbsp;&nbsp;    
     <b>Controls:</b>&nbsp;&nbsp;Use cursor keys to spin the object and <code>PageUp</code> / <code>PageDown</code> to zoom out/in.<br>
     <br>
