@@ -60,18 +60,18 @@ function initGL(canvas)
   for(var i=0; i<models.length; i++)
   {
   	var link = models[i].value; 
-  	loadMesh(link + ".json", link + ".dat");
+  	loadMesh(link + ".json", link + ".dat", i);
   }    
 }
 
-function loadMesh(meta, binary)
+function loadMesh(meta, binary, index)
 {
 	var mesh = JSON.parse(loadText(meta));
 	loadBinaryAsync(binary, function(data) 
 	{ 
 		loadMeshBuffers(mesh, data);
 		loadMeshTextures(mesh, textures);
-		meshes[meshes.length] = mesh;
+		meshes[index] = mesh;
 	});
 }
 
