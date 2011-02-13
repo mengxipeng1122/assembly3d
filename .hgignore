@@ -12,8 +12,6 @@ dist/
 *dist/
 
 
-obj
-*obj/
 
 gdb.setup
 gdbserver
