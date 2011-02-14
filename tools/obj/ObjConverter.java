@@ -44,6 +44,7 @@ import java.util.StringTokenizer;
 
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
+import static java.lang.Long.parseLong;
 
 /**
  * http://local.wasp.uwa.edu.au/~pbourke/dataformats/obj/
@@ -384,7 +385,7 @@ public final class ObjConverter
         // group_number or 0 or 'off'
         smoothingGroup = (group.equalsIgnoreCase("off"))
                        ? 0
-                       : parseInt(group);
+                       : (int) parseLong(group);
     }
 
     private void object(String group)
