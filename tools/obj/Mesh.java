@@ -120,8 +120,7 @@ public class Mesh
     private static final int POSITION = 0, TEXTURE = 1, NORMAL = 2;
     private static final String DEFAULT_MATERIAL = "off";
 
-    //private 
-        final String name;
+    private final String name;
     
     private final ArrayList<float[]> positionList, textureList, normalList;    
     private final ArrayList<Vertex> vertexList;    
@@ -346,11 +345,13 @@ public class Mesh
         }
         if(hasNormals) for(Vertex vertex : vertexList)
         {
-            fBuffer.put( normalList.get( vertex.normal ));
+        		int index = vertex.normal;
+            fBuffer.put( index < 0 ? new float[3] : normalList.get( index ));
         }
         if(hasTexCoords) for(Vertex vertex : vertexList)
         {
-            fBuffer.put( textureList.get( vertex.texture ));
+        		int index = vertex.texture;        
+            fBuffer.put( index < 0 ? new float[2] : textureList.get( index ));
         }
 
         buffer.position(geomBytes);
