@@ -11,6 +11,7 @@ build/
 dist/
 *dist/
 
+tools/bin
 
 
 gdb.setup
