@@ -23,12 +23,19 @@ var images =
 
 function initGL(canvas) 
 {
-  try 
+	var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+ 
+  for(var i=0; i<names.length; ++i) 
   {
-      gl = canvas.getContext("experimental-webgl");
+    try 
+    {
+      gl = canvas.getContext(names[i]);
+    } 
+    catch(e) {}
+   
+    if(gl) break;
   }
-  catch(e) {}
-  
+ 
   if (!gl) 
   {
       alert("Could not initialise WebGL, sorry :-(");
@@ -333,6 +340,12 @@ function modelChangedHandler(x)
 
 function start() 
 {
+	if(!window.WebGLRenderingContext)
+	{
+	  alert("Could not initialise WebGL, sorry :-(");
+	  return;
+	}
+
 	modelChangedHandler( document.getElementById("model") )
 
   var canvas = document.getElementById("mesh-viewer-canvas");
