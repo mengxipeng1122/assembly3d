@@ -12,6 +12,8 @@
     {
 			"name": "<xsl:value-of select="@name"/>",
 			"keyframes": "<xsl:value-of select="@keyframes"/>",
+			<xsl:if test="@from">"from": "<xsl:value-of select="@from"/>",</xsl:if>
+			<xsl:if test="@to">"to": "<xsl:value-of select="@to"/>",</xsl:if>
 			"channels": 
 			[
     		<xsl:for-each select="assembly:Attribute">

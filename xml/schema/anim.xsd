@@ -27,6 +27,8 @@
 		</xs:sequence>
 		<xs:attribute name="name" type="xs:string" use="required" />		
 		<xs:attribute name="keyframes" type="xs:positiveInteger" use="required" />
+		<xs:attribute name="from" type="xs:float" use="optional" default="0.0"/>
+		<xs:attribute name="to" type="xs:float" use="optional" default="1.0"/>				
 		<xs:attribute name="attributes" type="xs:positiveInteger" use="required" />
 	</xs:complexType>
 	
