@@ -3,9 +3,9 @@
       xsi:schemaLocation="http://assembly.interaction3d.org/anim http://assembly.interaction3d.org/anim.xsd">
   <Sampler duration="1.0" channels="1">
 		<Channel name="Root" keyframes="2" attributes="3">
-	    <Attribute name="TIME" size="1" type="FLOAT"/>
-	    <Attribute name="TRANSLATION" size="3" type="FLOAT"/>
-	    <Attribute name="ROTATION" size="4" type="FLOAT"/>
+            <Attribute name="TIME" size="1" type="FLOAT"/>
+            <Attribute name="TRANSLATION" size="3" type="FLOAT"/>
+            <Attribute name="ROTATION" size="4" type="FLOAT"/>
 		</Channel>
 	</Sampler>
 </Animation>
