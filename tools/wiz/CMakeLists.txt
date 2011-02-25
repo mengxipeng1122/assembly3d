@@ -14,6 +14,10 @@ if(UNIX)
   set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -DDEBUG -D_DEBUG -pedantic")
 endif(UNIX)
 
+if(MSVC)
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+endif(MSVC)
+
 add_definitions(-DTIXML_USE_STL)
 
 add_subdirectory(external_libs)

@@ -1,13 +1,13 @@
 
 set(WizUtils_SOURCE
-    StringUtils.cpp
-    FileUtils.cpp
-    XmlParser.cpp
+    wiz_utils/StringUtils.cpp
+    wiz_utils/FileUtils.cpp
+    wiz_utils/XmlParser.cpp
   )
 set(WizUtils_INCLUDE
-    StringUtils.h
-    FileUtils.h
-    XmlParser.h
+    wiz_utils/StringUtils.h
+    wiz_utils/FileUtils.h
+    wiz_utils/XmlParser.h
   )
 
 set(Tinyxml_INCLUDE ${CMAKE_SOURCE_DIR}/external_libs/tinyxml)

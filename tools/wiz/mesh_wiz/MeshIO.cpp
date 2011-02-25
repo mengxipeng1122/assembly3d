@@ -32,7 +32,7 @@
  */
 
 #include "MeshIO.h"
-#include "XmlParser.h"
+#include "WizUtils.h"
 #include <fstream>
 
 using namespace WizUtils;
