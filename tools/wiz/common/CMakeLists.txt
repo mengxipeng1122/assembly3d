@@ -5,6 +5,8 @@ set(WizUtils_SOURCE
     wiz_utils/XmlParser.cpp
   )
 set(WizUtils_INCLUDE
+    WizUtils.h
+    WizIncludes.h
     wiz_utils/StringUtils.h
     wiz_utils/FileUtils.h
     wiz_utils/XmlParser.h

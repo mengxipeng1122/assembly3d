@@ -54,10 +54,10 @@ void TransformTool::translate(Mesh* m, float tx, float ty, float tz)
                             {tMatrix[1][0], tMatrix[1][1], tMatrix[1][2]},
                             {tMatrix[2][0], tMatrix[2][1], tMatrix[2][2]}};
     
-    for(int i=0; i<4; i++)
-    {
-        std::cout << tMatrix[i][0] << tMatrix[i][1] << tMatrix[i][2] << tMatrix[i][3] << std::endl;
-    }
+//    for(int i=0; i<4; i++)
+//    {
+//        std::cout << tMatrix[i][0] << tMatrix[i][1] << tMatrix[i][2] << tMatrix[i][3] << std::endl;
+//    }
                        
 	for(unsigned int i = 0; i < m->getNumberOfVertices(); ++i)
 	{

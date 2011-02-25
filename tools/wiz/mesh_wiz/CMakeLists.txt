@@ -4,7 +4,7 @@ set(Tinyxml_INCLUDE ${CMAKE_SOURCE_DIR}/external_libs/tinyxml)
 set(WizUtils_INCLUDE ${CMAKE_SOURCE_DIR}/common)
 
 include_directories(${WizUtils_INCLUDE}
-	            ${Tinyxml_INCLUDE}
+                    ${Tinyxml_INCLUDE}
                     ${TCLAP_INCLUDE})
 
 file(GLOB MeshWiz_SOURCE *.cpp)

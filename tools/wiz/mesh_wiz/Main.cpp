@@ -47,10 +47,10 @@ int main (int argc, char* argv[])
     //bool debug = false;
     bool modelChanged = false;
     
-    
+
     try {  
 	
-	TCLAP::CmdLine cmd("Utility for manipulating 3d Meshes", '=', ProjectInfo::versionString);
+    TCLAP::CmdLine cmd("MeshWiz - Utility for manipulating Assembly3D mesh files.", '=', ProjectInfo::versionString);
 
     //---------------------------------------------------------------------------------------------------------
     // Input / Output
@@ -154,7 +154,13 @@ int main (int argc, char* argv[])
 	cmd.parse( argc, argv );
 
     //---------------------------------------------------------------------------------------------------------
-   
+
+//    std::cout << std::endl;
+    std::cout << cmd.getMessage() << std::endl;
+    std::cout << std::endl;
+
+    //---------------------------------------------------------------------------------------------------------
+
     inputfile = inputArg.getValue();
     if(!WizUtils::FileUtils::checkIfFileExists(inputfile.c_str()))
     {
@@ -434,6 +440,7 @@ int main (int argc, char* argv[])
                 MeshIO::generateDebug(&mesh, outputdir.c_str());
             }
         }
+        std::cout << "Done!" << std::endl;
     }
     else
     {
