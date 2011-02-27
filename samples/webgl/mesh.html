@@ -1,0 +1,403 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Mesh Viewer</title>
+    <!-- glMAtrix is available at: http://code.google.com/p/glmatrix/ -->
+    <script type="text/javascript" src="./lib/glMatrix-min.js"></script>
+		<script type="text/javascript" src="./lib/glShaderUtils.js"></script>    
+		<script type="text/javascript" src="./lib/ioUtils.js"></script>    
+		<!-- code based on based on http://learningwebgl.com/lessons/lesson07/ -->
+    <script type="text/javascript">
+var gl, program;
+var meshes = [], textures = {};
+var images = 
+{
+	"NEGATIVE_X": "../cube/left.jpg", 
+	"POSITIVE_X": "../cube/right.jpg",
+	"NEGATIVE_Y": "../cube/bottom.jpg", 
+	"POSITIVE_Y": "../cube/top.jpg",
+	"NEGATIVE_Z": "../cube/back.jpg", 
+	"POSITIVE_Z": "../cube/front.jpg",
+	"Infinite": "../infinite/diffuse.png"
+};
+
+function initGL(canvas) 
+{
+	var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+ 
+  for(var i=0; i<names.length; ++i) 
+  {
+    try 
+    {
+      gl = canvas.getContext(names[i]);
+    } 
+    catch(e) {}
+   
+    if(gl) break;
+  }
+ 
+  if (!gl) 
+  {
+      alert("Could not initialise WebGL, sorry :-(");
+      return;
+  }
+  
+  gl.viewportWidth = canvas.width;
+  gl.viewportHeight = canvas.height;
+  
+  gl.clearColor(1.0, 1.0, 1.0, 1.0);
+  gl.clearDepth(1.0);
+  gl.enable(gl.DEPTH_TEST);
+  gl.depthFunc(gl.LEQUAL);
+  
+  // shader program
+  var vertexShader = createVertexShader(gl, loadText('glsl/simple.vert'));
+  var fragmentShader = createFragmentShader(gl, loadText('glsl/simple.frag'));
+  program = createProgram(gl, vertexShader, fragmentShader);
+
+	program.attributes = getProgramAttributes(gl, program);
+	program.uniforms = getProgramUniforms(gl, program);
+	
+	gl.enableVertexAttribArray(program.attributes.Position);
+  gl.enableVertexAttribArray(program.attributes.Normal);
+  gl.enableVertexAttribArray(program.attributes.TexCoord);  
+  
+  var models = document.getElementById("model").options;
+  
+  for(var i=0; i<models.length; i++)
+  {
+  	var link = models[i].value; 
+  	loadMesh(link + ".json", link + ".dat", i);
+  }    
+}
+
+function loadMesh(meta, binary, index)
+{
+	var mesh = JSON.parse(loadText(meta));
+	loadBinaryAsync(binary, function(data) 
+	{ 
+		loadMeshBuffers(mesh, data);
+		loadMeshTextures(mesh, textures);
+		meshes[index] = mesh;
+	});
+}
+
+//---------------------------------
+// Loading Resoruces: Mesh & Textures
+//---------------------------------
+function loadMeshBuffers(mesh, buffer)
+{
+	if(mesh.vertices.count > 65535)
+	{
+		alert('Only models with less than 65536 vertices are supported');
+	}
+			
+  var offset = 0;
+
+	// array buffer(s)
+	for(var i=0; i<mesh.vertices.attributes.length; i++)
+	{
+		if(mesh.vertices.attributes[i].type != "FLOAT")
+		{
+			alert('Only vertex attributes of type="FLOAT" are supported!');
+		}			
+
+		var size = mesh.vertices.count*mesh.vertices.attributes[i].size;
+		mesh.vertices.attributes[i].buffer = gl.createBuffer();
+  	gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertices.attributes[i].buffer);
+  	gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(buffer, offset, size), gl.STATIC_DRAW);
+
+		offset += 4*size;
+	}
+  gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+	// element array buffer
+  mesh.triangles.count = 0;
+
+	var typeSize;
+	if(mesh.triangles.type == "UNSIGNED_BYTE")
+	{
+		typeSize = 1;
+  }
+	else if(mesh.triangles.type == "UNSIGNED_SHORT")
+	{
+		typeSize = 2;
+  }
+	else 
+	{	
+		alert('Only triangle indices of type="UNSIGNED_BYTE|UNSIGNED_SHORT" are supported!');
+	}				
+
+
+  var size = 0;
+  for ( var i=0, len=mesh.triangles.groups.length; i<len; ++i )
+  {
+	    mesh.triangles.groups[i].offset = size;
+      mesh.triangles.count += mesh.triangles.groups[i].count;
+      size = 3*typeSize*mesh.triangles.count;
+  }
+  
+  mesh.triangles.buffer = gl.createBuffer();
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.triangles.buffer);    
+  var indices = new Uint8Array(buffer, offset, size);
+  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+}
+
+function loadMeshTextures(mesh, textures)
+{
+	for(var i=0; i<mesh.triangles.groups.length; i++)
+	{
+		var src = images[mesh.triangles.groups[i].name];
+		if(!textures[src])
+		{
+      var image = document.createElement('img');
+	    image.loaded = false;
+	    image.texture = textures[src] = gl.createTexture();
+	    	    
+    	image.onload = (function(image) 
+    	{
+        return function() 
+        {
+          imageLoadedHandler(image);
+        };
+      }(image));
+      
+    	image.src = src;
+		}
+	}
+}
+
+function imageLoadedHandler(image) 
+{
+	var texture = image.texture;
+		
+  gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+
+  gl.bindTexture(gl.TEXTURE_2D, texture);
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+  
+  gl.generateMipmap(gl.TEXTURE_2D);
+
+  gl.bindTexture(gl.TEXTURE_2D, null);
+}
+
+//---------------------------------
+// Input
+//---------------------------------
+var xRot = 0, yRot = 0;
+var xSpeed = 0, ySpeed = 0;
+var z = -5.0;
+
+var keyStates = {};
+
+function handleKeyDown(event) 
+{
+  keyStates[event.keyCode] = true;
+}
+
+function handleKeyUp(event) 
+{
+  keyStates[event.keyCode] = false;
+}
+
+function handleKeys() 
+{
+  if (keyStates[33]) // PageUp
+      z -= 0.05;
+  if (keyStates[34]) // PageDown
+      z += 0.05;
+  if (keyStates[37]) // Left
+      // Left cursor key
+      ySpeed -= 1;
+  if (keyStates[39]) // Right
+      ySpeed += 1;
+  if (keyStates[38]) // Up
+      xSpeed -= 1;
+  if (keyStates[40]) // Down
+      xSpeed += 1;
+}
+
+//---------------------------------
+// Animation
+//---------------------------------
+var Projection = mat4.identity(mat4.create());
+var ModelView = mat4.identity(mat4.create());
+var Lighting = mat4.identity(mat4.create());
+
+var lastTime = 0;
+function animate() 
+{
+  var timeNow = new Date().getTime();
+  if (lastTime != 0) 
+  {
+      var elapsed = timeNow - lastTime;
+
+      xRot += (xSpeed * elapsed) / 1000.0;
+      yRot += (ySpeed * elapsed) / 1000.0;
+  }
+  lastTime = timeNow
+  
+	// Transform Matrices    
+	{
+		// Projection
+		Projection = mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0);
+		// ModelView
+		mat4.identity(ModelView);
+	  mat4.translate(ModelView, vec3.create([0.0, 0.0, z]));
+	  mat4.rotate(ModelView, xRot*Math.PI/180, vec3.create([1,0,0]));
+	  mat4.rotate(ModelView, yRot*Math.PI/180, vec3.create([0,1,0]));
+		// Lighting
+		//var inv3 = mat4.toInverseMat3(ModelView);
+		//mat3.toMat4(inv3, Lighting);
+		mat4.inverse(ModelView, Lighting);
+		mat4.transpose(Lighting);
+	}    
+}
+
+//---------------------------------
+// Rendering
+//---------------------------------
+function drawScene() 
+{
+	var mesh;
+	{
+		var model = document.getElementById("model");
+		var index = model.selectedIndex;
+		if(index < meshes.length) mesh = meshes[index];
+	}
+	
+  gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+  if(!mesh) return; // finished loading?
+
+	gl.useProgram(program);
+
+	// Uniforms
+	{
+		gl.uniformMatrix4fv(program.uniforms.Projection, false, Projection);
+		gl.uniformMatrix4fv(program.uniforms.ModelView, false, ModelView);
+		gl.uniformMatrix4fv(program.uniforms.Lighting, false, Lighting);
+	}
+	gl.uniform1i(program.uniforms.sampler, 0);
+      
+	// Attributes & Buffers
+	{
+  	gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertices.attributes[0].buffer);
+	  gl.vertexAttribPointer(program.attributes.Position, mesh.vertices.attributes[0].size, gl.FLOAT, false, 0, 0);
+
+  	gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertices.attributes[1].buffer);
+  	gl.vertexAttribPointer(program.attributes.Normal, mesh.vertices.attributes[1].size, gl.FLOAT, false, 0, 0);
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertices.attributes[2].buffer);
+		gl.vertexAttribPointer(program.attributes.TexCoord, mesh.vertices.attributes[2].size, gl.FLOAT, false, 0, 0);
+
+		gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+	  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mesh.triangles.buffer);
+	}
+
+	for(var i=0; i<mesh.triangles.groups.length; i++)
+	{
+		// Textures
+		var tex = textures[images[mesh.triangles.groups[i].name]];
+		//gl.activeTexture(gl.TEXTURE0);
+  	gl.bindTexture(gl.TEXTURE_2D, tex);
+
+		// Primitives	
+		var count = 3*mesh.triangles.groups[i].count;
+		gl.drawElements(gl.TRIANGLES, count, gl[mesh.triangles.type], mesh.triangles.groups[i].offset);
+	}
+}
+
+function tick() 
+{
+    handleKeys();
+    animate();
+    drawScene();
+}
+
+function modelChangedHandler(x)
+{
+	var xmlLink = document.getElementById("mesh.xml");
+	var jsonLink = document.getElementById("mesh.json");
+	var dataLink = document.getElementById("mesh.dat");	
+
+	var link = x.options[x.selectedIndex].value;
+
+	xmlLink.href = link + ".xml";
+	jsonLink.href = link + ".json";
+	dataLink.href = link + ".dat";
+
+	//hack to remove focus from selection
+	document.getElementById("dummy").focus();
+}
+
+function start() 
+{
+	if(!window.WebGLRenderingContext)
+	{
+	  alert("Could not initialise WebGL, sorry :-(");
+	  return;
+	}
+
+	modelChangedHandler( document.getElementById("model") )
+
+  var canvas = document.getElementById("mesh-viewer-canvas");
+  initGL(canvas);
+  
+  document.onkeydown = handleKeyDown;
+  document.onkeyup = handleKeyUp;
+
+  setInterval(tick, 15);
+}
+	</script>
+	<!-- style template based on 'http://www.glge.org/ -->
+	<style> 
+		body { margin:auto; background-color: #888; padding-top: 50px; font-family:sans; color: #666; font-size: 0.8em }
+		table { font-family:sans; color: #666; font-size: 1em }
+		h1 { color: #FF9546; text-shadow: #444 0.1em 0.1em 0.1em;}
+		a { color: #FF9546; }
+		#container { margin:auto; width: 900px; padding: 10px; background-color: #fff; border-radius: 5px; -webkit-box-shadow: 5px 5px 2px #444; }
+	</style>
+</head>
+<body onload="start();">
+	<div id="container"> 
+    <canvas id="mesh-viewer-canvas" style="border: none;" width="900" height="400"></canvas>
+		<h1>Mesh Viewer</h1>
+		<b>Select model:</b>&nbsp;&nbsp;<select id="model" onChange="modelChangedHandler(this)" style="min-width: 100px;">
+	 	  <!--<option value="../mesh/Assembly3D.mesh">Assembly3D</option>-->
+		  <option value="../cube/Cube.mesh">Cube</option>
+	 	  <option value="../infinite/Infinite.mesh">Infinite</option>
+		</select>&nbsp;&nbsp;&nbsp;&nbsp;    
+    <b>Controls:</b>&nbsp;&nbsp;Use cursor keys to spin the object and <code>PageUp</code> / <code>PageDown</code> to zoom out/in.<br>
+    <br>
+    Download Mesh: <a id="mesh.xml" href="#">XML</a> | <a id="mesh.json" href="#">JSON</a> | <a id="mesh.dat" href="#">Data</a>
+    <br><br>
+    <hr>
+    <table border="0">
+    <tr><td>
+		<img src="img/assembly3d.png" border="0">&nbsp;&nbsp;&nbsp;
+		</td><td>
+		<b>More information: </b><a href="http://assembly.interaction3d.org/" target="_blank">Assembly3D</a> project page.<br>
+		<b>Libaries: </b>Vector and Matrix operations via <a href="http://code.google.com/p/glmatrix/" target="_blank">glMatrix</a>.<br>
+		<b>Theme: </b>Style sheet is based on some demos fom <a href="http://glge.org" target="_blank">glge.org</a>.<br>
+		<b>Code: </b>The code is based on a sample from <a href="http://learningwebgl.com" target="_blank">learningwebgl.com</a>.<br>
+		<b>Models: </b>The 3D Head Scan "Infinite" by <a rel="cc:attributionURL" href="http://www.ir-ltd.net/" target="_blank">Lee Perry-Smith</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/" target="_blank">Creative Commons Attribution 3.0</a> Unported License. 
+		</td><td>
+		<img src="img/webgl.gif" border="0">&nbsp;&nbsp;&nbsp;
+		</td></tr>
+		</table>
+	</div>
+	<br>
+	<center>
+	Written by <a href="http://micha.monoid.net" target="_blank" style="color: #444">Michael Nischt</a> (2011)
+	</center>
+	<a href="#" id="dummy"> </a>
+</body>
+</html>
