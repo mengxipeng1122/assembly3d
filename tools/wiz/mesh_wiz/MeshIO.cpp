@@ -45,7 +45,7 @@ MeshIO::~MeshIO()
 {
 }
 
-bool MeshIO::load(Mesh* mesh, const std::string& file, const std::string& binaryFile)
+bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
 {
     bool loadBinaryFile = true;
     int numVertices = 0;
@@ -80,9 +80,9 @@ bool MeshIO::load(Mesh* mesh, const std::string& file, const std::string& binary
             
             for(int i = 0; i < format.attributeCount; ++i)
             {
-                format.attributeName.push_back(xml.getAttribute("Attribute", "name", "", i).c_str());
+                format.attributeName.push_back(xml.getAttribute("Attribute", "name", "", i));
                 format.attributeSize.push_back(xml.getAttribute("Attribute", "size", 0, i));
-                format.attributeType.push_back(xml.getAttribute("Attribute", "type", "FLOAT", i).c_str());
+                format.attributeType.push_back(xml.getAttribute("Attribute", "type", "FLOAT", i));
             }
             
         }
@@ -93,7 +93,7 @@ bool MeshIO::load(Mesh* mesh, const std::string& file, const std::string& binary
             for(int i = 0; i < numGroups; ++i)
             {
                 Group g;
-                g.name = xml.getAttribute("Group", "name", "", i).c_str();
+                g.name = xml.getAttribute("Group", "name", "", i);
                 g.triangleCount = xml.getAttribute("Group", "count", 0, i);
                 
                 if(groupIndex == 0)
@@ -122,7 +122,7 @@ bool MeshIO::load(Mesh* mesh, const std::string& file, const std::string& binary
         {
             format.isBinary = true;
             
-            std::ifstream fin(binaryFile.c_str(), std::ios::binary);
+            std::ifstream fin(binaryFile, std::ios::binary);
             
             fin.seekg(0);
             
@@ -132,7 +132,6 @@ bool MeshIO::load(Mesh* mesh, const std::string& file, const std::string& binary
             std::vector<float> tangents;
             std::vector<float> bitangents;
             
-//            bool writePosition = false;
             bool loadTexture = false;
             bool loadNormal = false;
             bool loadTangent = false;
@@ -147,7 +146,6 @@ bool MeshIO::load(Mesh* mesh, const std::string& file, const std::string& binary
             
             if(idx > -1 && idx < aSize)
             {
-//                writePosition = true;
                 startLoop = numVertices*idx;
                 endLoop = numVertices *(idx+1);
                 
@@ -339,7 +337,6 @@ bool MeshIO::load(Mesh* mesh, const std::string& file, const std::string& binary
             std::vector<float> tangents;
             std::vector<float> bitangents;
             
-//            bool writePosition = false;
             bool loadTexture = false;
             bool loadNormal = false;
             bool loadTangent = false;
@@ -353,7 +350,6 @@ bool MeshIO::load(Mesh* mesh, const std::string& file, const std::string& binary
             
             if(idx > -1 && idx < aSize)
             {
-//                writePosition = true;
                 startLoop = numVertices*idx;
                 endLoop = numVertices *(idx+1);
                 for(int i = startLoop; i < endLoop; ++i)
@@ -515,7 +511,7 @@ bool MeshIO::load(Mesh* mesh, const std::string& file, const std::string& binary
     
 }
 
-void MeshIO::generateDebug(Mesh* mesh, const std::string& outFilePath)
+void MeshIO::saveDebug(Mesh* mesh, const char* outFilePath)
 {
     XmlParser xml;
     xml.addXmlDeclaration();
@@ -671,7 +667,7 @@ void MeshIO::generateDebug(Mesh* mesh, const std::string& outFilePath)
 
 }
 
-void MeshIO::generateBinary(Mesh* mesh, const std::string& outFilePath, const std::string& binaryFilePath)
+void MeshIO::saveBinary(Mesh* mesh, const char* outFilePath, const char* binaryFilePath)
 {
     XmlParser xml;
     xml.addXmlDeclaration();
@@ -743,7 +739,7 @@ void MeshIO::generateBinary(Mesh* mesh, const std::string& outFilePath, const st
     // -------------------------------------------------------------------------------------------
     // Data
     // -------------------------------------------------------------------------------------------
-    std::ofstream fout(binaryFilePath.c_str(), std::ios::binary);
+    std::ofstream fout(binaryFilePath, std::ios::binary);
     
     int idx = -1;
     int aSize = mesh->getMeshFormat().attributeCount;

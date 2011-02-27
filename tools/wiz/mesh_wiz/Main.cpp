@@ -67,7 +67,7 @@ int main (int argc, char* argv[])
     TCLAP::ValueArg<std::string> scaleArg("s", "scale", "Scale the mesh by this scale vector or scale by one scale factor s", false, "", "x/y/z|s");
     TCLAP::ValueArg<std::string> resizeArg("", "resize", "Scale the mesh so, that its size is x/y/z or give axis and new value r", false, "", "x/y/z|axis/r");
     TCLAP::ValueArg<std::string> centerArg("", "center", "Center mesh to given axis (i.e. 1/1/1 to put center to 0/0/0)", false, "", "1/1/1");
-    TCLAP::SwitchArg center2Arg("", "center-all", "Center mesh to all axis", false);
+    TCLAP::SwitchArg centerAllArg("", "center-all", "Center mesh to all axis", false);
     
     //---------------------------------------------------------------------------------------------------------
     // Conversion
@@ -143,7 +143,7 @@ int main (int argc, char* argv[])
     cmd.add(normalsArg);
     cmd.add(convertIndexTypeToArg);
     cmd.add(convertToArg);
-    cmd.add(center2Arg);
+    cmd.add(centerAllArg);
     cmd.add(centerArg);
     cmd.add(resizeArg);
     cmd.add(scaleArg);
@@ -205,7 +205,7 @@ int main (int argc, char* argv[])
 
     //---------------------------------------------------------------------------------------------------------
     Mesh mesh;
-    if(!MeshIO::load(&mesh, inputfile, binaryInFileName))
+    if(!MeshIO::load(&mesh, inputfile.c_str(), binaryInFileName.c_str()))
     {
         std::cerr << "Error: Loading '" << inputfile << "', failed!" << std::endl;
         return 0;
@@ -398,7 +398,7 @@ int main (int argc, char* argv[])
         
         
     }
-    else if(center2Arg.isSet())
+    else if(centerAllArg.isSet())
     {
         toolMgr.center(1, 1, 1);
         modelChanged = true;
@@ -418,14 +418,14 @@ int main (int argc, char* argv[])
             {
                 if(verboseArg.getValue())
                     std::cout << "Converting mesh to debug format." << std::endl;
-                MeshIO::generateDebug(&mesh, outputdir.c_str());
+                MeshIO::saveDebug(&mesh, outputdir.c_str());
                 
             }
             else if(convertToArg.getValue().compare("binary") == 0)
             {
                 if(verboseArg.getValue())
                     std::cout << "Converting mesh to binary format." << std::endl;
-                MeshIO::generateBinary(&mesh, outputdir.c_str(), binaryOutFileName.c_str());
+                MeshIO::saveBinary(&mesh, outputdir.c_str(), binaryOutFileName.c_str());
                 
             }
         }
@@ -433,11 +433,11 @@ int main (int argc, char* argv[])
         {
             if(mesh.getMeshFormat().isBinary)
             {
-                MeshIO::generateBinary(&mesh, outputdir.c_str(), binaryOutFileName.c_str());
+                MeshIO::saveBinary(&mesh, outputdir.c_str(), binaryOutFileName.c_str());
             }
             else
             {
-                MeshIO::generateDebug(&mesh, outputdir.c_str());
+                MeshIO::saveDebug(&mesh, outputdir.c_str());
             }
         }
         std::cout << "Done!" << std::endl;

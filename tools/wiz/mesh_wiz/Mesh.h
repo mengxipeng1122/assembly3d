@@ -60,7 +60,7 @@ public:
     
     void printData();
     
-    void setIndexFormat(const std::string& format);
+    void setIndexFormat(const char* format);
     
     Vertex& getVertex(unsigned int index);
 	Group& getGroup(unsigned int index);
@@ -89,10 +89,10 @@ public:
     void setNumTriangles(int numTriangles) { m_numTriangles = numTriangles; }
     
     
-    void addAttribute(const std::string& name, int attrSize, const std::string& attrType);
-    void removeAttribute(const std::string& attributeName);
-    bool containsAttribute(const std::string& attrName);
-    int getAttributeIndexWithName(const std::string& attrName);
+    void addAttribute(const char* name, int attrSize, const char* attrType);
+    void removeAttribute(const char* attributeName);
+    bool containsAttribute(const char* attrName);
+    int getAttributeIndexWithName(const char* attrName);
     
 //    void normalize(float scaleTo = 1.0f, bool center = true);
 //    void reverseWinding();
@@ -108,7 +108,7 @@ public:
     
     void calculateBounds();
     
-    void setMeshPath(const std::string& path) { m_MeshPath = path; }
+    void setMeshPath(const char* path) { m_MeshPath = path; }
 private:
 
     void bounds(float center[3], float &width, float &height,

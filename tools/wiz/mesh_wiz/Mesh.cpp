@@ -121,12 +121,12 @@ void Mesh::bounds(float center[3], float &width, float &height,
 //    radius = std::max(std::max(width, height), length);
     radius = sqrtf(extent[0]*extent[0] + extent[1]*extent[1] + extent[2]*extent[2]);
 }
-void Mesh::setIndexFormat(const std::string& format)
+void Mesh::setIndexFormat(const char* format)
 {
     m_format.indexType = format;
 }
 
-void Mesh::addAttribute(const std::string& attrName, int attrSize, const std::string& attrType)
+void Mesh::addAttribute(const char* attrName, int attrSize, const char* attrType)
 {
     if(!containsAttribute(attrName))
     {
@@ -138,7 +138,7 @@ void Mesh::addAttribute(const std::string& attrName, int attrSize, const std::st
     }
 }
 
-void Mesh::removeAttribute(const std::string& attributeName)
+void Mesh::removeAttribute(const char* attributeName)
 {
     std::vector<unsigned int> idx;
     
@@ -160,7 +160,7 @@ void Mesh::removeAttribute(const std::string& attributeName)
 }
 
 
-bool Mesh::containsAttribute(const std::string& attrName)
+bool Mesh::containsAttribute(const char* attrName)
 {
     for(unsigned int i = 0; i < m_format.attributeName.size(); ++i)
     {
@@ -170,7 +170,7 @@ bool Mesh::containsAttribute(const std::string& attrName)
     return false;
 }
 
-int Mesh::getAttributeIndexWithName(const std::string& attrName)
+int Mesh::getAttributeIndexWithName(const char* attrName)
 {
     for(unsigned int i = 0; i < m_format.attributeName.size(); ++i)
     {

@@ -47,9 +47,9 @@ m_attributeTool(new AttributeTool())
 
 ToolManager::~ToolManager()
 {
-    SAFE_DELETE(m_convertTool);
-    SAFE_DELETE(m_transformTool);
-    SAFE_DELETE(m_attributeTool);
+    SAFE_DELETE(m_convertTool)
+    SAFE_DELETE(m_transformTool)
+    SAFE_DELETE(m_attributeTool)
 }
 bool ToolManager::convertIndexType(const char* type)
 {
@@ -57,12 +57,11 @@ bool ToolManager::convertIndexType(const char* type)
         std::cout << "Converting index type to 'unsigned " << type << "'" << std::endl;
     
     bool result = false;
-    ConvertTool convertTool;
-    
+
     std::string stype = type;
     if(stype.compare("int") == 0)
     {
-        convertTool.convertIndicesToUnsignedInt(m_mesh);
+        m_convertTool->convertIndicesToUnsignedInt(m_mesh);
         result = true;
     }    
     else if(stype.compare("short") == 0)
@@ -74,7 +73,7 @@ bool ToolManager::convertIndexType(const char* type)
         }
         else
         {
-            convertTool.convertIndicesToUnsignedShort(m_mesh);    
+            m_convertTool->convertIndicesToUnsignedShort(m_mesh);
             result = true;
         }
         
@@ -88,7 +87,7 @@ bool ToolManager::convertIndexType(const char* type)
         }
         else
         {
-            convertTool.convertIndicesToUnsignedByte(m_mesh);    
+            m_convertTool->convertIndicesToUnsignedByte(m_mesh);
             result = true;
         }
     }
