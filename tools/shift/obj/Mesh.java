@@ -30,7 +30,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-package org.interaction3d.assembly.tools.obj;
+package org.interaction3d.assembly.tools.shift.obj;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -47,77 +47,17 @@ import java.util.HashMap;
 import java.util.List;
 
 import static java.lang.String.format;
+import static org.interaction3d.assembly.tools.shift.obj.Vertex.POSITION;
+import static org.interaction3d.assembly.tools.shift.obj.Vertex.TEXTURE;
+import static org.interaction3d.assembly.tools.shift.obj.Vertex.NORMAL;
+
 
 /**
  *
  * @author Michael Nischt <micha@monoid.net>
  */
-public class Mesh
+final class Mesh
 {
-    // <editor-fold defaultstate="collapsed" desc="TriangleGroup">
-    
-    private static final class TriangleGroup 
-    {
-
-        final String material;
-        final ArrayList<int[]> primitives = new ArrayList<int[]>();
-        
-        public TriangleGroup(String material) {
-            this.material = material;
-        }        
-    }
-    
-    // </editor-fold>
-    
-    // <editor-fold defaultstate="collapsed" desc="Vertex">
-    
-    private static final class Vertex 
-    {
-        final int position, texture, normal;
-
-        public Vertex(int[] vertex)
-        {
-            position = vertex[POSITION];
-            texture = vertex[TEXTURE];
-            normal = vertex[NORMAL];
-        }
-        
-        public Vertex(int v, int vt, int vn)
-        {
-            this.position = v;
-            this.texture = vt;
-            this.normal = vn;
-        }
-
-        @Override
-        public int hashCode()
-        {
-            return position ^ texture ^ normal;
-        }
-
-        @Override
-        public boolean equals(Object obj)
-        {
-            if (obj == null || !(obj instanceof Vertex))
-                return false;
-
-            final Vertex other = (Vertex) obj;
-            if (this.position != other.position)
-                return false;
-            if (this.texture != other.texture)
-                return false;
-            if (this.normal != other.normal)
-                return false;
-            
-            return true;
-        }
-    }
-    
-    // </editor-fold>        
-    
-    
-    
-    private static final int POSITION = 0, TEXTURE = 1, NORMAL = 2;
     private static final String DEFAULT_MATERIAL = "off";
 
     private final String name;

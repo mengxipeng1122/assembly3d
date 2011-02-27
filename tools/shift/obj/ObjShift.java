@@ -30,7 +30,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-package org.interaction3d.assembly.tools.obj;
+package org.interaction3d.assembly.tools.shift.obj;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -50,7 +50,7 @@ import static java.lang.Long.parseLong;
  * http://local.wasp.uwa.edu.au/~pbourke/dataformats/obj/
  * @author Michael Nischt
  */
-public final class ObjConverter 
+public final class ObjShift 
 { 
     // tmp vars for current state
     private int smoothingGroup;
@@ -63,7 +63,7 @@ public final class ObjConverter
     private Mesh mesh;
       
     
-    public ObjConverter() 
+    public ObjShift() 
     {
     }
     
@@ -432,7 +432,7 @@ public final class ObjConverter
             dst = System.getProperty("user.dir");
         }
         
-        ObjConverter converter = new ObjConverter();
+        ObjShift converter = new ObjShift();
         converter.convert(src);
         converter.save(dst);
     }    

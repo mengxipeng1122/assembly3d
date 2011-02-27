@@ -29,73 +29,44 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- */package org.interaction3d.assembly.tools.obj;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URI;
-
-/**
- *
- * @author Michael Nischt <micha@monoid.net>
  */
-final class Path 
+package org.interaction3d.assembly.tools.shift.obj;
+
+final class Vertex 
 {
-    static String trunkObj(String name)
+    public static final int POSITION = 0, TEXTURE = 1, NORMAL = 2;
+
+    final int position, texture, normal;
+
+    Vertex(int[] vertex)
     {
-        if(name.length() > 4)
-        {            
-            int index = name.length() - 4; 
-            String last = name.substring(index).toLowerCase();
-            if(last.equals(".obj"))
-            {
-                name = name.substring(0, index);
-            }
-        }
-        return name;
+        position = vertex[POSITION];
+        texture = vertex[TEXTURE];
+        normal = vertex[NORMAL];
     }
     
-    static String filename(String uri)
+    Vertex(int v, int vt, int vn)
     {
-        File file = file(uri);
-        if(file.isDirectory())
-        {
-            return null;
-        }
-        return file.getName();
+        position = v;
+        texture = vt;
+        normal = vn;
     }
-    
-    static File file(String uri)
+
+    @Override
+    public int hashCode()
     {
-        try
-        {
-            return new File(new URI(uri));
-        }
-        catch(Exception e)
-        {
-            return new File(uri);
-        }
+        return position ^ texture ^ normal;
     }
-    
-    static InputStream inputStream(String uri)
+
+    @Override
+    public boolean equals(Object obj)
     {
-        try
-        {
-            return URI.create(uri).toURL().openStream();
-        }
-        catch(Exception e)
-        {
-            try
-            {
-                return new FileInputStream(uri);
-            }
-            catch(Exception e2)
-            {
-                throw new RuntimeException(e);
-            }
-        }
-    }    
-    
-    private Path() {}
+        if (obj == null || !(obj instanceof Vertex))
+            return false;
+
+        final Vertex other = (Vertex) obj;
+        return (this.position == other.position)
+        		&& (this.texture == other.texture)
+        		&& (this.normal == other.normal);
+    }
 }
