@@ -32,11 +32,6 @@
  */
 package org.interaction3d.assembly.tools.shift.obj;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -50,14 +45,20 @@ import static java.lang.String.format;
 import static org.interaction3d.assembly.tools.shift.obj.Vertex.POSITION;
 import static org.interaction3d.assembly.tools.shift.obj.Vertex.TEXTURE;
 import static org.interaction3d.assembly.tools.shift.obj.Vertex.NORMAL;
+import static org.interaction3d.assembly.tools.shift.obj.Triangulization.triangulize;
 
 
 /**
  *
- * @author Michael Nischt <micha@monoid.net>
+ * @author Michael Nischt
  */
 final class Mesh
 {
+		interface Assembly
+		{
+			void assemble(String name, CharSequence xml, ByteBuffer data);
+		}
+		
     private static final String DEFAULT_MATERIAL = "off";
 
     private final String name;
@@ -216,13 +217,19 @@ final class Mesh
         }            
     }
 
-    void writeTo(String path)
+    boolean convert(Assembly assembly)
     {
-        if(triangleGroups.isEmpty() || positionList.isEmpty()) return;
+        if(triangleGroups.isEmpty() || positionList.isEmpty()) 
+        {
+        	return false;
+        }
 
         clearEmptyGroup();
 
-        if(triangleGroups.isEmpty()) return;
+        if(triangleGroups.isEmpty())
+        {
+        	 return false;
+        }
 
         boolean hasTexCoords = !textureList.isEmpty();
         boolean hasNormals = !normalList.isEmpty();
@@ -316,47 +323,11 @@ final class Mesh
                 putInts(iBuffer, triangle.primitives);
             }
         }
-             
-        try
-        {
-            writeXml(xml, path + "/" + name + ".mesh.xml");
-            writeDat(buffer, path + "/" + name + ".mesh.dat");
-        }
-        catch(Exception ex)
-        {
-            throw new RuntimeException(ex);
-        }
+        
+        assembly.assemble(name, xml, buffer);
+        return true;
     }
-    
-    private static void writeXml(CharSequence xml, String path) throws IOException
-    {
-        FileWriter writer = new FileWriter(Path.file(path), false);
-        writer.append(xml);
-        writer.close();
-    }
-    private static void writeDat(ByteBuffer dat, String path) throws FileNotFoundException, IOException
-    {
-        File file = Path.file(path);
-        RandomAccessFile raf = new RandomAccessFile(file.getAbsolutePath(), "rw");
-        raf.getChannel().write(dat);
-        raf.close();
-    }
-    
-    
-    private static int[][] triangulize(float[][] polygon)
-    {
-        int[][] triangles = new int[polygon.length-2][3];
-
-        for(int i=0; i<triangles.length; i++)
-        {
-            triangles[i][0] = 0;
-            triangles[i][1] = i+1;
-            triangles[i][2] = i+2;
-        }
-
-        return triangles;
-    }
-    
+        
     private static void putInts(IntBuffer buffer, List<int[]> coordinates)
     {
         for(int[] element : coordinates)

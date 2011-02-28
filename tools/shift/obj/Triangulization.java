@@ -32,19 +32,33 @@
  */
 package org.interaction3d.assembly.tools.shift.obj;
 
-import java.util.ArrayList;
 
 /**
  *
  * @author Michael Nischt
  */
-final class TriangleGroup 
-{
-    final String material;
-    final ArrayList<int[]> primitives = new ArrayList<int[]>();
-    
-    TriangleGroup(String material) 
+final class Triangulization
+{   
+		/**
+		* 
+		* @param polygon an array of 3d points, the polygon vertices.
+		* @return an array of triangle faces mapping into the vertex array.
+		*/
+    public static int[][] triangulize(float[][] polygon)
     {
-        this.material = material;
-    }        
+    		// Naive implementation:
+    		// A simple triangle strip starting at the first vertex of the polygon
+        int[][] triangles = new int[polygon.length-2][3];
+
+        for(int i=0; i<triangles.length; i++)
+        {
+            triangles[i][0] = 0;
+            triangles[i][1] = i+1;
+            triangles[i][2] = i+2;
+        }
+
+        return triangles;
+    }
+    
+    private Triangulization() { /* static class */ } 
 }

@@ -32,6 +32,10 @@
  */
 package org.interaction3d.assembly.tools.shift.obj;
 
+/**
+ *
+ * @author Michael Nischt
+ */
 final class Vertex 
 {
     public static final int POSITION = 0, TEXTURE = 1, NORMAL = 2;
