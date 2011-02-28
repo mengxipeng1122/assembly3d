@@ -38,405 +38,164 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
 
-import static java.lang.Float.parseFloat;
-import static java.lang.Integer.parseInt;
-import static java.lang.Long.parseLong;
 
 /**
- * http://local.wasp.uwa.edu.au/~pbourke/dataformats/obj/
+ *
  * @author Michael Nischt
  */
 public final class ObjShift 
 { 
-    // tmp vars for current state
-    private int smoothingGroup;
-    private String object;
-          
-    // flags
-    private boolean multiple = false;
-    
-    private ArrayList<Mesh> meshes = new ArrayList<Mesh>();
-    private Mesh mesh;
-      
-    
-    public ObjShift() 
+	private static final String USAGE;
+	static
+	{
+		String usage =  "PARSE ERROR: \n";
+		usage += "    Required argument missing: source-file\n\n";
+		
+		usage += "USAGE:\n";
+		usage += "    java -jar ObjShift.jar [-m] <source-file> [output-dir]\n";
+		usage += "\n\n";
+		
+		usage += "    Where:\n\n";
+		usage += "        -m, --multiple\n";
+		usage += "         creates separate(multiple) mesh files for each object\n";
+		usage += "         note that this applies to o(object name) but not g (group names)\n";
+		
+		usage += "\n\n\n";		
+		usage += "    ObjShift - Converter tool for .obj files\n";
+		
+		USAGE = usage;
+	}
+	
+
+	public static void main( String... args ) throws Exception
+	{
+
+		if(args.length == 0)
+		{
+		}
+
+		boolean multiple = false;
+		String src = null, dst = null;
+		
+		for(String arg : args)
+		{
+			if(arg.equals("-m") || arg.equals("--multiple"))
+			{
+				multiple = true;
+			}
+			else if(src == null)
+			{
+				src = arg;
+			}
+			else if(dst == null)
+			{
+				dst = arg;
+			}
+			else
+			{
+				System.out.println(USAGE);
+				return;				
+			}
+		}
+
+		if(src == null)		
+		{
+				System.out.println(USAGE);
+				return;				
+		}
+		if(dst == null)
+		{		
+				dst = System.getProperty("user.dir");		
+		}
+				    
+		ObjShift.convert(src, dst, multiple);
+	}
+
+	public static void convert(String inputFile, String outputDir, boolean multiple) throws IOException
+	{
+	  File file = Path.file(outputDir);        
+	  if(!file.isDirectory()) { file.mkdirs(); }
+	  
+		String name = Path.trunkObj(Path.filename(inputFile));                
+	  ObjProcessor proc = new ObjProcessor(name, multiple);
+	  
+	  // load
+		readObj(proc, inputFile);
+	  
+	  // save
+	  final String path = outputDir;
+	  Mesh.Assembly assembly = new Mesh.Assembly() 
     {
-    }
-    
-    
-    // <editor-fold defaultstate="collapsed" desc="convert">
+    		public void assemble(String name, CharSequence xml, ByteBuffer data)
+    		{
+    			try 
+    			{
+    				writeXml(xml, path + File.separator + name + ".mesh.xml");
+	          writeData(data, path + File.separator + name + ".mesh.dat");			
+          }
+          catch(IOException ioe) { throw new RuntimeException(ioe); }
+    		}
+    };
+	  
+	  for(Mesh mesh : proc.getMeshes())
+	  {            	  	
+	    mesh.convert(assembly);
+	  }
+	}
+	
+	private static void readObj(ObjProcessor proc, String inputFile) throws IOException
+	{
+	  BufferedReader reader = null;
+	  try
+	  { 
+	  	reader = new BufferedReader(new InputStreamReader(Path.inputStream(inputFile))); 
+			String line;
+			while((line=reader.readLine()) != null)
+			{
+			    proc.line(line);
+			}
+		} 
+	  finally { close(reader); }    	
+	}
 
-    public void convert(String path)
-    {
-        String name = Path.trunkObj(Path.filename(path));
-        
-        InputStream in = Path.inputStream(path);
-        try
-        {
-            convert(in, name);
-        }
-        finally
-        {
-            close(in);
-        }
-    }
+	private static void writeXml(CharSequence xml, String outputFile) throws IOException
+	{
+	  FileWriter writer = null;
+	  try
+	  { 
+			writer = new FileWriter(Path.file(outputFile), false);
+	    writer.append(xml);
+		} 
+	  finally { close(writer); }
+	}
 
-    private void convert(InputStream in, String name)
-    {
-        try
-        {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            convertAndClose(reader, name);
-        }
-        catch (IOException ex)
-        {
-            throw new RuntimeException(ex);
-        }
-    }
+	private static void writeData(ByteBuffer dat, String outputFile) throws FileNotFoundException, IOException
+	{
+	  RandomAccessFile raf = null;
+	  try
+	  { 
+			raf = new RandomAccessFile(Path.file(outputFile).getAbsolutePath(), "rw");
+	    raf.getChannel().write(dat);
+	  }
+	  finally { close(raf); }        
+	}    
 
-    private void convert(BufferedReader reader, String name) throws IOException
-    {        
-        smoothingGroup = 0;
-        object = name;
-        mesh = new Mesh(name);
-                
-        String line;
-        while((line=reader.readLine()) != null)
-        {
-            line(line);
-        }
-        
-        mesh(object);
-    }
+	private static void close(Closeable c)
+	{
+		  try
+		  {
+		      if(c != null) c.close();
+		  }
+		  catch (IOException e)
+		  {
+		      throw new RuntimeException(e);
+		  }
+	}    
 
-    
-    private void convertAndClose(BufferedReader reader, String name) throws IOException
-    {
-        try
-        {
-            convert(reader, name);
-        }
-        finally
-        {
-            close(reader);
-        }
-    }    
-
-    static private void close(Closeable c)
-    {
-        try
-        {
-            c.close();
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
-    
-    public void save(String path)
-    {
-        File file = Path.file(path);
-        
-        if(!file.isDirectory())
-        {
-            file.mkdirs();
-        }
-        
-        for(Mesh next : meshes)
-        {            
-            next.writeTo(path);
-        }
-    }
-
-    // </editor-fold>
-
-    // <editor-fold defaultstate="collapsed" desc="line">
-    
-    private void line(String line)
-    {
-        {   // get rid of comment
-            int index = line.indexOf('#');
-            if(index >= 0)
-            {
-                line = line.substring(0, index);
-            }
-        }
-        line = line.trim();
-
-        StringTokenizer scanner = new StringTokenizer(line);
-
-        //empty line
-        if(!scanner.hasMoreElements())
-        {
-            return;
-        }
-
-        String op = scanner.nextToken();
-
-
-        if(op.equals("v"))
-        {
-            position(scanner);
-        }
-        else if(op.equals("vn"))
-        {
-            normal(scanner);
-        }
-        else if(op.equals("vt"))
-        {
-            texture(scanner);
-        }
-        else if(op.equals("p"))
-        {
-            points(scanner);
-        }
-        else if(op.equals("l"))
-        {
-            lines(scanner);
-        }
-        else if(op.equals("f"))
-        {
-            faces(scanner);
-        }
-        else if(op.equals("g"))
-        {
-            groups(scanner);
-        }
-        else if(op.equals("s"))
-        {
-            smoothingGroup(scanner.nextToken());
-        }
-        else if(op.equals("o"))
-        {
-            object(scanner.nextToken());
-        }
-        else if(op.equals("usemtl"))
-        {
-            usemtl(scanner.nextToken());
-        }
-        else if(op.equals("mtllib"))
-        {
-            mtllib(scanner);
-        }
-        else
-        {
-            //log("Unknown: " + op);
-        }
-    }
-
-    // </editor-fold>
-
-    // <editor-fold defaultstate="collapsed" desc="vertices">
-
-    private void position(StringTokenizer scanner)
-    {
-        // x y z (w=1)
-        float[] v = new float[3];
-        v[0] = parseFloat(scanner.nextToken());
-        v[1] = parseFloat(scanner.nextToken());
-        v[2] = parseFloat(scanner.nextToken());
-                
-        if(scanner.hasMoreTokens())
-        {
-            float w = parseFloat(scanner.nextToken());
-            v[0] /= w;
-            v[1] /= w;
-            v[2] /= w;
-        }
-        mesh.v(v);
-    }    
-
-    private void texture(StringTokenizer scanner)
-    {
-        // u (v=0) (w=0)
-        float[] texture = new float[2];
-        
-        float u = parseFloat(scanner.nextToken());
-        if(scanner.hasMoreTokens())
-        {
-            float v = parseFloat(scanner.nextToken());
-            //if(scanner.hasMoreTokens())
-            //{
-            //    float w = parsefloat(scanner.nextToken());
-            //    texture = new float[3];
-            //    texture[2] = w;
-            //}
-            //else
-            //{
-            //    texture = new float[2];
-            //}
-            texture[1] = v;
-        }
-        //else
-        //{
-        //    texture = new float[1];
-        //}
-        texture[0] = u;
-        
-        mesh.vt(texture);
-    }
-
-    private void normal(StringTokenizer scanner)
-    {
-        // i j k
-        float[] normal =
-        {
-            parseFloat(scanner.nextToken()),
-            parseFloat(scanner.nextToken()),
-            parseFloat(scanner.nextToken())
-        };
-
-        mesh.vn(normal);
-    }
-
-    // </editor-fold>
-    
-    // <editor-fold defaultstate="collapsed" desc="primitives">
-
-    private void points(StringTokenizer scanner)
-    {
-        // v1 v2 v3 . . .
-        List<int[]> points = new ArrayList<int[]>();
-        while (scanner.hasMoreTokens())
-        {
-            int p = parseInt(scanner.nextToken());
-            points.add(new int[] { p });
-        }
-        mesh.p(points);
-    }
-
-    private void lines(StringTokenizer scanner)
-    {
-        // v1/vt1 v2/vt2 v3/vt3 . . .
-        // can be v/t or v
-        List<int[]> lines = new ArrayList<int[]>();
-        while(scanner.hasMoreTokens())
-        {
-            int p,t;
-            {
-                String vert = scanner.nextToken();
-                int split = vert.indexOf('/');
-                if(split < 0) split = vert.length();
-
-                p = parseInt(vert.substring(0, split++));
-                t = (split < vert.length()) ? t = parseInt(vert.substring(split)) : 0;
-            }
-            lines.add(new int[] { p, t});
-        }
-        mesh.l(lines);
-
-    }
-
-    private void faces(StringTokenizer scanner)
-    {
-        // v1/vt1/vn1 v2/vt2/vn2 v3/vt3/vn3 . . .
-        // can be v/t/n or v/t or v//n or v
-
-        List<int[]> face = new ArrayList<int[]>();
-        while(scanner.hasMoreTokens())
-        {
-            int p,t,n;
-            {
-                String vert = scanner.nextToken();
-                int split1 = vert.indexOf('/');
-                if(split1 < 0) split1 = vert.length();
-                int split2 = vert.indexOf('/', split1+1);
-                if(split2 < 0) split2 = vert.length();
-
-
-                p = parseInt(vert.substring(0, split1++));
-                t = (split1 < split2) ? parseInt(vert.substring(split1, split2)) : 0;
-                split2++;
-                n = (split2 < vert.length()) ?  parseInt(vert.substring(split2)) : 0;                
-            }
-
-            face.add( new int[] {p, t, n} );
-        }
-        mesh.f(face, smoothingGroup);
-    }
-    
-    // </editor-fold>
-
-    // <editor-fold defaultstate="collapsed" desc="misc">
-
-    private void mtllib(StringTokenizer scanner)
-    {
-        // filename1 filename2 . . .
-        //List<String> list = new ArrayList<String>();
-        //while(scanner.hasMoreTokens())
-        //{
-        //    list.add(scanner.nextToken());
-        //}
-        //log("ignored: mtllib filename1 filename2 ...");
-    }
-
-    private void usemtl(String material)
-    {
-        mesh.usemtl(material);
-    }
-
-    private void smoothingGroup(String group)
-    {
-        // group_number or 0 or 'off'
-        smoothingGroup = (group.equalsIgnoreCase("off"))
-                       ? 0
-                       : (int) parseLong(group);
-    }
-
-    private void object(String group)
-    {
-        // object_name
-        if(multiple)
-        {
-            mesh(object = group);
-        }
-    }
-
-    private void groups(StringTokenizer scanner)
-    {
-        // (group_name1=default) (group_name2) . . .
-        //log("Groups (g) are not supported");
-    }
-
-    // </editor-fold>
-
-    private void mesh(String name)
-    {
-        meshes.add(mesh);
-        mesh = mesh.next(name);
-    }
-        
-    // <editor-fold defaultstate="collapsed" desc="main">
-
-    public static void main( String... args ) throws Exception
-    {
-        if(args.length == 0)
-        {
-            System.out.println("Usage: <source-file.obj> <output-directory>");
-            return;
-        }
-        
-        String src = args[0];
-        String dst;
-        if(args.length > 1)
-        {
-            dst = args[1];
-        }
-        else
-        {
-            dst = System.getProperty("user.dir");
-        }
-        
-        ObjShift converter = new ObjShift();
-        converter.convert(src);
-        converter.save(dst);
-    }    
-    
-    // </editor-fold>
-
+	private ObjShift() { /* static class */ }
 }

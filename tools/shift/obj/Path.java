@@ -40,7 +40,7 @@ import java.net.URI;
 
 /**
  *
- * @author Michael Nischt <micha@monoid.net>
+ * @author Michael Nischt
  */
 final class Path 
 {
@@ -99,5 +99,5 @@ final class Path
         }
     }    
     
-    private Path() {}
+    private Path() { /* static class */ }
 }
