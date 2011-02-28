@@ -140,6 +140,7 @@ int main (int argc, char* argv[])
 //    cmd.add(validateAndChangeArg);
 //    cmd.add(optimizeIndicesArg);
 //    cmd.add(optimizeVerticesArg);
+    cmd.add(stitchEpsArg);
     cmd.add(stitchArg);
     cmd.add(bitangentsArg);
     cmd.add(tangentsArg);
@@ -386,6 +387,31 @@ int main (int argc, char* argv[])
         toolMgr.stitch();
         modelChanged = true;
     }
+    if(stitchEpsArg.isSet())
+    {
+        std::string args = stitchEpsArg.getValue();
+        float eps = 0.0f;
+        std::vector<float> values;
+
+        int numSlashes = WizUtils::StringUtils::findOccurensesOf(args, "/");
+        if(numSlashes == 1)
+        {
+            std::string cmdStr = args;
+            int pos = cmdStr.find("/");
+            std::string attributeName = cmdStr.substr(0, pos);
+            cmdStr = cmdStr.erase(0, pos+1);
+
+            WizUtils::StringUtils::getValuesFromCmdString(cmdStr, values);
+            if(values.size() == 1)
+            {
+                eps = values[0];
+                toolMgr.stitchEps(attributeName.c_str(), eps);
+                modelChanged = true;
+
+            }
+        }
+
+    }
     
     //---------------------------------------------------------------------------------------------------------
 
@@ -430,14 +456,12 @@ int main (int argc, char* argv[])
                 if(verboseArg.getValue())
                     std::cout << "Converting mesh to debug format." << std::endl;
                 MeshIO::saveDebug(&mesh, outputdir.c_str());
-                
             }
             else if(convertToArg.getValue().compare("binary") == 0)
             {
                 if(verboseArg.getValue())
                     std::cout << "Converting mesh to binary format." << std::endl;
                 MeshIO::saveBinary(&mesh, outputdir.c_str(), binaryOutFileName.c_str());
-                
             }
         }
         else

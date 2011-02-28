@@ -200,3 +200,39 @@ void ToolManager::stitch()
 
     m_optimizeTool->stitch(m_mesh);
 }
+
+void ToolManager::stitchEps(const char* attributeName, float epsilon)
+{
+    if(m_verboseOutput)
+        std::cout << "Stitching vertices. Comparing " << attributeName << " with an epsilon of " << epsilon << std::endl;
+
+    OptimizeTool::Attribute attrib;
+
+    if(std::string(attributeName).compare("postion") == 0)
+    {
+        attrib = OptimizeTool::POSITION;
+    }
+    else if(std::string(attributeName).compare("normal") == 0)
+    {
+        attrib = OptimizeTool::NORMAL;
+    }
+    else if(std::string(attributeName).compare("texture") == 0)
+    {
+        attrib = OptimizeTool::TEXCOORD;
+    }
+    else if(std::string(attributeName).compare("tangent") == 0)
+    {
+        attrib = OptimizeTool::TANGENT;
+    }
+    else if(std::string(attributeName).compare("bitangent") == 0)
+    {
+        attrib = OptimizeTool::BITANGENT;
+    }
+    else
+    {
+        std::cout << "No suitable attribute given, stiching without epsilon" << std::endl;
+        m_optimizeTool->stitch(m_mesh);
+    }
+    m_optimizeTool->stitch(m_mesh, attrib, epsilon);
+
+}

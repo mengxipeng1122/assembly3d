@@ -42,7 +42,16 @@ public:
 	OptimizeTool();
 	~OptimizeTool();
 
+    enum Attribute{
+        POSITION=0,
+        NORMAL,
+        TEXCOORD,
+        TANGENT,
+        BITANGENT
+    };
+
     void stitch(Mesh* m);
+    void stitch(Mesh* m, Attribute a, float epsilon);
 
 protected:
 private:

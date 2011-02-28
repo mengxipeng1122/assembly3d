@@ -61,7 +61,8 @@ public:
     void generateBitangents();
     void removeBitangents();
     void stitch();
-    
+    void stitchEps(const char* attributeName, float epsilon);
+
 protected:
 private:
     Mesh* m_mesh;
