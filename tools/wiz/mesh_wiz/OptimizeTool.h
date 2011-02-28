@@ -34,11 +34,16 @@
 #ifndef _OPTIMIZETOOL_H_
 #define _OPTIMIZETOOL_H_
 
+#include "Mesh.h"
+
 class OptimizeTool
 {
 public:
 	OptimizeTool();
 	~OptimizeTool();
+
+    void stitch(Mesh* m);
+
 protected:
 private:
 	

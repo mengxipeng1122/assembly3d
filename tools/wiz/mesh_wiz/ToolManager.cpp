@@ -40,7 +40,8 @@ m_mesh(mesh),
 m_verboseOutput(verbose),
 m_convertTool(new ConvertTool()),
 m_transformTool(new TransformTool()),
-m_attributeTool(new AttributeTool())
+m_attributeTool(new AttributeTool()),
+m_optimizeTool(new OptimizeTool())
 {
     
 }
@@ -50,6 +51,7 @@ ToolManager::~ToolManager()
     SAFE_DELETE(m_convertTool)
     SAFE_DELETE(m_transformTool)
     SAFE_DELETE(m_attributeTool)
+    SAFE_DELETE(m_optimizeTool)
 }
 bool ToolManager::convertIndexType(const char* type)
 {
@@ -189,4 +191,12 @@ void ToolManager::center(int axisX, int axisY, int axisZ)
         std::cout << "Centering mesh" << std::endl;
 
     m_transformTool->center(m_mesh, axisX, axisY, axisZ);
+}
+
+void ToolManager::stitch()
+{
+    if(m_verboseOutput)
+        std::cout << "Stitching vertices" << std::endl;
+
+    m_optimizeTool->stitch(m_mesh);
 }

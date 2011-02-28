@@ -101,7 +101,9 @@ int main (int argc, char* argv[])
     //---------------------------------------------------------------------------------------------------------
     TCLAP::SwitchArg optimizeVerticesArg("", "optimize-vertices", "Optimize vertices order for GPU cache", false);
     TCLAP::SwitchArg optimizeIndicesArg("", "optimize-indices", "Optimize indices order for GPU cache", false);
-        
+    TCLAP::SwitchArg stitchArg("", "stitch", "Remove duplicate vertices", false);
+    TCLAP::ValueArg<std::string> stitchEpsArg("", "stitch-eps", "Remove duplicate vertices. Comparing all attributes but one given attribute with a possible deviation epsilon", false, "", "attribute/epsilon");
+
     //---------------------------------------------------------------------------------------------------------
     // Rename
     //---------------------------------------------------------------------------------------------------------
@@ -138,6 +140,7 @@ int main (int argc, char* argv[])
 //    cmd.add(validateAndChangeArg);
 //    cmd.add(optimizeIndicesArg);
 //    cmd.add(optimizeVerticesArg);
+    cmd.add(stitchArg);
     cmd.add(bitangentsArg);
     cmd.add(tangentsArg);
     cmd.add(normalsArg);
@@ -377,7 +380,15 @@ int main (int argc, char* argv[])
     }
     
     //---------------------------------------------------------------------------------------------------------
+
+    if(stitchArg.isSet())
+    {
+        toolMgr.stitch();
+        modelChanged = true;
+    }
     
+    //---------------------------------------------------------------------------------------------------------
+
     if(centerArg.isSet())
     {
         std::string args = centerArg.getValue();

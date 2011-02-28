@@ -83,8 +83,13 @@ public:
     bool hasBitangents() const { return m_hasBitangents; }
     
     MeshFormat& getMeshFormat() { return m_format; }
+
     void addVertex(Vertex vertex) { m_vertices.push_back(vertex); }
+    void clearVertices() { m_vertices.clear(); }
+
     void addIndex(unsigned int index) { m_indices.push_back(index); }
+    void clearIndices() { m_indices.clear(); }
+
     void addGroup(Group group) { m_groups.push_back(group); }
     void setNumTriangles(int numTriangles) { m_numTriangles = numTriangles; }
     
@@ -108,7 +113,7 @@ public:
     
     void calculateBounds();
     
-    void setMeshPath(const char* path) { m_MeshPath = path; }
+    void setMeshPath(const char* path) { m_meshPath = path; }
 private:
 
     void bounds(float center[3], float &width, float &height,
@@ -120,7 +125,7 @@ private:
     
     MeshFormat m_format;
     
-    std::string m_MeshPath;
+    std::string m_meshPath;
     
     int m_numTriangles;
     
