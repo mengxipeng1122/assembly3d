@@ -209,12 +209,33 @@ void Mesh::printData()
 void Mesh::destroy()
 {
     m_numTriangles = 0;
-    
+
+    m_hasPositions = false;
+    m_hasNormals = false;
+    m_hasTexCoords = false;
+    m_hasTangents = false;
+    m_hasBitangents = false;
+
+    m_center[0] = 0.0f;
+    m_center[1] = 0.0f;
+    m_center[2] = 0.0f;
+    m_width = 0.0f;
+    m_height = 0.0f;
+    m_length = 0.0f;
+    m_radius = 0.0f;
+    m_extent[0] = 0.0f;
+    m_extent[1] = 0.0f;
+    m_extent[2] = 0.0f;
+
     m_groups.clear();
     m_vertices.clear();
     m_indices.clear();
     
-    m_format.name = "Assembly3D";
+    m_format.name = "Assembly3D.mesh";
+    m_format.attributeName.clear();
+    m_format.attributeSize.clear();
+    m_format.attributeType.clear();
+    m_format.indexType = "UNSIGNED_INT";
     m_format.attributeCount = 0;
     m_format.isBinary = false;
     
@@ -234,4 +255,52 @@ void Mesh::calculateBounds()
     m_extent[2] = 0.0f;
     
     bounds(m_center, m_width, m_height, m_length, m_radius, m_extent);
+}
+void Mesh::setMeshPath(const char* path)
+{
+    m_meshPath = path;
+}
+void Mesh::hasPositions(bool val)
+{
+    m_hasPositions = val;
+}
+void Mesh::hasNormals(bool val)
+{
+    m_hasNormals = val;
+}
+void Mesh::hasTexCoords(bool val)
+{
+    m_hasTexCoords = val;
+}
+void Mesh::hasTangents(bool val)
+{
+    m_hasTangents = val;
+}
+void Mesh::hasBitangents(bool val)
+{
+    m_hasBitangents = val;
+}
+void Mesh::addVertex(Vertex vertex)
+{
+    m_vertices.push_back(vertex);
+}
+void Mesh::clearVertices()
+{
+    m_vertices.clear();
+}
+void Mesh::addIndex(unsigned int index)
+{
+    m_indices.push_back(index);
+}
+void Mesh::clearIndices()
+{
+    m_indices.clear();
+}
+void Mesh::addGroup(Group group)
+{
+    m_groups.push_back(group);
+}
+void Mesh::setNumTriangles(int numTriangles)
+{
+    m_numTriangles = numTriangles;
 }

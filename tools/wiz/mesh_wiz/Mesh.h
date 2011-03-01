@@ -66,32 +66,32 @@ public:
 	Group& getGroup(unsigned int index);
 	unsigned int* getTriangle(unsigned int index);
     
-    int getNumberOfTriangles() const { return m_numTriangles; }
-    unsigned int getNumberOfVertices() const { return m_vertices.size(); }
-	unsigned int getNumberOfGroups() const { return m_groups.size(); }
-    
-    void hasPositions(bool val) { m_hasPositions = val; }
-    void hasNormals(bool val) { m_hasNormals = val; }
-    void hasTexCoords(bool val) { m_hasTexCoords = val; }
-    void hasTangents(bool val) { m_hasTangents = val; }
-    void hasBitangents(bool val) { m_hasBitangents = val; }
-    
-    bool hasPositions() const { return m_hasPositions; }
-    bool hasNormals() const { return m_hasNormals; }
-    bool hasTexCoords() const { return m_hasTexCoords; }
-    bool hasTangents() const { return m_hasTangents; }
-    bool hasBitangents() const { return m_hasBitangents; }
-    
-    MeshFormat& getMeshFormat() { return m_format; }
+    int getNumberOfTriangles() const;
+    unsigned int getNumberOfVertices() const;
+    unsigned int getNumberOfGroups() const;
 
-    void addVertex(Vertex vertex) { m_vertices.push_back(vertex); }
-    void clearVertices() { m_vertices.clear(); }
+    void hasPositions(bool val);
+    void hasNormals(bool val);
+    void hasTexCoords(bool val);
+    void hasTangents(bool val);
+    void hasBitangents(bool val);
+    
+    bool hasPositions() const;
+    bool hasNormals() const;
+    bool hasTexCoords() const;
+    bool hasTangents() const;
+    bool hasBitangents() const;
 
-    void addIndex(unsigned int index) { m_indices.push_back(index); }
-    void clearIndices() { m_indices.clear(); }
+    MeshFormat& getMeshFormat();
 
-    void addGroup(Group group) { m_groups.push_back(group); }
-    void setNumTriangles(int numTriangles) { m_numTriangles = numTriangles; }
+    void addVertex(Vertex vertex);
+    void clearVertices();
+
+    void addIndex(unsigned int index);
+    void clearIndices();
+
+    void addGroup(Group group);
+    void setNumTriangles(int numTriangles);
     
     
     void addAttribute(const char* name, int attrSize, const char* attrType);
@@ -113,7 +113,7 @@ public:
     
     void calculateBounds();
     
-    void setMeshPath(const char* path) { m_meshPath = path; }
+    void setMeshPath(const char* path);
 private:
 
     void bounds(float center[3], float &width, float &height,
@@ -200,5 +200,32 @@ inline Group& Mesh::getGroup(unsigned int index)
 
 inline unsigned int* Mesh::getTriangle(unsigned int index)
 { return &m_indices[index * 3]; }
+
+inline int Mesh::getNumberOfTriangles() const
+{ return m_numTriangles; }
+
+inline unsigned int Mesh::getNumberOfVertices() const
+{ return m_vertices.size(); }
+
+inline unsigned int Mesh::getNumberOfGroups() const
+{ return m_groups.size(); }
+
+inline bool Mesh::hasPositions() const
+{ return m_hasPositions; }
+
+inline bool Mesh::hasNormals() const
+{ return m_hasNormals; }
+
+inline bool Mesh::hasTexCoords() const
+{ return m_hasTexCoords; }
+
+inline bool Mesh::hasTangents() const
+{ return m_hasTangents; }
+
+inline bool Mesh::hasBitangents() const
+{ return m_hasBitangents; }
+
+inline Mesh::MeshFormat& Mesh::getMeshFormat()
+{ return m_format; }
 
 #endif  // _MESH_H_

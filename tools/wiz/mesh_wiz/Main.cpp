@@ -101,8 +101,17 @@ int main (int argc, char* argv[])
     //---------------------------------------------------------------------------------------------------------
     TCLAP::SwitchArg optimizeVerticesArg("", "optimize-vertices", "Optimize vertices order for GPU cache", false);
     TCLAP::SwitchArg optimizeIndicesArg("", "optimize-indices", "Optimize indices order for GPU cache", false);
+
     TCLAP::SwitchArg stitchArg("", "stitch", "Remove duplicate vertices", false);
-    TCLAP::ValueArg<std::string> stitchEpsArg("", "stitch-eps", "Remove duplicate vertices. Comparing all attributes but one given attribute with a possible deviation epsilon", false, "", "attribute/epsilon");
+
+    std::vector<std::string> stitchAllowed;
+    stitchAllowed.push_back("position/epsilon");
+    stitchAllowed.push_back("normal/epsilon");
+    stitchAllowed.push_back("texture/epsilon");
+    stitchAllowed.push_back("tangent/epsilon");
+    stitchAllowed.push_back("bitangent/epsilon");
+    TCLAP::ValuesConstraint<std::string> stitchAllowedVals( stitchAllowed );
+    TCLAP::ValueArg<std::string> stitchEpsArg("", "stitch-eps", "Remove duplicate vertices. Comparing all attributes but one given attribute with a possible deviation epsilon", false, "", &stitchAllowedVals);
 
     //---------------------------------------------------------------------------------------------------------
     // Rename
@@ -238,7 +247,6 @@ int main (int argc, char* argv[])
     }
     
     //---------------------------------------------------------------------------------------------------------
-    
     if(normalsArg.isSet())
     {
         if(normalsArg.getValue().compare("generate")==0)
