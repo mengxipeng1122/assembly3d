@@ -38,6 +38,7 @@
 #include "ConvertTool.h"
 #include "TransformTool.h"
 #include "AttributeTool.h"
+#include "OptimizeTool.h"
 
 class Mesh;
 class ToolManager
@@ -59,7 +60,9 @@ public:
     void removeTangents();
     void generateBitangents();
     void removeBitangents();
-    
+    void stitch();
+    void stitchEps(const char* attributeName, float epsilon);
+
 protected:
 private:
     Mesh* m_mesh;
@@ -68,6 +71,7 @@ private:
     ConvertTool* m_convertTool;
     TransformTool* m_transformTool;
     AttributeTool* m_attributeTool;
+    OptimizeTool* m_optimizeTool;
     
 };
 

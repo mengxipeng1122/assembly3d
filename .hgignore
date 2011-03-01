@@ -49,10 +49,11 @@ Release/*
 
 # other stuff
 */build/*
-*/build_release/*
-*/build_debug/*
+*release/*
+*debug/*
 */codelite_workspace/*
 */external_libs/*
+*testdata/
 
 # switch to regexp syntax.
 #syntax: regexp

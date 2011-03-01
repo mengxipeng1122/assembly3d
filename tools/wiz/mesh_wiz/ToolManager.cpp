@@ -40,16 +40,18 @@ m_mesh(mesh),
 m_verboseOutput(verbose),
 m_convertTool(new ConvertTool()),
 m_transformTool(new TransformTool()),
-m_attributeTool(new AttributeTool())
+m_attributeTool(new AttributeTool()),
+m_optimizeTool(new OptimizeTool())
 {
     
 }
 
 ToolManager::~ToolManager()
 {
-    SAFE_DELETE(m_convertTool);
-    SAFE_DELETE(m_transformTool);
-    SAFE_DELETE(m_attributeTool);
+    SAFE_DELETE(m_convertTool)
+    SAFE_DELETE(m_transformTool)
+    SAFE_DELETE(m_attributeTool)
+    SAFE_DELETE(m_optimizeTool)
 }
 bool ToolManager::convertIndexType(const char* type)
 {
@@ -57,12 +59,11 @@ bool ToolManager::convertIndexType(const char* type)
         std::cout << "Converting index type to 'unsigned " << type << "'" << std::endl;
     
     bool result = false;
-    ConvertTool convertTool;
-    
+
     std::string stype = type;
     if(stype.compare("int") == 0)
     {
-        convertTool.convertIndicesToUnsignedInt(m_mesh);
+        m_convertTool->convertIndicesToUnsignedInt(m_mesh);
         result = true;
     }    
     else if(stype.compare("short") == 0)
@@ -74,7 +75,7 @@ bool ToolManager::convertIndexType(const char* type)
         }
         else
         {
-            convertTool.convertIndicesToUnsignedShort(m_mesh);    
+            m_convertTool->convertIndicesToUnsignedShort(m_mesh);
             result = true;
         }
         
@@ -88,7 +89,7 @@ bool ToolManager::convertIndexType(const char* type)
         }
         else
         {
-            convertTool.convertIndicesToUnsignedByte(m_mesh);    
+            m_convertTool->convertIndicesToUnsignedByte(m_mesh);
             result = true;
         }
     }
@@ -190,4 +191,48 @@ void ToolManager::center(int axisX, int axisY, int axisZ)
         std::cout << "Centering mesh" << std::endl;
 
     m_transformTool->center(m_mesh, axisX, axisY, axisZ);
+}
+
+void ToolManager::stitch()
+{
+    if(m_verboseOutput)
+        std::cout << "Stitching vertices" << std::endl;
+
+    m_optimizeTool->stitch(m_mesh);
+}
+
+void ToolManager::stitchEps(const char* attributeName, float epsilon)
+{
+    if(m_verboseOutput)
+        std::cout << "Stitching vertices. Comparing " << attributeName << " with an epsilon of " << epsilon << std::endl;
+
+    OptimizeTool::Attribute attrib;
+
+    if(std::string(attributeName).compare("postion") == 0)
+    {
+        attrib = OptimizeTool::POSITION;
+    }
+    else if(std::string(attributeName).compare("normal") == 0)
+    {
+        attrib = OptimizeTool::NORMAL;
+    }
+    else if(std::string(attributeName).compare("texture") == 0)
+    {
+        attrib = OptimizeTool::TEXCOORD;
+    }
+    else if(std::string(attributeName).compare("tangent") == 0)
+    {
+        attrib = OptimizeTool::TANGENT;
+    }
+    else if(std::string(attributeName).compare("bitangent") == 0)
+    {
+        attrib = OptimizeTool::BITANGENT;
+    }
+    else
+    {
+        std::cout << "No suitable attribute given, stiching without epsilon" << std::endl;
+        m_optimizeTool->stitch(m_mesh);
+    }
+    m_optimizeTool->stitch(m_mesh, attrib, epsilon);
+
 }
