@@ -1,0 +1,23 @@
+{ 
+	"vertices": 
+	{ 
+		"count": 120, 
+		"attributes": 
+		[ 
+			{ "name": "POSITION", "size": 3, "type": "FLOAT" }, 
+			{ "name": "NORMAL", "size": 3, "type": "FLOAT" }
+		]
+	}, 
+	"triangles": 
+	{ 
+		"type": "UNSIGNED_BYTE", 
+		"groups": 
+		[
+			{ "name": "red", "count": 20 }, 
+			{ "name": "yellow", "count": 20 }, 
+			{ "name": "green", "count": 20 }, 
+			{ "name": "blue", "count": 20 }, 
+			{ "name": "gray", "count": 140 }
+		]
+	}
+}
