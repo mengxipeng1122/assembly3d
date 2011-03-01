@@ -43,9 +43,9 @@ private:
 	MeshIO();
 	~MeshIO();
 public:
-    static bool load(Mesh* mesh, const std::string& file, const std::string& binaryFile);
-    static void generateDebug(Mesh* mesh, const std::string& outFilePath);
-    static void generateBinary(Mesh* mesh, const std::string& outFilePath, const std::string& binaryFilePath);
+    static bool load(Mesh* mesh, const char* file, const char* binaryFile);
+    static void saveDebug(Mesh* mesh, const char* outFilePath);
+    static void saveBinary(Mesh* mesh, const char* outFilePath, const char* binaryFilePath);
     
 private:
 	

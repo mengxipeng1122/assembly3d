@@ -67,7 +67,7 @@ int main (int argc, char* argv[])
     TCLAP::ValueArg<std::string> scaleArg("s", "scale", "Scale the mesh by this scale vector or scale by one scale factor s", false, "", "x/y/z|s");
     TCLAP::ValueArg<std::string> resizeArg("", "resize", "Scale the mesh so, that its size is x/y/z or give axis and new value r", false, "", "x/y/z|axis/r");
     TCLAP::ValueArg<std::string> centerArg("", "center", "Center mesh to given axis (i.e. 1/1/1 to put center to 0/0/0)", false, "", "1/1/1");
-    TCLAP::SwitchArg center2Arg("", "center-all", "Center mesh to all axis", false);
+    TCLAP::SwitchArg centerAllArg("", "center-all", "Center mesh to all axis", false);
     
     //---------------------------------------------------------------------------------------------------------
     // Conversion
@@ -101,7 +101,9 @@ int main (int argc, char* argv[])
     //---------------------------------------------------------------------------------------------------------
     TCLAP::SwitchArg optimizeVerticesArg("", "optimize-vertices", "Optimize vertices order for GPU cache", false);
     TCLAP::SwitchArg optimizeIndicesArg("", "optimize-indices", "Optimize indices order for GPU cache", false);
-        
+    TCLAP::SwitchArg stitchArg("", "stitch", "Remove duplicate vertices", false);
+    TCLAP::ValueArg<std::string> stitchEpsArg("", "stitch-eps", "Remove duplicate vertices. Comparing all attributes but one given attribute with a possible deviation epsilon", false, "", "attribute/epsilon");
+
     //---------------------------------------------------------------------------------------------------------
     // Rename
     //---------------------------------------------------------------------------------------------------------
@@ -138,12 +140,14 @@ int main (int argc, char* argv[])
 //    cmd.add(validateAndChangeArg);
 //    cmd.add(optimizeIndicesArg);
 //    cmd.add(optimizeVerticesArg);
+    cmd.add(stitchEpsArg);
+    cmd.add(stitchArg);
     cmd.add(bitangentsArg);
     cmd.add(tangentsArg);
     cmd.add(normalsArg);
     cmd.add(convertIndexTypeToArg);
     cmd.add(convertToArg);
-    cmd.add(center2Arg);
+    cmd.add(centerAllArg);
     cmd.add(centerArg);
     cmd.add(resizeArg);
     cmd.add(scaleArg);
@@ -205,7 +209,7 @@ int main (int argc, char* argv[])
 
     //---------------------------------------------------------------------------------------------------------
     Mesh mesh;
-    if(!MeshIO::load(&mesh, inputfile, binaryInFileName))
+    if(!MeshIO::load(&mesh, inputfile.c_str(), binaryInFileName.c_str()))
     {
         std::cerr << "Error: Loading '" << inputfile << "', failed!" << std::endl;
         return 0;
@@ -377,7 +381,40 @@ int main (int argc, char* argv[])
     }
     
     //---------------------------------------------------------------------------------------------------------
+
+    if(stitchArg.isSet())
+    {
+        toolMgr.stitch();
+        modelChanged = true;
+    }
+    if(stitchEpsArg.isSet())
+    {
+        std::string args = stitchEpsArg.getValue();
+        float eps = 0.0f;
+        std::vector<float> values;
+
+        int numSlashes = WizUtils::StringUtils::findOccurensesOf(args, "/");
+        if(numSlashes == 1)
+        {
+            std::string cmdStr = args;
+            int pos = cmdStr.find("/");
+            std::string attributeName = cmdStr.substr(0, pos);
+            cmdStr = cmdStr.erase(0, pos+1);
+
+            WizUtils::StringUtils::getValuesFromCmdString(cmdStr, values);
+            if(values.size() == 1)
+            {
+                eps = values[0];
+                toolMgr.stitchEps(attributeName.c_str(), eps);
+                modelChanged = true;
+
+            }
+        }
+
+    }
     
+    //---------------------------------------------------------------------------------------------------------
+
     if(centerArg.isSet())
     {
         std::string args = centerArg.getValue();
@@ -398,7 +435,7 @@ int main (int argc, char* argv[])
         
         
     }
-    else if(center2Arg.isSet())
+    else if(centerAllArg.isSet())
     {
         toolMgr.center(1, 1, 1);
         modelChanged = true;
@@ -418,26 +455,24 @@ int main (int argc, char* argv[])
             {
                 if(verboseArg.getValue())
                     std::cout << "Converting mesh to debug format." << std::endl;
-                MeshIO::generateDebug(&mesh, outputdir.c_str());
-                
+                MeshIO::saveDebug(&mesh, outputdir.c_str());
             }
             else if(convertToArg.getValue().compare("binary") == 0)
             {
                 if(verboseArg.getValue())
                     std::cout << "Converting mesh to binary format." << std::endl;
-                MeshIO::generateBinary(&mesh, outputdir.c_str(), binaryOutFileName.c_str());
-                
+                MeshIO::saveBinary(&mesh, outputdir.c_str(), binaryOutFileName.c_str());
             }
         }
         else
         {
             if(mesh.getMeshFormat().isBinary)
             {
-                MeshIO::generateBinary(&mesh, outputdir.c_str(), binaryOutFileName.c_str());
+                MeshIO::saveBinary(&mesh, outputdir.c_str(), binaryOutFileName.c_str());
             }
             else
             {
-                MeshIO::generateDebug(&mesh, outputdir.c_str());
+                MeshIO::saveDebug(&mesh, outputdir.c_str());
             }
         }
         std::cout << "Done!" << std::endl;
