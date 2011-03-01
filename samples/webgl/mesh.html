@@ -12,6 +12,11 @@ var gl, program;
 var meshes = [], textures = {};
 var images = 
 {
+	"red": "../logo/red.png",
+	"green": "../logo/green.png",	
+	"blue": "../logo/blue.png",		
+	"yellow": "../logo/yellow.png",
+	"gray": "../logo/gray.png",
 	"NEGATIVE_X": "../cube/left.jpg", 
 	"POSITIVE_X": "../cube/right.jpg",
 	"NEGATIVE_Y": "../cube/bottom.jpg", 
@@ -57,11 +62,7 @@ function initGL(canvas)
 
 	program.attributes = getProgramAttributes(gl, program);
 	program.uniforms = getProgramUniforms(gl, program);
-	
-	gl.enableVertexAttribArray(program.attributes.Position);
-  gl.enableVertexAttribArray(program.attributes.Normal);
-  gl.enableVertexAttribArray(program.attributes.TexCoord);  
-  
+	  
   var models = document.getElementById("model").options;
   
   for(var i=0; i<models.length; i++)
@@ -76,10 +77,10 @@ function loadMesh(meta, binary, index)
 	var mesh = JSON.parse(loadText(meta));
 	loadBinaryAsync(binary, function(data) 
 	{ 
-		loadMeshBuffers(mesh, data);
-		loadMeshTextures(mesh, textures);
+		loadMeshBuffers(mesh, data);		
 		meshes[index] = mesh;
 	});
+	loadMeshTextures(mesh, textures);
 }
 
 //---------------------------------
@@ -268,13 +269,19 @@ function drawScene()
 	{
 		var model = document.getElementById("model");
 		var index = model.selectedIndex;
-		if(index < meshes.length) mesh = meshes[index];
+		if(index >= 0 && index < meshes.length) 
+		{
+			mesh = meshes[index];
+		}
 	}
 	
   gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  if(!mesh) return; // finished loading?
+  if(!mesh) 
+  {
+	  return; // not finished loading
+  }
 
 	gl.useProgram(program);
 
@@ -287,15 +294,40 @@ function drawScene()
 	gl.uniform1i(program.uniforms.sampler, 0);
       
 	// Attributes & Buffers
+	
 	{
-  	gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertices.attributes[0].buffer);
-	  gl.vertexAttribPointer(program.attributes.Position, mesh.vertices.attributes[0].size, gl.FLOAT, false, 0, 0);
+		if(mesh.vertices.attributes.length > 0)
+		{
+			gl.enableVertexAttribArray(program.attributes.Position);
+  		gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertices.attributes[0].buffer);
+	  	gl.vertexAttribPointer(program.attributes.Position, mesh.vertices.attributes[0].size, gl.FLOAT, false, 0, 0);
+  	}
+  	else
+  	{
+			  gl.disableVertexAttribArray(program.attributes.Position);			  	
+  	}
 
-  	gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertices.attributes[1].buffer);
-  	gl.vertexAttribPointer(program.attributes.Normal, mesh.vertices.attributes[1].size, gl.FLOAT, false, 0, 0);
+		if(mesh.vertices.attributes.length > 1)
+		{
+		  gl.enableVertexAttribArray(program.attributes.Normal);
+	  	gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertices.attributes[1].buffer);
+	  	gl.vertexAttribPointer(program.attributes.Normal, mesh.vertices.attributes[1].size, gl.FLOAT, false, 0, 0);
+  	}
+  	else
+  	{
+			  gl.disableVertexAttribArray(program.attributes.Normal);			  	
+  	}
 
-		gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertices.attributes[2].buffer);
-		gl.vertexAttribPointer(program.attributes.TexCoord, mesh.vertices.attributes[2].size, gl.FLOAT, false, 0, 0);
+		if(mesh.vertices.attributes.length > 2)
+		{		
+		  gl.enableVertexAttribArray(program.attributes.TexCoord);			
+			gl.bindBuffer(gl.ARRAY_BUFFER, mesh.vertices.attributes[2].buffer);
+			gl.vertexAttribPointer(program.attributes.TexCoord, mesh.vertices.attributes[2].size, gl.FLOAT, false, 0, 0);
+		}
+		else
+		{
+			  gl.disableVertexAttribArray(program.attributes.TexCoord);			
+		}
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
@@ -306,13 +338,17 @@ function drawScene()
 	{
 		// Textures
 		var tex = textures[images[mesh.triangles.groups[i].name]];
-		//gl.activeTexture(gl.TEXTURE0);
   	gl.bindTexture(gl.TEXTURE_2D, tex);
 
 		// Primitives	
 		var count = 3*mesh.triangles.groups[i].count;
 		gl.drawElements(gl.TRIANGLES, count, gl[mesh.triangles.type], mesh.triangles.groups[i].offset);
 	}
+	
+	gl.bindTexture(gl.TEXTURE_2D, null);	
+	gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+	
+	gl.useProgram(null);
 }
 
 function tick() 
@@ -371,9 +407,9 @@ function start()
     <canvas id="mesh-viewer-canvas" style="border: none;" width="900" height="400"></canvas>
 		<h1>Mesh Viewer</h1>
 		<b>Select model:</b>&nbsp;&nbsp;<select id="model" onChange="modelChangedHandler(this)" style="min-width: 100px;">
-	 	  <!--<option value="../mesh/Assembly3D.mesh">Assembly3D</option>-->
-		  <option value="../cube/Cube.mesh">Cube</option>
+	 	  <option value="../logo/Assembly3D.mesh">Logo</option>
 	 	  <option value="../infinite/Infinite.mesh">Infinite</option>
+		  <option value="../cube/Cube.mesh">Cube</option>
 		</select>&nbsp;&nbsp;&nbsp;&nbsp;    
     <b>Controls:</b>&nbsp;&nbsp;Use cursor keys to spin the object and <code>PageUp</code> / <code>PageDown</code> to zoom out/in.<br>
     <br>

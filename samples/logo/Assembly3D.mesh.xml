@@ -1,0 +1,13 @@
+<Mesh>
+	<Vertices count="120" attributes="2">
+		<Attribute name="POSITION" size="3" type="FLOAT" />
+		<Attribute name="NORMAL" size="3" type="FLOAT" />
+	</Vertices>
+	<Triangles type="UNSIGNED_BYTE" groups="5" >
+		<Group name="red" count="20" />
+		<Group name="yellow" count="20" />
+		<Group name="green" count="20" />
+		<Group name="blue" count="20" />
+		<Group name="gray" count="140" />
+	</Triangles>
+</Mesh>
