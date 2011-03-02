@@ -50,24 +50,75 @@ int main (int argc, char* argv[])
 
     try {  
 	
-    TCLAP::CmdLine cmd("MeshWiz - Utility for manipulating Assembly3D mesh files.", '=', ProjectInfo::versionString);
+    TCLAP::CmdLine cmd("MeshWiz - Utility for manipulating Assembly3D mesh files.",
+                       '=',
+                       ProjectInfo::versionString);
 
     //---------------------------------------------------------------------------------------------------------
     // Input / Output
     //---------------------------------------------------------------------------------------------------------
-	TCLAP::UnlabeledValueArg<std::string> inputArg("source-file","File to manipulate",true,"","source-file");
-    TCLAP::ValueArg<std::string> outputArg("o", "output-folder", "Output folder", false, "processed", "output-folder");
-    TCLAP::ValueArg<std::string> binaryOutputArg("b", "binary-file", "Name of binary file", false, "", "binary-file");
+    TCLAP::UnlabeledValueArg<std::string> inputArg("source-file",
+                                                   "File to manipulate",
+                                                   true,
+                                                   "",
+                                                   "source-file");
+
+    TCLAP::ValueArg<std::string> outputArg("o",
+                                           "output-folder",
+                                           "Output folder",
+                                           false,
+                                           "processed",
+                                           "output-folder");
+
+    TCLAP::ValueArg<std::string> binaryOutputArg("b",
+                                                 "binary-file",
+                                                 "Name of binary file",
+                                                 false,
+                                                 "",
+                                                 "binary-file");
     
     //---------------------------------------------------------------------------------------------------------
     // Transform
     //---------------------------------------------------------------------------------------------------------
-    TCLAP::ValueArg<std::string> translateArg("t", "translate", "Translate the mesh by this vector", false, "", "x/y/z");
-    TCLAP::ValueArg<std::string> rotateArg("r", "rotate", "Rotate the mesh <angle> degrees on the axis x/y/z", false, "", "angle/x/y/z");
-    TCLAP::ValueArg<std::string> scaleArg("s", "scale", "Scale the mesh by this scale vector or scale by one scale factor s", false, "", "x/y/z|s");
-    TCLAP::ValueArg<std::string> resizeArg("", "resize", "Scale the mesh so, that its size is x/y/z or give axis and new value r", false, "", "x/y/z|axis/r");
-    TCLAP::ValueArg<std::string> centerArg("", "center", "Center mesh to given axis (i.e. 1/1/1 to put center to 0/0/0)", false, "", "1/1/1");
-    TCLAP::SwitchArg centerAllArg("", "center-all", "Center mesh to all axis", false);
+    TCLAP::ValueArg<std::string> translateArg("t",
+                                              "translate",
+                                              "Translate the mesh by this vector",
+                                              false,
+                                              "",
+                                              "x/y/z");
+
+    TCLAP::ValueArg<std::string> rotateArg("r",
+                                           "rotate",
+                                           "Rotate the mesh <angle> degrees on the axis x/y/z",
+                                           false,
+                                           "",
+                                           "angle/x/y/z");
+
+    TCLAP::ValueArg<std::string> scaleArg("s",
+                                          "scale",
+                                          "Scale the mesh by this scale vector or scale by one scale factor s",
+                                          false,
+                                          "",
+                                          "x/y/z|s");
+
+    TCLAP::ValueArg<std::string> resizeArg("",
+                                           "resize",
+                                           "Scale the mesh so, that its size is x/y/z or give axis and new value r",
+                                           false,
+                                           "",
+                                           "x/y/z|axis/r");
+
+    TCLAP::ValueArg<std::string> centerArg("",
+                                           "center",
+                                           "Center mesh to given axis (i.e. 1/1/1 to put center to 0/0/0)",
+                                           false,
+                                           "",
+                                           "1/1/1");
+
+    TCLAP::SwitchArg centerAllArg("",
+                                  "center-all",
+                                  "Center mesh to all axis",
+                                  false);
     
     //---------------------------------------------------------------------------------------------------------
     // Conversion
@@ -76,14 +127,24 @@ int main (int argc, char* argv[])
     conversionAllowed.push_back("binary");
     conversionAllowed.push_back("debug");
     TCLAP::ValuesConstraint<std::string> conversionAllowedVals( conversionAllowed );
-    TCLAP::ValueArg<std::string> convertToArg("", "convert-to", "Convert mesh betweeen binary and debug version", false, "binary", &conversionAllowedVals);
+    TCLAP::ValueArg<std::string> convertToArg("",
+                                              "convert-to",
+                                              "Convert mesh betweeen binary and debug version",
+                                              false,
+                                              "binary",
+                                              &conversionAllowedVals);
     
     std::vector<std::string> conversionIndexTypeToAllowed;
     conversionIndexTypeToAllowed.push_back("int");
     conversionIndexTypeToAllowed.push_back("short");
     conversionIndexTypeToAllowed.push_back("byte");
     TCLAP::ValuesConstraint<std::string> conversionIndexTypeToAllowedVals( conversionIndexTypeToAllowed );
-    TCLAP::ValueArg<std::string> convertIndexTypeToArg("", "convert-index-type-to", "Convert index type between UNSIGNED_INT , UNSIGNED_SHORT and UNSIGNED_BYTE", false, "", &conversionIndexTypeToAllowedVals);
+    TCLAP::ValueArg<std::string> convertIndexTypeToArg("",
+                                                       "convert-index-type-to",
+                                                       "Convert index type between UNSIGNED_INT , UNSIGNED_SHORT and UNSIGNED_BYTE",
+                                                       false,
+                                                       "",
+                                                       &conversionIndexTypeToAllowedVals);
 
     //---------------------------------------------------------------------------------------------------------
     // Normals / Tangents
@@ -92,17 +153,44 @@ int main (int argc, char* argv[])
     normalsTangentsAllowed.push_back("generate");
     normalsTangentsAllowed.push_back("remove");
     TCLAP::ValuesConstraint<std::string> normalsTangentsAllowedVals( normalsTangentsAllowed );
-    TCLAP::ValueArg<std::string> normalsArg("","normals","Generate or remove mesh normals", false, "", &normalsTangentsAllowedVals);
-    TCLAP::ValueArg<std::string> tangentsArg("","tangents","Generate or remove mesh tangents", false, "", &normalsTangentsAllowedVals);
-    TCLAP::ValueArg<std::string> bitangentsArg("","bitangents","Generate or remove mesh bitangents", false, "", &normalsTangentsAllowedVals);
+    TCLAP::ValueArg<std::string> normalsArg("",
+                                            "normals",
+                                            "Generate or remove mesh normals",
+                                            false,
+                                            "",
+                                            &normalsTangentsAllowedVals);
+
+    TCLAP::ValueArg<std::string> tangentsArg("",
+                                             "tangents",
+                                             "Generate or remove mesh tangents",
+                                             false,
+                                             "",
+                                             &normalsTangentsAllowedVals);
+
+    TCLAP::ValueArg<std::string> bitangentsArg("",
+                                               "bitangents",
+                                               "Generate or remove mesh bitangents",
+                                               false,
+                                               "",
+                                               &normalsTangentsAllowedVals);
     
     //---------------------------------------------------------------------------------------------------------
     // Optimization
     //---------------------------------------------------------------------------------------------------------
-    TCLAP::SwitchArg optimizeVerticesArg("", "optimize-vertices", "Optimize vertices order for GPU cache", false);
-    TCLAP::SwitchArg optimizeIndicesArg("", "optimize-indices", "Optimize indices order for GPU cache", false);
+    TCLAP::SwitchArg optimizeVerticesArg("",
+                                         "optimize-vertices",
+                                         "Optimize vertices order for GPU cache",
+                                         false);
 
-    TCLAP::SwitchArg stitchArg("", "stitch", "Remove duplicate vertices", false);
+    TCLAP::SwitchArg optimizeIndicesArg("",
+                                        "optimize-indices",
+                                        "Optimize indices order for GPU cache",
+                                        false);
+
+    TCLAP::SwitchArg stitchArg("",
+                               "stitch",
+                               "Remove duplicate vertices",
+                               false);
 
     std::vector<std::string> stitchAllowed;
     stitchAllowed.push_back("position/epsilon");
@@ -111,12 +199,22 @@ int main (int argc, char* argv[])
     stitchAllowed.push_back("tangent/epsilon");
     stitchAllowed.push_back("bitangent/epsilon");
     TCLAP::ValuesConstraint<std::string> stitchAllowedVals( stitchAllowed );
-    TCLAP::ValueArg<std::string> stitchEpsArg("", "stitch-eps", "Remove duplicate vertices. Comparing all attributes but one given attribute with a possible deviation epsilon", false, "", &stitchAllowedVals);
+    TCLAP::ValueArg<std::string> stitchEpsArg("",
+                                              "stitch-eps",
+                                              "Remove duplicate vertices. Comparing all attributes but one given attribute with a possible deviation epsilon",
+                                              false,
+                                              "",
+                                              &stitchAllowedVals);
 
     //---------------------------------------------------------------------------------------------------------
     // Rename
     //---------------------------------------------------------------------------------------------------------
-    TCLAP::ValueArg<std::string> renameIdsArg("", "rename-ids", "Rename group ids", false, "", "new-name");
+    TCLAP::ValueArg<std::string> renameIdsArg("",
+                                              "rename-ids",
+                                              "Rename group ids",
+                                              false,
+                                              "",
+                                              "new-name");
     
     //---------------------------------------------------------------------------------------------------------
     // Other mesh related stuff
@@ -125,10 +223,22 @@ int main (int argc, char* argv[])
     flipAllowed.push_back("cw");
     flipAllowed.push_back("ccw");
     TCLAP::ValuesConstraint<std::string> flipAllowedVals( flipAllowed );
-    TCLAP::ValueArg<std::string> flipArg("", "flip", "Flip front-face clockwise or counterclockwise", false, "", &flipAllowedVals);
+    TCLAP::ValueArg<std::string> flipArg("",
+                                         "flip",
+                                         "Flip front-face clockwise or counterclockwise",
+                                         false,
+                                         "",
+                                         &flipAllowedVals);
     
-    TCLAP::SwitchArg checkWithNormalsArg("", "check-with-normals", "Check with normals (if present)", false);
-    TCLAP::SwitchArg validateAndChangeArg("", "validate-and-change", "Validate and change mesh", false);
+    TCLAP::SwitchArg checkWithNormalsArg("",
+                                         "check-with-normals",
+                                         "Check with normals (if present)",
+                                         false);
+
+    TCLAP::SwitchArg validateAndChangeArg("",
+                                          "validate-and-change",
+                                          "Validate and change mesh",
+                                          false);
 
     //---------------------------------------------------------------------------------------------------------
     // Other
@@ -240,7 +350,8 @@ int main (int argc, char* argv[])
     {
         if(!toolMgr.convertIndexType(convertIndexTypeToArg.getValue().c_str()))
         {
-            std::cerr << "Error: To many vertices. It is not possible to have indices of the type '" << convertIndexTypeToArg.getValue() << "'" << std::endl;
+            std::cerr << "Error: To many vertices. It is not possible to have indices of the type '";
+            std::cerr << convertIndexTypeToArg.getValue() << "'" << std::endl;
             return 0;
         }
         modelChanged = true;
