@@ -34,6 +34,8 @@
 #include "TransformTool.h"
 #include <cmath>
 
+#define PIf		3.1415926535897932384626433832795f
+
 TransformTool::TransformTool()
 {
     
@@ -69,11 +71,24 @@ void TransformTool::translate(Mesh* m, float tx, float ty, float tz)
 
 void TransformTool::rotate(Mesh* m, float rangle, float rx, float ry, float rz)
 {
-	// rx ... vector normalisieren
+    // normalize rotation axis
+    float length = sqrtf(rx*rx+ry*ry+rz*rz);
+    if(length == 0.0f)
+        length = 0.0f;
+    else
+        length = 1.0f / length;
 
-    float rMatrix[3][4] = {{cos(rangle)+(rx*rx)*(1-cos(rangle)), (rx*ry)*(1-cos(rangle))-rz*sin(rangle), (rx*rz)*(1-cos(rangle))+ry*sin(rangle), 0.0f},
-                           {(rx*ry)*(1-cos(rangle))+rz*sin(rangle), cos(rangle)+(ry*ry)*(1-cos(rangle)), (ry*rz)*(1-cos(rangle))-rx*sin(rangle), 0.0f},
-                           {(rz*rx)*(1-cos(rangle))-ry*sin(rangle), (rz*ry)*(1-cos(rangle))+rx*sin(rangle), cos(rangle)+(rx*rx)*(1-cos(rangle)), 0.0f}};
+    rx *= length;
+    ry *= length;
+    rz *= length;
+
+    float s = sinf(2.0f*PIf*rangle/360.0f);
+    float c = cosf(2.0f*PIf*rangle/360.0f);
+    float t = 1.0f - c;
+
+    float rMatrix[3][4] = {{rx*rx*t + c,      rx*ry*t - rz*s,   rx*rz*t + ry*s,   0.0f},
+                           {ry*rx*t + rz*s,   ry*ry*t + c,      ry*rz*t - rx*s,   0.0f},
+                           {rz*rx*t - ry*s,   rz*ry*t + rx*s,   rz*rz*t + c,      0.0f}};
                            
     float riMatrix[3][3] = {{rMatrix[0][0], rMatrix[0][1], rMatrix[0][2]},
                             {rMatrix[1][0], rMatrix[1][1], rMatrix[1][2]},
