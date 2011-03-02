@@ -253,7 +253,7 @@ final class Mesh
         { 
             indexBytes = 1; indexType = "UNSIGNED_BYTE";
         }
-        else if(vertices < (1 << 8)) 
+        else if(vertices < (1 << 16)) 
         { 
             indexBytes = 1; indexType = "UNSIGNED_SHORT";
         }
