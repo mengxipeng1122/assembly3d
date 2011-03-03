@@ -536,14 +536,17 @@ void MeshIO::saveDebug(Mesh* mesh, const char* outFilePath)
             // -------------------------------------------------------------------------------------------
             // Attributes
             // -------------------------------------------------------------------------------------------
+            std::vector<int> attribIndices;
+            getAttributeIndices(mesh, attribIndices);
+
             for(int attrIndex = 0; attrIndex < mesh->getMeshFormat().attributeCount; ++attrIndex)
             {
                 // -------------------------------------------------------------------------------------------
                 // Element
                 // -------------------------------------------------------------------------------------------
                 xml.addTag("Attribute", false);
-                xml.addAttribute("Attribute", "name", mesh->getMeshFormat().attributeName[attrIndex].c_str(), attrIndex);
-                xml.addAttribute("Attribute", "size", mesh->getMeshFormat().attributeSize[attrIndex], attrIndex);
+                xml.addAttribute("Attribute", "name", mesh->getMeshFormat().attributeName[attribIndices[attrIndex]].c_str(), attrIndex);
+                xml.addAttribute("Attribute", "size", mesh->getMeshFormat().attributeSize[attribIndices[attrIndex]], attrIndex);
 //                xml.addAttribute("Attribute", "type", "FLOAT", attrIndex);
             }
         }
@@ -693,15 +696,18 @@ void MeshIO::saveBinary(Mesh* mesh, const char* outFilePath, const char* binaryF
             // -------------------------------------------------------------------------------------------
             // Attributes
             // -------------------------------------------------------------------------------------------
+            std::vector<int> attribIndices;
+            getAttributeIndices(mesh, attribIndices);
+
             for(int attrIndex = 0; attrIndex < mesh->getMeshFormat().attributeCount; ++attrIndex)
             {
                 // -------------------------------------------------------------------------------------------
                 // Element
                 // -------------------------------------------------------------------------------------------
                 xml.addTag("Attribute", false);
-                xml.addAttribute("Attribute", "name", mesh->getMeshFormat().attributeName[attrIndex].c_str(), attrIndex);
-                xml.addAttribute("Attribute", "size", mesh->getMeshFormat().attributeSize[attrIndex], attrIndex);
-                xml.addAttribute("Attribute", "type", mesh->getMeshFormat().attributeType[attrIndex].c_str(), attrIndex);
+                xml.addAttribute("Attribute", "name", mesh->getMeshFormat().attributeName[attribIndices[attrIndex]].c_str(), attrIndex);
+                xml.addAttribute("Attribute", "size", mesh->getMeshFormat().attributeSize[attribIndices[attrIndex]], attrIndex);
+                xml.addAttribute("Attribute", "type", mesh->getMeshFormat().attributeType[attribIndices[attrIndex]].c_str(), attrIndex);
             }
         }
         xml.popTag();
@@ -857,5 +863,20 @@ void MeshIO::saveBinary(Mesh* mesh, const char* outFilePath, const char* binaryF
     
     fout.flush();
     fout.close();
+
+}
+
+void MeshIO::getAttributeIndices(Mesh* mesh, std::vector<int>& indices)
+{
+    if(mesh->getAttributeIndexWithName("POSITION")!= -1)
+        indices.push_back(mesh->getAttributeIndexWithName("POSITION"));
+    if(mesh->getAttributeIndexWithName("NORMAL")!= -1)
+        indices.push_back(mesh->getAttributeIndexWithName("NORMAL"));
+    if(mesh->getAttributeIndexWithName("TEXTURE")!= -1)
+        indices.push_back(mesh->getAttributeIndexWithName("TEXTURE"));
+    if(mesh->getAttributeIndexWithName("TANGENT")!= -1)
+        indices.push_back(mesh->getAttributeIndexWithName("TANGENT"));
+    if(mesh->getAttributeIndexWithName("BITANGENT")!= -1)
+        indices.push_back(mesh->getAttributeIndexWithName("BITANGENT"));
 
 }
