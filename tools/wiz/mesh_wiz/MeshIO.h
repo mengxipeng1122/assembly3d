@@ -48,6 +48,7 @@ public:
     static void saveBinary(Mesh* mesh, const char* outFilePath, const char* binaryFilePath);
     
 private:
+    static void getAttributeIndices(Mesh* mesh, std::vector<int>& indices);
 	
 };
 
