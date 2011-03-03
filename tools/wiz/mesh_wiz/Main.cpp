@@ -480,10 +480,10 @@ int main (int argc, char* argv[])
                 x = values[0];
                 y = values[1];
                 z = values[2];
-                toolMgr.scale(x, y, z);
+//                toolMgr.scale(x, y, z);
+                toolMgr.resize(x, y, z);
+                modelChanged = true;
             }
-            toolMgr.resize(x, y, z);
-            modelChanged = true;
         }
         else if(numSlashes == 1)
         {
@@ -496,9 +496,9 @@ int main (int argc, char* argv[])
             if(values.size() == 1)
             {
                 x = values[0];
+                toolMgr.resize(axis.c_str(), x);
+                modelChanged = true;
             }
-            toolMgr.resize(axis.c_str(), x);
-            modelChanged = true;
         }
 		
         
