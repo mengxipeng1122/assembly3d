@@ -138,17 +138,20 @@ void TransformTool::resize(Mesh* m, const char axis, float val)
     if(axis == 'x')
     {
         rsx = val/m->getWidth();
-        rsy = rsz = rsx;
+        rsy = rsx;
+        rsz = rsx;
     }
     else if(axis == 'y')
     {
         rsy = val/m->getHeight();
-        rsx = rsz = rsy;
+        rsx = rsy;
+        rsz = rsy;
     }
     else if(axis == 'z')
     {
         rsz = val/m->getLength();
-        rsx = rsy = rsz;
+        rsx = rsz;
+        rsy = rsz;
     }
     
     scale(m, rsx, rsy, rsz);
