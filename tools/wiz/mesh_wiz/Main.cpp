@@ -333,7 +333,12 @@ int main (int argc, char* argv[])
         std::cerr << "Error: Loading '" << inputfile << "', failed!" << std::endl;
         return 0;
     }
-    
+    if(!WizUtils::FileUtils::checkIfFileExists(binaryInFileName.c_str()) && mesh.getMeshFormat().isBinary)
+    {
+        std::cerr << "Error: Binary file not found! " << std::endl;
+        return 0;
+    }
+
 	verbose = verboseArg.getValue();
     ToolManager toolMgr(&mesh, verbose);
     
