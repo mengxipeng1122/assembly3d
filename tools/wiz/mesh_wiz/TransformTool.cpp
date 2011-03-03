@@ -133,7 +133,8 @@ void TransformTool::resize(Mesh* m, float width, float height, float length)
 }
 
 void TransformTool::resize(Mesh* m, const char axis, float val)
-{   float rsx, rsy, rsz;
+{
+    float rsx, rsy, rsz;
     rsx = rsy = rsz = 0.0f;
     if(axis == 'x')
     {

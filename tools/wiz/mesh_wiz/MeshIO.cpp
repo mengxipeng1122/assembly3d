@@ -47,7 +47,6 @@ MeshIO::~MeshIO()
 
 bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
 {
-    bool loadBinaryFile = true;
     int numVertices = 0;
 //    int numAttributes = 0;
     int numGroups = 0;
@@ -116,387 +115,212 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
         }
         xml.popTag();
         
-        loadBinaryFile = !(xml.tagExists("Data"));
+//        loadBinaryFile = !(xml.tagExists("Data"));
         
-        if(loadBinaryFile)
+        // -------------------------------------------------
+        // Load binary file
+        // -------------------------------------------------
+        format.isBinary = true;
+
+        std::ifstream fin(binaryFile, std::ios::binary);
+
+        fin.seekg(0);
+
+        std::vector<float> verts;
+        std::vector<float> texCoords;
+        std::vector<float> normals;
+        std::vector<float> tangents;
+        std::vector<float> bitangents;
+
+        bool loadTexture = false;
+        bool loadNormal = false;
+        bool loadTangent = false;
+        bool loadBitangent = false;
+
+        int index = 0;
+        int startLoop = 0;
+        int endLoop = 0;
+        int idx = -1;
+        int aSize = format.attributeCount;
+        idx = mesh->getAttributeIndexWithName("POSITION");
+
+        if(idx > -1 && idx < aSize)
         {
-            format.isBinary = true;
-            
-            std::ifstream fin(binaryFile, std::ios::binary);
-            
-            fin.seekg(0);
-            
-            std::vector<float> verts;
-            std::vector<float> texCoords;
-            std::vector<float> normals;
-            std::vector<float> tangents;
-            std::vector<float> bitangents;
-            
-            bool loadTexture = false;
-            bool loadNormal = false;
-            bool loadTangent = false;
-            bool loadBitangent = false;
-            
-            int index = 0;
-            int startLoop = 0;
-            int endLoop = 0;
-            int idx = -1;
-            int aSize = format.attributeCount;
-            idx = mesh->getAttributeIndexWithName("POSITION");
-            
-            if(idx > -1 && idx < aSize)
-            {
-                startLoop = numVertices*idx;
-                endLoop = numVertices *(idx+1);
-                
-                for(int i = startLoop; i < endLoop; ++i)
-                {
-                    float px = 0.0f;
-                    float py = 0.0f;
-                    float pz = 0.0f;
-                    
-                    fin.read((char *)(&px), sizeof(px));
-                    fin.read((char *)(&py), sizeof(py));
-                    fin.read((char *)(&pz), sizeof(pz));             
+            startLoop = numVertices*idx;
+            endLoop = numVertices *(idx+1);
 
-                    verts.push_back(px);
-                    verts.push_back(py);
-                    verts.push_back(pz);
-                }
-            
-            }
-            idx = mesh->getAttributeIndexWithName("NORMAL");
-            if(idx > -1 && idx < aSize)
+            for(int i = startLoop; i < endLoop; ++i)
             {
-                loadNormal = true;
-                index = 0;
-                startLoop = numVertices*idx;
-                endLoop = numVertices*(idx+1);
-                for(int i = startLoop; i < endLoop; ++i)
-                {
-                    float nx = 0.0f;
-                    float ny = 0.0f;
-                    float nz = 0.0f;
+                float px = 0.0f;
+                float py = 0.0f;
+                float pz = 0.0f;
 
-                    fin.read((char *)(&nx), sizeof(nx));
-                    fin.read((char *)(&ny), sizeof(ny));
-                    fin.read((char *)(&nz), sizeof(nz));
-                    
-                    normals.push_back(nx);
-                    normals.push_back(ny);
-                    normals.push_back(nz);
-                }
-            }
-            idx = mesh->getAttributeIndexWithName("TEXTURE");
-            if(idx > -1 && idx < aSize)
-            {
-                loadTexture = true;
-                index = 0;
-                startLoop = numVertices*idx;
-                endLoop = numVertices*(idx+1);
-                for(int i = startLoop; i < endLoop; ++i)
-                {
-                    float tx = 0.0f;
-                    float ty = 0.0f;
-                    
-                    fin.read((char *)(&tx), sizeof(tx));
-                    fin.read((char *)(&ty), sizeof(ty));
-                    
-                    texCoords.push_back(tx);
-                    texCoords.push_back(ty);
-                }
-            }
-            idx = mesh->getAttributeIndexWithName("TANGENT");
-            if(idx > -1 && idx < aSize)
-            {
-                loadTangent = true;
-                index = 0;
-                startLoop = numVertices*idx;
-                endLoop = numVertices*(idx+1);
-                for(int i = startLoop; i < endLoop; ++i)
-                {
-                    float tanx = 0.0f;
-                    float tany = 0.0f;
-                    float tanz = 0.0f;
+                fin.read((char *)(&px), sizeof(px));
+                fin.read((char *)(&py), sizeof(py));
+                fin.read((char *)(&pz), sizeof(pz));
 
-                    fin.read((char *)(&tanx), sizeof(tanx));
-                    fin.read((char *)(&tany), sizeof(tany));
-                    fin.read((char *)(&tanz), sizeof(tanz));
-                    
-                    tangents.push_back(tanx);
-                    tangents.push_back(tany);
-                    tangents.push_back(tanz);
-                }
-            }
-            idx = mesh->getAttributeIndexWithName("BITANGENT");
-            if(idx > -1 && idx < aSize)
-            {
-                loadBitangent = true;
-                index = 0;
-                startLoop = numVertices*idx;
-                endLoop = numVertices*(idx+1);
-                for(int i = startLoop; i < endLoop; ++i)
-                {
-                    float btanx = 0.0f;
-                    float btany = 0.0f;
-                    float btanz = 0.0f;
-
-                    fin.read((char *)(&btanx), sizeof(btanx));
-                    fin.read((char *)(&btany), sizeof(btany));
-                    fin.read((char *)(&btanz), sizeof(btanz));
-                    
-                    bitangents.push_back(btanx);
-                    bitangents.push_back(btany);
-                    bitangents.push_back(btanz);
-                }
-            }
-            if(format.indexType.compare("UNSIGNED_INT") == 0)
-            {
-                for(int i = 0; i < numIndices; ++i)
-                {
-                    unsigned int index = 0;
-                    fin.read((char *)(&index), sizeof(index));
-                    mesh->addIndex(index);
-                }
-            }
-            else if(format.indexType.compare("UNSIGNED_SHORT") == 0)
-            {
-                for(int i = 0; i < numIndices; ++i)
-                {
-                    unsigned short index = 0;
-                    fin.read((char *)(&index), sizeof(index));
-                    mesh->addIndex((unsigned int)index);
-                }
-            }
-            else if(format.indexType.compare("UNSIGNED_BYTE") == 0)
-            {
-                for(int i = 0; i < numIndices; ++i)
-                {
-                    unsigned char index = 0;
-                    fin.read((char *)(&index), sizeof(index));
-                    mesh->addIndex((unsigned int)index);
-                }
+                verts.push_back(px);
+                verts.push_back(py);
+                verts.push_back(pz);
             }
 
-            for(int i = 0; i < numVertices; ++i)
-            {
-                Vertex vert = {
-                    {0.0f, 0.0f, 0.0f},
-                    {0.0f, 0.0f},
-                    {0.0f, 0.0f, 0.0f},
-                    {0.0f, 0.0f, 0.0f},
-                    {0.0f, 0.0f, 0.0f}
-                }; 
-                vert.position[0] = verts[i * 3 + 0];
-                vert.position[1] = verts[i * 3 + 1];
-                vert.position[2] = verts[i * 3 + 2];
-                
-                if(loadNormal)
-                {
-                
-                    vert.normal[0] = normals[i * 3 + 0];
-                    vert.normal[1] = normals[i * 3 + 1];
-                    vert.normal[2] = normals[i * 3 + 2];
-                }
-                if(loadTexture)
-                {
-                
-                    vert.texCoord[0] = texCoords[i * 2 + 0];
-                    vert.texCoord[1] = texCoords[i * 2 + 1];
-                }
-                if(loadTangent)
-                {
-                
-                    vert.tangent[0] = tangents[i * 3 + 0];
-                    vert.tangent[1] = tangents[i * 3 + 1];
-                    vert.tangent[2] = tangents[i * 3 + 2];
-                }
-                if(loadBitangent)
-                {
-                
-                    vert.bitangent[0] = bitangents[i * 3 + 0];
-                    vert.bitangent[1] = bitangents[i * 3 + 1];
-                    vert.bitangent[2] = bitangents[i * 3 + 2];
-                }
-                mesh->addVertex(vert);
-            }           
-            
         }
-        else
+        idx = mesh->getAttributeIndexWithName("NORMAL");
+        if(idx > -1 && idx < aSize)
         {
-            loadBinaryFile = false;
-            format.isBinary = false;
-            std::string dataString = xml.getValue("Data", "");
-            std::stringstream dataStr;
-            
-            dataStr << dataString;
-            
-            std::vector<float> verts;
-            std::vector<float> texCoords;
-            std::vector<float> normals;
-            std::vector<float> tangents;
-            std::vector<float> bitangents;
-            
-            bool loadTexture = false;
-            bool loadNormal = false;
-            bool loadTangent = false;
-            bool loadBitangent = false;
-            int idx = -1;
-            int aSize = format.attributeCount;
-            idx = mesh->getAttributeIndexWithName("POSITION");
-            int index = 0;
-            int startLoop = 0;
-            int endLoop = 0;
-            
-            if(idx > -1 && idx < aSize)
+            loadNormal = true;
+            index = 0;
+            startLoop = numVertices*idx;
+            endLoop = numVertices*(idx+1);
+            for(int i = startLoop; i < endLoop; ++i)
             {
-                startLoop = numVertices*idx;
-                endLoop = numVertices *(idx+1);
-                for(int i = startLoop; i < endLoop; ++i)
-                {
-                    float px = 0.0f;
-                    float py = 0.0f;
-                    float pz = 0.0f;
-                    
-                    dataStr >> px >> py >> pz;
-                    
-                    verts.push_back(px);
-                    verts.push_back(py);
-                    verts.push_back(pz);
-                   
-                }
+                float nx = 0.0f;
+                float ny = 0.0f;
+                float nz = 0.0f;
 
-            }
-            idx = mesh->getAttributeIndexWithName("NORMAL");
-            if(idx > -1 && idx < aSize)
-            {
-                loadNormal = true;
-                index = 0;
-                startLoop = numVertices*idx;
-                endLoop = numVertices*(idx+1);
-                for(int i = startLoop; i < endLoop; ++i)
-                {
-                    float nx = 0.0f;
-                    float ny = 0.0f;
-                    float nz = 0.0f;
+                fin.read((char *)(&nx), sizeof(nx));
+                fin.read((char *)(&ny), sizeof(ny));
+                fin.read((char *)(&nz), sizeof(nz));
 
-                    dataStr >> nx >> ny >> nz;
-                    
-                    normals.push_back(nx);
-                    normals.push_back(ny);
-                    normals.push_back(nz);
-                    ++index;
-                }
-            
+                normals.push_back(nx);
+                normals.push_back(ny);
+                normals.push_back(nz);
             }
-            idx = mesh->getAttributeIndexWithName("TEXTURE");
-            if(idx > -1 && idx < aSize)
+        }
+        idx = mesh->getAttributeIndexWithName("TEXTURE");
+        if(idx > -1 && idx < aSize)
+        {
+            loadTexture = true;
+            index = 0;
+            startLoop = numVertices*idx;
+            endLoop = numVertices*(idx+1);
+            for(int i = startLoop; i < endLoop; ++i)
             {
-                loadTexture = true;
-                index = 0;
-                startLoop = numVertices*idx;
-                endLoop = numVertices*(idx+1);
-                for(int i = startLoop; i < endLoop; ++i)
-                {
-                    float tx = 0.0f;
-                    float ty = 0.0f;
-                    
-                    dataStr >> tx >> ty;
-                    
-                    texCoords.push_back(tx);
-                    texCoords.push_back(ty);
-                }
+                float tx = 0.0f;
+                float ty = 0.0f;
+
+                fin.read((char *)(&tx), sizeof(tx));
+                fin.read((char *)(&ty), sizeof(ty));
+
+                texCoords.push_back(tx);
+                texCoords.push_back(ty);
             }
-            idx = mesh->getAttributeIndexWithName("TANGENT");
-            if(idx > -1 && idx < aSize)
+        }
+        idx = mesh->getAttributeIndexWithName("TANGENT");
+        if(idx > -1 && idx < aSize)
+        {
+            loadTangent = true;
+            index = 0;
+            startLoop = numVertices*idx;
+            endLoop = numVertices*(idx+1);
+            for(int i = startLoop; i < endLoop; ++i)
             {
-                loadTangent = true;
-                index = 0;
-                startLoop = numVertices*idx;
-                endLoop = numVertices*(idx+1);
-                for(int i = startLoop; i < endLoop; ++i)
-                {
-                    float tanx = 0.0f;
-                    float tany = 0.0f;
-                    float tanz = 0.0f;
-                    
-                    dataStr >> tanx >> tany >> tanz;
-                    
-                    tangents.push_back(tanx);
-                    tangents.push_back(tany);
-                    tangents.push_back(tanz);
-                }
+                float tanx = 0.0f;
+                float tany = 0.0f;
+                float tanz = 0.0f;
+
+                fin.read((char *)(&tanx), sizeof(tanx));
+                fin.read((char *)(&tany), sizeof(tany));
+                fin.read((char *)(&tanz), sizeof(tanz));
+
+                tangents.push_back(tanx);
+                tangents.push_back(tany);
+                tangents.push_back(tanz);
             }
-            idx = mesh->getAttributeIndexWithName("BITANGENT");
-            if(idx > -1 && idx < aSize)
+        }
+        idx = mesh->getAttributeIndexWithName("BITANGENT");
+        if(idx > -1 && idx < aSize)
+        {
+            loadBitangent = true;
+            index = 0;
+            startLoop = numVertices*idx;
+            endLoop = numVertices*(idx+1);
+            for(int i = startLoop; i < endLoop; ++i)
             {
-                loadBitangent = true;
-                index = 0;
-                startLoop = numVertices*idx;
-                endLoop = numVertices*(idx+1);
-                for(int i = startLoop; i < endLoop; ++i)
-                {
-                    float btanx = 0.0f;
-                    float btany = 0.0f;
-                    float btanz = 0.0f;
-                    
-                    dataStr >> btanx >> btany >> btanz;
-                    
-                    bitangents.push_back(btanx);
-                    bitangents.push_back(btany);
-                    bitangents.push_back(btanz);
-                }
+                float btanx = 0.0f;
+                float btany = 0.0f;
+                float btanz = 0.0f;
+
+                fin.read((char *)(&btanx), sizeof(btanx));
+                fin.read((char *)(&btany), sizeof(btany));
+                fin.read((char *)(&btanz), sizeof(btanz));
+
+                bitangents.push_back(btanx);
+                bitangents.push_back(btany);
+                bitangents.push_back(btanz);
             }
-            
+        }
+        if(format.indexType.compare("UNSIGNED_INT") == 0)
+        {
             for(int i = 0; i < numIndices; ++i)
             {
                 unsigned int index = 0;
-                dataStr >> index;
+                fin.read((char *)(&index), sizeof(index));
                 mesh->addIndex(index);
             }
-            for(int i = 0; i < numVertices; ++i)
+        }
+        else if(format.indexType.compare("UNSIGNED_SHORT") == 0)
+        {
+            for(int i = 0; i < numIndices; ++i)
             {
-                Vertex vert = {
-                    {0.0f, 0.0f, 0.0f},
-                    {0.0f, 0.0f},
-                    {0.0f, 0.0f, 0.0f},
-                    {0.0f, 0.0f, 0.0f},
-                    {0.0f, 0.0f, 0.0f}
-                }; 
-                vert.position[0] = verts[i * 3 + 0];
-                vert.position[1] = verts[i * 3 + 1];
-                vert.position[2] = verts[i * 3 + 2];
-                
-                if(loadNormal)
-                {
-                
-                    vert.normal[0] = normals[i * 3 + 0];
-                    vert.normal[1] = normals[i * 3 + 1];
-                    vert.normal[2] = normals[i * 3 + 2];
-                }
-                if(loadTexture)
-                {
-                
-                    vert.texCoord[0] = texCoords[i * 2 + 0];
-                    vert.texCoord[1] = texCoords[i * 2 + 1];
-                }
-                if(loadTangent)
-                {
-                
-                    vert.tangent[0] = tangents[i * 3 + 0];
-                    vert.tangent[1] = tangents[i * 3 + 1];
-                    vert.tangent[2] = tangents[i * 3 + 2];
-                }
-                if(loadBitangent)
-                {
-                
-                    vert.bitangent[0] = bitangents[i * 3 + 0];
-                    vert.bitangent[1] = bitangents[i * 3 + 1];
-                    vert.bitangent[2] = bitangents[i * 3 + 2];
-                }
-                mesh->addVertex(vert);
+                unsigned short index = 0;
+                fin.read((char *)(&index), sizeof(index));
+                mesh->addIndex((unsigned int)index);
             }
         }
+        else if(format.indexType.compare("UNSIGNED_BYTE") == 0)
+        {
+            for(int i = 0; i < numIndices; ++i)
+            {
+                unsigned char index = 0;
+                fin.read((char *)(&index), sizeof(index));
+                mesh->addIndex((unsigned int)index);
+            }
+        }
+
+        for(int i = 0; i < numVertices; ++i)
+        {
+            Vertex vert = {
+                {0.0f, 0.0f, 0.0f},
+                {0.0f, 0.0f},
+                {0.0f, 0.0f, 0.0f},
+                {0.0f, 0.0f, 0.0f},
+                {0.0f, 0.0f, 0.0f}
+            };
+            vert.position[0] = verts[i * 3 + 0];
+            vert.position[1] = verts[i * 3 + 1];
+            vert.position[2] = verts[i * 3 + 2];
+
+            if(loadNormal)
+            {
+
+                vert.normal[0] = normals[i * 3 + 0];
+                vert.normal[1] = normals[i * 3 + 1];
+                vert.normal[2] = normals[i * 3 + 2];
+            }
+            if(loadTexture)
+            {
+
+                vert.texCoord[0] = texCoords[i * 2 + 0];
+                vert.texCoord[1] = texCoords[i * 2 + 1];
+            }
+            if(loadTangent)
+            {
+
+                vert.tangent[0] = tangents[i * 3 + 0];
+                vert.tangent[1] = tangents[i * 3 + 1];
+                vert.tangent[2] = tangents[i * 3 + 2];
+            }
+            if(loadBitangent)
+            {
+
+                vert.bitangent[0] = bitangents[i * 3 + 0];
+                vert.bitangent[1] = bitangents[i * 3 + 1];
+                vert.bitangent[2] = bitangents[i * 3 + 2];
+            }
+            mesh->addVertex(vert);
+        }
+            
     }
     xml.popTag();
     
@@ -511,166 +335,166 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
     
 }
 
-void MeshIO::saveDebug(Mesh* mesh, const char* outFilePath)
+void MeshIO::dumpTxt(Mesh* mesh, const char* outFilePath)
 {
-    XmlParser xml;
-    xml.addXmlDeclaration();
     // -------------------------------------------------------------------------------------------
     // Root: Mesh
     // -------------------------------------------------------------------------------------------
-    xml.addTag("Mesh");
-    xml.addAttribute("Mesh", "xmlns", "http://xml.qu.tu-berlin.de/assembly/mesh", 0);
-    xml.addAttribute("Mesh", "xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance", 0);
-    xml.addAttribute("Mesh", "xsi:schemaLocation", "http://xml.qu.tu-berlin.de/assembly/mesh mesh.xsd", 0);
-    xml.pushTag("Mesh");
+    std::stringstream ss;
+    ss << "----------------------------------------------\n";
+    ss << "Mesh: " << WizUtils::FileUtils::getFileName(mesh->getMeshPath()) << "\n";
+    ss << "----------------------------------------------\n";
+
+    // -------------------------------------------------------------------------------------------
+    // Vertices
+    // -------------------------------------------------------------------------------------------
+    ss << "Vertices: " <<  "count=" << (int)mesh->getNumberOfVertices() << " ";
+    ss << "attributes=" << mesh->getMeshFormat().attributeCount << "\n";
+
+    // -------------------------------------------------------------------------------------------
+    // Attributes
+    // -------------------------------------------------------------------------------------------
+    std::vector<int> attribIndices;
+    getAttributeIndices(mesh, attribIndices);
+
+    for(int attrIndex = 0; attrIndex < mesh->getMeshFormat().attributeCount; ++attrIndex)
     {
         // -------------------------------------------------------------------------------------------
-        // Vertices
+        // Element
         // -------------------------------------------------------------------------------------------
-        xml.addTag("Vertices");
-        xml.addAttribute("Vertices", "count", (int)mesh->getNumberOfVertices(), 0);
-        xml.addAttribute("Vertices", "attributes", mesh->getMeshFormat().attributeCount, 0);
-        
-        xml.pushTag("Vertices");
-        {
-            // -------------------------------------------------------------------------------------------
-            // Attributes
-            // -------------------------------------------------------------------------------------------
-            std::vector<int> attribIndices;
-            getAttributeIndices(mesh, attribIndices);
+        ss << "Attribute, name=" << mesh->getMeshFormat().attributeName[attribIndices[attrIndex]].c_str() << " ";
+        ss << "size=" << mesh->getMeshFormat().attributeSize[attribIndices[attrIndex]] << "\n";
 
-            for(int attrIndex = 0; attrIndex < mesh->getMeshFormat().attributeCount; ++attrIndex)
-            {
-                // -------------------------------------------------------------------------------------------
-                // Element
-                // -------------------------------------------------------------------------------------------
-                xml.addTag("Attribute", false);
-                xml.addAttribute("Attribute", "name", mesh->getMeshFormat().attributeName[attribIndices[attrIndex]].c_str(), attrIndex);
-                xml.addAttribute("Attribute", "size", mesh->getMeshFormat().attributeSize[attribIndices[attrIndex]], attrIndex);
-//                xml.addAttribute("Attribute", "type", "FLOAT", attrIndex);
-            }
-        }
-        xml.popTag();
-        
-        // -------------------------------------------------------------------------------------------
-        // Triangles
-        // -------------------------------------------------------------------------------------------
-        xml.addTag("Triangles");
-        xml.addAttribute("Triangles","groups", (int)mesh->getNumberOfGroups(), 0);
-        
-        xml.pushTag("Triangles");
-        {
-            // -------------------------------------------------------------------------------------------
-            // Groups
-            // -------------------------------------------------------------------------------------------
-            for(unsigned int groupIndex = 0; groupIndex < mesh->getNumberOfGroups(); ++groupIndex)
-            {
-                // -------------------------------------------------------------------------------------------
-                // Group
-                // -------------------------------------------------------------------------------------------
-                xml.addTag("Group", false);
-
-                const MeshWiz::Group& g = mesh->getGroup(groupIndex);
-
-                xml.addAttribute("Group", "name", g.name.c_str(), groupIndex);
-                xml.addAttribute("Group", "count", g.triangleCount, groupIndex);
-            }
-        }
-        xml.popTag();
-        // -------------------------------------------------------------------------------------------
-        // Data
-        // -------------------------------------------------------------------------------------------
-        xml.addTag("Data");
-        
-        std::stringstream data;
-        int idx = -1;
-        int aSize = mesh->getMeshFormat().attributeCount;
-        idx = mesh->getAttributeIndexWithName("POSITION");
-        if(idx > -1 && idx < aSize)
-        {
-            for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
-            {
-                const Vertex& vert = mesh->getVertex(vertexIndex); 
-                
-                for(int vertSizePosIndex = 0; vertSizePosIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizePosIndex)
-                {
-                    data << vert.position[vertSizePosIndex] << " ";
-                }   
-            }
-        }
-        idx = mesh->getAttributeIndexWithName("NORMAL");
-        if(idx > -1 && idx < aSize)
-        {
-            for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
-            {
-                const Vertex& vert = mesh->getVertex(vertexIndex);
-                
-                for(int vertSizeNormalIndex = 0; vertSizeNormalIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizeNormalIndex)
-                {
-                    data << vert.normal[vertSizeNormalIndex] << " ";
-                }
-            }
-        }
-        idx = mesh->getAttributeIndexWithName("TEXTURE");
-        if(idx > -1 && idx < aSize)
-        {
-            for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
-            {
-                const Vertex& vert = mesh->getVertex(vertexIndex);
-                
-                for(int vertSizeTexIndex = 0; vertSizeTexIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizeTexIndex)
-                {
-                    data << vert.texCoord[vertSizeTexIndex] << " ";
-                }
-            }
-        }
-        idx = mesh->getAttributeIndexWithName("TANGENT");
-        if(idx > -1 && idx < aSize)
-        {
-        
-            for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
-            {
-                const Vertex& vert = mesh->getVertex(vertexIndex);
-                
-                for(int vertSizeTexIndex = 0; vertSizeTexIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizeTexIndex)
-                {
-                    data << vert.tangent[vertSizeTexIndex] << " ";
-                }
-            }
-        }
-        idx = mesh->getAttributeIndexWithName("BITANGENT");
-        if(idx > -1 && idx < aSize)
-        {
-        
-            for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
-            {
-                const Vertex& vert = mesh->getVertex(vertexIndex);
-                
-                for(int vertSizeTexIndex = 0; vertSizeTexIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizeTexIndex)
-                {
-                    data << vert.bitangent[vertSizeTexIndex] << " ";
-                }
-            }
-        }
-        
-        // Triangles
-        for(int triangleIndex = 0; triangleIndex < mesh->getNumberOfTriangles(); ++triangleIndex)
-        {
-            const unsigned int* pTriangle = 0;
-            pTriangle = mesh->getTriangle(triangleIndex);
-            data << (int)pTriangle[0] << " " << (int)pTriangle[1] << " " << (int)pTriangle[2] << " ";
-        }
-        
-        xml.setValue("Data", data.str());
-        
     }
-    xml.popTag();
-    
-    xml.saveFile(outFilePath);
+    ss << std::endl;
+    // -------------------------------------------------------------------------------------------
+    // Triangles
+    // -------------------------------------------------------------------------------------------
+    ss << "Triangles: " << "groups=" << (int)mesh->getNumberOfGroups() << "\n";
+
+    // -------------------------------------------------------------------------------------------
+    // Groups
+    // -------------------------------------------------------------------------------------------
+    for(unsigned int groupIndex = 0; groupIndex < mesh->getNumberOfGroups(); ++groupIndex)
+    {
+        // -------------------------------------------------------------------------------------------
+        // Group
+        // -------------------------------------------------------------------------------------------
+        const MeshWiz::Group& g = mesh->getGroup(groupIndex);
+
+        ss << "Group: name=" << g.name.c_str() << " count=" << g.triangleCount << "\n";
+    }
+    ss << std::endl;
+    // -------------------------------------------------------------------------------------------
+    // Data
+    // -------------------------------------------------------------------------------------------
+    ss << "Data:" << std::endl;
+
+    std::stringstream data;
+    int idx = -1;
+    int aSize = mesh->getMeshFormat().attributeCount;
+    idx = mesh->getAttributeIndexWithName("POSITION");
+    if(idx > -1 && idx < aSize)
+    {
+        data << "Positions:" << "\n";
+
+        for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
+        {
+            const Vertex& vert = mesh->getVertex(vertexIndex);
+
+            for(int vertSizePosIndex = 0; vertSizePosIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizePosIndex)
+            {
+                data << vert.position[vertSizePosIndex] << " ";
+            }
+            data << std::endl;
+        }
+    }
+    idx = mesh->getAttributeIndexWithName("NORMAL");
+    if(idx > -1 && idx < aSize)
+    {
+        data << "Normals:" << std::endl;
+
+        for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
+        {
+            const Vertex& vert = mesh->getVertex(vertexIndex);
+
+            for(int vertSizeNormalIndex = 0; vertSizeNormalIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizeNormalIndex)
+            {
+                data << vert.normal[vertSizeNormalIndex] << " ";
+            }
+            data << std::endl;
+        }
+    }
+    idx = mesh->getAttributeIndexWithName("TEXTURE");
+    if(idx > -1 && idx < aSize)
+    {
+        data << "TexCoords:" << std::endl;
+
+        for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
+        {
+            const Vertex& vert = mesh->getVertex(vertexIndex);
+
+            for(int vertSizeTexIndex = 0; vertSizeTexIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizeTexIndex)
+            {
+                data << vert.texCoord[vertSizeTexIndex] << " ";
+            }
+            data << std::endl;
+        }
+    }
+    idx = mesh->getAttributeIndexWithName("TANGENT");
+    if(idx > -1 && idx < aSize)
+    {
+        data << "Tangents:" << std::endl;
+
+        for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
+        {
+            const Vertex& vert = mesh->getVertex(vertexIndex);
+
+            for(int vertSizeTexIndex = 0; vertSizeTexIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizeTexIndex)
+            {
+                data << vert.tangent[vertSizeTexIndex] << " ";
+            }
+            data << std::endl;
+        }
+    }
+    idx = mesh->getAttributeIndexWithName("BITANGENT");
+    if(idx > -1 && idx < aSize)
+    {
+        data << "Bitangents:" << std::endl;
+
+        for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
+        {
+            const Vertex& vert = mesh->getVertex(vertexIndex);
+
+            for(int vertSizeTexIndex = 0; vertSizeTexIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizeTexIndex)
+            {
+                data << vert.bitangent[vertSizeTexIndex] << " ";
+            }
+            data << std::endl;
+        }
+    }
+
+    // Triangles
+    data << "Triangles:" << std::endl;
+
+    for(int triangleIndex = 0; triangleIndex < mesh->getNumberOfTriangles(); ++triangleIndex)
+    {
+        const unsigned int* pTriangle = 0;
+        pTriangle = mesh->getTriangle(triangleIndex);
+        data << (int)pTriangle[0] << " " << (int)pTriangle[1] << " " << (int)pTriangle[2] << std::endl;
+    }
+
+    ss << data.str();
+
+
+//    xml.saveFile(outFilePath);
+    std::ofstream fout(outFilePath);
+    fout << ss.str();
+    fout.close();
 
 }
 
-void MeshIO::saveBinary(Mesh* mesh, const char* outFilePath, const char* binaryFilePath)
+void MeshIO::saveFile(Mesh* mesh, const char* outFilePath, const char* binaryFilePath)
 {
     XmlParser xml;
     xml.addXmlDeclaration();
