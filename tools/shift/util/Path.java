@@ -30,7 +30,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-package org.interaction3d.assembly.tools.shift.obj;
+package org.interaction3d.assembly.tools.shift.util;
 
 
 import java.io.File;
@@ -42,9 +42,9 @@ import java.net.URI;
  *
  * @author Michael Nischt
  */
-final class Path 
+public final class Path 
 {
-    static String trunkObj(String name)
+    public static String trunkObj(String name)
     {
         if(name.length() > 4)
         {            
@@ -58,7 +58,7 @@ final class Path
         return name;
     }
     
-    static String filename(String uri)
+    public static String filename(String uri)
     {
         File file = file(uri);
         if(file.isDirectory())
@@ -68,7 +68,7 @@ final class Path
         return file.getName();
     }
     
-    static File file(String uri)
+    public static File file(String uri)
     {
         try
         {
@@ -80,7 +80,7 @@ final class Path
         }
     }
     
-    static InputStream inputStream(String uri)
+    public static InputStream inputStream(String uri)
     {
         try
         {
