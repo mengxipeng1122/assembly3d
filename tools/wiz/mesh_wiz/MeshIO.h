@@ -44,9 +44,9 @@ private:
 	~MeshIO();
 public:
     static bool load(Mesh* mesh, const char* file, const char* binaryFile);
-    static void saveDebug(Mesh* mesh, const char* outFilePath);
-    static void saveBinary(Mesh* mesh, const char* outFilePath, const char* binaryFilePath);
-    
+    static void saveFile(Mesh* mesh, const char* outFilePath, const char* binaryFilePath);
+    static void dumpTxt(Mesh* mesh, const char* outFilePath);
+
 private:
     static void getAttributeIndices(Mesh* mesh, std::vector<int>& indices);
 	

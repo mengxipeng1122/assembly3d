@@ -114,6 +114,7 @@ public:
     void calculateBounds();
     
     void setMeshPath(const char* path);
+    const char* getMeshPath() const;
 private:
 
     void bounds(float center[3], float &width, float &height,
@@ -227,5 +228,8 @@ inline bool Mesh::hasBitangents() const
 
 inline Mesh::MeshFormat& Mesh::getMeshFormat()
 { return m_format; }
+
+inline const char* Mesh::getMeshPath() const
+{ return m_meshPath.c_str(); }
 
 #endif  // _MESH_H_
