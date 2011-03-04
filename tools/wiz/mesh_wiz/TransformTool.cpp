@@ -65,7 +65,7 @@ void TransformTool::translate(Mesh* m, float tx, float ty, float tz)
 	{
 		Vertex* pVertex = &m->getVertex(i);
 
-        multiplyVertexAndMatrix(pVertex, tMatrix, tiMatrix);
+        multiplyVertexWithTransformMatrix(pVertex, tMatrix, tiMatrix);
     }
 }
 
@@ -78,8 +78,8 @@ void TransformTool::rotate(Mesh* m, float rangle, float rx, float ry, float rz)
     ry = rvec[1];
     rz = rvec[2];
 
-    float s = sinf(2.0f*PIf*rangle/360.0f);
-    float c = cosf(2.0f*PIf*rangle/360.0f);
+    float s = sin(2.0f*PIf*rangle/360.0f);
+    float c = cos(2.0f*PIf*rangle/360.0f);
     float t = 1.0f - c;
 
     float rMatrix[3][4] = {{rx*rx*t + c,      rx*ry*t - rz*s,   rx*rz*t + ry*s,   0.0f},
@@ -95,7 +95,7 @@ void TransformTool::rotate(Mesh* m, float rangle, float rx, float ry, float rz)
 	{
 		Vertex* pVertex = &m->getVertex(i);
 
-        multiplyVertexAndMatrix(pVertex, rMatrix, riMatrix);
+        multiplyVertexWithTransformMatrix(pVertex, rMatrix, riMatrix);
     }
     
 }
@@ -114,7 +114,7 @@ void TransformTool::scale(Mesh* m, float sx, float sy, float sz)
 	{
 		Vertex* pVertex = &m->getVertex(i);
         
-        multiplyVertexAndMatrix(pVertex, sMatrix, siMatrix);
+        multiplyVertexWithTransformMatrix(pVertex, sMatrix, siMatrix);
         
     }
 }
@@ -177,7 +177,7 @@ void TransformTool::center(Mesh* m, int ax, int ay, int az)
     translate(m, tX, tY, tZ);
 }
 
-void TransformTool::multiplyVertexAndMatrix(Vertex* vec, float matrix[3][4], float inverseTransposedMatrix[3][3])
+void TransformTool::multiplyVertexWithTransformMatrix(Vertex* vec, float matrix[3][4], float inverseTransposedMatrix[3][3])
 {
     float x,y,z;
     x = vec->position[0]; y = vec->position[1]; z = vec->position[2];
