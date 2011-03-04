@@ -255,7 +255,7 @@ final class Mesh
         }
         else if(vertices < (1 << 16)) 
         { 
-            indexBytes = 1; indexType = "UNSIGNED_SHORT";
+            indexBytes = 2; indexType = "UNSIGNED_SHORT";
         }
         int groups = triangleGroups.size();
         int geomBytes = vertices * attributeBytes;
