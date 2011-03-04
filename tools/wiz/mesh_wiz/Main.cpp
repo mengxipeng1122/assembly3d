@@ -42,8 +42,7 @@
 int main (int argc, char* argv[])
 {
     std::string inputfile;
-    std::string outputdir;
-    std::string debugOutputDir;
+    std::string outputfile;
     bool verbose = false;
     //bool debug = false;
     bool modelChanged = false;
@@ -284,18 +283,14 @@ int main (int argc, char* argv[])
     }
     if(!infoArg.isSet())
     {
-        outputdir = outputArg.getValue();
-        debugOutputDir = outputArg.getValue();
+        std::string outputdir = outputArg.getValue();
         if(!WizUtils::FileUtils::checkIfDirectoryExists(outputdir.c_str()))
         {
             WizUtils::FileUtils::createDirectory(outputdir.c_str());
         }
         std::string infilename = WizUtils::FileUtils::getFileName(inputfile);
-        outputdir.append("/"+infilename);
+        outputfile = outputdir+"/"+infilename;
 
-        size_t posdot = outputdir.find(".xml");
-        debugOutputDir = outputdir.substr(0, posdot);
-        debugOutputDir.append(".txt");
     }
     
     //---------------------------------------------------------------------------------------------------------
@@ -574,13 +569,18 @@ int main (int argc, char* argv[])
     //---------------------------------------------------------------------------------------------------------
     if(dumpArg.isSet())
     {
-        MeshIO::dumpTxt(&mesh, debugOutputDir.c_str());
+        std::string debugOutputFile;
+        size_t posdot = outputfile.find(".xml");
+        debugOutputFile = outputfile.substr(0, posdot);
+        debugOutputFile.append(".txt");
+
+        MeshIO::dumpTxt(&mesh, debugOutputFile.c_str());
         std::cout << "Dump mesh to text file" << std::endl;
     }
 
     if(modelChanged)
     {
-        MeshIO::saveFile(&mesh, outputdir.c_str(), binaryOutFileName.c_str());
+        MeshIO::saveFile(&mesh, outputfile.c_str(), binaryOutFileName.c_str());
         std::cout << "Done!" << std::endl;
     }
     else
