@@ -51,9 +51,8 @@ public:
     
 protected:
 private:
-	void calculateVectorWithMatrix(Vertex* vec, float matrix[3][4], float inverseTransposedMatrix[3][3]);
-    void normalize(Vertex* vec);
-	
+    void multiplyVertexWithTransformMatrix(Vertex* vec, float matrix[3][4], float inverseTransposedMatrix[3][3]);
+    void normalize(float vector[3]);
 };
 
 

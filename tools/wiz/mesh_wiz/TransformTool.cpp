@@ -65,22 +65,18 @@ void TransformTool::translate(Mesh* m, float tx, float ty, float tz)
 	{
 		Vertex* pVertex = &m->getVertex(i);
 
-		calculateVectorWithMatrix(pVertex, tMatrix, tiMatrix);
+        multiplyVertexAndMatrix(pVertex, tMatrix, tiMatrix);
     }
 }
 
 void TransformTool::rotate(Mesh* m, float rangle, float rx, float ry, float rz)
 {
     // normalize rotation axis
-    float length = sqrtf(rx*rx+ry*ry+rz*rz);
-    if(length == 0.0f)
-        length = 0.0f;
-    else
-        length = 1.0f / length;
-
-    rx *= length;
-    ry *= length;
-    rz *= length;
+    float rvec[3] = {rx, ry, rz};
+    normalize(rvec);
+    rx = rvec[0];
+    ry = rvec[1];
+    rz = rvec[2];
 
     float s = sinf(2.0f*PIf*rangle/360.0f);
     float c = cosf(2.0f*PIf*rangle/360.0f);
@@ -99,7 +95,7 @@ void TransformTool::rotate(Mesh* m, float rangle, float rx, float ry, float rz)
 	{
 		Vertex* pVertex = &m->getVertex(i);
 
-        calculateVectorWithMatrix(pVertex, rMatrix, riMatrix);
+        multiplyVertexAndMatrix(pVertex, rMatrix, riMatrix);
     }
     
 }
@@ -118,7 +114,7 @@ void TransformTool::scale(Mesh* m, float sx, float sy, float sz)
 	{
 		Vertex* pVertex = &m->getVertex(i);
         
-        calculateVectorWithMatrix(pVertex, sMatrix, siMatrix);
+        multiplyVertexAndMatrix(pVertex, sMatrix, siMatrix);
         
     }
 }
@@ -181,79 +177,46 @@ void TransformTool::center(Mesh* m, int ax, int ay, int az)
     translate(m, tX, tY, tZ);
 }
 
-void TransformTool::calculateVectorWithMatrix(Vertex* vec, float matrix[3][4], float inverseTransposedMatrix[3][3])
+void TransformTool::multiplyVertexAndMatrix(Vertex* vec, float matrix[3][4], float inverseTransposedMatrix[3][3])
 {
-  float x,y,z;
-  x = vec->position[0]; y = vec->position[1]; z = vec->position[2]; 
-  vec->position[0] = x*matrix[0][0] + y*matrix[0][1] + z*matrix[0][2] + matrix[0][3];
-  vec->position[1] = x*matrix[1][0] + y*matrix[1][1] + z*matrix[1][2] + matrix[1][3];
-  vec->position[2] = x*matrix[2][0] + y*matrix[2][1] + z*matrix[2][2] + matrix[2][3];
+    float x,y,z;
+    x = vec->position[0]; y = vec->position[1]; z = vec->position[2];
+    vec->position[0] = x*matrix[0][0] + y*matrix[0][1] + z*matrix[0][2] + matrix[0][3];
+    vec->position[1] = x*matrix[1][0] + y*matrix[1][1] + z*matrix[1][2] + matrix[1][3];
+    vec->position[2] = x*matrix[2][0] + y*matrix[2][1] + z*matrix[2][2] + matrix[2][3];
 
-	//normale, tangenten, bitangen inverse transpose
-  x = vec->normal[0]; y = vec->normal[1]; z = vec->normal[2];     
-  vec->normal[0] = x*inverseTransposedMatrix[0][0] + y*inverseTransposedMatrix[0][1] + z*inverseTransposedMatrix[0][2];
-  vec->normal[1] = x*inverseTransposedMatrix[1][0] + y*inverseTransposedMatrix[1][1] + z*inverseTransposedMatrix[1][2];
-  vec->normal[2] = x*inverseTransposedMatrix[2][0] + y*inverseTransposedMatrix[2][1] + z*inverseTransposedMatrix[2][2];
+    //normale, tangenten, bitangen inverse transpose
+    x = vec->normal[0]; y = vec->normal[1]; z = vec->normal[2];
+    vec->normal[0] = x*inverseTransposedMatrix[0][0] + y*inverseTransposedMatrix[0][1] + z*inverseTransposedMatrix[0][2];
+    vec->normal[1] = x*inverseTransposedMatrix[1][0] + y*inverseTransposedMatrix[1][1] + z*inverseTransposedMatrix[1][2];
+    vec->normal[2] = x*inverseTransposedMatrix[2][0] + y*inverseTransposedMatrix[2][1] + z*inverseTransposedMatrix[2][2];
+    normalize(vec->normal);
 
-  x = vec->bitangent[0]; y = vec->bitangent[1]; z = vec->bitangent[2];
-  vec->bitangent[0] = x*inverseTransposedMatrix[0][0] + y*inverseTransposedMatrix[0][1] + z*inverseTransposedMatrix[0][2];
-  vec->bitangent[1] = x*inverseTransposedMatrix[1][0] + y*inverseTransposedMatrix[1][1] + z*inverseTransposedMatrix[1][2];
-  vec->bitangent[2] = x*inverseTransposedMatrix[2][0] + y*inverseTransposedMatrix[2][1] + z*inverseTransposedMatrix[2][2];
-    
-  x = vec->tangent[0]; y = vec->tangent[1]; z = vec->tangent[2];
-  vec->tangent[0] = x*inverseTransposedMatrix[0][0] + y*inverseTransposedMatrix[0][1] + z*inverseTransposedMatrix[0][2];
-  vec->tangent[1] = x*inverseTransposedMatrix[1][0] + y*inverseTransposedMatrix[1][1] + z*inverseTransposedMatrix[1][2];
-  vec->tangent[2] = x*inverseTransposedMatrix[2][0] + y*inverseTransposedMatrix[2][1] + z*inverseTransposedMatrix[2][2];
-    
-  normalize(vec);
+    x = vec->bitangent[0]; y = vec->bitangent[1]; z = vec->bitangent[2];
+    vec->bitangent[0] = x*inverseTransposedMatrix[0][0] + y*inverseTransposedMatrix[0][1] + z*inverseTransposedMatrix[0][2];
+    vec->bitangent[1] = x*inverseTransposedMatrix[1][0] + y*inverseTransposedMatrix[1][1] + z*inverseTransposedMatrix[1][2];
+    vec->bitangent[2] = x*inverseTransposedMatrix[2][0] + y*inverseTransposedMatrix[2][1] + z*inverseTransposedMatrix[2][2];
+    normalize(vec->bitangent);
+
+    x = vec->tangent[0]; y = vec->tangent[1]; z = vec->tangent[2];
+    vec->tangent[0] = x*inverseTransposedMatrix[0][0] + y*inverseTransposedMatrix[0][1] + z*inverseTransposedMatrix[0][2];
+    vec->tangent[1] = x*inverseTransposedMatrix[1][0] + y*inverseTransposedMatrix[1][1] + z*inverseTransposedMatrix[1][2];
+    vec->tangent[2] = x*inverseTransposedMatrix[2][0] + y*inverseTransposedMatrix[2][1] + z*inverseTransposedMatrix[2][2];
+    normalize(vec->tangent);
+
 }
-void TransformTool::normalize(Vertex* vec)
+
+void TransformTool::normalize(float vector[3])
 {
-    float tmpLength = 0.0f;
     float length = 0.0f;
- 
-    // normal
-    tmpLength = sqrtf(vec->normal[0] * vec->normal[0] +
-        vec->normal[1] * vec->normal[1] +
-        vec->normal[2] * vec->normal[2]);
+    length = sqrtf(vector[0]*vector[0]+vector[1]*vector[1]+vector[2]*vector[2]);
 
-    if(tmpLength == 0.0f)
-        tmpLength = 0.0f;
-    else
-        length = 1.0f / tmpLength;
-
-    vec->normal[0] *= length;
-    vec->normal[1] *= length;
-    vec->normal[2] *= length;
-    
-    // tangent
-    tmpLength = sqrtf(vec->tangent[0] * vec->tangent[0] +
-        vec->tangent[1] * vec->tangent[1] +
-        vec->tangent[2] * vec->tangent[2]);
-
-    if(tmpLength == 0.0f)
+    if(length == 0.0f)
         length = 0.0f;
     else
-        length = 1.0f / tmpLength;
+        length = 1.0f / length;
 
-    vec->tangent[0] *= length;
-    vec->tangent[1] *= length;
-    vec->tangent[2] *= length;
-
-    // bitangent
-    tmpLength = sqrtf(vec->bitangent[0] * vec->bitangent[0] +
-        vec->bitangent[1] * vec->bitangent[1] +
-        vec->bitangent[2] * vec->bitangent[2]);
-
-    if(tmpLength == 0.0f)
-        length = 0.0f;
-    else
-        length = 1.0f / tmpLength;
-
-    vec->bitangent[0] *= length;
-    vec->bitangent[1] *= length;
-    vec->bitangent[2] *= length;
-    
-    
-    
+    vector[0] *= length;
+    vector[1] *= length;
+    vector[2] *= length;
 }
