@@ -82,42 +82,42 @@ int main (int argc, char* argv[])
     //---------------------------------------------------------------------------------------------------------
     TCLAP::ValueArg<std::string> translateArg("t",
                                               "translate",
-                                              "Translate the mesh by this vector.",
+                                              "Translates the mesh by this vector.",
                                               false,
                                               "",
                                               "x/y/z");
 
     TCLAP::ValueArg<std::string> rotateArg("r",
                                            "rotate",
-                                           "Rotate the mesh <angle> degrees on the axis x/y/z.",
+                                           "Rotates the mesh <angle> degrees on the axis x/y/z.",
                                            false,
                                            "",
                                            "angle/x/y/z");
 
     TCLAP::ValueArg<std::string> scaleArg("s",
                                           "scale",
-                                          "Scale the mesh by this scale vector or scale by one scale factor s.",
+                                          "Scales the mesh by this scale vector or scales by one scale factor s.",
                                           false,
                                           "",
                                           "x/y/z|s");
 
     TCLAP::ValueArg<std::string> resizeArg("",
                                            "resize",
-                                           "Scale the mesh so, that its size is x/y/z or give axis and new value r.",
+                                           "Scales the mesh so, that its size is x/y/z or give axis and new value r.",
                                            false,
                                            "",
                                            "x/y/z|axis/r");
 
     TCLAP::ValueArg<std::string> centerArg("",
                                            "center",
-                                           "Center mesh to given axis (i.e. 1/1/1 to put center to 0/0/0).",
+                                           "Centers mesh to given axis (i.e. 1/1/1 to put center to 0/0/0).",
                                            false,
                                            "",
                                            "1/1/1");
 
     TCLAP::SwitchArg centerAllArg("",
                                   "center-all",
-                                  "Center mesh to all axis.",
+                                  "Centers mesh to all axis.",
                                   false);
     
     //---------------------------------------------------------------------------------------------------------
@@ -130,7 +130,7 @@ int main (int argc, char* argv[])
     TCLAP::ValuesConstraint<std::string> conversionIndexTypeToAllowedVals( conversionIndexTypeToAllowed );
     TCLAP::ValueArg<std::string> convertIndexTypeToArg("",
                                                        "convert-index-type-to",
-                                                       "Convert index type between UNSIGNED_INT , UNSIGNED_SHORT and UNSIGNED_BYTE.",
+                                                       "Converts index type between UNSIGNED_INT , UNSIGNED_SHORT and UNSIGNED_BYTE.",
                                                        false,
                                                        "",
                                                        &conversionIndexTypeToAllowedVals);
@@ -144,21 +144,21 @@ int main (int argc, char* argv[])
     TCLAP::ValuesConstraint<std::string> normalsTangentsAllowedVals( normalsTangentsAllowed );
     TCLAP::ValueArg<std::string> normalsArg("",
                                             "normals",
-                                            "Generate or remove mesh normals.",
+                                            "Generates or removes mesh normals.",
                                             false,
                                             "",
                                             &normalsTangentsAllowedVals);
 
     TCLAP::ValueArg<std::string> tangentsArg("",
                                              "tangents",
-                                             "Generate or remove mesh tangents.",
+                                             "Generates or removes mesh tangents.",
                                              false,
                                              "",
                                              &normalsTangentsAllowedVals);
 
     TCLAP::ValueArg<std::string> bitangentsArg("",
                                                "bitangents",
-                                               "Generate or remove mesh bitangents.",
+                                               "Generates or removes mesh bitangents.",
                                                false,
                                                "",
                                                &normalsTangentsAllowedVals);
@@ -168,17 +168,17 @@ int main (int argc, char* argv[])
     //---------------------------------------------------------------------------------------------------------
     TCLAP::SwitchArg optimizeVerticesArg("",
                                          "optimize-vertices",
-                                         "Optimize vertices order for GPU cache.",
+                                         "Optimizes vertices order for GPU cache.",
                                          false);
 
     TCLAP::SwitchArg optimizeIndicesArg("",
                                         "optimize-indices",
-                                        "Optimize indices order for GPU cache.",
+                                        "Optimizes indices order for GPU cache.",
                                         false);
 
     TCLAP::SwitchArg stitchArg("",
                                "stitch",
-                               "Remove duplicate vertices",
+                               "Removes duplicate vertices.",
                                false);
 
     std::vector<std::string> stitchAllowed;
@@ -190,7 +190,7 @@ int main (int argc, char* argv[])
     TCLAP::ValuesConstraint<std::string> stitchAllowedVals( stitchAllowed );
     TCLAP::ValueArg<std::string> stitchEpsArg("",
                                               "stitch-eps",
-                                              "Remove duplicate vertices. Comparing all attributes but one given attribute with a possible deviation epsilon.",
+                                              "Removes duplicate vertices. Compares all attributes but one given attribute with a possible deviation epsilon.",
                                               false,
                                               "",
                                               &stitchAllowedVals);
@@ -200,7 +200,7 @@ int main (int argc, char* argv[])
     //---------------------------------------------------------------------------------------------------------
     TCLAP::ValueArg<std::string> renameIdsArg("",
                                               "rename-ids",
-                                              "Rename group ids.",
+                                              "Renames group ids.",
                                               false,
                                               "",
                                               "new-name");
@@ -214,19 +214,19 @@ int main (int argc, char* argv[])
     TCLAP::ValuesConstraint<std::string> flipAllowedVals( flipAllowed );
     TCLAP::ValueArg<std::string> flipArg("",
                                          "flip",
-                                         "Flip front-face clockwise or counterclockwise.",
+                                         "Flips front-face clockwise or counterclockwise.",
                                          false,
                                          "",
                                          &flipAllowedVals);
     
     TCLAP::SwitchArg checkWithNormalsArg("",
                                          "check-with-normals",
-                                         "Check with normals (if present).",
+                                         "Checks with normals (if present).",
                                          false);
 
     TCLAP::SwitchArg validateAndChangeArg("",
                                           "validate-and-change",
-                                          "Validate and change mesh.",
+                                          "Validates and changes mesh.",
                                           false);
 
     //---------------------------------------------------------------------------------------------------------
@@ -234,9 +234,9 @@ int main (int argc, char* argv[])
     //---------------------------------------------------------------------------------------------------------
     TCLAP::SwitchArg verboseArg("v", "verbose", "Verbose output.", false);
     
-    TCLAP::SwitchArg infoArg("i", "info", "Print mesh info.", false);
+    TCLAP::SwitchArg infoArg("i", "info", "Prints the mesh info.", false);
 
-    TCLAP::SwitchArg dumpArg("", "dump-txt", "Dump mesh to text file.", false);
+    TCLAP::SwitchArg dumpArg("", "dump-txt", "Dumps the mesh to a text file.", false);
     //---------------------------------------------------------------------------------------------------------
     // Adding args to cmd
     //---------------------------------------------------------------------------------------------------------
