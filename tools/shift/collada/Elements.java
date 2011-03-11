@@ -115,9 +115,9 @@ final class Elements
     }    
 
     //TODO: needs fixing? at least adjsut style to similiar than above!
-    public static double[][] coordinates(String data, int count, int stride, int offset)
+    public static float[][] paraseFloatArray(String data, int count, int stride, int offset)
     {
-        double[][] vertexElements = new double[count][stride];
+        float[][] vertexElements = new float[count][stride];
 
         StringTokenizer tokenizer = new StringTokenizer(data);
 
@@ -127,7 +127,7 @@ final class Elements
         index = 0;
         for(int i=0; i<vertexElements.length; i++) for(int j=0; j<vertexElements[i].length; j++)
         {
-            vertexElements[i][j] = Double.parseDouble(tokenizer.nextToken());
+            vertexElements[i][j] = Float.parseFloat(tokenizer.nextToken());
         }
         return vertexElements;
     }
