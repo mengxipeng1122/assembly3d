@@ -38,7 +38,11 @@
 using namespace WizUtils;
 using namespace MeshTester;
 
-TesterTool::TesterTool(const char* actual, const char* actualBinary, const char* expected, const char* expectedBinary)
+TesterTool::TesterTool(const char* actual, const char* actualBinary, const char* expected, const char* expectedBinary, float epsilon)
+    :
+    m_attribsPass(false),
+    m_groupsPass(false),
+    m_epsilon(epsilon)
 {
     loadMesh(actual, actualBinary, m_attributesActual, m_groupsActual);
 
@@ -150,8 +154,7 @@ void TesterTool::start()
             const Attribute& attribE = m_attributesExpected[i];
             if(attribA.count == attribE.count)
             {
-                // TODO: Add epsilon
-                if(compare(attribE.count, attribA.values, attribE.values) == 0)
+                if(compare(attribE.count, attribA.values, attribE.values, m_epsilon) == 0)
                 {
                     m_attribsPass = true;
                 }
@@ -172,10 +175,14 @@ void TesterTool::start()
             const Group& groupE = m_groupsExpected[i];
             if(groupA.numBytes == groupE.numBytes)
             {
-                // TODO: Add epsilon
                 if(compare(groupE.numBytes, groupA.bytes, groupE.bytes) == 0)
                 {
                     m_groupsPass = true;
+                }
+                else
+                {
+                    m_groupsPass = false;
+                    break;
                 }
             }
         }
@@ -212,8 +219,8 @@ int TesterTool::compare(int n, float* array_a, float* array_e, float epsilon)
     return 0;
 }
 
-int TesterTool::compare(int n, unsigned char* array_a, unsigned char* array_b)
+int TesterTool::compare(int n, unsigned char* array_a, unsigned char* array_e)
 {
-    return memcmp(array_a, array_b, n);
+    return memcmp(array_a, array_e, n);
 }
 

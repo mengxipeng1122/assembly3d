@@ -41,15 +41,15 @@
 class TesterTool
 {
 public:
-    TesterTool(const char* actual, const char* actualBinary, const char* expected, const char* expectedBinary);
+    TesterTool(const char* actual, const char* actualBinary, const char* expected, const char* expectedBinary, float epsilon);
 
     void start();
 
     void printResults();
 
 private:
-    int compare(int n, float* array_a, float* array_b, float epsilon=0.0f);
-    int compare(int n, unsigned char* array_a, unsigned char* array_b);
+    int compare(int n, float* array_a, float* array_e, float epsilon);
+    int compare(int n, unsigned char* array_a, unsigned char* array_e);
 
     void loadMesh(const std::string& xmlFile,
                   const std::string& binaryFile,
@@ -64,6 +64,8 @@ private:
 
     bool m_attribsPass;
     bool m_groupsPass;
+
+    float m_epsilon;
 
 
 };
