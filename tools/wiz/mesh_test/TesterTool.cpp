@@ -33,22 +33,24 @@
 
 #include "TesterTool.h"
 #include "WizUtils.h"
+#include <fstream>
 
 using namespace WizUtils;
 using namespace MeshTester;
 
-TesterTool::TesterTool(const char* actual, const char* expected)
+TesterTool::TesterTool(const char* actual, const char* actualBinary, const char* expected, const char* expectedBinary)
 {
-    loadMesh(actual, m_attributesActual);
+    loadMesh(actual, actualBinary, m_attributesActual, m_groupsActual);
 
-    loadMesh(expected, m_attributesExpected);
-
+    loadMesh(expected, expectedBinary, m_attributesExpected, m_groupsExpected);
 }
 
-void TesterTool::loadMesh(const std::string &xmlPath, std::vector<Attribute>& attribs)
+void TesterTool::loadMesh(const std::string &xmlFile, const std::string& binaryFile, std::vector<Attribute>& attribs, std::vector<Group>& groups)
 {
     XmlParser xml;
-    xml.loadFile(xmlPath);
+    xml.loadFile(xmlFile);
+
+    std::ifstream fin(binaryFile.c_str(), std::ios::binary);
 
     xml.pushTag("Mesh");
     {
@@ -62,41 +64,156 @@ void TesterTool::loadMesh(const std::string &xmlPath, std::vector<Attribute>& at
                 Attribute attrib;
                 attrib.name = xml.getAttribute("Attribute", "name", "", i).c_str();
                 attrib.size = xml.getAttribute("Attribute", "size", 0, i);
-                attrib.values = new float[numVertices * attrib.size];
+                attrib.count = numVertices * attrib.size;
+                attrib.values = new float[attrib.count];
+
+                for(int j = 0; j < numVertices; ++j)
+                {
+                    for(int k = 0; k < attrib.size; ++k)
+                    {
+                        float val = 0.0f;
+
+                        fin.read((char *)(&val), sizeof(val));
+
+                        attrib.values[j*attrib.size + k] = val;
+                    }
+                }
+
                 attribs.push_back(attrib);
+            }
+        }
+        xml.popTag();
+
+        int numGroups = xml.getAttribute("Triangles", "groups", 0);
+        std::string typeIndices = xml.getAttribute("Triangles", "type", "");
+
+        xml.pushTag("Triangles");
+        {
+            for(int i = 0; i < numGroups; ++i)
+            {
+                Group group;
+                group.type = typeIndices.c_str();
+                group.name = xml.getAttribute("Group", "name", "", i).c_str();
+                group.count = xml.getAttribute("Group", "count", 0, i);
+
+                int numBytes = 0;
+
+                if(std::string(group.type).compare("UNSIGNED_BYTE") == 0)
+                {
+                    numBytes = group.count * 3 * sizeof(unsigned char);
+                }
+                else if(std::string(group.type).compare("UNSIGNED_SHORT") == 0)
+                {
+                    numBytes = group.count * 3 * sizeof(unsigned short);
+                }
+                else if(std::string(group.type).compare("UNSIGNED_INT") == 0)
+                {
+                    numBytes = group.count * 3 * sizeof(unsigned int);
+                }
+
+                group.numBytes = numBytes;
+                group.bytes = new unsigned char[numBytes];
+
+                for(int j = 0; j < group.count*3; ++j)
+                {
+                    unsigned char val = 0;
+
+                    fin.read((char *)(&val), sizeof(val));
+
+                    group.bytes[j] = val;
+                }
+
+                groups.push_back(group);
+
             }
         }
         xml.popTag();
     }
     xml.popTag();
+    fin.close();
+    xml.clear();
 
 }
 
 void TesterTool::start()
 {
     // test attributes
+    m_attribsPass = false;
+    m_groupsPass = false;
 
-    for(unsigned int i = 0; i < m_attributesActual.size(); ++i)
+
+    if(m_attributesActual.size() == m_attributesExpected.size())
     {
-
+        for(unsigned int i = 0; i < m_attributesExpected.size(); ++i)
+        {
+            const Attribute& attribA = m_attributesActual[i];
+            const Attribute& attribE = m_attributesExpected[i];
+            if(attribA.count == attribE.count)
+            {
+                // TODO: Add epsilon
+                if(compare(attribE.count, attribA.values, attribE.values) == 0)
+                {
+                    m_attribsPass = true;
+                }
+                else
+                {
+                    m_attribsPass = false;
+                    break;
+                }
+            }
+        }
     }
 
+    if(m_groupsActual.size() == m_groupsExpected.size())
+    {
+        for(unsigned int i = 0; i < m_groupsExpected.size(); ++i)
+        {
+            const Group& groupA = m_groupsActual[i];
+            const Group& groupE = m_groupsExpected[i];
+            if(groupA.numBytes == groupE.numBytes)
+            {
+                // TODO: Add epsilon
+                if(compare(groupE.numBytes, groupA.bytes, groupE.bytes) == 0)
+                {
+                    m_groupsPass = true;
+                }
+            }
+        }
+
+    }
     // test indices
+
+    printResults();
 
 }
 
 void TesterTool::printResults()
 {
+    if(m_attribsPass && m_groupsPass)
+    {
+        std::cout << "Passed!" << std::endl;
+    }
+    else
+    {
+        std::cout << "Failed!" << std::endl;
+    }
 
 }
 
-int TesterTool::compare(int n, float* array_a, float* array_b, float epsilon)
+int TesterTool::compare(int n, float* array_a, float* array_e, float epsilon)
 {
+    for(int i = 0; i < n; ++i)
+    {
+        if(array_a[i] < array_e[i] - epsilon/2 || array_a[i] > array_e[i] + epsilon/2 )
+        {
+            return -1;
+        }
+    }
     return 0;
 }
 
 int TesterTool::compare(int n, unsigned char* array_a, unsigned char* array_b)
 {
-    return 0;
+    return memcmp(array_a, array_b, n);
 }
 

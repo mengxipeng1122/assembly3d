@@ -40,17 +40,17 @@ namespace MeshTester
     {
         const char* name;
         int size;
+        int count;
         float* values;
     };
 
     struct Group
     {
-
-    };
-
-    struct Triangle
-    {
-
+        const char* name;
+        const char* type;
+        int count;
+        unsigned char* bytes;
+        int numBytes;
     };
 
 }

@@ -43,21 +43,29 @@ int main (int argc, char* argv[])
                            '=',
                            ProjectInfo::versionString);
 
-        TCLAP::ValueArg<std::string> inputArg("i", "input", "Input file", true, "", "input-file");
-        TCLAP::ValueArg<std::string> expectedArg("e", "expected", "Outputfile", true, "", "output-file");
+        TCLAP::ValueArg<std::string> actualArg("a", "actual-input", "Input file", true, "", "actual-input-file");
+        TCLAP::ValueArg<std::string> actualBinaryArg("", "actual-binary", "Actual input binary file", true, "", "actual-binary-file");
+        TCLAP::ValueArg<std::string> expectedArg("e", "expected-input", "Expected file", true, "", "expected-file");
+        TCLAP::ValueArg<std::string> expectedBinaryArg("", "expected-binary", "Expected binary file", true, "", "expected-binary-file");
 
-        TCLAP::SwitchArg ignoreOrderAttributes("", "ignore-order-attributes", "Ignore attribute order");
-        TCLAP::SwitchArg ignoreOrderGroups("", "ignore-order-groups", "Ignore group order");
+//        TCLAP::SwitchArg ignoreOrderAttributes("", "ignore-order-attributes", "Ignore attribute order");
+//        TCLAP::SwitchArg ignoreOrderGroups("", "ignore-order-groups", "Ignore group order");
 
-        cmd.add(ignoreOrderAttributes);
-        cmd.add(ignoreOrderGroups);
+//        cmd.add(ignoreOrderAttributes);
+//        cmd.add(ignoreOrderGroups);
+        cmd.add(expectedBinaryArg);
         cmd.add(expectedArg);
-        cmd.add(inputArg);
+        cmd.add(actualBinaryArg);
+        cmd.add(actualArg);
 
         // Parse the argv array.
         cmd.parse( argc, argv );
 
-        TesterTool tester(inputArg.getValue().c_str(), expectedArg.getValue().c_str());
+        std::string actualFile = actualArg.getValue();
+        std::string actualBinaryFile = actualBinaryArg.getValue();
+        std::string expectedFile = expectedArg.getValue();
+        std::string expectedBinaryFile = expectedBinaryArg.getValue();
+        TesterTool tester(actualFile.c_str(), actualBinaryFile.c_str(), expectedFile.c_str(), expectedBinaryFile.c_str());
 
         tester.start();
 
