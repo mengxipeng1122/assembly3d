@@ -37,24 +37,21 @@
 
 using namespace WizUtils;
 using namespace MeshTester;
+using namespace std;
 
-TesterTool::TesterTool(const char* actual, const char* actualBinary, const char* expected, const char* expectedBinary, float epsilon)
-    :
-    m_attribsPass(false),
-    m_groupsPass(false),
-    m_epsilon(epsilon)
+TesterTool::TesterTool()
 {
-    loadMesh(actual, actualBinary, m_attributesActual, m_groupsActual);
-
-    loadMesh(expected, expectedBinary, m_attributesExpected, m_groupsExpected);
 }
 
-void TesterTool::loadMesh(const std::string &xmlFile, const std::string& binaryFile, std::vector<Attribute>& attribs, std::vector<Group>& groups)
+void TesterTool::loadMesh(const string &xmlFile,
+                          const string& binaryFile,
+                          vector<Attribute>& attribs,
+                          vector<Group>& groups)
 {
     XmlParser xml;
     xml.loadFile(xmlFile);
 
-    std::ifstream fin(binaryFile.c_str(), std::ios::binary);
+    ifstream fin(binaryFile.c_str(), ios::binary);
 
     xml.pushTag("Mesh");
     {
@@ -89,7 +86,7 @@ void TesterTool::loadMesh(const std::string &xmlFile, const std::string& binaryF
         xml.popTag();
 
         int numGroups = xml.getAttribute("Triangles", "groups", 0);
-        std::string typeIndices = xml.getAttribute("Triangles", "type", "");
+        string typeIndices = xml.getAttribute("Triangles", "type", "");
 
         xml.pushTag("Triangles");
         {
@@ -102,15 +99,15 @@ void TesterTool::loadMesh(const std::string &xmlFile, const std::string& binaryF
 
                 int numBytes = 0;
 
-                if(std::string(group.type).compare("UNSIGNED_BYTE") == 0)
+                if(string(group.type).compare("UNSIGNED_BYTE") == 0)
                 {
                     numBytes = group.count * 3 * sizeof(unsigned char);
                 }
-                else if(std::string(group.type).compare("UNSIGNED_SHORT") == 0)
+                else if(string(group.type).compare("UNSIGNED_SHORT") == 0)
                 {
                     numBytes = group.count * 3 * sizeof(unsigned short);
                 }
-                else if(std::string(group.type).compare("UNSIGNED_INT") == 0)
+                else if(string(group.type).compare("UNSIGNED_INT") == 0)
                 {
                     numBytes = group.count * 3 * sizeof(unsigned int);
                 }
@@ -134,84 +131,122 @@ void TesterTool::loadMesh(const std::string &xmlFile, const std::string& binaryF
         xml.popTag();
     }
     xml.popTag();
-    fin.close();
     xml.clear();
+    fin.close();
 
 }
 
-void TesterTool::start()
+void TesterTool::compare(const char* actual,
+                         const char* actualBinary,
+                         const char* expected,
+                         const char* expectedBinary,
+                         float epsilon)
 {
+    std::vector<Attribute> attributesActual;
+    std::vector<Attribute> attributesExpected;
+    std::vector<Group> groupsActual;
+    std::vector<Group> groupsExpected;
+
+    loadMesh(actual, actualBinary, attributesActual, groupsActual);
+    loadMesh(expected, expectedBinary, attributesExpected, groupsExpected);
+
+    bool attribsPass = false;
+    bool groupsPass = false;
+
     // test attributes
-    m_attribsPass = false;
-    m_groupsPass = false;
-
-
-    if(m_attributesActual.size() == m_attributesExpected.size())
+    if(attributesActual.size() == attributesExpected.size())
     {
-        for(unsigned int i = 0; i < m_attributesExpected.size(); ++i)
+        for(unsigned int i = 0; i < attributesExpected.size(); ++i)
         {
-            const Attribute& attribA = m_attributesActual[i];
-            const Attribute& attribE = m_attributesExpected[i];
+            const Attribute& attribA = attributesActual[i];
+            const Attribute& attribE = attributesExpected[i];
             if(attribA.count == attribE.count)
             {
-                if(compare(attribE.count, attribA.values, attribE.values, m_epsilon) == 0)
+                if(compare(attribE.count,
+                           attribA.values,
+                           attribE.values,
+                           epsilon) == 0)
                 {
-                    m_attribsPass = true;
+                    attribsPass = true;
                 }
                 else
                 {
-                    m_attribsPass = false;
+                    attribsPass = false;
                     break;
                 }
+            }
+            else
+            {
+                attribsPass = false;
+                break;
             }
         }
     }
 
-    if(m_groupsActual.size() == m_groupsExpected.size())
+    // test indices
+    if(groupsActual.size() == groupsExpected.size())
     {
-        for(unsigned int i = 0; i < m_groupsExpected.size(); ++i)
+        for(unsigned int i = 0; i < groupsExpected.size(); ++i)
         {
-            const Group& groupA = m_groupsActual[i];
-            const Group& groupE = m_groupsExpected[i];
+            const Group& groupA = groupsActual[i];
+            const Group& groupE = groupsExpected[i];
             if(groupA.numBytes == groupE.numBytes)
             {
-                if(compare(groupE.numBytes, groupA.bytes, groupE.bytes) == 0)
+                if(compare(groupE.numBytes,
+                           groupA.bytes,
+                           groupE.bytes) == 0)
                 {
-                    m_groupsPass = true;
+                    groupsPass = true;
                 }
                 else
                 {
-                    m_groupsPass = false;
+                    groupsPass = false;
                     break;
                 }
             }
+            else
+            {
+                groupsPass = false;
+                break;
+            }
         }
-
     }
-    // test indices
 
-    printResults();
-
-}
-
-void TesterTool::printResults()
-{
-    if(m_attribsPass && m_groupsPass)
+    // print result
+    if(attribsPass && groupsPass)
     {
-        std::cout << "Passed!" << std::endl;
+        cout << "Passed!" << endl;
     }
     else
     {
-        std::cout << "Failed!" << std::endl;
+        cout << "Failed!" << endl;
     }
 
+    // delete allocated memory
+    clear(attributesActual, groupsActual);
+    clear(attributesExpected, groupsExpected);
+
+}
+
+void TesterTool::clear(std::vector<Attribute>& attribs,
+                       std::vector<Group>& groups)
+{
+    for(unsigned int i = 0; i < attribs.size(); ++i)
+    {
+        delete[] attribs[i].values;
+    }
+    for(unsigned int i = 0; i < groups.size(); ++i)
+    {
+        delete[] groups[i].bytes;
+    }
 }
 
 int TesterTool::compare(int n, float* array_a, float* array_e, float epsilon)
 {
     for(int i = 0; i < n; ++i)
     {
-        if(array_a[i] < array_e[i] - epsilon/2 || array_a[i] > array_e[i] + epsilon/2 )
+        if(array_a[i] < array_e[i] - epsilon/2 ||
+           array_a[i] > array_e[i] + epsilon/2 )
         {
             return -1;
         }
@@ -223,4 +258,3 @@ int TesterTool::compare(int n, unsigned char* array_a, unsigned char* array_e)
 {
     return memcmp(array_a, array_e, n);
 }
-

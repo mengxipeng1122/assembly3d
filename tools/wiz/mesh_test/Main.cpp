@@ -39,15 +39,15 @@
 int main (int argc, char* argv[])
 {
     try {
-        TCLAP::CmdLine cmd("MeshTester - Utility for testing Assembly3D mesh files.",
+        TCLAP::CmdLine cmd("MeshTester - Utility for comparing Assembly3D mesh files.",
                            '=',
                            ProjectInfo::versionString);
 
-        TCLAP::ValueArg<std::string> actualArg("a", "actual-input", "Input file", true, "", "actual-input-file");
-        TCLAP::ValueArg<std::string> actualBinaryArg("", "actual-binary", "Actual input binary file", true, "", "actual-binary-file");
-        TCLAP::ValueArg<std::string> expectedArg("e", "expected-input", "Expected file", true, "", "expected-file");
-        TCLAP::ValueArg<std::string> expectedBinaryArg("", "expected-binary", "Expected binary file", true, "", "expected-binary-file");
-        TCLAP::ValueArg<float> epsilonArg("", "epsilon", "Epsilon for attribute compare (default 0.0).", false, 0.0f, "val");
+        TCLAP::ValueArg<std::string> actualArg("a", "actual", "Actual file.", true, "", "file-path");
+        TCLAP::ValueArg<std::string> actualBinaryArg("b", "actual-binary", "Actual input binary file.", true, "", "file-path");
+        TCLAP::ValueArg<std::string> expectedArg("e", "expected", "Expected file.", true, "", "file-path");
+        TCLAP::ValueArg<std::string> expectedBinaryArg("f", "expected-binary", "Expected binary file.", true, "", "file-path");
+        TCLAP::ValueArg<float> epsilonArg("", "epsilon", "Compares attribute values with a deviation epsilon (default 0.0).", false, 0.0f, "val");
 
 //        TCLAP::SwitchArg ignoreOrderAttributes("", "ignore-order-attributes", "Ignore attribute order");
 //        TCLAP::SwitchArg ignoreOrderGroups("", "ignore-order-groups", "Ignore group order");
@@ -63,14 +63,15 @@ int main (int argc, char* argv[])
         // Parse the argv array.
         cmd.parse( argc, argv );
 
-        std::string actualFile = actualArg.getValue();
-        std::string actualBinaryFile = actualBinaryArg.getValue();
-        std::string expectedFile = expectedArg.getValue();
-        std::string expectedBinaryFile = expectedBinaryArg.getValue();
+        const char* actualFile = actualArg.getValue().c_str();
+        const char* actualBinaryFile = actualBinaryArg.getValue().c_str();
+        const char* expectedFile = expectedArg.getValue().c_str();
+        const char* expectedBinaryFile = expectedBinaryArg.getValue().c_str();
         float eps = epsilonArg.getValue();
-        TesterTool tester(actualFile.c_str(), actualBinaryFile.c_str(), expectedFile.c_str(), expectedBinaryFile.c_str(), eps);
 
-        tester.start();
+        TesterTool tester;
+
+        tester.compare(actualFile, actualBinaryFile, expectedFile, expectedBinaryFile, eps);
 
     } catch (TCLAP::ArgException &e)  // catch any exceptions
     { std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; }
