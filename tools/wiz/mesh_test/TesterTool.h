@@ -41,13 +41,19 @@
 class TesterTool
 {
 public:
-    TesterTool(const char* actual, const char* actualBinary, const char* expected, const char* expectedBinary, float epsilon);
+    TesterTool();
 
-    void start();
-
-    void printResults();
+    void compare(const char* actual,
+                 const char* actualBinary,
+                 const char* expected,
+                 const char* expectedBinary,
+                 float epsilon);
 
 private:
+
+    void clear(std::vector<MeshTester::Attribute>& attribs,
+               std::vector<MeshTester::Group>& groups);
+
     int compare(int n, float* array_a, float* array_e, float epsilon);
     int compare(int n, unsigned char* array_a, unsigned char* array_e);
 
@@ -55,18 +61,6 @@ private:
                   const std::string& binaryFile,
                   std::vector<MeshTester::Attribute>& attribs,
                   std::vector<MeshTester::Group>& m_groupsActual);
-
-    std::vector<MeshTester::Attribute> m_attributesActual;
-    std::vector<MeshTester::Attribute> m_attributesExpected;
-
-    std::vector<MeshTester::Group> m_groupsActual;
-    std::vector<MeshTester::Group> m_groupsExpected;
-
-    bool m_attribsPass;
-    bool m_groupsPass;
-
-    float m_epsilon;
-
 
 };
 
