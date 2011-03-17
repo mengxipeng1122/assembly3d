@@ -43,7 +43,7 @@ int main (int argc, char* argv[])
 {
     std::string inputfile;
     std::string outputfile;
-    bool verbose = false;
+    bool verbose = true;
     //bool debug = false;
     bool modelChanged = false;
     
@@ -232,7 +232,7 @@ int main (int argc, char* argv[])
     //---------------------------------------------------------------------------------------------------------
     // Other
     //---------------------------------------------------------------------------------------------------------
-    TCLAP::SwitchArg verboseArg("v", "verbose", "Verbose output.", false);
+    TCLAP::SwitchArg quiteArg("q", "quite", "No verbose output.", false);
     
     TCLAP::SwitchArg infoArg("i", "info", "Prints the mesh info.", false);
 
@@ -242,7 +242,7 @@ int main (int argc, char* argv[])
     //---------------------------------------------------------------------------------------------------------
     cmd.add(infoArg);
     cmd.add(dumpArg);
-    cmd.add(verboseArg);
+    cmd.add(quiteArg);
     cmd.add(binaryOutputArg);
     cmd.add(inputArg);
     cmd.add(outputArg);
@@ -331,7 +331,7 @@ int main (int argc, char* argv[])
         return 0;
     }
 
-	verbose = verboseArg.getValue();
+    verbose = !quiteArg.getValue();
     ToolManager toolMgr(&mesh, verbose);
     
     //---------------------------------------------------------------------------------------------------------
