@@ -31,7 +31,7 @@
  *
  */
 
-#include "MeshTesterIncludes.h"
+#include "MeshTestIncludes.h"
 #include <tclap/CmdLine.h>
 #include "TesterTool.h"
 

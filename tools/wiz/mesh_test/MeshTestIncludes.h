@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef MESHTESTERINCLUDE_H
-#define MESHTESTERINCLUDE_H
+#ifndef MESHTESTINCLUDE_H
+#define MESHTESTINCLUDE_H
 
 // -----------------------------------------------------------------------------
 
@@ -40,15 +40,15 @@
 
 // -----------------------------------------------------------------------------
 
-#include "MeshTesterTypes.h"
+#include "MeshTestTypes.h"
 
 // -----------------------------------------------------------------------------
 
 namespace ProjectInfo
 {
-    const char* const  projectName    = "MeshTester";
+    const char* const  projectName    = "MeshTest";
     const char* const  versionString  = "1.0.0";
     const int          versionNumber  = 0x10000;
 }
 
-#endif // MESHTESTERINCLUDE_H
+#endif // MESHTESTINCLUDE_H

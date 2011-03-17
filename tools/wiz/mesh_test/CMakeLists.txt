@@ -7,17 +7,17 @@ include_directories(${WizUtils_INCLUDE}
                     ${Tinyxml_INCLUDE}
                     ${TCLAP_INCLUDE})
 
-add_executable(MeshTester Main.cpp
+add_executable(MeshTest Main.cpp
                           TesterTool.h
                           TesterTool.cpp
-                          MeshTesterIncludes.h
-                          MeshTesterTypes.h)
+                          MeshTestIncludes.h
+                          MeshTestTypes.h)
 
-target_link_libraries(MeshTester WizUtils)
+target_link_libraries(MeshTest WizUtils)
 
-#install(TARGETS MeshTester DESTINATION ${CMAKE_SOURCE_DIR}/testsuite)
+#install(TARGETS MeshTest DESTINATION ${CMAKE_SOURCE_DIR}/testsuite)
 if(WIN32)
-    install(TARGETS MeshTester RUNTIME DESTINATION .)
+    install(TARGETS MeshTest RUNTIME DESTINATION .)
 else()
-    install(TARGETS MeshTester RUNTIME DESTINATION bin)
+    install(TARGETS MeshTest RUNTIME DESTINATION bin)
 endif()
