@@ -35,6 +35,16 @@
 #include <tclap/CmdLine.h>
 #include "TesterTool.h"
 
+std::string getBinaryFileName(const std::string& fileName)
+{
+    std::string binaryFileName;
+    size_t pos = fileName.find(".xml");
+    binaryFileName = fileName.substr(0, pos);
+    binaryFileName.append(".dat");
+
+    return binaryFileName;
+}
+
 
 int main (int argc, char* argv[])
 {
@@ -43,11 +53,37 @@ int main (int argc, char* argv[])
                            '=',
                            ProjectInfo::versionString);
 
-        TCLAP::ValueArg<std::string> actualArg("a", "actual", "Actual file.", true, "", "file-path");
-        TCLAP::ValueArg<std::string> actualBinaryArg("b", "actual-binary", "Actual input binary file.", true, "", "file-path");
-        TCLAP::ValueArg<std::string> expectedArg("e", "expected", "Expected file.", true, "", "file-path");
-        TCLAP::ValueArg<std::string> expectedBinaryArg("f", "expected-binary", "Expected binary file.", true, "", "file-path");
-        TCLAP::ValueArg<float> epsilonArg("", "epsilon", "Compares attribute values with a deviation epsilon (default 0.0).", false, 0.0f, "val");
+        // -------------------------------------------------------------------
+
+        TCLAP::ValueArg<std::string> actualArg("a",
+                                               "actual",
+                                               "Actual file.",
+                                               true,
+                                               "",
+                                               "file-path");
+
+        TCLAP::ValueArg<std::string> actualBinaryArg("", "actual-binary",
+                                                     "Actual input binary file (default: same as actual file but with extension '.dat').",
+                                                     false, "",
+                                                     "file-path");
+        TCLAP::ValueArg<std::string> expectedArg("e",
+                                                 "expected",
+                                                 "Expected file.",
+                                                 true,
+                                                 "",
+                                                 "file-path");
+
+        TCLAP::ValueArg<std::string> expectedBinaryArg("",
+                                                       "expected-binary",
+                                                       "Expected binary file (default: same as expected file but with extension '.dat').",
+                                                       false, "",
+                                                       "file-path");
+        TCLAP::ValueArg<float> epsilonArg("",
+                                          "epsilon",
+                                          "Compares attribute values with a deviation epsilon (default: 0.0).",
+                                          false,
+                                          0.0f,
+                                          "val");
 
 //        TCLAP::SwitchArg ignoreOrderAttributes("", "ignore-order-attributes", "Ignore attribute order");
 //        TCLAP::SwitchArg ignoreOrderGroups("", "ignore-order-groups", "Ignore group order");
@@ -63,15 +99,41 @@ int main (int argc, char* argv[])
         // Parse the argv array.
         cmd.parse( argc, argv );
 
-        const char* actualFile = actualArg.getValue().c_str();
-        const char* actualBinaryFile = actualBinaryArg.getValue().c_str();
-        const char* expectedFile = expectedArg.getValue().c_str();
-        const char* expectedBinaryFile = expectedBinaryArg.getValue().c_str();
+        // -------------------------------------------------------------------
+
+        std::string actualFile = actualArg.getValue();
+        std::string expectedFile = expectedArg.getValue();
+
+        std::string actualBinaryFile;
+        std::string expectedBinaryFile;
+
+        if(actualBinaryArg.isSet())
+        {
+            actualBinaryFile = actualBinaryArg.getValue();
+        }
+        else
+        {
+            actualBinaryFile = getBinaryFileName(actualFile);
+        }
+
+        if(expectedBinaryArg.isSet())
+        {
+            expectedBinaryFile = expectedBinaryArg.getValue();
+        }
+        else
+        {
+            expectedBinaryFile = getBinaryFileName(expectedFile);
+        }
+
         float eps = epsilonArg.getValue();
 
         TesterTool tester;
 
-        tester.compare(actualFile, actualBinaryFile, expectedFile, expectedBinaryFile, eps);
+        tester.compare(actualFile.c_str(),
+                       actualBinaryFile.c_str(),
+                       expectedFile.c_str(),
+                       expectedBinaryFile.c_str(),
+                       eps);
 
     } catch (TCLAP::ArgException &e)  // catch any exceptions
     { std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; }
