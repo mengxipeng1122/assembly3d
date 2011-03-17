@@ -153,7 +153,7 @@ void TesterTool::compare(const char* actual,
     bool attribsPass = false;
     bool groupsPass = false;
 
-    // test attributes
+    // compare attributes
     if(attributesActual.size() == attributesExpected.size())
     {
         for(unsigned int i = 0; i < attributesExpected.size(); ++i)
@@ -183,7 +183,7 @@ void TesterTool::compare(const char* actual,
         }
     }
 
-    // test indices
+    // compare groups
     if(groupsActual.size() == groupsExpected.size())
     {
         for(unsigned int i = 0; i < groupsExpected.size(); ++i)
