@@ -51,16 +51,16 @@ public:
 
 private:
 
-    void clear(std::vector<MeshTester::Attribute>& attribs,
-               std::vector<MeshTester::Group>& groups);
+    void clear(std::vector<MeshTest::Attribute>& attribs,
+               std::vector<MeshTest::Group>& groups);
 
     int compare(int n, float* array_a, float* array_e, float epsilon);
     int compare(int n, unsigned char* array_a, unsigned char* array_e);
 
     void loadMesh(const std::string& xmlFile,
                   const std::string& binaryFile,
-                  std::vector<MeshTester::Attribute>& attribs,
-                  std::vector<MeshTester::Group>& m_groupsActual);
+                  std::vector<MeshTest::Attribute>& attribs,
+                  std::vector<MeshTest::Group>& m_groupsActual);
 
 };
 

@@ -34,7 +34,7 @@
 #ifndef MESHTESTERTYPES_H
 #define MESHTESTERTYPES_H
 
-namespace MeshTester
+namespace MeshTest
 {
     struct Attribute
     {

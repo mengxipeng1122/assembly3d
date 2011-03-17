@@ -34,6 +34,9 @@
 #include "MeshTestIncludes.h"
 #include <tclap/CmdLine.h>
 #include "TesterTool.h"
+#include "WizUtils.h"
+
+using namespace WizUtils;
 
 std::string getBinaryFileName(const std::string& fileName)
 {
@@ -44,7 +47,6 @@ std::string getBinaryFileName(const std::string& fileName)
 
     return binaryFileName;
 }
-
 
 int main (int argc, char* argv[])
 {
@@ -104,6 +106,17 @@ int main (int argc, char* argv[])
         std::string actualFile = actualArg.getValue();
         std::string expectedFile = expectedArg.getValue();
 
+        if(FileUtils::checkIfFileExists(actualFile.c_str()) == false)
+        {
+            std::cerr << "Error: Actual file does not exist!" << std::endl;
+            return 0;
+        }
+        if(FileUtils::checkIfFileExists(expectedFile.c_str()) == false)
+        {
+            std::cerr << "Error: Expected file does not exist!" << std::endl;
+            return 0;
+        }
+
         std::string actualBinaryFile;
         std::string expectedBinaryFile;
 
@@ -123,6 +136,17 @@ int main (int argc, char* argv[])
         else
         {
             expectedBinaryFile = getBinaryFileName(expectedFile);
+        }
+
+        if(FileUtils::checkIfFileExists(actualBinaryFile.c_str()) == false)
+        {
+            std::cerr << "Error: Actual binary file does not exist!" << std::endl;
+            return 0;
+        }
+        if(FileUtils::checkIfFileExists(expectedBinaryFile.c_str()) == false)
+        {
+            std::cerr << "Error: Expected binary file does not exist!" << std::endl;
+            return 0;
         }
 
         float eps = epsilonArg.getValue();
