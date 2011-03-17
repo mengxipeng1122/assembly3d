@@ -270,8 +270,12 @@ int main (int argc, char* argv[])
     //---------------------------------------------------------------------------------------------------------
 
 //    std::cout << std::endl;
-    std::cout << cmd.getMessage() << std::endl;
-    std::cout << std::endl;
+    verbose = !quiteArg.getValue();
+    if(verbose)
+    {
+        std::cout << cmd.getMessage() << std::endl;
+        std::cout << std::endl;
+    }
 
     //---------------------------------------------------------------------------------------------------------
 
@@ -331,7 +335,7 @@ int main (int argc, char* argv[])
         return 0;
     }
 
-    verbose = !quiteArg.getValue();
+
     ToolManager toolMgr(&mesh, verbose);
     
     //---------------------------------------------------------------------------------------------------------

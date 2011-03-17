@@ -36,7 +36,7 @@
 #include <fstream>
 
 using namespace WizUtils;
-using namespace MeshTester;
+using namespace MeshTest;
 using namespace std;
 
 TesterTool::TesterTool()
