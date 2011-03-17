@@ -43,7 +43,7 @@ TesterTool::TesterTool()
 {
 }
 
-void TesterTool::loadMesh(const string &xmlFile,
+void TesterTool::loadMesh(const string& xmlFile,
                           const string& binaryFile,
                           vector<Attribute>& attribs,
                           vector<Group>& groups)
@@ -142,10 +142,10 @@ void TesterTool::compare(const char* actual,
                          const char* expectedBinary,
                          float epsilon)
 {
-    std::vector<Attribute> attributesActual;
-    std::vector<Attribute> attributesExpected;
-    std::vector<Group> groupsActual;
-    std::vector<Group> groupsExpected;
+    vector<Attribute> attributesActual;
+    vector<Attribute> attributesExpected;
+    vector<Group> groupsActual;
+    vector<Group> groupsExpected;
 
     loadMesh(actual, actualBinary, attributesActual, groupsActual);
     loadMesh(expected, expectedBinary, attributesExpected, groupsExpected);
@@ -228,8 +228,8 @@ void TesterTool::compare(const char* actual,
 
 }
 
-void TesterTool::clear(std::vector<Attribute>& attribs,
-                       std::vector<Group>& groups)
+void TesterTool::clear(vector<Attribute>& attribs,
+                       vector<Group>& groups)
 {
     for(unsigned int i = 0; i < attribs.size(); ++i)
     {
