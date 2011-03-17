@@ -14,3 +14,10 @@ add_executable(MeshTester Main.cpp
                           MeshTesterTypes.h)
 
 target_link_libraries(MeshTester WizUtils)
+
+#install(TARGETS MeshTester DESTINATION ${CMAKE_SOURCE_DIR}/testsuite)
+if(WIN32)
+    install(TARGETS MeshTester RUNTIME DESTINATION .)
+else()
+    install(TARGETS MeshTester RUNTIME DESTINATION bin)
+endif()
