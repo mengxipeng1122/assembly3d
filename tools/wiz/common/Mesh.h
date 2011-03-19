@@ -37,6 +37,7 @@
 #include "WizIncludes.h"
 #include <vector>
 #include <iostream>
+#include <string>
 
 class Mesh
 {
