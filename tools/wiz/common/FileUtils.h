@@ -50,6 +50,7 @@ namespace WizUtils
         static bool checkIfFileExists(const char* path);
         static std::string getFileNameFromPath(const std::string& s);
         static std::string getFileName(const std::string& s);
+        static std::string getBinaryFileName(const char* fileName, const char* oldExt, const char* newExt);
     private:
     };
 }

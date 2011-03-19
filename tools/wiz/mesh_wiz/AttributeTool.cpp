@@ -39,6 +39,8 @@
 #include "AttributeTool.h"
 #include <cmath>
 
+using namespace Wiz;
+
 AttributeTool::AttributeTool()
 {
     
@@ -341,11 +343,6 @@ void AttributeTool::removeTangents(Mesh* m)
         m->getVertex(i).tangent[0] = 0.0f;
         m->getVertex(i).tangent[1] = 0.0f;
         m->getVertex(i).tangent[2] = 0.0f;
-//        m->getVertices()[i].tangent[3] = 0.0f;
-
-//        m->getVertices()[i].bitangent[0] = 0.0f;
-//        m->getVertices()[i].bitangent[1] = 0.0f;
-//        m->getVertices()[i].bitangent[2] = 0.0f;
     }
     m->removeAttribute("TANGENT");
     m->hasTangents(false);
@@ -355,11 +352,6 @@ void AttributeTool::removeBitangents(Mesh* m)
 {
 	for(unsigned int i = 0; i < m->getNumberOfVertices(); ++i)
     {
-//        m->getVertices()[i].tangent[0] = 0.0f;
-//        m->getVertices()[i].tangent[1] = 0.0f;
-//        m->getVertices()[i].tangent[2] = 0.0f;
-//        m->getVertices()[i].tangent[3] = 0.0f;
-//
         m->getVertex(i).bitangent[0] = 0.0f;
         m->getVertex(i).bitangent[1] = 0.0f;
         m->getVertex(i).bitangent[2] = 0.0f;
@@ -371,21 +363,28 @@ void AttributeTool::removeBitangents(Mesh* m)
 
 void AttributeTool::addNormals(Mesh* m)
 {
-    generateNormals(m);
+//    generateNormals(m);
+    m->generateNormals();
     m->addAttribute("NORMAL", 3, "FLOAT");
 }
 
 void AttributeTool::addTangents(Mesh* m)
 {
     if(m->hasTangents() == false)
-        generateTangents(m);
+    {
+//        generateTangents(m);
+        m->generateTangents();
+    }
     m->addAttribute("TANGENT", 3, "FLOAT");
 }
 
 void AttributeTool::addBitangents(Mesh* m)
 {
     if(m->hasBitangents() == false)
-        generateTangents(m);
+    {
+//        generateTangents(m);
+        m->generateTangents();
+    }
     m->addAttribute("BITANGENT", 3, "FLOAT");
 }
 

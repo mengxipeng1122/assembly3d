@@ -7,7 +7,15 @@ include_directories(${WizCommon_INCLUDE}
                     ${TCLAP_INCLUDE})
 
 add_executable(MeshPrim Main.cpp
-                        MeshPrimIncludes.h)
+                        MeshPrimIncludes.h
+                        PrimGen.h
+                        PrimGen.cpp
+                        Primitive.h
+                        Primitive.cpp
+                        primitives/Plane.h
+                        primitives/Cube.h
+                        primitives/Sphere.h
+                        primitives/Torus.h)
 
 target_link_libraries(MeshPrim WizCommon)
 

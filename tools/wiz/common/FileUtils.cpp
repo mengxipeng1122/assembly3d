@@ -137,3 +137,14 @@ std::string FileUtils::getFileName(const std::string& s)
     }
     
 }
+
+std::string FileUtils::getBinaryFileName(const char* fileName, const char* oldExt, const char* newExt)
+{
+    std::string fName = fileName;
+    std::string binaryFileName;
+    size_t pos = fName.find(oldExt);
+    binaryFileName = fName.substr(0, pos);
+    binaryFileName.append(newExt);
+
+    return binaryFileName;
+}

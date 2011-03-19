@@ -60,6 +60,9 @@ public:
     void printData();
     
     void setIndexFormat(const char* format);
+
+    void generateNormals();
+    void generateTangents();
     
     Wiz::Vertex& getVertex(unsigned int index);
     Wiz::Group& getGroup(unsigned int index);
