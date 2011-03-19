@@ -34,22 +34,15 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include <iostream>
-using namespace std;
-
-class Primitive;
+#include "../Primitive.h"
 
 class Sphere : public Primitive
 {
 public:
-    Sphere(){}
-    virtual ~Sphere(){}
+    Sphere();
+    virtual ~Sphere();
 
-    void create()
-    {
-        cout << "Create sphere" << endl;
-    }
-
+    void create(Mesh* mesh);
 };
 
 

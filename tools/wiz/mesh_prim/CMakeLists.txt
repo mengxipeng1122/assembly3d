@@ -11,11 +11,14 @@ add_executable(MeshPrim Main.cpp
                         PrimGen.h
                         PrimGen.cpp
                         Primitive.h
-                        Primitive.cpp
                         primitives/Plane.h
+                        primitives/Plane.cpp
                         primitives/Cube.h
+                        primitives/Cube.cpp
                         primitives/Sphere.h
-                        primitives/Torus.h)
+                        primitives/Sphere.cpp
+                        primitives/Torus.h
+                        primitives/Torus.cpp)
 
 target_link_libraries(MeshPrim WizCommon)
 

@@ -34,22 +34,15 @@
 #ifndef TORUS_H
 #define TORUS_H
 
-#include <iostream>
-using namespace std;
-
-class Primitive;
+#include "../Primitive.h"
 
 class Torus : public Primitive
 {
 public:
-    Torus(){}
-    virtual ~Torus(){}
+    Torus();
+    virtual ~Torus();
 
-    void create()
-    {
-        cout << "Create torus" << endl;
-    }
-
+    void create(Mesh* mesh);
 };
 
 

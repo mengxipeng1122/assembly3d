@@ -34,6 +34,7 @@
 #include "MeshPrimIncludes.h"
 #include <tclap/CmdLine.h>
 #include "WizUtils.h"
+#include "MeshIO.h"
 
 #include "PrimGen.h"
 
@@ -48,12 +49,19 @@ int main (int argc, char* argv[])
                            MeshPrim::ProjectInfo::versionString);
 
         // -------------------------------------------------------------------
-        TCLAP::ValueArg<std::string> outputFileArg("o", "output-file", "Output file", true, "Prim.mesh.xml", "output-path");
+        TCLAP::ValueArg<std::string> outputNameArg("o", "output-file-name", "Output file name",
+                                                   true, "Prim.mesh.xml", "output-name");
+        TCLAP::ValueArg<std::string> outputDirArg("d", "output-dir", "Output directory (default=./)",
+                                                  false, "./", "path");
 
-        TCLAP::ValueArg<std::string> planeArg("p", "plane", "Generates plane geometry.", false, "", "plane-args");
-        TCLAP::ValueArg<std::string> cubeArg("c", "cube", "Generates cube geometry.", false, "", "cube-args");
-        TCLAP::ValueArg<std::string> sphereArg("s", "sphere", "Generates sphere geometry.", false, "", "sphere-args");
-        TCLAP::ValueArg<std::string> torusArg("t", "torus", "Generates torus geometry.", false, "", "torus-args");
+        TCLAP::ValueArg<std::string> planeArg("p", "plane", "Generates plane geometry.",
+                                              false, "", "half-extend");
+        TCLAP::ValueArg<std::string> cubeArg("c", "cube", "Generates cube geometry.",
+                                             false, "", "half-extend");
+        TCLAP::ValueArg<std::string> sphereArg("s", "sphere", "Generates sphere geometry.",
+                                               false, "", "radius/slices");
+        TCLAP::ValueArg<std::string> torusArg("t", "torus", "Generates torus geometry.",
+                                              false, "", "inner-radius/outer-radius/sides/faces");
         // -------------------------------------------------------------------
 
         std::vector<TCLAP::Arg*> xorlist;
@@ -63,41 +71,75 @@ int main (int argc, char* argv[])
         xorlist.push_back(&torusArg);
         cmd.xorAdd(xorlist);
 
-        cmd.add(outputFileArg);
+        cmd.add(outputDirArg);
+        cmd.add(outputNameArg);
 
         cmd.parse( argc, argv );
 
         // -------------------------------------------------------------------
 
+        std::string outputDir;
         std::string outputFile;
         std::string outputBinaryFile;
 
-        outputFile = outputFileArg.getValue();
-        outputBinaryFile = FileUtils::getBinaryFileName(outputFile.c_str(), ".xml", ".dat");
+        outputDir = outputDirArg.getValue();
 
+        outputFile = outputDir.append(outputNameArg.getValue());
+
+        outputBinaryFile = outputDir.append(FileUtils::getBinaryFileName(outputFile.c_str(), ".xml", ".dat"));
+
+        Mesh* mesh = new Mesh();
         PrimGen primGen;
 
         if(planeArg.isSet())
         {
-            primGen.createPlane();
+            std::string args = planeArg.getValue();
+            float val = 0.0f;
+            StringUtils::getValueFromCmdString(args, val);
+
+            primGen.createMesh(mesh, PrimGen::PRIM_TYPE_PLANE, 1, val);
         }
         else if(cubeArg.isSet())
         {
-            primGen.createCube();
+            std::string args = planeArg.getValue();
+            float val = 0.0f;
+            StringUtils::getValueFromCmdString(args, val);
+
+            primGen.createMesh(mesh, PrimGen::PRIM_TYPE_CUBE, 1, val);
         }
         else if(sphereArg.isSet())
         {
-            primGen.createSphere();
+            std::string args = planeArg.getValue();
+
+            std::vector<float> values;
+            StringUtils::getValuesFromCmdString(args, values);
+
+            if(values.size() == 2)
+            {
+                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_SPHERE, 2,
+                                   values[0], values[1]);
+            }
         }
         else if(torusArg.isSet())
         {
-            primGen.createTorus();
+            std::string args = planeArg.getValue();
+
+            std::vector<float> values;
+            StringUtils::getValuesFromCmdString(args, values);
+
+            if(values.size() == 4)
+            {
+                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_TORUS, 4,
+                                   values[0], values[1], values[2], values[3]);
+            }
         }
         else
         {
             return 1;
         }
-        primGen.saveFile(outputFile.c_str(), outputBinaryFile.c_str());
+        if(mesh)
+            MeshIO::saveFile(mesh, outputFile.c_str(), outputBinaryFile.c_str());
+
 
     } catch (TCLAP::ArgException &e)  // catch any exceptions
     { std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; }

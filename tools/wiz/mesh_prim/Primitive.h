@@ -34,14 +34,16 @@
 #ifndef PRIMITIVE_H
 #define PRIMITIVE_H
 
+#include "MeshPrimIncludes.h"
+#include "Mesh.h"
+
 class Primitive
 {
 public:
-    Primitive();
-    virtual ~Primitive();
+    Primitive() {}
+    virtual ~Primitive(){}
 
-    virtual void create() = 0;
-private:
+    virtual void create(Mesh* mesh) = 0;
 
 };
 
