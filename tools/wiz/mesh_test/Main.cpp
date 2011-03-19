@@ -38,15 +38,6 @@
 
 using namespace WizUtils;
 
-std::string getBinaryFileName(const std::string& fileName)
-{
-    std::string binaryFileName;
-    size_t pos = fileName.find(".xml");
-    binaryFileName = fileName.substr(0, pos);
-    binaryFileName.append(".dat");
-
-    return binaryFileName;
-}
 
 int main (int argc, char* argv[])
 {
@@ -126,7 +117,7 @@ int main (int argc, char* argv[])
         }
         else
         {
-            actualBinaryFile = getBinaryFileName(actualFile);
+            actualBinaryFile = FileUtils::getBinaryFileName(actualFile.c_str(), ".xml", ".dat");
         }
 
         if(expectedBinaryArg.isSet())
@@ -135,7 +126,7 @@ int main (int argc, char* argv[])
         }
         else
         {
-            expectedBinaryFile = getBinaryFileName(expectedFile);
+            expectedBinaryFile = FileUtils::getBinaryFileName(expectedFile.c_str(), ".xml", ".dat");
         }
 
         if(FileUtils::checkIfFileExists(actualBinaryFile.c_str()) == false)

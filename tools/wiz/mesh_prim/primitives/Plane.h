@@ -34,22 +34,19 @@
 #ifndef PLANE_H
 #define PLANE_H
 
-#include <iostream>
-using namespace std;
+#include "../Primitive.h"
 
-class Primitive;
 
 class Plane : public Primitive
 {
 public:
-    Plane(){}
-    virtual ~Plane(){}
+    Plane(float halfExtend);
+    virtual ~Plane();
 
-    void create()
-    {
-        cout << "Create plane" << endl;
-    }
+    void create(Mesh* mesh);
 
+private:
+    float m_halfExtend;
 };
 
 

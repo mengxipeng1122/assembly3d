@@ -36,21 +36,23 @@
 
 #include "MeshPrimIncludes.h"
 #include "Primitive.h"
+#include "Mesh.h"
 
 class PrimGen
 {
 public:
+    static const int PRIM_TYPE_PLANE = 0;
+    static const int PRIM_TYPE_CUBE = 1;
+    static const int PRIM_TYPE_SPHERE = 2;
+    static const int PRIM_TYPE_TORUS = 3;
+
     PrimGen();
     ~PrimGen();
 
-    void createPlane();
-    void createCube();
-    void createSphere();
-    void createTorus();
-
-    void saveFile(const char* xmlPath, const char* binaryPath);
+    void createMesh(Mesh* mesh, int primType, unsigned int numVals, ...);
 
 private:
+
     Primitive* m_prim;
 
 };

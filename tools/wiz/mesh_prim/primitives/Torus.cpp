@@ -31,13 +31,22 @@
  *
  */
 
-#include "Primitive.h"
+#include "Torus.h"
 
-Primitive::Primitive()
+#include <iostream>
+using namespace std;
+
+
+Torus::Torus()
 {
 }
 
-Primitive::~Primitive()
+Torus::~Torus()
 {
-
 }
+
+void Torus::create(Mesh* mesh)
+{
+    cout << "Create torus" << endl;
+}
+

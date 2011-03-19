@@ -34,22 +34,15 @@
 #ifndef CUBE_H
 #define CUBE_H
 
-#include <iostream>
-using namespace std;
-
-class Primitive;
+#include "../Primitive.h"
 
 class Cube : public Primitive
 {
 public:
-    Cube(){}
-    virtual ~Cube(){}
+    Cube();
+    virtual ~Cube();
 
-    void create()
-    {
-        cout << "Create cube" << endl;
-    }
-
+    void create(Mesh* mesh);
 };
 
 #endif // CUBE_H
