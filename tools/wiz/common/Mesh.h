@@ -34,10 +34,9 @@
 #ifndef _MESH_H_
 #define _MESH_H_
 
-#include "MeshWizIncludes.h"
+#include "WizIncludes.h"
 #include <vector>
 #include <iostream>
-using namespace MeshWiz;
 
 class Mesh
 {
@@ -62,8 +61,8 @@ public:
     
     void setIndexFormat(const char* format);
     
-    Vertex& getVertex(unsigned int index);
-	Group& getGroup(unsigned int index);
+    Wiz::Vertex& getVertex(unsigned int index);
+    Wiz::Group& getGroup(unsigned int index);
 	unsigned int* getTriangle(unsigned int index);
     
     int getNumberOfTriangles() const;
@@ -84,13 +83,13 @@ public:
 
     MeshFormat& getMeshFormat();
 
-    void addVertex(Vertex vertex);
+    void addVertex(Wiz::Vertex vertex);
     void clearVertices();
 
     void addIndex(unsigned int index);
     void clearIndices();
 
-    void addGroup(Group group);
+    void addGroup(Wiz::Group group);
     void setNumTriangles(int numTriangles);
     
     
@@ -120,9 +119,9 @@ private:
     void bounds(float center[3], float &width, float &height,
     float &length, float &radius, float extent[3]) const;
     
-    std::vector<Vertex> m_vertices;
+    std::vector<Wiz::Vertex> m_vertices;
     std::vector<unsigned int> m_indices;
-    std::vector<Group> m_groups;
+    std::vector<Wiz::Group> m_groups;
     
     MeshFormat m_format;
     
@@ -193,10 +192,10 @@ inline float Mesh::getRadius() const
 inline void Mesh::getExtent(float &x, float &y, float &z) const
 { x = m_extent[0]; y = m_extent[1]; z = m_extent[2]; }
 
-inline Vertex& Mesh::getVertex(unsigned int index)
+inline Wiz::Vertex& Mesh::getVertex(unsigned int index)
 { return m_vertices[index]; }
 
-inline Group& Mesh::getGroup(unsigned int index)
+inline Wiz::Group& Mesh::getGroup(unsigned int index)
 { return m_groups[index]; }
 
 inline unsigned int* Mesh::getTriangle(unsigned int index)

@@ -33,7 +33,9 @@
 
 #include "MeshIO.h"
 #include <fstream>
+#include "WizUtils.h"
 
+using namespace Wiz;
 using namespace WizUtils;
 
 MeshIO::MeshIO()
@@ -91,7 +93,7 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
             for(int i = 0; i < numGroups; ++i)
             {
                 Group g;
-                g.name = xml.getAttribute("Group", "name", "", i);
+                g.name = xml.getAttribute("Group", "name", "", i).c_str();
                 g.triangleCount = xml.getAttribute("Group", "count", 0, i);
                 
                 if(groupIndex == 0)
@@ -379,9 +381,9 @@ void MeshIO::dumpTxt(Mesh* mesh, const char* outFilePath)
         // -------------------------------------------------------------------------------------------
         // Group
         // -------------------------------------------------------------------------------------------
-        const MeshWiz::Group& g = mesh->getGroup(groupIndex);
+        const Wiz::Group& g = mesh->getGroup(groupIndex);
 
-        ss << "Group: name=" << g.name.c_str() << " count=" << g.triangleCount << "\n";
+        ss << "Group: name=" << g.name << " count=" << g.triangleCount << "\n";
     }
     ss << std::endl;
     // -------------------------------------------------------------------------------------------
@@ -554,9 +556,9 @@ void MeshIO::saveFile(Mesh* mesh, const char* outFilePath, const char* binaryFil
                 // -------------------------------------------------------------------------------------------
                 xml.addTag("Group", false);
 
-                const MeshWiz::Group& g = mesh->getGroup(groupIndex);
+                const Wiz::Group& g = mesh->getGroup(groupIndex);
 
-                xml.addAttribute("Group", "name", g.name.c_str(), groupIndex);
+                xml.addAttribute("Group", "name", g.name, groupIndex);
                 xml.addAttribute("Group", "count", g.triangleCount, groupIndex);
             }
         }

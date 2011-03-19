@@ -1,11 +1,17 @@
 
 set(WizCommon_SOURCE
+    Mesh.cpp
+    MeshIO.cpp
     StringUtils.cpp
     FileUtils.cpp
     XmlParser.cpp
   )
 set(WizCommon_INCLUDE
     WizIncludes.h
+    WizTypes.h
+    WizUtils.h
+    Mesh.h
+    MeshIO.h
     StringUtils.h
     FileUtils.h
     XmlParser.h

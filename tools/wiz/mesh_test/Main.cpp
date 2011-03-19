@@ -34,7 +34,7 @@
 #include "MeshTestIncludes.h"
 #include <tclap/CmdLine.h>
 #include "TesterTool.h"
-//#include "WizUtils.h"
+#include "WizUtils.h"
 
 using namespace WizUtils;
 
@@ -53,7 +53,7 @@ int main (int argc, char* argv[])
     try {
         TCLAP::CmdLine cmd("MeshTester - Utility for comparing Assembly3D mesh files.",
                            '=',
-                           ProjectInfo::versionString);
+                           MeshTest::ProjectInfo::versionString);
 
         // -------------------------------------------------------------------
 

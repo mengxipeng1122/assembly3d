@@ -34,25 +34,24 @@
 #ifndef _FILEUTILS_H_
 #define _FILEUTILS_H_
 
-//#include "WizIncludes.h"
 #include <string>
 #include <vector>
 
 namespace WizUtils
 {
-class FileUtils
-{
-private:
-    FileUtils();
-    ~FileUtils();
-public:
-    static bool createDirectory(const char* path);
-    static bool checkIfDirectoryExists(const char* path);
-    static bool checkIfFileExists(const char* path);
-    static std::string getFileNameFromPath(const std::string& s);
-    static std::string getFileName(const std::string& s);
-private:
-};
-
+    class FileUtils
+    {
+    private:
+        FileUtils();
+        ~FileUtils();
+    public:
+        static bool createDirectory(const char* path);
+        static bool checkIfDirectoryExists(const char* path);
+        static bool checkIfFileExists(const char* path);
+        static std::string getFileNameFromPath(const std::string& s);
+        static std::string getFileName(const std::string& s);
+    private:
+    };
 }
+
 #endif  // _FILEUTILS_H_

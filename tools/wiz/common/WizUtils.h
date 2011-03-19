@@ -1,22 +1,22 @@
 /*
  * Copyright (c) 2011 Peter Vasil
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
+ * 
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- *
+ * 
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
+ * 
  * Neither the name of the project's author nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -31,27 +31,11 @@
  *
  */
 
-#ifndef MESHTESTINCLUDE_H
-#define MESHTESTINCLUDE_H
+#ifndef WIZUTILS_H
+#define WIZUTILS_H
 
-// -----------------------------------------------------------------------------
+#include "FileUtils.h"
+#include "StringUtils.h"
+#include "XmlParser.h"
 
-#include "WizIncludes.h"
-
-// -----------------------------------------------------------------------------
-
-#include "MeshTestTypes.h"
-
-// -----------------------------------------------------------------------------
-
-namespace MeshTest
-{
-    namespace ProjectInfo
-    {
-        const char* const  projectName    = "MeshTest";
-        const char* const  versionString  = "1.0.0";
-        const int          versionNumber  = 0x10000;
-    }
-}
-
-#endif // MESHTESTINCLUDE_H
+#endif // WIZUTILS_H

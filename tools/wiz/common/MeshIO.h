@@ -31,31 +31,25 @@
  *
  */
 
-#include <string>
+#ifndef _MESHIO_H_
+#define _MESHIO_H_
 
-#ifndef _MESHWIZTYPES_H_
-#define _MESHWIZTYPES_H_
+#include "WizIncludes.h"
+#include "Mesh.h"
 
-
-namespace MeshWiz
+class MeshIO
 {
-    
-    struct Vertex
-    {
-        float position[3];
-        float texCoord[2];
-        float normal[3];
-        float tangent[3];
-        float bitangent[3];
-    };
+private:
+	MeshIO();
+	~MeshIO();
+public:
+    static bool load(Mesh* mesh, const char* file, const char* binaryFile);
+    static void saveFile(Mesh* mesh, const char* outFilePath, const char* binaryFilePath);
+    static void dumpTxt(Mesh* mesh, const char* outFilePath);
 
-    struct Group
-    {
-        std::string name;
-        int startIndex;
-        int triangleCount;
-    };
-    
-}
+private:
+    static void getAttributeIndices(Mesh* mesh, std::vector<int>& indices);
+	
+};
 
-#endif  // _MESHWIZTYPES_H_
+#endif // _MESHIO_H_

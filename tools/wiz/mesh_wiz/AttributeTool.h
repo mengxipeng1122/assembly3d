@@ -36,7 +36,7 @@
 
 #include "Mesh.h"
 
-using namespace MeshWiz;
+using namespace Wiz;
 
 class AttributeTool
 {

@@ -51,7 +51,7 @@ public:
     
 protected:
 private:
-    void multiplyVertexWithTransformMatrix(Vertex* vec, float matrix[3][4], float inverseTransposedMatrix[3][3]);
+    void multiplyVertexWithTransformMatrix(Wiz::Vertex* vec, float matrix[3][4], float inverseTransposedMatrix[3][3]);
     void normalize(float vector[3]);
 };
 

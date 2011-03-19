@@ -31,27 +31,30 @@
  *
  */
 
-#ifndef MESHTESTINCLUDE_H
-#define MESHTESTINCLUDE_H
+#ifndef _WIZTYPES_H_
+#define _WIZTYPES_H_
 
-// -----------------------------------------------------------------------------
+//#include <string>
 
-#include "WizIncludes.h"
-
-// -----------------------------------------------------------------------------
-
-#include "MeshTestTypes.h"
-
-// -----------------------------------------------------------------------------
-
-namespace MeshTest
+namespace Wiz
 {
-    namespace ProjectInfo
+    
+    struct Vertex
     {
-        const char* const  projectName    = "MeshTest";
-        const char* const  versionString  = "1.0.0";
-        const int          versionNumber  = 0x10000;
-    }
+        float position[3];
+        float texCoord[2];
+        float normal[3];
+        float tangent[3];
+        float bitangent[3];
+    };
+
+    struct Group
+    {
+        const char* name;
+        int startIndex;
+        int triangleCount;
+    };
+    
 }
 
-#endif // MESHTESTINCLUDE_H
+#endif // _WIZTYPES_H_
