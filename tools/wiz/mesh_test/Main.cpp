@@ -34,7 +34,7 @@
 #include "MeshTestIncludes.h"
 #include <tclap/CmdLine.h>
 #include "TesterTool.h"
-#include "WizUtils.h"
+//#include "WizUtils.h"
 
 using namespace WizUtils;
 

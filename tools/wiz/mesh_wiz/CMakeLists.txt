@@ -14,7 +14,7 @@ file(GLOB MeshWiz_INCLUDE *.h)
 add_executable(MeshWiz ${MeshWiz_SOURCE}
                        ${MeshWiz_INCLUDE})
 
-target_link_libraries(MeshWiz WizUtils)
+target_link_libraries(MeshWiz WizCommon)
 
 if(WIN32)
 	install(TARGETS MeshWiz RUNTIME DESTINATION .)

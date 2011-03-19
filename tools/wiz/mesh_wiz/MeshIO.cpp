@@ -32,7 +32,6 @@
  */
 
 #include "MeshIO.h"
-#include "WizUtils.h"
 #include <fstream>
 
 using namespace WizUtils;
