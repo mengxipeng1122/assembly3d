@@ -377,14 +377,14 @@ void AttributeTool::addNormals(Mesh* m)
 
 void AttributeTool::addTangents(Mesh* m)
 {
-    if(!m->hasTangents())
+    if(m->hasTangents() == false)
         generateTangents(m);
     m->addAttribute("TANGENT", 3, "FLOAT");
 }
 
 void AttributeTool::addBitangents(Mesh* m)
 {
-    if(!m->hasBitangents())
+    if(m->hasBitangents() == false)
         generateTangents(m);
     m->addAttribute("BITANGENT", 3, "FLOAT");
 }

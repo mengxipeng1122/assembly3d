@@ -128,7 +128,7 @@ void Mesh::setIndexFormat(const char* format)
 
 void Mesh::addAttribute(const char* attrName, int attrSize, const char* attrType)
 {
-    if(!containsAttribute(attrName))
+    if(containsAttribute(attrName) == false)
     {
         m_format.attributeName.push_back(attrName);
         m_format.attributeSize.push_back(attrSize);

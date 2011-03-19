@@ -233,11 +233,11 @@ void TesterTool::clear(vector<Attribute>& attribs,
 {
     for(unsigned int i = 0; i < attribs.size(); ++i)
     {
-        delete[] attribs[i].values;
+        SAFE_DELETE_ARRAY(attribs[i].values)
     }
     for(unsigned int i = 0; i < groups.size(); ++i)
     {
-        delete[] groups[i].bytes;
+        SAFE_DELETE_ARRAY(groups[i].bytes)
     }
 }
 
