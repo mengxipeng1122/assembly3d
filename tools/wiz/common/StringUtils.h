@@ -31,12 +31,26 @@
  *
  */
 
-#ifndef _WIZUTILS_H_
-#define _WIZUTILS_H_
+#ifndef _STRINGUTILS_H_
+#define _STRINGUTILS_H_
 
-#include "wiz_utils/FileUtils.h"
-#include "wiz_utils/StringUtils.h"
-#include "wiz_utils/XmlParser.h"
+//#include "WizIncludes.h"
+#include <string>
+#include <vector>
 
+namespace WizUtils
+{
+class StringUtils
+{
+private:
+    StringUtils();
+    ~StringUtils();
+public:
+    static int findOccurensesOf(const std::string& cmdStr, const std::string& stringToSearch);
+    static void getValueFromCmdString(const std::string& cmdStr, float& val);
+    static void getValuesFromCmdString(const std::string& cmdStr, std::vector<float>& vals);
+private:
+};
 
-#endif  // _WIZUTILS_H_
+}
+#endif  // _STRINGUTILS_H_

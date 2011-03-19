@@ -31,26 +31,28 @@
  *
  */
 
-#ifndef _STRINGUTILS_H_
-#define _STRINGUTILS_H_
+#ifndef _FILEUTILS_H_
+#define _FILEUTILS_H_
 
-#include "../WizIncludes.h"
+//#include "WizIncludes.h"
 #include <string>
 #include <vector>
 
 namespace WizUtils
 {
-class StringUtils
+class FileUtils
 {
 private:
-    StringUtils();
-    ~StringUtils();
+    FileUtils();
+    ~FileUtils();
 public:
-    static int findOccurensesOf(const std::string& cmdStr, const std::string& stringToSearch);
-    static void getValueFromCmdString(const std::string& cmdStr, float& val);
-    static void getValuesFromCmdString(const std::string& cmdStr, std::vector<float>& vals);
+    static bool createDirectory(const char* path);
+    static bool checkIfDirectoryExists(const char* path);
+    static bool checkIfFileExists(const char* path);
+    static std::string getFileNameFromPath(const std::string& s);
+    static std::string getFileName(const std::string& s);
 private:
 };
 
 }
-#endif  // _STRINGUTILS_H_
+#endif  // _FILEUTILS_H_

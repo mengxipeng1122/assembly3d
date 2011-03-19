@@ -32,7 +32,7 @@
  */
 
 #include "TesterTool.h"
-#include "WizUtils.h"
+//#include "WizUtils.h"
 #include <fstream>
 
 using namespace WizUtils;

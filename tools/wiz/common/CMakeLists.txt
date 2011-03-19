@@ -1,21 +1,20 @@
 
-set(WizUtils_SOURCE
-    wiz_utils/StringUtils.cpp
-    wiz_utils/FileUtils.cpp
-    wiz_utils/XmlParser.cpp
+set(WizCommon_SOURCE
+    StringUtils.cpp
+    FileUtils.cpp
+    XmlParser.cpp
   )
-set(WizUtils_INCLUDE
-    WizUtils.h
+set(WizCommon_INCLUDE
     WizIncludes.h
-    wiz_utils/StringUtils.h
-    wiz_utils/FileUtils.h
-    wiz_utils/XmlParser.h
+    StringUtils.h
+    FileUtils.h
+    XmlParser.h
   )
 
 set(Tinyxml_INCLUDE ${CMAKE_SOURCE_DIR}/external_libs/tinyxml)
 
 include_directories(${Tinyxml_INCLUDE})
 
-add_library(WizUtils ${WizUtils_SOURCE} ${WizUtils_INCLUDE})
+add_library(WizCommon ${WizCommon_SOURCE} ${WizCommon_INCLUDE})
 
-target_link_libraries(WizUtils tinyxml)
+target_link_libraries(WizCommon tinyxml)

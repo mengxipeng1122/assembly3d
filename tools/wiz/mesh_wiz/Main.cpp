@@ -33,7 +33,6 @@
 
 #include "MeshWizIncludes.h"
 #include <tclap/CmdLine.h>
-#include "WizUtils.h"
 #include "Mesh.h"
 #include "MeshIO.h"
 #include "ToolManager.h"
