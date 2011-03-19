@@ -62,7 +62,7 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
     Mesh::MeshFormat& format = mesh->getMeshFormat();
     
     XmlParser xml;
-    if(!xml.loadFile(file))
+    if(xml.loadFile(file) == false)
         return false;
     
     

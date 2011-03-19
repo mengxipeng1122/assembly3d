@@ -38,6 +38,8 @@
 #include "MeshIO.h"
 #include "ToolManager.h"
 
+using namespace WizUtils;
+
 //==============================================================================
 int main (int argc, char* argv[])
 {
@@ -280,19 +282,19 @@ int main (int argc, char* argv[])
     //---------------------------------------------------------------------------------------------------------
 
     inputfile = inputArg.getValue();
-    if(!WizUtils::FileUtils::checkIfFileExists(inputfile.c_str()))
+    if(FileUtils::checkIfFileExists(inputfile.c_str()) == false)
     {
         std::cerr << "Error: Input source '" << inputfile << "', does not exist!" << std::endl;
         return 1;
     }
-    if(!infoArg.isSet())
+    if(infoArg.isSet() == false)
     {
         std::string outputdir = outputArg.getValue();
-        if(!WizUtils::FileUtils::checkIfDirectoryExists(outputdir.c_str()))
+        if(FileUtils::checkIfDirectoryExists(outputdir.c_str()) == false)
         {
-            WizUtils::FileUtils::createDirectory(outputdir.c_str());
+            FileUtils::createDirectory(outputdir.c_str());
         }
-        std::string infilename = WizUtils::FileUtils::getFileName(inputfile);
+        std::string infilename = FileUtils::getFileName(inputfile);
         outputfile = outputdir+"/"+infilename;
 
     }
@@ -312,7 +314,7 @@ int main (int argc, char* argv[])
         binaryInFileName = inputfile.substr(0, posdot);
         binaryInFileName.append(".dat");
 
-        std::string infilename = WizUtils::FileUtils::getFileName(inputfile);
+        std::string infilename = FileUtils::getFileName(inputfile);
         size_t pos = infilename.find(".xml");
         std::string tmp = infilename.substr(0, pos);
         
@@ -324,12 +326,12 @@ int main (int argc, char* argv[])
 
     //---------------------------------------------------------------------------------------------------------
     Mesh mesh;
-    if(!MeshIO::load(&mesh, inputfile.c_str(), binaryInFileName.c_str()))
+    if(MeshIO::load(&mesh, inputfile.c_str(), binaryInFileName.c_str()) == false)
     {
         std::cerr << "Error: Loading '" << inputfile << "', failed!" << std::endl;
         return 1;
     }
-    if(!WizUtils::FileUtils::checkIfFileExists(binaryInFileName.c_str()) && mesh.getMeshFormat().isBinary)
+    if(FileUtils::checkIfFileExists(binaryInFileName.c_str()) == false && mesh.getMeshFormat().isBinary)
     {
         std::cerr << "Error: Binary file not found! " << std::endl;
         return 1;
@@ -360,7 +362,7 @@ int main (int argc, char* argv[])
     //---------------------------------------------------------------------------------------------------------
     if(convertIndexTypeToArg.isSet())
     {
-        if(!toolMgr.convertIndexType(convertIndexTypeToArg.getValue().c_str()))
+        if(toolMgr.convertIndexType(convertIndexTypeToArg.getValue().c_str()) == false)
         {
             std::cerr << "Error: To many vertices. It is not possible to have indices of the type '";
             std::cerr << convertIndexTypeToArg.getValue() << "'" << std::endl;
@@ -416,7 +418,7 @@ int main (int argc, char* argv[])
         float x, y, z;
         x = y = z = 0.0f;
         std::vector<float> values;
-		WizUtils::StringUtils::getValuesFromCmdString(args, values);
+        StringUtils::getValuesFromCmdString(args, values);
 
         if(values.size() == 3)
         {
@@ -434,7 +436,7 @@ int main (int argc, char* argv[])
         angle = x = y = z = 0.0f;
 
         std::vector<float> values;        
-        WizUtils::StringUtils::getValuesFromCmdString(args, values);
+        StringUtils::getValuesFromCmdString(args, values);
         if(values.size() == 4)
         {
             angle = values[0];
@@ -453,7 +455,7 @@ int main (int argc, char* argv[])
         x = y = z = 0.0f;
         std::vector<float> values;
         
-        WizUtils::StringUtils::getValuesFromCmdString(args, values);
+        StringUtils::getValuesFromCmdString(args, values);
         
         if(values.size() == 3)
         {
@@ -478,10 +480,10 @@ int main (int argc, char* argv[])
         x = y = z = 0.0f;
         std::vector<float> values;
         
-        int numSlashes = WizUtils::StringUtils::findOccurensesOf(args, "/");
+        int numSlashes = StringUtils::findOccurensesOf(args, "/");
         if(numSlashes == 2)
         {
-            WizUtils::StringUtils::getValuesFromCmdString(args, values);
+            StringUtils::getValuesFromCmdString(args, values);
             if(values.size() == 3)
             {
                 x = values[0];
@@ -499,7 +501,7 @@ int main (int argc, char* argv[])
             std::string axis = cmdStr.substr(0, pos);
             cmdStr = cmdStr.erase(0, pos+1);
 
-            WizUtils::StringUtils::getValuesFromCmdString(cmdStr, values);
+            StringUtils::getValuesFromCmdString(cmdStr, values);
             if(values.size() == 1)
             {
                 x = values[0];
@@ -522,7 +524,7 @@ int main (int argc, char* argv[])
         float eps = 0.0f;
         std::vector<float> values;
 
-        int numSlashes = WizUtils::StringUtils::findOccurensesOf(args, "/");
+        int numSlashes = StringUtils::findOccurensesOf(args, "/");
         if(numSlashes == 1)
         {
             std::string cmdStr = args;
@@ -530,7 +532,7 @@ int main (int argc, char* argv[])
             std::string attributeName = cmdStr.substr(0, pos);
             cmdStr = cmdStr.erase(0, pos+1);
 
-            WizUtils::StringUtils::getValuesFromCmdString(cmdStr, values);
+            StringUtils::getValuesFromCmdString(cmdStr, values);
             if(values.size() == 1)
             {
                 eps = values[0];
@@ -551,7 +553,7 @@ int main (int argc, char* argv[])
         axisX = axisY = axisZ = 0;
         std::vector<float> values;
 
-        WizUtils::StringUtils::getValuesFromCmdString(args, values);
+        StringUtils::getValuesFromCmdString(args, values);
         if(values.size() == 3)
         {
             axisX = (int)values[0];
