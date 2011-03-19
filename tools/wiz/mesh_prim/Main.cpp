@@ -35,6 +35,8 @@
 #include <tclap/CmdLine.h>
 #include "WizUtils.h"
 
+#include "PrimGen.h"
+
 using namespace WizUtils;
 
 
@@ -46,14 +48,56 @@ int main (int argc, char* argv[])
                            MeshPrim::ProjectInfo::versionString);
 
         // -------------------------------------------------------------------
+        TCLAP::ValueArg<std::string> outputFileArg("o", "output-file", "Output file", true, "Prim.mesh.xml", "output-path");
 
-//        cmd.add(actualArg);
+        TCLAP::ValueArg<std::string> planeArg("p", "plane", "Generates plane geometry.", false, "", "plane-args");
+        TCLAP::ValueArg<std::string> cubeArg("c", "cube", "Generates cube geometry.", false, "", "cube-args");
+        TCLAP::ValueArg<std::string> sphereArg("s", "sphere", "Generates sphere geometry.", false, "", "sphere-args");
+        TCLAP::ValueArg<std::string> torusArg("t", "torus", "Generates torus geometry.", false, "", "torus-args");
+        // -------------------------------------------------------------------
 
-        // Parse the argv array.
-//        cmd.parse( argc, argv );
+        std::vector<TCLAP::Arg*> xorlist;
+        xorlist.push_back(&planeArg);
+        xorlist.push_back(&cubeArg);
+        xorlist.push_back(&sphereArg);
+        xorlist.push_back(&torusArg);
+        cmd.xorAdd(xorlist);
+
+        cmd.add(outputFileArg);
+
+        cmd.parse( argc, argv );
 
         // -------------------------------------------------------------------
 
+        std::string outputFile;
+        std::string outputBinaryFile;
+
+        outputFile = outputFileArg.getValue();
+        outputBinaryFile = FileUtils::getBinaryFileName(outputFile.c_str(), ".xml", ".dat");
+
+        PrimGen primGen;
+
+        if(planeArg.isSet())
+        {
+            primGen.createPlane();
+        }
+        else if(cubeArg.isSet())
+        {
+            primGen.createCube();
+        }
+        else if(sphereArg.isSet())
+        {
+            primGen.createSphere();
+        }
+        else if(torusArg.isSet())
+        {
+            primGen.createTorus();
+        }
+        else
+        {
+            return 1;
+        }
+        primGen.saveFile(outputFile.c_str(), outputBinaryFile.c_str());
 
     } catch (TCLAP::ArgException &e)  // catch any exceptions
     { std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; }
