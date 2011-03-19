@@ -33,6 +33,8 @@
 
 #include "OptimizeTool.h"
 
+using namespace Wiz;
+
 OptimizeTool::OptimizeTool()
 {
     

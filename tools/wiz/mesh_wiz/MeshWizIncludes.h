@@ -40,17 +40,15 @@
 
 // -----------------------------------------------------------------------------
 
-#include "MeshWizTypes.h"
-
-// -----------------------------------------------------------------------------
-
-namespace ProjectInfo
+namespace MeshWiz
 {
-    const char* const  projectName    = "MeshWiz";
-    const char* const  versionString  = "1.1.1";
-    const int          versionNumber  = 0x10101;
+    namespace ProjectInfo
+    {
+        const char* const  projectName    = "MeshWiz";
+        const char* const  versionString  = "1.1.1";
+        const int          versionNumber  = 0x10101;
+    }
 }
-
 
 // -----------------------------------------------------------------------------
 

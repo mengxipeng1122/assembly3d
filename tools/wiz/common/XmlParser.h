@@ -44,89 +44,88 @@
 
 namespace WizUtils
 {
-    
-class XmlParser {
+    class XmlParser
+    {
 
-public:
-	XmlParser();
-	~XmlParser();
-    
-    bool loadFile(const std::string& xmlFile);
-    void saveFile(const std::string& xmlFile);
-    
-    void clear();
+    public:
+        XmlParser();
+        ~XmlParser();
 
-    bool tagExists(const std::string& tag, int which = 0);
-    int getValue(const std::string&  tag, int defaultValue, int which = 0);
-    double getValue(const std::string&  tag, double defaultValue, int which = 0);
-    std::string getValue(const std::string&  tag, const std::string& defaultValue, int which = 0);
-    
-    int setValue(const std::string& tag, int value, int which = 0);
-    int setValue(const std::string& tag, double value, int which = 0);
-    int setValue(const std::string& tag, const std::string& value, int which = 0);
-    
-    bool pushTag(const std::string&  tag, int which = 0);
-    int	popTag();
-    int	getPushLevel() const;
-    
-    int addValue(const std::string&  tag, int value);
-    int addValue(const std::string&  tag, double value);
-    int addValue(const std::string&  tag, const std::string& value);
+        bool loadFile(const std::string& xmlFile);
+        void saveFile(const std::string& xmlFile);
 
-    int	addTag(const std::string& tag, bool endTag=true); //adds an empty tag at the current level
-    void addXmlDeclaration();
-    
-    int	addAttribute(const std::string& tag, const std::string& attribute, int value, int which = 0);
-    int	addAttribute(const std::string& tag, const std::string& attribute, double value, int which = 0);
-    int	addAttribute(const std::string& tag, const std::string& attribute, const std::string& value, int which = 0);
-    
-    int	addAttribute(const std::string& tag, const std::string& attribute, int value);
-    int	addAttribute(const std::string& tag, const std::string& attribute, double value);
-    int	addAttribute(const std::string& tag, const std::string& attribute, const std::string& value);
-    
-    int	setAttribute(const std::string& tag, const std::string& attribute, int value, int which = 0);
-    int	setAttribute(const std::string& tag, const std::string& attribute, double value, int which = 0);
-    int	setAttribute(const std::string& tag, const std::string& attribute, const std::string& value, int which = 0);
-    
-    int	setAttribute(const std::string& tag, const std::string& attribute, int value);
-    int	setAttribute(const std::string& tag, const std::string& attribute, double value);
-    int	setAttribute(const std::string& tag, const std::string& attribute, const std::string& value);
-    
-    int	getNumTags(const std::string& tag);
+        void clear();
 
-    int	getNumAttributes(const std::string& tag, int which = 0);
-    
-    bool attributeExists(const std::string& tag, const std::string& attribute, int which = 0);
-    
-    bool getAttributeNames(const std::string& tag, std::vector<std::string>& outNames, int which = 0);
-    
-    int	getAttribute(const std::string& tag, const std::string& attribute, int defaultValue, int which = 0);
-    double getAttribute(const std::string& tag, const std::string& attribute, double defaultValue, int which = 0);
-    std::string	getAttribute(const std::string& tag, const std::string& attribute, const std::string& defaultValue, int which = 0);
-    
-//    void	loadFromBuffer( std::string buffer );
-    void	copyXmlToString(std::string & str);
-    
-    TiXmlDocument doc;
-    bool bDocLoaded;
-    
-protected:
-    TiXmlHandle storedHandle;
-    int level;
-    
-    int writeTag(const std::string&  tag, const std::string& valueString, int which = 0, bool endTag=true);
-    
-    bool readTag(const std::string&  tag, TiXmlHandle& valHandle, int which = 0);
+        bool tagExists(const std::string& tag, int which = 0);
+        int getValue(const std::string&  tag, int defaultValue, int which = 0);
+        double getValue(const std::string&  tag, double defaultValue, int which = 0);
+        std::string getValue(const std::string&  tag, const std::string& defaultValue, int which = 0);
 
-    int	writeAttribute(const std::string& tag, const std::string& attribute, const std::string& valueString, int which = 0);
-    TiXmlElement* getElementForAttribute(const std::string& tag, int which);
-    bool readIntAttribute(const std::string& tag, const std::string& attribute, int& outValue, int which);
-    bool readDoubleAttribute(const std::string& tag, const std::string& attribute, double& outValue, int which);
-    bool readStringAttribute(const std::string& tag, const std::string& attribute, std::string& outValue, int which);
+        int setValue(const std::string& tag, int value, int which = 0);
+        int setValue(const std::string& tag, double value, int which = 0);
+        int setValue(const std::string& tag, const std::string& value, int which = 0);
 
-    
-    
-};
+        bool pushTag(const std::string&  tag, int which = 0);
+        int	popTag();
+        int	getPushLevel() const;
 
+        int addValue(const std::string&  tag, int value);
+        int addValue(const std::string&  tag, double value);
+        int addValue(const std::string&  tag, const std::string& value);
+
+        int	addTag(const std::string& tag, bool endTag=true); //adds an empty tag at the current level
+        void addXmlDeclaration();
+
+        int	addAttribute(const std::string& tag, const std::string& attribute, int value, int which = 0);
+        int	addAttribute(const std::string& tag, const std::string& attribute, double value, int which = 0);
+        int	addAttribute(const std::string& tag, const std::string& attribute, const std::string& value, int which = 0);
+
+        int	addAttribute(const std::string& tag, const std::string& attribute, int value);
+        int	addAttribute(const std::string& tag, const std::string& attribute, double value);
+        int	addAttribute(const std::string& tag, const std::string& attribute, const std::string& value);
+
+        int	setAttribute(const std::string& tag, const std::string& attribute, int value, int which = 0);
+        int	setAttribute(const std::string& tag, const std::string& attribute, double value, int which = 0);
+        int	setAttribute(const std::string& tag, const std::string& attribute, const std::string& value, int which = 0);
+
+        int	setAttribute(const std::string& tag, const std::string& attribute, int value);
+        int	setAttribute(const std::string& tag, const std::string& attribute, double value);
+        int	setAttribute(const std::string& tag, const std::string& attribute, const std::string& value);
+
+        int	getNumTags(const std::string& tag);
+
+        int	getNumAttributes(const std::string& tag, int which = 0);
+
+        bool attributeExists(const std::string& tag, const std::string& attribute, int which = 0);
+
+        bool getAttributeNames(const std::string& tag, std::vector<std::string>& outNames, int which = 0);
+
+        int	getAttribute(const std::string& tag, const std::string& attribute, int defaultValue, int which = 0);
+        double getAttribute(const std::string& tag, const std::string& attribute, double defaultValue, int which = 0);
+        std::string	getAttribute(const std::string& tag, const std::string& attribute, const std::string& defaultValue, int which = 0);
+
+    //    void	loadFromBuffer( std::string buffer );
+        void	copyXmlToString(std::string & str);
+
+        TiXmlDocument doc;
+        bool bDocLoaded;
+
+    protected:
+        TiXmlHandle storedHandle;
+        int level;
+
+        int writeTag(const std::string&  tag, const std::string& valueString, int which = 0, bool endTag=true);
+
+        bool readTag(const std::string&  tag, TiXmlHandle& valHandle, int which = 0);
+
+        int	writeAttribute(const std::string& tag, const std::string& attribute, const std::string& valueString, int which = 0);
+        TiXmlElement* getElementForAttribute(const std::string& tag, int which);
+        bool readIntAttribute(const std::string& tag, const std::string& attribute, int& outValue, int which);
+        bool readDoubleAttribute(const std::string& tag, const std::string& attribute, double& outValue, int which);
+        bool readStringAttribute(const std::string& tag, const std::string& attribute, std::string& outValue, int which);
+
+
+
+    };
 }
 #endif // _XMLPARSER_H_

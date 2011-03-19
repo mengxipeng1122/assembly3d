@@ -35,7 +35,7 @@
 #include <limits>
 #include <cmath>
 
-using namespace MeshWiz;
+using namespace Wiz;
 
 Mesh::Mesh()
 :

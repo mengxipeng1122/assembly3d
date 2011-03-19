@@ -32,11 +32,13 @@
  */
 
 #include "MeshWizIncludes.h"
+#include "WizUtils.h"
 #include <tclap/CmdLine.h>
 #include "Mesh.h"
 #include "MeshIO.h"
 #include "ToolManager.h"
 
+using namespace Wiz;
 using namespace WizUtils;
 
 //==============================================================================
@@ -53,7 +55,7 @@ int main (int argc, char* argv[])
 	
     TCLAP::CmdLine cmd("MeshWiz - Utility for manipulating Assembly3D mesh files.",
                        '=',
-                       ProjectInfo::versionString);
+                       MeshWiz::ProjectInfo::versionString);
 
     //---------------------------------------------------------------------------------------------------------
     // Input / Output
