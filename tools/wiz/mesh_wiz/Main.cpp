@@ -283,7 +283,7 @@ int main (int argc, char* argv[])
     if(!WizUtils::FileUtils::checkIfFileExists(inputfile.c_str()))
     {
         std::cerr << "Error: Input source '" << inputfile << "', does not exist!" << std::endl;
-        return 0;
+        return 1;
     }
     if(!infoArg.isSet())
     {
@@ -327,12 +327,12 @@ int main (int argc, char* argv[])
     if(!MeshIO::load(&mesh, inputfile.c_str(), binaryInFileName.c_str()))
     {
         std::cerr << "Error: Loading '" << inputfile << "', failed!" << std::endl;
-        return 0;
+        return 1;
     }
     if(!WizUtils::FileUtils::checkIfFileExists(binaryInFileName.c_str()) && mesh.getMeshFormat().isBinary)
     {
         std::cerr << "Error: Binary file not found! " << std::endl;
-        return 0;
+        return 1;
     }
 
 
@@ -364,7 +364,7 @@ int main (int argc, char* argv[])
         {
             std::cerr << "Error: To many vertices. It is not possible to have indices of the type '";
             std::cerr << convertIndexTypeToArg.getValue() << "'" << std::endl;
-            return 0;
+            return 1;
         }
         modelChanged = true;
     }

@@ -109,12 +109,12 @@ int main (int argc, char* argv[])
         if(FileUtils::checkIfFileExists(actualFile.c_str()) == false)
         {
             std::cerr << "Error: Actual file does not exist!" << std::endl;
-            return 0;
+            return 1;
         }
         if(FileUtils::checkIfFileExists(expectedFile.c_str()) == false)
         {
             std::cerr << "Error: Expected file does not exist!" << std::endl;
-            return 0;
+            return 1;
         }
 
         std::string actualBinaryFile;
@@ -141,12 +141,12 @@ int main (int argc, char* argv[])
         if(FileUtils::checkIfFileExists(actualBinaryFile.c_str()) == false)
         {
             std::cerr << "Error: Actual binary file does not exist!" << std::endl;
-            return 0;
+            return 1;
         }
         if(FileUtils::checkIfFileExists(expectedBinaryFile.c_str()) == false)
         {
             std::cerr << "Error: Expected binary file does not exist!" << std::endl;
-            return 0;
+            return 1;
         }
 
         float eps = epsilonArg.getValue();
