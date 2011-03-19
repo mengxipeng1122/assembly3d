@@ -34,6 +34,7 @@
 #ifndef _FILEUTILS_H_
 #define _FILEUTILS_H_
 
+#include "WizIncludes.h"
 #include <string>
 #include <vector>
 

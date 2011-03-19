@@ -34,6 +34,7 @@
 #ifndef WIZUTILS_H
 #define WIZUTILS_H
 
+#include "WizIncludes.h"
 #include "FileUtils.h"
 #include "StringUtils.h"
 #include "XmlParser.h"

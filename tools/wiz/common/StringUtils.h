@@ -34,7 +34,7 @@
 #ifndef _STRINGUTILS_H_
 #define _STRINGUTILS_H_
 
-//#include "WizIncludes.h"
+#include "WizIncludes.h"
 #include <string>
 #include <vector>
 

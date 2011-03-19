@@ -39,6 +39,7 @@
 // http://www.openframeworks.cc/
 //--------------------------------------------------------------------------
 
+#include "WizIncludes.h"
 #include "tinyxml.h"
 #include <vector>
 
