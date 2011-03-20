@@ -45,33 +45,6 @@ public:
 
     virtual void create(Mesh* mesh) = 0;
 
-protected:
-    void initializeStandardMeshFormat(Mesh::MeshFormat& format, unsigned int numVertices);
 };
-
-inline void Primitive::initializeStandardMeshFormat(Mesh::MeshFormat &format, unsigned int numVertices)
-{
-    format.name = "Assembly3D.mesh";
-    format.isBinary = true;
-
-    if(numVertices < (1 << 8))
-        format.indexType = "UNSIGNED_BYTE";
-    else if(numVertices < (1 << 16))
-        format.indexType = "UNSIGNED_SHORT";
-    else
-        format.indexType = "UNSIGNED_INT";
-
-    format.attributeCount = 3;
-    format.attributeName.push_back("POSITION");
-    format.attributeName.push_back("NORMAL");
-    format.attributeName.push_back("TEXTURE");
-    format.attributeSize.push_back(3);
-    format.attributeSize.push_back(3);
-    format.attributeSize.push_back(2);
-    format.attributeType.push_back("FLOAT");
-    format.attributeType.push_back("FLOAT");
-    format.attributeType.push_back("FLOAT");
-
-}
 
 #endif // PRIMITIVE_H
