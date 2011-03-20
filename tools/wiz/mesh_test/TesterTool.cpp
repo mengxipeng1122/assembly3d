@@ -63,7 +63,12 @@ void TesterTool::loadMesh(const string& xmlFile,
             for(int i = 0; i < numAtributes; ++i)
             {
                 Attribute attrib;
-                attrib.name = xml.getAttribute("Attribute", "name", "", i).c_str();
+
+                std::string tmpAttribName = xml.getAttribute("Attribute", "name", "", i);
+                attrib.name = new char[tmpAttribName.length()+1];
+                attrib.name[tmpAttribName.length()] = 0;
+                memcpy(attrib.name, tmpAttribName.c_str(), tmpAttribName.size());
+
                 attrib.size = xml.getAttribute("Attribute", "size", 0, i);
                 attrib.count = numVertices * attrib.size;
                 attrib.values = new float[attrib.count];
@@ -93,8 +98,15 @@ void TesterTool::loadMesh(const string& xmlFile,
             for(int i = 0; i < numGroups; ++i)
             {
                 Group group;
-                group.type = typeIndices.c_str();
-                group.name = xml.getAttribute("Group", "name", "", i).c_str();
+                group.type = new char[typeIndices.length()+1];
+                group.type[typeIndices.length()] = 0;
+                memcpy(group.type, typeIndices.c_str(), typeIndices.size());
+
+                std::string tmpGrName = xml.getAttribute("Group", "name", "", i);
+                group.name = new char[tmpGrName.length()+1];
+                group.name[tmpGrName.length()] = 0;
+                memcpy(group.name, tmpGrName.c_str(), tmpGrName.size());
+
                 group.count = xml.getAttribute("Group", "count", 0, i);
 
                 int numBytes = 0;
@@ -133,7 +145,6 @@ void TesterTool::loadMesh(const string& xmlFile,
     xml.popTag();
     xml.clear();
     fin.close();
-
 }
 
 void TesterTool::compare(const char* actual,
@@ -233,10 +244,13 @@ void TesterTool::clear(vector<Attribute>& attribs,
 {
     for(unsigned int i = 0; i < attribs.size(); ++i)
     {
+        SAFE_DELETE_ARRAY(attribs[i].name)
         SAFE_DELETE_ARRAY(attribs[i].values)
     }
     for(unsigned int i = 0; i < groups.size(); ++i)
     {
+        SAFE_DELETE_ARRAY(groups[i].type)
+        SAFE_DELETE_ARRAY(groups[i].name)
         SAFE_DELETE_ARRAY(groups[i].bytes)
     }
 }

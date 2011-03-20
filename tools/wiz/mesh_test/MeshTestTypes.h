@@ -38,7 +38,7 @@ namespace MeshTest
 {
     struct Attribute
     {
-        const char* name;
+        char* name;
         int size;
         int count;
         float* values;
@@ -46,8 +46,8 @@ namespace MeshTest
 
     struct Group
     {
-        const char* name;
-        const char* type;
+        char* name;
+        char* type;
         int count;
         unsigned char* bytes;
         int numBytes;
