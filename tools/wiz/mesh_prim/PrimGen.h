@@ -49,7 +49,7 @@ public:
     PrimGen();
     ~PrimGen();
 
-    void createMesh(Mesh* mesh, int primType, unsigned int numVals, ...);
+    void createMesh(Mesh* mesh, int primType, std::vector<float> values);
 
 private:
 

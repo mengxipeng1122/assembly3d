@@ -50,35 +50,22 @@ PrimGen::~PrimGen()
     SAFE_DELETE(m_prim)
 }
 
-void PrimGen::createMesh(Mesh* mesh, int primType, unsigned int numVals, ...)
+void PrimGen::createMesh(Mesh* mesh, int primType, std::vector<float> values)
 {
-    vector<float> values;
-    va_list vl;
-    va_start(vl, numVals);
-
-    for(unsigned int i=0; i < numVals; ++i)
-    {
-        double arg = va_arg(vl, double );
-
-        values.push_back((float)arg);
-
-    }
-    va_end(vl);
-
     switch(primType)
     {
     case PRIM_TYPE_PLANE:
-        if(numVals == 1)
-            m_prim = new Plane(values[0]);
+        m_prim = new Plane(values[0]);
         break;
     case PRIM_TYPE_CUBE:
-        m_prim = new Cube();
+        m_prim = new Cube(values[0]);
         break;
     case PRIM_TYPE_SPHERE:
-        m_prim = new Sphere();
+        m_prim = new Sphere(values[0], (int)values[1]);
         break;
     case PRIM_TYPE_TORUS:
-        m_prim = new Torus();
+        m_prim = new Torus(values[0], values[1],
+                           (int)values[2], (int)values[3]);
         break;
     default:
         m_prim = 0;
