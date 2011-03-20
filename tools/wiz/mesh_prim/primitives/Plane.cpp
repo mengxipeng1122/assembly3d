@@ -35,11 +35,13 @@
 
 #include <iostream>
 using namespace std;
+using namespace Wiz;
 
 Plane::Plane(float halfExtend)
     :
     m_halfExtend(halfExtend)
 {
+
 }
 
 Plane::~Plane()
@@ -49,6 +51,84 @@ Plane::~Plane()
 void Plane::create(Mesh* mesh)
 {
     cout << "Create plane" << endl;
+
+    int numberVertices = 4;
+    int numTriangles = 2;
+
+    float positions[] = {
+        -1.0f, -1.0f, 0.0f,
+        1.0f, -1.0f, 0.0f,
+        -1.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, 0.0f,
+    };
+
+    float normals[] =
+    {
+        0.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 1.0f
+    };
+
+    float texCoords[] =
+    {
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 1.0f
+    };
+
+    unsigned int indices[] =
+    {
+        0, 1, 2,
+        1, 3, 2
+    };
+
+    for (int i = 0; i < numberVertices; i++)
+    {
+        Vertex vert = {{0.0f,0.0f,0.0f},
+                       {0.0f,0.0f},
+                       {0.0f,0.0f,0.0f},
+                       {0.0f,0.0f,0.0f},
+                       {0.0f,0.0f,0.0f}};
+
+        createVertex(vert, &positions[i*3], &normals[i*3], &texCoords[i*3]);
+        mesh->addVertex(vert);
+    }
+
+    Mesh::MeshFormat& format = mesh->getMeshFormat();
+    initializeStandardMeshFormat(format, mesh->getNumberOfVertices());
+
+
+    for(int i = 0; i < numTriangles*3; ++i)
+    {
+        mesh->addIndex(indices[i]);
+    }
+    mesh->setNumTriangles(numTriangles);
+    Group g;
+    g.name = "xy_plane";
+    g.startIndex = 0;
+    g.triangleCount = 2;
+    mesh->addGroup(g);
+}
+
+void Plane::createVertex(Vertex& vertex, float position[3], float normal[3], float texCoord[2])
+{
+
+    vertex.position[0] = position[0];
+    vertex.position[1] = position[1];
+    vertex.position[2] = position[2];
+
+    vertex.normal[0] = normal[0];
+    vertex.normal[1] = normal[1];
+    vertex.normal[2] = normal[2];
+
+    vertex.texCoord[0] = texCoord[0];
+    vertex.texCoord[1] = texCoord[1];
+
+    vertex.position[0] *= m_halfExtend;
+    vertex.position[1] *= m_halfExtend;
+
 }
 
 

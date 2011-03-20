@@ -139,8 +139,7 @@ int main (int argc, char* argv[])
         {
             return 1;
         }
-        if(mesh)
-            MeshIO::saveFile(mesh, outputFile.c_str(), outputBinaryFile.c_str());
+        MeshIO::saveFile(mesh, outputFile.c_str(), outputBinaryFile.c_str());
 
 
     } catch (TCLAP::ArgException &e)  // catch any exceptions
