@@ -84,9 +84,9 @@ int main (int argc, char* argv[])
 
         outputDir = outputDirArg.getValue();
 
-        outputFile = outputDir.append(outputNameArg.getValue());
+        outputFile = outputDir + outputNameArg.getValue();
 
-        outputBinaryFile = outputDir.append(FileUtils::getBinaryFileName(outputFile.c_str(), ".xml", ".dat"));
+        outputBinaryFile = FileUtils::getBinaryFileName(outputFile.c_str(), ".xml", ".dat");
 
         Mesh* mesh = new Mesh();
         PrimGen primGen;
@@ -103,7 +103,7 @@ int main (int argc, char* argv[])
         }
         else if(cubeArg.isSet())
         {
-            std::string args = planeArg.getValue();
+            std::string args = cubeArg.getValue();
             float val = 0.0f;
             StringUtils::getValueFromCmdString(args, val);
             std::vector<float> values;
@@ -113,7 +113,7 @@ int main (int argc, char* argv[])
         }
         else if(sphereArg.isSet())
         {
-            std::string args = planeArg.getValue();
+            std::string args = sphereArg.getValue();
 
             std::vector<float> values;
             StringUtils::getValuesFromCmdString(args, values);
@@ -125,7 +125,7 @@ int main (int argc, char* argv[])
         }
         else if(torusArg.isSet())
         {
-            std::string args = planeArg.getValue();
+            std::string args = torusArg.getValue();
 
             std::vector<float> values;
             StringUtils::getValuesFromCmdString(args, values);
