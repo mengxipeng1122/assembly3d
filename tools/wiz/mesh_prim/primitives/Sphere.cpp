@@ -88,6 +88,9 @@ void Sphere::create(Mesh* mesh)
     }
 
     mesh->initializeStandardMeshFormat();
+    mesh->hasPositions(true);
+    mesh->hasNormals(true);
+    mesh->hasTexCoords(true);
 
     for (i = 0; i < (unsigned int)numberParallels ; i++ ) {
         for (j = 0; j < (unsigned int)m_slices; j++ ) {
@@ -109,10 +112,7 @@ void Sphere::create(Mesh* mesh)
         }
     }
     mesh->setNumTriangles(numberTriangles);
-    Group g;
-    g.name = "sphere";
-    g.startIndex = 0;
-    g.triangleCount = numberTriangles;
+    Group g = {"sphere", 0, numberTriangles};
     mesh->addGroup(g);
 
 }

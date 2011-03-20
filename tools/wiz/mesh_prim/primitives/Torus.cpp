@@ -126,6 +126,9 @@ void Torus::create(Mesh* mesh)
     }
 
     mesh->initializeStandardMeshFormat();
+    mesh->hasPositions(true);
+    mesh->hasNormals(true);
+    mesh->hasTexCoords(true);
 
     // generate indices
     for (sideCount = 0; sideCount < m_numSides; ++sideCount)
@@ -150,10 +153,7 @@ void Torus::create(Mesh* mesh)
         }
     }
     mesh->setNumTriangles(numberTriangles);
-    Group g;
-    g.name = "Torus";
-    g.startIndex = 0;
-    g.triangleCount = numberTriangles;
+    Group g = {"torus", 0, numberTriangles};
     mesh->addGroup(g);
 
 }

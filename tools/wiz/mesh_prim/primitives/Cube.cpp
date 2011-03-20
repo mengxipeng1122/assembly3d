@@ -164,41 +164,35 @@ void Cube::create(Mesh *mesh)
                        {0.0f,0.0f,0.0f},
                        {0.0f,0.0f,0.0f}};
 
-        createVertex(vert, &positions[i*3], &normals[i*3], &texCoords[i*3]);
+        vert.position[0] = positions[i*3 + 0];
+        vert.position[1] = positions[i*3 + 1];
+        vert.position[2] = positions[i*3 + 2];
+
+        vert.normal[0] = normals[i*3 + 0];
+        vert.normal[1] = normals[i*3 + 1];
+        vert.normal[2] = normals[i*3 + 2];
+
+        vert.texCoord[0] = texCoords[i*3 + 0];
+        vert.texCoord[1] = texCoords[i*3 + 1];
+
+        vert.position[0] *= m_halfExtend;
+        vert.position[1] *= m_halfExtend;
+        vert.position[2] *= m_halfExtend;
+
         mesh->addVertex(vert);
     }
 
     mesh->initializeStandardMeshFormat();
+    mesh->hasPositions(true);
+    mesh->hasNormals(true);
+    mesh->hasTexCoords(true);
 
     for(int i = 0; i < numTriangles*3; ++i)
     {
         mesh->addIndex(indices[i]);
     }
     mesh->setNumTriangles(numTriangles);
-    Group g;
-    g.name = "xy_plane";
-    g.startIndex = 0;
-    g.triangleCount = numTriangles;
+    Group g = {"cube", 0, numTriangles};
     mesh->addGroup(g);
-
-}
-
-void Cube::createVertex(Vertex& vertex, float position[3], float normal[3], float texCoord[2])
-{
-
-    vertex.position[0] = position[0];
-    vertex.position[1] = position[1];
-    vertex.position[2] = position[2];
-
-    vertex.normal[0] = normal[0];
-    vertex.normal[1] = normal[1];
-    vertex.normal[2] = normal[2];
-
-    vertex.texCoord[0] = texCoord[0];
-    vertex.texCoord[1] = texCoord[1];
-
-    vertex.position[0] *= m_halfExtend;
-    vertex.position[1] *= m_halfExtend;
-    vertex.position[2] *= m_halfExtend;
 
 }
