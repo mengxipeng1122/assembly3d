@@ -178,7 +178,7 @@ void Cube::create(Mesh *mesh)
     Group g;
     g.name = "xy_plane";
     g.startIndex = 0;
-    g.triangleCount = 12;
+    g.triangleCount = numTriangles;
     mesh->addGroup(g);
 
 }

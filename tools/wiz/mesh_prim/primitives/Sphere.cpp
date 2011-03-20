@@ -33,8 +33,12 @@
 
 #include "Sphere.h"
 
+#include <cmath>
 #include <iostream>
 using namespace std;
+using namespace Wiz;
+
+#define PIf		3.1415926535897932384626433832795f
 
 Sphere::Sphere(float radius, int slices)
     :
@@ -50,6 +54,67 @@ Sphere::~Sphere()
 void Sphere::create(Mesh* mesh)
 {
     cout << "Create sphere" << endl;
+
+    unsigned int i,j;
+
+    int numberParallels = m_slices;
+    int numberIndices = numberParallels * m_slices * 6;
+    int numberTriangles = numberIndices / 3;
+
+    float angleStep = (2.0f * PIf) / ((float) m_slices);
+
+    for (i = 0; i < (unsigned int)numberParallels + 1; i++ ) {
+        for (j = 0; j < (unsigned int)m_slices + 1; j++ ) {
+
+            Vertex vert = {{0.0f,0.0f,0.0f},
+                           {0.0f,0.0f},
+                           {0.0f,0.0f,0.0f},
+                           {0.0f,0.0f,0.0f},
+                           {0.0f,0.0f,0.0f}};
+
+            vert.position[0] = m_radius * sinf ( angleStep * (float)i ) * sinf ( angleStep * (float)j );
+            vert.position[1] = m_radius * cosf ( angleStep * (float)i );
+            vert.position[2] = m_radius * sinf ( angleStep * (float)i ) * cosf ( angleStep * (float)j );
+
+            vert.normal[0] = vert.position[0] / m_radius;
+            vert.normal[1] = vert.position[1] / m_radius;
+            vert.normal[2] = vert.position[2] / m_radius;
+
+            vert.texCoord[0] = (float) j / (float) m_slices;
+            vert.texCoord[1] = ( 1.0f - (float) i ) / (float) (numberParallels - 1 );
+
+            mesh->addVertex(vert);
+        }
+    }
+
+    mesh->initializeStandardMeshFormat();
+
+    for (i = 0; i < (unsigned int)numberParallels ; i++ ) {
+        for (j = 0; j < (unsigned int)m_slices; j++ ) {
+
+            unsigned int tris[6] = {0,0,0,0,0,0};
+
+            tris[0] = i * ( m_slices + 1 ) + j;
+            tris[1] = ( i + 1 ) * ( m_slices + 1 ) + j;
+            tris[2] = ( i + 1 ) * ( m_slices + 1 ) + ( j + 1 );
+
+            tris[3] = i * ( m_slices + 1 ) + j;
+            tris[4] = ( i + 1 ) * ( m_slices + 1 ) + ( j + 1 );
+            tris[5] = i * ( m_slices + 1 ) + ( j + 1 );
+
+            for(unsigned int k = 0; k < 6; ++k)
+            {
+                mesh->addIndex(tris[k]);
+            }
+        }
+    }
+    mesh->setNumTriangles(numberTriangles);
+    Group g;
+    g.name = "sphere";
+    g.startIndex = 0;
+    g.triangleCount = numberTriangles;
+    mesh->addGroup(g);
+
 }
 
 
