@@ -37,7 +37,15 @@
 using namespace std;
 
 
-Torus::Torus()
+Torus::Torus(float innerRadius,
+             float outerRadius,
+             int numSides,
+             int numFaces)
+                 :
+                 m_innerRadius(innerRadius),
+                 m_outerRadius(outerRadius),
+                 m_numSides(numSides),
+                 m_numFaces(numFaces)
 {
 }
 

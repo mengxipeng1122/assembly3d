@@ -39,10 +39,12 @@
 class Cube : public Primitive
 {
 public:
-    Cube();
+    Cube(float halfExtend);
     virtual ~Cube();
 
     void create(Mesh* mesh);
+private:
+    float m_halfExtend;
 };
 
 #endif // CUBE_H

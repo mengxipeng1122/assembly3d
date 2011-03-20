@@ -39,10 +39,13 @@
 class Sphere : public Primitive
 {
 public:
-    Sphere();
+    Sphere(float radius, int slices);
     virtual ~Sphere();
 
     void create(Mesh* mesh);
+private:
+    float m_radius;
+    int m_slices;
 };
 
 

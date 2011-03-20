@@ -39,10 +39,19 @@
 class Torus : public Primitive
 {
 public:
-    Torus();
+    Torus(float innerRadius,
+          float outerRadius,
+          int numSides,
+          int numFaces);
+
     virtual ~Torus();
 
     void create(Mesh* mesh);
+private:
+    float m_innerRadius;
+    float m_outerRadius;
+    int m_numSides;
+    int m_numFaces;
 };
 
 

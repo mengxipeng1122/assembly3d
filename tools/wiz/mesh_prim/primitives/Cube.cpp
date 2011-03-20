@@ -36,7 +36,9 @@
 #include <iostream>
 using namespace std;
 
-Cube::Cube()
+Cube::Cube(float halfExtend)
+    :
+    m_halfExtend(halfExtend)
 {
 }
 

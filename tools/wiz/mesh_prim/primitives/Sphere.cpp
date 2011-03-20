@@ -36,7 +36,10 @@
 #include <iostream>
 using namespace std;
 
-Sphere::Sphere()
+Sphere::Sphere(float radius, int slices)
+    :
+    m_radius(radius),
+    m_slices(slices)
 {
 }
 

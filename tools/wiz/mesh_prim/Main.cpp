@@ -96,16 +96,20 @@ int main (int argc, char* argv[])
             std::string args = planeArg.getValue();
             float val = 0.0f;
             StringUtils::getValueFromCmdString(args, val);
+            std::vector<float> values;
+            values.push_back(val);
 
-            primGen.createMesh(mesh, PrimGen::PRIM_TYPE_PLANE, 1, val);
+            primGen.createMesh(mesh, PrimGen::PRIM_TYPE_PLANE, values);
         }
         else if(cubeArg.isSet())
         {
             std::string args = planeArg.getValue();
             float val = 0.0f;
             StringUtils::getValueFromCmdString(args, val);
+            std::vector<float> values;
+            values.push_back(val);
 
-            primGen.createMesh(mesh, PrimGen::PRIM_TYPE_CUBE, 1, val);
+            primGen.createMesh(mesh, PrimGen::PRIM_TYPE_CUBE, values);
         }
         else if(sphereArg.isSet())
         {
@@ -116,8 +120,7 @@ int main (int argc, char* argv[])
 
             if(values.size() == 2)
             {
-                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_SPHERE, 2,
-                                   values[0], values[1]);
+                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_SPHERE, values);
             }
         }
         else if(torusArg.isSet())
@@ -129,8 +132,7 @@ int main (int argc, char* argv[])
 
             if(values.size() == 4)
             {
-                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_TORUS, 4,
-                                   values[0], values[1], values[2], values[3]);
+                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_TORUS, values);
             }
         }
         else
