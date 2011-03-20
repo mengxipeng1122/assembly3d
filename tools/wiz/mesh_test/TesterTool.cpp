@@ -259,8 +259,8 @@ int TesterTool::compare(int n, float* array_a, float* array_e, float epsilon)
 {
     for(int i = 0; i < n; ++i)
     {
-        if(array_a[i] < array_e[i] - epsilon/2 ||
-           array_a[i] > array_e[i] + epsilon/2 )
+        if(array_a[i] < array_e[i] - epsilon ||
+           array_a[i] > array_e[i] + epsilon )
         {
             return -1;
         }
