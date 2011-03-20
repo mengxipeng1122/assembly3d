@@ -44,6 +44,7 @@ public:
 
     void create(Mesh* mesh);
 private:
+    void createVertex(Wiz::Vertex& vertex,float position[3], float normal[3], float texCoord[2]);
     float m_halfExtend;
 };
 

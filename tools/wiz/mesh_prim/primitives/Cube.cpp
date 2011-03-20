@@ -35,6 +35,7 @@
 
 #include <iostream>
 using namespace std;
+using namespace Wiz;
 
 Cube::Cube(float halfExtend)
     :
@@ -49,4 +50,155 @@ Cube::~Cube()
 void Cube::create(Mesh *mesh)
 {
     cout << "Create cube" << endl;
+
+    int numVertices = 24;
+    int numTriangles = 12;
+
+    float positions[] =
+    {
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f, +1.0f,
+        +1.0f, -1.0f, +1.0f,
+        +1.0f, -1.0f, -1.0f,
+        -1.0f, +1.0f, -1.0f,
+        -1.0f, +1.0f, +1.0f,
+        +1.0f, +1.0f, +1.0f,
+        +1.0f, +1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, +1.0f, -1.0f,
+        +1.0f, +1.0f, -1.0f,
+        +1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f, +1.0f,
+        -1.0f, +1.0f, +1.0f,
+        +1.0f, +1.0f, +1.0f,
+        +1.0f, -1.0f, +1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f, +1.0f,
+        -1.0f, +1.0f, +1.0f,
+        -1.0f, +1.0f, -1.0f,
+        +1.0f, -1.0f, -1.0f,
+        +1.0f, -1.0f, +1.0f,
+        +1.0f, +1.0f, +1.0f,
+        +1.0f, +1.0f, -1.0f
+    };
+
+    float normals[] =
+    {
+        0.0f, -1.0f,  0.0f,
+        0.0f, -1.0f,  0.0f,
+        0.0f, -1.0f,  0.0f,
+        0.0f, -1.0f,  0.0f,
+        0.0f, +1.0f,  0.0f,
+        0.0f, +1.0f,  0.0f,
+        0.0f, +1.0f,  0.0f,
+        0.0f, +1.0f,  0.0f,
+        0.0f,  0.0f, -1.0f,
+        0.0f,  0.0f, -1.0f,
+        0.0f,  0.0f, -1.0f,
+        0.0f,  0.0f, -1.0f,
+        0.0f,  0.0f, +1.0f,
+        0.0f,  0.0f, +1.0f,
+        0.0f,  0.0f, +1.0f,
+        0.0f,  0.0f, +1.0f,
+        -1.0f,  0.0f,  0.0f,
+        -1.0f,  0.0f,  0.0f,
+        -1.0f,  0.0f,  0.0f,
+        -1.0f,  0.0f,  0.0f,
+        +1.0f,  0.0f,  0.0f,
+        +1.0f,  0.0f,  0.0f,
+        +1.0f,  0.0f,  0.0f,
+        +1.0f,  0.0f,  0.0f
+    };
+
+
+    float texCoords[] =
+    {
+        0.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 1.0f,
+        1.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+        0.0f, 1.0f,
+        0.0f, 0.0f,
+        0.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 1.0f,
+        1.0f, 0.0f,
+        0.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 1.0f,
+        1.0f, 0.0f,
+        0.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 1.0f,
+        1.0f, 0.0f,
+        0.0f, 0.0f,
+        0.0f, 1.0f,
+        1.0f, 1.0f,
+        1.0f, 0.0f,
+    };
+
+    unsigned int indices[] =
+    {
+        0, 2, 1,
+        0, 3, 2,
+        4, 5, 6,
+        4, 6, 7,
+        8, 9, 10,
+        8, 10, 11,
+        12, 15, 14,
+        12, 14, 13,
+        16, 17, 18,
+        16, 18, 19,
+        20, 23, 22,
+        20, 22, 21
+    };
+
+
+    for (int i = 0; i < numVertices; i++)
+    {
+        Vertex vert = {{0.0f,0.0f,0.0f},
+                       {0.0f,0.0f},
+                       {0.0f,0.0f,0.0f},
+                       {0.0f,0.0f,0.0f},
+                       {0.0f,0.0f,0.0f}};
+
+        createVertex(vert, &positions[i*3], &normals[i*3], &texCoords[i*3]);
+        mesh->addVertex(vert);
+    }
+
+    Mesh::MeshFormat& format = mesh->getMeshFormat();
+    initializeStandardMeshFormat(format, mesh->getNumberOfVertices());
+
+    for(int i = 0; i < numTriangles*3; ++i)
+    {
+        mesh->addIndex(indices[i]);
+    }
+    mesh->setNumTriangles(numTriangles);
+    Group g;
+    g.name = "xy_plane";
+    g.startIndex = 0;
+    g.triangleCount = 12;
+    mesh->addGroup(g);
+
+}
+
+void Cube::createVertex(Vertex& vertex, float position[3], float normal[3], float texCoord[2])
+{
+
+    vertex.position[0] = position[0];
+    vertex.position[1] = position[1];
+    vertex.position[2] = position[2];
+
+    vertex.normal[0] = normal[0];
+    vertex.normal[1] = normal[1];
+    vertex.normal[2] = normal[2];
+
+    vertex.texCoord[0] = texCoord[0];
+    vertex.texCoord[1] = texCoord[1];
+
+    vertex.position[0] *= m_halfExtend;
+    vertex.position[1] *= m_halfExtend;
+
 }
