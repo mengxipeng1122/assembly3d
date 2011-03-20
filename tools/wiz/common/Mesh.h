@@ -118,6 +118,9 @@ public:
     
     void setMeshPath(const char* path);
     const char* getMeshPath() const;
+
+    void initializeStandardMeshFormat();
+
 private:
 
     void bounds(float center[3], float &width, float &height,

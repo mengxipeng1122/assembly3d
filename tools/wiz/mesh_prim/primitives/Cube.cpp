@@ -168,8 +168,7 @@ void Cube::create(Mesh *mesh)
         mesh->addVertex(vert);
     }
 
-    Mesh::MeshFormat& format = mesh->getMeshFormat();
-    initializeStandardMeshFormat(format, mesh->getNumberOfVertices());
+    mesh->initializeStandardMeshFormat();
 
     for(int i = 0; i < numTriangles*3; ++i)
     {
@@ -200,5 +199,6 @@ void Cube::createVertex(Vertex& vertex, float position[3], float normal[3], floa
 
     vertex.position[0] *= m_halfExtend;
     vertex.position[1] *= m_halfExtend;
+    vertex.position[2] *= m_halfExtend;
 
 }

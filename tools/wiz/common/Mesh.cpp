@@ -305,6 +305,31 @@ void Mesh::setNumTriangles(int numTriangles)
     m_numTriangles = numTriangles;
 }
 
+void Mesh::initializeStandardMeshFormat()
+{
+    m_format.name = "Assembly3D.mesh";
+    m_format.isBinary = true;
+
+    if(getNumberOfVertices() < (1 << 8))
+        m_format.indexType = "UNSIGNED_BYTE";
+    else if(getNumberOfVertices() < (1 << 16))
+        m_format.indexType = "UNSIGNED_SHORT";
+    else
+        m_format.indexType = "UNSIGNED_INT";
+
+    m_format.attributeCount = 3;
+    m_format.attributeName.push_back("POSITION");
+    m_format.attributeName.push_back("NORMAL");
+    m_format.attributeName.push_back("TEXTURE");
+    m_format.attributeSize.push_back(3);
+    m_format.attributeSize.push_back(3);
+    m_format.attributeSize.push_back(2);
+    m_format.attributeType.push_back("FLOAT");
+    m_format.attributeType.push_back("FLOAT");
+    m_format.attributeType.push_back("FLOAT");
+
+}
+
 void Mesh::generateNormals()
 {
     const unsigned int *pTriangle = 0;

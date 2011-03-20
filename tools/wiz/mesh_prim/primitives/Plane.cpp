@@ -96,8 +96,7 @@ void Plane::create(Mesh* mesh)
         mesh->addVertex(vert);
     }
 
-    Mesh::MeshFormat& format = mesh->getMeshFormat();
-    initializeStandardMeshFormat(format, mesh->getNumberOfVertices());
+    mesh->initializeStandardMeshFormat();
 
 
     for(int i = 0; i < numTriangles*3; ++i)
