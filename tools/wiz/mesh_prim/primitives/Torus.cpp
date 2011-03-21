@@ -91,18 +91,18 @@ void Torus::create(Mesh* mesh,
     sIncr = 1.0f/(float)m_numSides;
 
     // generate vertices and its attributes
-    for (sideCount = 0; sideCount <= m_numSides; ++sideCount, s+=sIncr)
+    for (sideCount = 0; sideCount <= (unsigned int)m_numSides; ++sideCount, s+=sIncr)
     {
         // precompute some values
         cos2PIs = (float)cos (2.0f*PIf*s);
         sin2PIs = (float)sin (2.0f*PIf*s);
 
         t=0.0f;
-        for (faceCount = 0; faceCount <= m_numFaces; ++faceCount, t+=tIncr)
+        for (faceCount = 0; faceCount <= (unsigned int)m_numFaces; ++faceCount, t+=tIncr)
         {
             // precompute some values
-            cos2PIt = (float)cos (2.0f*(float)M_PI*t);
-            sin2PIt = (float)sin (2.0f*(float)M_PI*t);
+            cos2PIt = (float)cos (2.0f*PIf*t);
+            sin2PIt = (float)sin (2.0f*PIf*t);
 
             Vertex vert = {{0.0f,0.0f,0.0f},
                            {0.0f,0.0f,0.0f},
@@ -140,9 +140,9 @@ void Torus::create(Mesh* mesh,
     mesh->initializeMeshFormat();
 
     // generate indices
-    for (sideCount = 0; sideCount < m_numSides; ++sideCount)
+    for (sideCount = 0; sideCount < (unsigned int)m_numSides; ++sideCount)
     {
-        for (faceCount = 0; faceCount < m_numFaces; ++faceCount)
+        for (faceCount = 0; faceCount < (unsigned int)m_numFaces; ++faceCount)
         {
             // get the number of the vertices for a face of the torus. They must be < numVertices
             v0 = ((sideCount * (m_numFaces +1)) + faceCount);

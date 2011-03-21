@@ -57,16 +57,16 @@ namespace assembly3d
 
             private:
 
-                void clear(std::vector<Attribute>& attribs,
-                           std::vector<Group>& groups);
+                void clear(std::vector<test::mesh::Attribute>& attribs,
+                           std::vector<test::mesh::Group>& groups);
 
                 int compare(int n, float* array_a, float* array_e, float epsilon);
                 int compare(int n, unsigned char* array_a, unsigned char* array_e);
 
                 void loadMesh(const std::string& xmlFile,
                               const std::string& binaryFile,
-                              std::vector<Attribute>& attribs,
-                              std::vector<Group>& m_groupsActual);
+                              std::vector<test::mesh::Attribute>& attribs,
+                              std::vector<test::mesh::Group>& m_groupsActual);
 
             };
         }
