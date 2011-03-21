@@ -52,7 +52,11 @@ namespace assembly3d
                 static const int PRIM_TYPE_SPHERE = 2;
                 static const int PRIM_TYPE_TORUS = 3;
 
-                PrimGen();
+                PrimGen(bool generatePositions=true,
+                        bool generateNormals=true,
+                        bool generateTexCoords=true,
+                        bool generateTangents=false,
+                        bool generateBitangents= false);
                 ~PrimGen();
 
                 void createMesh(Mesh* mesh, int primType, std::vector<float> values);
@@ -60,6 +64,11 @@ namespace assembly3d
             private:
 
                 Primitive* m_prim;
+                bool m_generatePositions;
+                bool m_generateNormals;
+                bool m_generateTexCoords;
+                bool m_generateTangents;
+                bool m_generateBitangents;
 
             };
         }

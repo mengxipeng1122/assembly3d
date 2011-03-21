@@ -64,6 +64,12 @@ int main (int argc, char* argv[])
                                                false, "", "radius/slices");
         TCLAP::ValueArg<std::string> torusArg("t", "torus", "Generates torus geometry.",
                                               false, "", "inner-radius/outer-radius/sides/faces");
+        TCLAP::ValueArg<std::string> generateAttribsArg("",
+                                                        "generate-attributes",
+                                                        "Specifies which attribute to generate (default: positions/normals/texCoords",
+                                                        false,
+                                                        "positions/normals/texcoords",
+                                                        "attributes");
         // -------------------------------------------------------------------
 
         std::vector<TCLAP::Arg*> xorlist;
@@ -74,6 +80,7 @@ int main (int argc, char* argv[])
         cmd.xorAdd(xorlist);
 
         cmd.add(outputDirArg);
+        cmd.add(generateAttribsArg);
         cmd.add(outputNameArg);
 
         cmd.parse( argc, argv );
@@ -90,8 +97,47 @@ int main (int argc, char* argv[])
 
         outputBinaryFile = FileUtils::getBinaryFileName(outputFile.c_str(), ".xml", ".dat");
 
+        bool genPos = true;
+        bool genNorm = true;
+        bool genTex = true;
+//        bool genTan = false;
+//        bool genBitan = false;
+
+        if(generateAttribsArg.isSet())
+        {
+            std::string attribsArgs = generateAttribsArg.getValue();
+            std::vector<std::string> genValues;
+            StringUtils::getStrValuesFromCmdString(attribsArgs, genValues);
+
+            genPos = false;
+            genNorm = false;
+            genTex = false;
+
+            std::vector<std::string>::iterator it;
+            for(it = genValues.begin(); it != genValues.end(); ++it)
+            {
+                if(it->compare("positions") == 0)
+                {
+                    genPos = true;
+                }
+                else if(it->compare("normals") == 0)
+                {
+                    genNorm = true;
+                }
+                else if(it->compare("texcoords") == 0)
+                {
+                    genTex = true;
+                }
+            }
+            if(!genPos && !genNorm && !genTex)
+            {
+                std::cerr << "There are no attributes to generate" << std::endl;
+                return 1;
+            }
+        }
+
         Mesh* mesh = new Mesh();
-        PrimGen primGen;
+        PrimGen primGen(genPos, genNorm, genTex);
 
         if(planeArg.isSet())
         {

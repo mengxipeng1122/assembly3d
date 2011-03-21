@@ -44,7 +44,18 @@ using namespace assembly3d;
 using namespace prim;
 using namespace mesh;
 
-PrimGen::PrimGen() : m_prim(0)
+PrimGen::PrimGen(bool generatePositions,
+                 bool generateNormals,
+                 bool generateTexCoords,
+                 bool generateTangents,
+                 bool generateBitangents)
+                     :
+                     m_prim(0),
+                     m_generatePositions(generatePositions),
+                     m_generateNormals(generateNormals),
+                     m_generateTexCoords(generateTexCoords),
+                     m_generateTangents(generateTangents),
+                     m_generateBitangents(generateBitangents)
 {
 }
 
@@ -73,6 +84,11 @@ void PrimGen::createMesh(Mesh* mesh, int primType, std::vector<float> values)
     default:
         m_prim = 0;
     }
-    m_prim->create(mesh);
+    m_prim->create(mesh,
+                   m_generatePositions,
+                   m_generateNormals,
+                   m_generateTexCoords,
+                   m_generateTangents,
+                   m_generateBitangents);
 
 }

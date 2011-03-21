@@ -58,7 +58,12 @@ Torus::~Torus()
 {
 }
 
-void Torus::create(Mesh* mesh)
+void Torus::create(Mesh* mesh,
+                   bool positions,
+                   bool normals,
+                   bool texCoords,
+                   bool tangents,
+                   bool bitangents)
 {
     cout << "Create torus" << endl;
 
@@ -127,10 +132,12 @@ void Torus::create(Mesh* mesh)
         }
     }
 
-    mesh->initializeStandardMeshFormat();
-    mesh->hasPositions(true);
-    mesh->hasNormals(true);
-    mesh->hasTexCoords(true);
+    mesh->hasPositions(positions);
+    mesh->hasNormals(normals);
+    mesh->hasTexCoords(texCoords);
+    mesh->hasTangents(tangents);
+    mesh->hasBitangents(bitangents);
+    mesh->initializeMeshFormat();
 
     // generate indices
     for (sideCount = 0; sideCount < m_numSides; ++sideCount)

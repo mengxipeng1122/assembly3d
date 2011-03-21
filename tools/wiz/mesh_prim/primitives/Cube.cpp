@@ -49,14 +49,19 @@ Cube::~Cube()
 {
 }
 
-void Cube::create(Mesh *mesh)
+void Cube::create(Mesh *mesh,
+                  bool positions,
+                  bool normals,
+                  bool texCoords,
+                  bool tangents,
+                  bool bitangents)
 {
     cout << "Create cube" << endl;
 
     int numVertices = 24;
     int numTriangles = 12;
 
-    float positions[] =
+    float cube_positions[] =
     {
         -1.0f, -1.0f, -1.0f,
         -1.0f, -1.0f, +1.0f,
@@ -84,7 +89,7 @@ void Cube::create(Mesh *mesh)
         +1.0f, +1.0f, -1.0f
     };
 
-    float normals[] =
+    float cube_normals[] =
     {
         0.0f, -1.0f,  0.0f,
         0.0f, -1.0f,  0.0f,
@@ -113,7 +118,7 @@ void Cube::create(Mesh *mesh)
     };
 
 
-    float texCoords[] =
+    float cube_texCoords[] =
     {
         0.0f, 0.0f,
         0.0f, 1.0f,
@@ -141,7 +146,7 @@ void Cube::create(Mesh *mesh)
         1.0f, 0.0f,
     };
 
-    unsigned int indices[] =
+    unsigned int cube_indices[] =
     {
         0, 2, 1,
         0, 3, 2,
@@ -166,16 +171,16 @@ void Cube::create(Mesh *mesh)
                        {0.0f,0.0f,0.0f},
                        {0.0f,0.0f,0.0f}};
 
-        vert.position[0] = positions[i*3 + 0];
-        vert.position[1] = positions[i*3 + 1];
-        vert.position[2] = positions[i*3 + 2];
+        vert.position[0] = cube_positions[i*3 + 0];
+        vert.position[1] = cube_positions[i*3 + 1];
+        vert.position[2] = cube_positions[i*3 + 2];
 
-        vert.normal[0] = normals[i*3 + 0];
-        vert.normal[1] = normals[i*3 + 1];
-        vert.normal[2] = normals[i*3 + 2];
+        vert.normal[0] = cube_normals[i*3 + 0];
+        vert.normal[1] = cube_normals[i*3 + 1];
+        vert.normal[2] = cube_normals[i*3 + 2];
 
-        vert.texCoord[0] = texCoords[i*3 + 0];
-        vert.texCoord[1] = texCoords[i*3 + 1];
+        vert.texCoord[0] = cube_texCoords[i*3 + 0];
+        vert.texCoord[1] = cube_texCoords[i*3 + 1];
 
         vert.position[0] *= m_halfExtend;
         vert.position[1] *= m_halfExtend;
@@ -184,14 +189,16 @@ void Cube::create(Mesh *mesh)
         mesh->addVertex(vert);
     }
 
-    mesh->initializeStandardMeshFormat();
-    mesh->hasPositions(true);
-    mesh->hasNormals(true);
-    mesh->hasTexCoords(true);
+    mesh->hasPositions(positions);
+    mesh->hasNormals(normals);
+    mesh->hasTexCoords(texCoords);
+    mesh->hasTangents(tangents);
+    mesh->hasBitangents(bitangents);
+    mesh->initializeMeshFormat();
 
     for(int i = 0; i < numTriangles*3; ++i)
     {
-        mesh->addIndex(indices[i]);
+        mesh->addIndex(cube_indices[i]);
     }
     mesh->setNumTriangles(numTriangles);
     Group g = {"cube", 0, numTriangles};

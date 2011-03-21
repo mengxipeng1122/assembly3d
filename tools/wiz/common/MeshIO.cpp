@@ -36,7 +36,7 @@
 #include "Assembly3DUtils.h"
 
 using namespace assembly3d;
-using namespace assembly3d::utils;
+using namespace utils;
 
 MeshIO::MeshIO()
 {
