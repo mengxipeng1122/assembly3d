@@ -38,30 +38,39 @@
 #include <string>
 #include <vector>
 
-class TesterTool
+namespace assembly3d
 {
-public:
-    TesterTool();
+    namespace test
+    {
+        namespace mesh
+        {
+            class TesterTool
+            {
+            public:
+                TesterTool();
 
-    void compare(const char* actual,
-                 const char* actualBinary,
-                 const char* expected,
-                 const char* expectedBinary,
-                 float epsilon);
+                void compare(const char* actual,
+                             const char* actualBinary,
+                             const char* expected,
+                             const char* expectedBinary,
+                             float epsilon);
 
-private:
+            private:
 
-    void clear(std::vector<MeshTest::Attribute>& attribs,
-               std::vector<MeshTest::Group>& groups);
+                void clear(std::vector<Attribute>& attribs,
+                           std::vector<Group>& groups);
 
-    int compare(int n, float* array_a, float* array_e, float epsilon);
-    int compare(int n, unsigned char* array_a, unsigned char* array_e);
+                int compare(int n, float* array_a, float* array_e, float epsilon);
+                int compare(int n, unsigned char* array_a, unsigned char* array_e);
 
-    void loadMesh(const std::string& xmlFile,
-                  const std::string& binaryFile,
-                  std::vector<MeshTest::Attribute>& attribs,
-                  std::vector<MeshTest::Group>& m_groupsActual);
+                void loadMesh(const std::string& xmlFile,
+                              const std::string& binaryFile,
+                              std::vector<Attribute>& attribs,
+                              std::vector<Group>& m_groupsActual);
 
-};
+            };
+        }
+    }
+}
 
 #endif // TESTERTOOL_H

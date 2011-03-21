@@ -36,19 +36,28 @@
 
 #include "Mesh.h"
 
-class ConvertTool
+namespace assembly3d
 {
-public:
-	ConvertTool();
-	~ConvertTool();
-    
-    void convertIndicesToUnsignedInt(Mesh* m);
-    void convertIndicesToUnsignedShort(Mesh* m);
-    void convertIndicesToUnsignedByte(Mesh* m);
-    
-protected:
-private:
-	
-};
+    namespace wiz
+    {
+        namespace mesh
+        {
+            class ConvertTool
+            {
+            public:
+                ConvertTool();
+                ~ConvertTool();
+
+                void convertIndicesToUnsignedInt(Mesh* m);
+                void convertIndicesToUnsignedShort(Mesh* m);
+                void convertIndicesToUnsignedByte(Mesh* m);
+
+            protected:
+            private:
+
+            };
+        }
+    }
+}
 
 #endif  // _CONVERTTOOL_H_

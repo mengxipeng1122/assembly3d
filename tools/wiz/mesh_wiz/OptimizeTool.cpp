@@ -33,7 +33,9 @@
 
 #include "OptimizeTool.h"
 
-using namespace Wiz;
+using namespace assembly3d;
+using namespace wiz;
+using namespace mesh;
 
 OptimizeTool::OptimizeTool()
 {

@@ -1,15 +1,15 @@
 
-set(WizCommon_SOURCE
+set(Assembly3DCommon_SOURCE
     Mesh.cpp
     MeshIO.cpp
     StringUtils.cpp
     FileUtils.cpp
     XmlParser.cpp
   )
-set(WizCommon_INCLUDE
-    WizIncludes.h
-    WizTypes.h
-    WizUtils.h
+set(Assembly3DCommon_INCLUDE
+    Assembly3DIncludes.h
+    Assembly3DTypes.h
+    Assembly3DUtils.h
     Mesh.h
     MeshIO.h
     StringUtils.h
@@ -21,6 +21,7 @@ set(Tinyxml_INCLUDE ${CMAKE_SOURCE_DIR}/external_libs/tinyxml)
 
 include_directories(${Tinyxml_INCLUDE})
 
-add_library(WizCommon ${WizCommon_SOURCE} ${WizCommon_INCLUDE})
+add_library(Assembly3DCommon ${Assembly3DCommon_SOURCE}
+                             ${Assembly3DCommon_INCLUDE})
 
-target_link_libraries(WizCommon tinyxml)
+target_link_libraries(Assembly3DCommon tinyxml)

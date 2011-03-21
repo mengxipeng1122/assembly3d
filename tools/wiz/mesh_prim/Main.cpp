@@ -33,20 +33,22 @@
 
 #include "MeshPrimIncludes.h"
 #include <tclap/CmdLine.h>
-#include "WizUtils.h"
+#include "Assembly3DUtils.h"
 #include "MeshIO.h"
 
 #include "PrimGen.h"
 
-using namespace WizUtils;
-
+using namespace assembly3d;
+using namespace utils;
+using namespace prim;
+using namespace mesh;
 
 int main (int argc, char* argv[])
 {
     try {
         TCLAP::CmdLine cmd("MeshPrim - Utility for generating Assembly3D primitives.",
                            '=',
-                           MeshPrim::ProjectInfo::versionString);
+                           ProjectInfo::versionString);
 
         // -------------------------------------------------------------------
         TCLAP::ValueArg<std::string> outputNameArg("o", "output-file-name", "Output file name",

@@ -36,7 +36,9 @@
 #include <cmath>
 #include <iostream>
 using namespace std;
-using namespace Wiz;
+using namespace assembly3d;
+using namespace prim;
+using namespace mesh;
 
 #define PIf		3.1415926535897932384626433832795f
 
@@ -67,8 +69,8 @@ void Sphere::create(Mesh* mesh)
         for (j = 0; j < (unsigned int)m_slices + 1; j++ ) {
 
             Vertex vert = {{0.0f,0.0f,0.0f},
-                           {0.0f,0.0f},
                            {0.0f,0.0f,0.0f},
+                           {0.0f,0.0f},
                            {0.0f,0.0f,0.0f},
                            {0.0f,0.0f,0.0f}};
 

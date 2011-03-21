@@ -32,14 +32,16 @@
  */
 
 #include "MeshWizIncludes.h"
-#include "WizUtils.h"
+#include "Assembly3DUtils.h"
 #include <tclap/CmdLine.h>
 #include "Mesh.h"
 #include "MeshIO.h"
 #include "ToolManager.h"
 
-using namespace Wiz;
-using namespace WizUtils;
+using namespace assembly3d;
+using namespace utils;
+using namespace wiz;
+using namespace mesh;
 
 //==============================================================================
 int main (int argc, char* argv[])
@@ -55,7 +57,7 @@ int main (int argc, char* argv[])
 	
     TCLAP::CmdLine cmd("MeshWiz - Utility for manipulating Assembly3D mesh files.",
                        '=',
-                       MeshWiz::ProjectInfo::versionString);
+                       ProjectInfo::versionString);
 
     //---------------------------------------------------------------------------------------------------------
     // Input / Output
@@ -472,7 +474,6 @@ int main (int argc, char* argv[])
             toolMgr.scale(x, x, x);
             modelChanged = true;
         }
-        	
     }
     if(resizeArg.isSet())
     {
@@ -539,10 +540,8 @@ int main (int argc, char* argv[])
                 eps = values[0];
                 toolMgr.stitchEps(attributeName.c_str(), eps);
                 modelChanged = true;
-
             }
         }
-
     }
     
     //---------------------------------------------------------------------------------------------------------

@@ -34,6 +34,10 @@
 #include "ToolManager.h"
 #include <cmath>
 
+using namespace assembly3d;
+using namespace wiz;
+using namespace mesh;
+
 ToolManager::ToolManager(Mesh* mesh, bool verbose) 
 :
 m_mesh(mesh),

@@ -32,11 +32,13 @@
  */
 
 #include "TesterTool.h"
-#include "WizUtils.h"
+#include "Assembly3DUtils.h"
 #include <fstream>
 
-using namespace WizUtils;
-using namespace MeshTest;
+using namespace assembly3d;
+using namespace utils;
+using namespace test;
+using namespace mesh;
 using namespace std;
 
 TesterTool::TesterTool()

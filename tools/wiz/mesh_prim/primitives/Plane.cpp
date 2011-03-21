@@ -35,7 +35,9 @@
 
 #include <iostream>
 using namespace std;
-using namespace Wiz;
+using namespace assembly3d;
+using namespace prim;
+using namespace mesh;
 
 Plane::Plane(float halfExtend)
     :
@@ -87,8 +89,8 @@ void Plane::create(Mesh* mesh)
     for (int i = 0; i < numberVertices; i++)
     {
         Vertex vert = {{0.0f,0.0f,0.0f},
-                       {0.0f,0.0f},
                        {0.0f,0.0f,0.0f},
+                       {0.0f,0.0f},
                        {0.0f,0.0f,0.0f},
                        {0.0f,0.0f,0.0f}};
 

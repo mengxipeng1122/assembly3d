@@ -34,208 +34,211 @@
 #ifndef _MESH_H_
 #define _MESH_H_
 
-#include "WizIncludes.h"
+#include "Assembly3DIncludes.h"
 #include <vector>
 #include <iostream>
 #include <string>
 
-class Mesh
+namespace assembly3d
 {
-public:
-    struct MeshFormat
+    class Mesh
     {
-        std::string name;
-        int attributeCount;
-        std::vector<std::string> attributeName;
-        std::vector<int> attributeSize;
-        std::vector<std::string> attributeType;
-        std::string indexType;
-        bool isBinary;
+    public:
+        struct MeshFormat
+        {
+            std::string name;
+            int attributeCount;
+            std::vector<std::string> attributeName;
+            std::vector<int> attributeSize;
+            std::vector<std::string> attributeType;
+            std::string indexType;
+            bool isBinary;
+        };
+
+        Mesh();
+        ~Mesh();
+
+        void destroy();
+
+        void printData();
+
+        void setIndexFormat(const char* format);
+
+        void generateNormals();
+        void generateTangents();
+
+        assembly3d::Vertex& getVertex(unsigned int index);
+        assembly3d::Group& getGroup(unsigned int index);
+        unsigned int* getTriangle(unsigned int index);
+
+        int getNumberOfTriangles() const;
+        unsigned int getNumberOfVertices() const;
+        unsigned int getNumberOfGroups() const;
+
+        void hasPositions(bool val);
+        void hasNormals(bool val);
+        void hasTexCoords(bool val);
+        void hasTangents(bool val);
+        void hasBitangents(bool val);
+
+        bool hasPositions() const;
+        bool hasNormals() const;
+        bool hasTexCoords() const;
+        bool hasTangents() const;
+        bool hasBitangents() const;
+
+        MeshFormat& getMeshFormat();
+
+        void addVertex(assembly3d::Vertex vertex);
+        void clearVertices();
+
+        void addIndex(unsigned int index);
+        void clearIndices();
+
+        void addGroup(assembly3d::Group group);
+        void setNumTriangles(int numTriangles);
+
+
+        void addAttribute(const char* name, int attrSize, const char* attrType);
+        void removeAttribute(const char* attributeName);
+        bool containsAttribute(const char* attrName);
+        int getAttributeIndexWithName(const char* attrName);
+
+    //    void normalize(float scaleTo = 1.0f, bool center = true);
+    //    void reverseWinding();
+
+        // Getter methods.
+
+        void getCenter(float &x, float &y, float &z) const;
+        float getWidth() const;
+        float getHeight() const;
+        float getLength() const;
+        float getRadius() const;
+        void getExtent(float &x, float &y, float &z) const;
+
+        void calculateBounds();
+
+        void setMeshPath(const char* path);
+        const char* getMeshPath() const;
+
+        void initializeStandardMeshFormat();
+
+    private:
+
+        void bounds(float center[3], float &width, float &height,
+        float &length, float &radius, float extent[3]) const;
+
+        std::vector<assembly3d::Vertex> m_vertices;
+        std::vector<unsigned int> m_indices;
+        std::vector<assembly3d::Group> m_groups;
+
+        MeshFormat m_format;
+
+        std::string m_meshPath;
+
+        int m_numTriangles;
+
+        bool m_hasPositions;
+        bool m_hasNormals;
+        bool m_hasTexCoords;
+        bool m_hasTangents;
+        bool m_hasBitangents;
+
+        float m_center[3];
+        float m_width;
+        float m_height;
+        float m_length;
+        float m_radius;
+        float m_extent[3];
+
+        friend std::ostream& operator<<(std::ostream& os, Mesh& obj);
     };
 
-	Mesh();
-	~Mesh();
-    
-    void destroy();
-    
-    void printData();
-    
-    void setIndexFormat(const char* format);
+    inline std::ostream& operator<<(std::ostream& os, Mesh& obj)
+    {
+        os << "Assebmbly3D mesh info: \n---------------------------\n";
+        os << "Format:      " << (obj.getMeshFormat().isBinary == true ? "binary" : "debug") << "\n";
+        os << "Vertices:    " << obj.getNumberOfVertices() << "\n";
+        os << "Index type:  " << obj.getMeshFormat().indexType << "\n";
+        os << "Positions:   " << (obj.hasPositions() == true ? "yes" : "no" ) << "\n";
+        os << "Normals:     " << (obj.hasNormals() == true ? "yes" : "no" ) << "\n";
+        os << "TexCoords:   " << (obj.hasTexCoords() == true ? "yes" : "no" ) << "\n";
+        os << "Tangents:    " << (obj.hasTangents() == true ? "yes" : "no" ) << "\n";
+        os << "Bitangents:  " << (obj.hasBitangents() == true ? "yes" : "no" ) << "\n";
+        os << "Groups:      " << obj.getNumberOfGroups() << "\n";
+        os << "Triangles:   " << obj.getNumberOfTriangles() << "\n";
+        os << "Index type:  " << obj.getMeshFormat().indexType << "\n";
+        os << "---------------------------\n";
+        os << "Width:       " << obj.getWidth() << "\n";
+        os << "Height:      " << obj.getHeight() << "\n";
+        os << "Length:      " << obj.getLength() << "\n";
+        float x, y, z;
+        obj.getCenter(x, y, z);
+        os << "Center:      " << x << " / " << y << " / " << z << "\n";
+        x = y = z = 0.0f;
+        obj.getExtent(x, y, z);
+        os << "Extent:      " << x << " / " << y << " / " << z << "\n";
+        os << "Radius:      " << obj.getRadius() << "\n";
+    //    os << "Format: ";
+        return os;
+    }
 
-    void generateNormals();
-    void generateTangents();
-    
-    Wiz::Vertex& getVertex(unsigned int index);
-    Wiz::Group& getGroup(unsigned int index);
-	unsigned int* getTriangle(unsigned int index);
-    
-    int getNumberOfTriangles() const;
-    unsigned int getNumberOfVertices() const;
-    unsigned int getNumberOfGroups() const;
+    inline void Mesh::getCenter(float &x, float &y, float &z) const
+    { x = m_center[0]; y = m_center[1]; z = m_center[2]; }
 
-    void hasPositions(bool val);
-    void hasNormals(bool val);
-    void hasTexCoords(bool val);
-    void hasTangents(bool val);
-    void hasBitangents(bool val);
-    
-    bool hasPositions() const;
-    bool hasNormals() const;
-    bool hasTexCoords() const;
-    bool hasTangents() const;
-    bool hasBitangents() const;
+    inline float Mesh::getWidth() const
+    { return m_width; }
 
-    MeshFormat& getMeshFormat();
+    inline float Mesh::getHeight() const
+    { return m_height; }
 
-    void addVertex(Wiz::Vertex vertex);
-    void clearVertices();
+    inline float Mesh::getLength() const
+    { return m_length; }
 
-    void addIndex(unsigned int index);
-    void clearIndices();
+    inline float Mesh::getRadius() const
+    { return m_radius; }
 
-    void addGroup(Wiz::Group group);
-    void setNumTriangles(int numTriangles);
-    
-    
-    void addAttribute(const char* name, int attrSize, const char* attrType);
-    void removeAttribute(const char* attributeName);
-    bool containsAttribute(const char* attrName);
-    int getAttributeIndexWithName(const char* attrName);
-    
-//    void normalize(float scaleTo = 1.0f, bool center = true);
-//    void reverseWinding();
+    inline void Mesh::getExtent(float &x, float &y, float &z) const
+    { x = m_extent[0]; y = m_extent[1]; z = m_extent[2]; }
 
-    // Getter methods.
+    inline assembly3d::Vertex& Mesh::getVertex(unsigned int index)
+    { return m_vertices[index]; }
 
-    void getCenter(float &x, float &y, float &z) const;
-    float getWidth() const;
-    float getHeight() const;
-    float getLength() const;
-    float getRadius() const;
-    void getExtent(float &x, float &y, float &z) const;
-    
-    void calculateBounds();
-    
-    void setMeshPath(const char* path);
-    const char* getMeshPath() const;
+    inline assembly3d::Group& Mesh::getGroup(unsigned int index)
+    { return m_groups[index]; }
 
-    void initializeStandardMeshFormat();
+    inline unsigned int* Mesh::getTriangle(unsigned int index)
+    { return &m_indices[index * 3]; }
 
-private:
+    inline int Mesh::getNumberOfTriangles() const
+    { return m_numTriangles; }
 
-    void bounds(float center[3], float &width, float &height,
-    float &length, float &radius, float extent[3]) const;
-    
-    std::vector<Wiz::Vertex> m_vertices;
-    std::vector<unsigned int> m_indices;
-    std::vector<Wiz::Group> m_groups;
-    
-    MeshFormat m_format;
-    
-    std::string m_meshPath;
-    
-    int m_numTriangles;
-    
-    bool m_hasPositions;
-    bool m_hasNormals;
-    bool m_hasTexCoords;
-    bool m_hasTangents;
-    bool m_hasBitangents;
-    
-    float m_center[3];
-    float m_width;
-    float m_height;
-    float m_length;
-    float m_radius;
-    float m_extent[3];
-    
-    friend std::ostream& operator<<(std::ostream& os, Mesh& obj);
-};
+    inline unsigned int Mesh::getNumberOfVertices() const
+    { return m_vertices.size(); }
 
-inline std::ostream& operator<<(std::ostream& os, Mesh& obj)
-{
-    os << "Assebmbly3D mesh info: \n---------------------------\n";
-    os << "Format:      " << (obj.getMeshFormat().isBinary == true ? "binary" : "debug") << "\n";
-	os << "Vertices:    " << obj.getNumberOfVertices() << "\n";
-    os << "Index type:  " << obj.getMeshFormat().indexType << "\n";
-    os << "Positions:   " << (obj.hasPositions() == true ? "yes" : "no" ) << "\n";
-    os << "Normals:     " << (obj.hasNormals() == true ? "yes" : "no" ) << "\n";
-    os << "TexCoords:   " << (obj.hasTexCoords() == true ? "yes" : "no" ) << "\n";
-    os << "Tangents:    " << (obj.hasTangents() == true ? "yes" : "no" ) << "\n";
-    os << "Bitangents:  " << (obj.hasBitangents() == true ? "yes" : "no" ) << "\n";
-    os << "Groups:      " << obj.getNumberOfGroups() << "\n";
-    os << "Triangles:   " << obj.getNumberOfTriangles() << "\n";
-    os << "Index type:  " << obj.getMeshFormat().indexType << "\n";
-    os << "---------------------------\n";
-    os << "Width:       " << obj.getWidth() << "\n";
-    os << "Height:      " << obj.getHeight() << "\n";
-    os << "Length:      " << obj.getLength() << "\n";
-    float x, y, z;
-    obj.getCenter(x, y, z);
-    os << "Center:      " << x << " / " << y << " / " << z << "\n";
-    x = y = z = 0.0f;
-    obj.getExtent(x, y, z);
-    os << "Extent:      " << x << " / " << y << " / " << z << "\n";
-    os << "Radius:      " << obj.getRadius() << "\n";
-//    os << "Format: ";
-	return os;
+    inline unsigned int Mesh::getNumberOfGroups() const
+    { return m_groups.size(); }
+
+    inline bool Mesh::hasPositions() const
+    { return m_hasPositions; }
+
+    inline bool Mesh::hasNormals() const
+    { return m_hasNormals; }
+
+    inline bool Mesh::hasTexCoords() const
+    { return m_hasTexCoords; }
+
+    inline bool Mesh::hasTangents() const
+    { return m_hasTangents; }
+
+    inline bool Mesh::hasBitangents() const
+    { return m_hasBitangents; }
+
+    inline Mesh::MeshFormat& Mesh::getMeshFormat()
+    { return m_format; }
+
+    inline const char* Mesh::getMeshPath() const
+    { return m_meshPath.c_str(); }
+
 }
-
-inline void Mesh::getCenter(float &x, float &y, float &z) const
-{ x = m_center[0]; y = m_center[1]; z = m_center[2]; }
-
-inline float Mesh::getWidth() const
-{ return m_width; }
-
-inline float Mesh::getHeight() const
-{ return m_height; }
-
-inline float Mesh::getLength() const
-{ return m_length; }
-
-inline float Mesh::getRadius() const
-{ return m_radius; }
-
-inline void Mesh::getExtent(float &x, float &y, float &z) const
-{ x = m_extent[0]; y = m_extent[1]; z = m_extent[2]; }
-
-inline Wiz::Vertex& Mesh::getVertex(unsigned int index)
-{ return m_vertices[index]; }
-
-inline Wiz::Group& Mesh::getGroup(unsigned int index)
-{ return m_groups[index]; }
-
-inline unsigned int* Mesh::getTriangle(unsigned int index)
-{ return &m_indices[index * 3]; }
-
-inline int Mesh::getNumberOfTriangles() const
-{ return m_numTriangles; }
-
-inline unsigned int Mesh::getNumberOfVertices() const
-{ return m_vertices.size(); }
-
-inline unsigned int Mesh::getNumberOfGroups() const
-{ return m_groups.size(); }
-
-inline bool Mesh::hasPositions() const
-{ return m_hasPositions; }
-
-inline bool Mesh::hasNormals() const
-{ return m_hasNormals; }
-
-inline bool Mesh::hasTexCoords() const
-{ return m_hasTexCoords; }
-
-inline bool Mesh::hasTangents() const
-{ return m_hasTangents; }
-
-inline bool Mesh::hasBitangents() const
-{ return m_hasBitangents; }
-
-inline Mesh::MeshFormat& Mesh::getMeshFormat()
-{ return m_format; }
-
-inline const char* Mesh::getMeshPath() const
-{ return m_meshPath.c_str(); }
-
 #endif  // _MESH_H_

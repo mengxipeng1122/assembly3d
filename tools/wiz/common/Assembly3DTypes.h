@@ -31,19 +31,18 @@
  *
  */
 
-#ifndef _WIZTYPES_H_
-#define _WIZTYPES_H_
+#ifndef _ASSEMBLY3DTYPES_H_
+#define _ASSEMBLY3DTYPES_H_
 
 //#include <string>
 
-namespace Wiz
+namespace assembly3d
 {
-    
     struct Vertex
     {
         float position[3];
-        float texCoord[2];
         float normal[3];
+        float texCoord[2];
         float tangent[3];
         float bitangent[3];
     };
@@ -54,7 +53,6 @@ namespace Wiz
         int startIndex;
         int triangleCount;
     };
-    
 }
 
-#endif // _WIZTYPES_H_
+#endif // _ASSEMBLY3DTYPES_H_

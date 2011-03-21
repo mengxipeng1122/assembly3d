@@ -31,11 +31,11 @@
  *
  */
 
-#ifndef WIZUTILS_H
-#define WIZUTILS_H
+#ifndef _ASSEMBLY3DUTILS_H_
+#define _ASSEMBLY3DUTILS_H_
 
 #include "FileUtils.h"
 #include "StringUtils.h"
 #include "XmlParser.h"
 
-#endif // WIZUTILS_H
+#endif // _ASSEMBLY3DUTILS_H_

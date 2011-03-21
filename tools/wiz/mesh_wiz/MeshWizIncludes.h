@@ -36,17 +36,23 @@
 
 // -----------------------------------------------------------------------------
 
-#include "WizIncludes.h"
+#include "Assembly3DIncludes.h"
 
 // -----------------------------------------------------------------------------
 
-namespace MeshWiz
+namespace assembly3d
 {
-    namespace ProjectInfo
+    namespace wiz
     {
-        const char* const  projectName    = "MeshWiz";
-        const char* const  versionString  = "1.1.1";
-        const int          versionNumber  = 0x10101;
+        namespace mesh
+        {
+            namespace ProjectInfo
+            {
+                const char* const  projectName    = "MeshWiz";
+                const char* const  versionString  = "1.1.1";
+                const int          versionNumber  = 0x10101;
+            }
+        }
     }
 }
 

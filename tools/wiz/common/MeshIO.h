@@ -34,22 +34,24 @@
 #ifndef _MESHIO_H_
 #define _MESHIO_H_
 
-#include "WizIncludes.h"
+#include "Assembly3DIncludes.h"
 #include "Mesh.h"
 
-class MeshIO
+namespace assembly3d
 {
-private:
-	MeshIO();
-	~MeshIO();
-public:
-    static bool load(Mesh* mesh, const char* file, const char* binaryFile);
-    static void saveFile(Mesh* mesh, const char* outFilePath, const char* binaryFilePath);
-    static void dumpTxt(Mesh* mesh, const char* outFilePath);
+    class MeshIO
+    {
+    private:
+        MeshIO();
+        ~MeshIO();
+    public:
+        static bool load(Mesh* mesh, const char* file, const char* binaryFile);
+        static void saveFile(Mesh* mesh, const char* outFilePath, const char* binaryFilePath);
+        static void dumpTxt(Mesh* mesh, const char* outFilePath);
 
-private:
-    static void getAttributeIndices(Mesh* mesh, std::vector<int>& indices);
-	
-};
+    private:
+        static void getAttributeIndices(Mesh* mesh, std::vector<int>& indices);
 
+    };
+}
 #endif // _MESHIO_H_

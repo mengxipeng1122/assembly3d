@@ -36,25 +36,33 @@
 
 #include "Mesh.h"
 
-class TransformTool
+namespace assembly3d
 {
-public:
-	TransformTool();
-	~TransformTool();
-    
-    void translate(Mesh* m, float tx, float ty, float tz);
-    void rotate(Mesh* m, float rangle, float rx, float ry, float rz);
-    void scale(Mesh* m, float sx, float sy, float sz);
-    void resize(Mesh* m, float rsx, float rsy, float rsz);
-    void resize(Mesh* m, const char axis, float val);
-    void center(Mesh* m, int ax, int ay, int az);
-    
-protected:
-private:
-    void multiplyVertexWithTransformMatrix(Wiz::Vertex* vec, float matrix[3][4], float inverseTransposedMatrix[3][3]);
-    void normalize(float vector[3]);
-};
+    namespace wiz
+    {
+        namespace mesh
+        {
+            class TransformTool
+            {
+            public:
+                TransformTool();
+                ~TransformTool();
 
+                void translate(Mesh* m, float tx, float ty, float tz);
+                void rotate(Mesh* m, float rangle, float rx, float ry, float rz);
+                void scale(Mesh* m, float sx, float sy, float sz);
+                void resize(Mesh* m, float rsx, float rsy, float rsz);
+                void resize(Mesh* m, const char axis, float val);
+                void center(Mesh* m, int ax, int ay, int az);
+
+            protected:
+            private:
+                void multiplyVertexWithTransformMatrix(Vertex* vec, float matrix[3][4], float inverseTransposedMatrix[3][3]);
+                void normalize(float vector[3]);
+            };
+        }
+    }
+}
 
 
 #endif  // _TRANSFORMTOOL_H_

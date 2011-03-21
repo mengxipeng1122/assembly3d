@@ -59,7 +59,8 @@ static std::vector<std::string> tokenize(const std::string & str, const std::str
   return tokens;
 }
 
-using namespace WizUtils;
+using namespace assembly3d;
+using namespace assembly3d::utils;
 
 XmlParser::XmlParser() : storedHandle(NULL)
 {
