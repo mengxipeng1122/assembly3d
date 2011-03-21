@@ -68,6 +68,11 @@ namespace assembly3d
                               std::vector<test::mesh::Attribute>& attribs,
                               std::vector<test::mesh::Group>& m_groupsActual);
 
+                int getAttributeIndexWithName(const char* attrName,
+                                              std::vector<test::mesh::Attribute>& attribs);
+                int getGroupIndexWithName(const char* groupName,
+                                          std::vector<test::mesh::Group> &groups);
+
             };
         }
     }
