@@ -49,7 +49,12 @@ namespace assembly3d
                 Primitive() {}
                 virtual ~Primitive(){}
 
-                virtual void create(Mesh* mesh) = 0;
+                virtual void create(Mesh* mesh,
+                                    bool positions,
+                                    bool normals,
+                                    bool texCoords,
+                                    bool tangents,
+                                    bool bitangents) = 0;
 
             };
         }

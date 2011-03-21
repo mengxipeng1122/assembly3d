@@ -53,7 +53,12 @@ Sphere::~Sphere()
 {
 }
 
-void Sphere::create(Mesh* mesh)
+void Sphere::create(Mesh* mesh,
+                    bool positions,
+                    bool normals,
+                    bool texCoords,
+                    bool tangents,
+                    bool bitangents)
 {
     cout << "Create sphere" << endl;
 
@@ -89,10 +94,12 @@ void Sphere::create(Mesh* mesh)
         }
     }
 
-    mesh->initializeStandardMeshFormat();
-    mesh->hasPositions(true);
-    mesh->hasNormals(true);
-    mesh->hasTexCoords(true);
+    mesh->hasPositions(positions);
+    mesh->hasNormals(normals);
+    mesh->hasTexCoords(texCoords);
+    mesh->hasTangents(tangents);
+    mesh->hasBitangents(bitangents);
+    mesh->initializeMeshFormat();
 
     for (i = 0; i < (unsigned int)numberParallels ; i++ ) {
         for (j = 0; j < (unsigned int)m_slices; j++ ) {

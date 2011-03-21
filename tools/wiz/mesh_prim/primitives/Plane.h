@@ -49,7 +49,12 @@ namespace assembly3d
                 Plane(float halfExtend);
                 virtual ~Plane();
 
-                void create(Mesh* mesh);
+                void create(Mesh* mesh,
+                            bool positions,
+                            bool normals,
+                            bool texCoords,
+                            bool tangents,
+                            bool bitangents);
 
             private:
                 float m_halfExtend;

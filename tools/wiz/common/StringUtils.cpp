@@ -83,6 +83,29 @@ void StringUtils::getValueFromCmdString(const std::string& cmdStr, float& val)
     val = (float)atof(cmdStr.c_str());
 }
 
+void StringUtils::getStrValuesFromCmdString(const std::string& cmdStr, std::vector<std::string>& vals)
+{
+    std::string args = cmdStr;
+
+    size_t startIdx = 0;
+    size_t endIdx = 0;
+    vals.clear();
+    while(endIdx != std::string::npos)
+    {
+        endIdx = args.find("/", startIdx);
+        if(endIdx == std::string::npos)
+        {
+            vals.push_back(args.substr(startIdx));
+            endIdx = -1;
+        }
+        else
+        {
+            vals.push_back(args.substr(startIdx, endIdx));
+        }
+        startIdx = endIdx+1;
+    }
+}
+
 int StringUtils::findOccurensesOf(const std::string& cmdStr, const std::string& stringToSearch)
 {
     int result = 0;

@@ -121,7 +121,7 @@ namespace assembly3d
         void setMeshPath(const char* path);
         const char* getMeshPath() const;
 
-        void initializeStandardMeshFormat();
+        void initializeMeshFormat();
 
     private:
 

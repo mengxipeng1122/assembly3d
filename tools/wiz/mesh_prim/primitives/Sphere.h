@@ -48,7 +48,12 @@ namespace assembly3d
                 Sphere(float radius, int slices);
                 virtual ~Sphere();
 
-                void create(Mesh* mesh);
+                void create(Mesh* mesh,
+                            bool positions,
+                            bool normals,
+                            bool texCoords,
+                            bool tangents,
+                            bool bitangents);
             private:
                 float m_radius;
                 int m_slices;

@@ -51,6 +51,7 @@ namespace assembly3d
             static int findOccurensesOf(const std::string& cmdStr, const std::string& stringToSearch);
             static void getValueFromCmdString(const std::string& cmdStr, float& val);
             static void getValuesFromCmdString(const std::string& cmdStr, std::vector<float>& vals);
+            static void getStrValuesFromCmdString(const std::string& cmdStr, std::vector<std::string>& vals);
         private:
         };
 

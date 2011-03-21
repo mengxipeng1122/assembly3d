@@ -305,7 +305,7 @@ void Mesh::setNumTriangles(int numTriangles)
     m_numTriangles = numTriangles;
 }
 
-void Mesh::initializeStandardMeshFormat()
+void Mesh::initializeMeshFormat()
 {
     m_format.name = "Assembly3D.mesh";
     m_format.isBinary = true;
@@ -317,16 +317,42 @@ void Mesh::initializeStandardMeshFormat()
     else
         m_format.indexType = "UNSIGNED_INT";
 
-    m_format.attributeCount = 3;
-    m_format.attributeName.push_back("POSITION");
-    m_format.attributeName.push_back("NORMAL");
-    m_format.attributeName.push_back("TEXTURE");
-    m_format.attributeSize.push_back(3);
-    m_format.attributeSize.push_back(3);
-    m_format.attributeSize.push_back(2);
-    m_format.attributeType.push_back("FLOAT");
-    m_format.attributeType.push_back("FLOAT");
-    m_format.attributeType.push_back("FLOAT");
+    m_format.attributeCount = 0;
+    if(m_hasPositions)
+    {
+        ++m_format.attributeCount;
+        m_format.attributeName.push_back("POSITION");
+        m_format.attributeSize.push_back(3);
+        m_format.attributeType.push_back("FLOAT");
+    }
+    if(m_hasNormals)
+    {
+        ++m_format.attributeCount;
+        m_format.attributeName.push_back("NORMAL");
+        m_format.attributeSize.push_back(3);
+        m_format.attributeType.push_back("FLOAT");
+    }
+    if(m_hasTexCoords)
+    {
+        ++m_format.attributeCount;
+        m_format.attributeName.push_back("TEXTURE");
+        m_format.attributeSize.push_back(2);
+        m_format.attributeType.push_back("FLOAT");
+    }
+    if(m_hasTangents)
+    {
+        ++m_format.attributeCount;
+        m_format.attributeName.push_back("TANGENT");
+        m_format.attributeSize.push_back(3);
+        m_format.attributeType.push_back("FLOAT");
+    }
+    if(m_hasBitangents)
+    {
+        ++m_format.attributeCount;
+        m_format.attributeName.push_back("BITANGENT");
+        m_format.attributeSize.push_back(3);
+        m_format.attributeType.push_back("FLOAT");
+    }
 
 }
 
