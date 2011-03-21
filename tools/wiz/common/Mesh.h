@@ -67,8 +67,8 @@ namespace assembly3d
         void generateNormals();
         void generateTangents();
 
-        assembly3d::Vertex& getVertex(unsigned int index);
-        assembly3d::Group& getGroup(unsigned int index);
+        Vertex& getVertex(unsigned int index);
+        Group& getGroup(unsigned int index);
         unsigned int* getTriangle(unsigned int index);
 
         int getNumberOfTriangles() const;
@@ -89,7 +89,7 @@ namespace assembly3d
 
         MeshFormat& getMeshFormat();
 
-        void addVertex(assembly3d::Vertex vertex);
+        void addVertex(Vertex vertex);
         void clearVertices();
 
         void addIndex(unsigned int index);
@@ -103,7 +103,7 @@ namespace assembly3d
         void removeAttribute(const char* attributeName);
         bool containsAttribute(const char* attrName);
         int getAttributeIndexWithName(const char* attrName);
-
+        int getGroupIndexWithName(const char* groupName);
     //    void normalize(float scaleTo = 1.0f, bool center = true);
     //    void reverseWinding();
 
@@ -128,9 +128,9 @@ namespace assembly3d
         void bounds(float center[3], float &width, float &height,
         float &length, float &radius, float extent[3]) const;
 
-        std::vector<assembly3d::Vertex> m_vertices;
+        std::vector<Vertex> m_vertices;
         std::vector<unsigned int> m_indices;
-        std::vector<assembly3d::Group> m_groups;
+        std::vector<Group> m_groups;
 
         MeshFormat m_format;
 
@@ -201,10 +201,10 @@ namespace assembly3d
     inline void Mesh::getExtent(float &x, float &y, float &z) const
     { x = m_extent[0]; y = m_extent[1]; z = m_extent[2]; }
 
-    inline assembly3d::Vertex& Mesh::getVertex(unsigned int index)
+    inline Vertex& Mesh::getVertex(unsigned int index)
     { return m_vertices[index]; }
 
-    inline assembly3d::Group& Mesh::getGroup(unsigned int index)
+    inline Group& Mesh::getGroup(unsigned int index)
     { return m_groups[index]; }
 
     inline unsigned int* Mesh::getTriangle(unsigned int index)

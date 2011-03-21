@@ -274,3 +274,25 @@ int TesterTool::compare(int n, unsigned char* array_a, unsigned char* array_e)
 {
     return memcmp(array_a, array_e, n);
 }
+
+int TesterTool::getAttributeIndexWithName(const char *attrName,
+                                          std::vector<Attribute>& attribs)
+{
+    for(unsigned int i = 0; i < attribs.size(); ++i)
+    {
+        if(string(attribs[i].name).compare(attrName) == 0)
+            return i;
+    }
+    return -1;
+}
+
+int TesterTool::getGroupIndexWithName(const char *groupName,
+                                      std::vector<Group> &groups)
+{
+    for(unsigned int i = 0; i < groups.size(); ++i)
+    {
+        if(string(groups[i].name).compare(groupName) == 0)
+            return i;
+    }
+    return -1;
+}

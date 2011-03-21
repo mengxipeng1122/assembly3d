@@ -691,17 +691,28 @@ void MeshIO::saveFile(Mesh* mesh, const char* outFilePath, const char* binaryFil
 
 }
 
-void MeshIO::getAttributeIndices(Mesh* mesh, std::vector<int>& indices)
+void MeshIO::getAttributeIndices(Mesh* mesh, std::vector<int>& aIndices)
 {
+    aIndices.clear();
     if(mesh->getAttributeIndexWithName("POSITION")!= -1)
-        indices.push_back(mesh->getAttributeIndexWithName("POSITION"));
+        aIndices.push_back(mesh->getAttributeIndexWithName("POSITION"));
     if(mesh->getAttributeIndexWithName("NORMAL")!= -1)
-        indices.push_back(mesh->getAttributeIndexWithName("NORMAL"));
+        aIndices.push_back(mesh->getAttributeIndexWithName("NORMAL"));
     if(mesh->getAttributeIndexWithName("TEXTURE")!= -1)
-        indices.push_back(mesh->getAttributeIndexWithName("TEXTURE"));
+        aIndices.push_back(mesh->getAttributeIndexWithName("TEXTURE"));
     if(mesh->getAttributeIndexWithName("TANGENT")!= -1)
-        indices.push_back(mesh->getAttributeIndexWithName("TANGENT"));
+        aIndices.push_back(mesh->getAttributeIndexWithName("TANGENT"));
     if(mesh->getAttributeIndexWithName("BITANGENT")!= -1)
-        indices.push_back(mesh->getAttributeIndexWithName("BITANGENT"));
+        aIndices.push_back(mesh->getAttributeIndexWithName("BITANGENT"));
 
+}
+
+void MeshIO::getGroupIndices(Mesh* mesh, std::vector<std::string>& names, std::vector<int>& gIndices)
+{
+    gIndices.clear();
+    for(unsigned int i = 0; i < names.size(); ++i)
+    {
+        int idx = mesh->getGroupIndexWithName(names[i].c_str());
+        gIndices.push_back(idx);
+    }
 }

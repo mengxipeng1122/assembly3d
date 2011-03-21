@@ -52,8 +52,8 @@ namespace assembly3d
             static void dumpTxt(Mesh* mesh, const char* outFilePath);
 
         private:
-            static void getAttributeIndices(Mesh* mesh, std::vector<int>& indices);
-
+            static void getAttributeIndices(Mesh* mesh, std::vector<int>& aIndices);
+            static void getGroupIndices(Mesh* mesh, std::vector<std::string>& names, std::vector<int>& gIndices);
         };
     }
 }
