@@ -34,6 +34,7 @@
 #include "Mesh.h"
 #include <limits>
 #include <cmath>
+#include <algorithm>
 
 using namespace assembly3d;
 
@@ -178,6 +179,17 @@ int Mesh::getAttributeIndexWithName(const char* attrName)
             return i;
     }
     return -1;
+}
+
+int Mesh::getGroupIndexWithName(const char *groupName)
+{
+    for(unsigned int i = 0; i < m_groups.size(); ++i)
+    {
+        if(std::string(m_groups[i].name).compare(groupName) == 0)
+            return i;
+    }
+    return -1;
+
 }
 
 void Mesh::printData()

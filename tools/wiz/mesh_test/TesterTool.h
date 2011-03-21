@@ -66,7 +66,12 @@ namespace assembly3d
                 void loadMesh(const std::string& xmlFile,
                               const std::string& binaryFile,
                               std::vector<Attribute>& attribs,
-                              std::vector<Group>& m_groupsActual);
+                              std::vector<Group>& groups);
+
+                int getAttributeIndexWithName(const char* attrName,
+                                              std::vector<Attribute>& attribs);
+                int getGroupIndexWithName(const char* groupName,
+                                          std::vector<Group> &groups);
 
             };
         }
