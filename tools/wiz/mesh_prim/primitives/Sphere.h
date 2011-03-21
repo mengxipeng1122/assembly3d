@@ -36,17 +36,25 @@
 
 #include "../Primitive.h"
 
-class Sphere : public Primitive
+namespace assembly3d
 {
-public:
-    Sphere(float radius, int slices);
-    virtual ~Sphere();
+    namespace prim
+    {
+        namespace mesh
+        {
+            class Sphere : public Primitive
+            {
+            public:
+                Sphere(float radius, int slices);
+                virtual ~Sphere();
 
-    void create(Mesh* mesh);
-private:
-    float m_radius;
-    int m_slices;
-};
-
+                void create(Mesh* mesh);
+            private:
+                float m_radius;
+                int m_slices;
+            };
+        }
+    }
+}
 
 #endif // SPHERE_H

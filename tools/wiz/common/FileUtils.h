@@ -34,26 +34,29 @@
 #ifndef _FILEUTILS_H_
 #define _FILEUTILS_H_
 
-#include "WizIncludes.h"
+#include "Assembly3DIncludes.h"
 #include <string>
 #include <vector>
 
-namespace WizUtils
+namespace assembly3d
 {
-    class FileUtils
+    namespace utils
     {
-    private:
-        FileUtils();
-        ~FileUtils();
-    public:
-        static bool createDirectory(const char* path);
-        static bool checkIfDirectoryExists(const char* path);
-        static bool checkIfFileExists(const char* path);
-        static std::string getFileNameFromPath(const std::string& s);
-        static std::string getFileName(const std::string& s);
-        static std::string getBinaryFileName(const char* fileName, const char* oldExt, const char* newExt);
-    private:
-    };
+        class FileUtils
+        {
+        private:
+            FileUtils();
+            ~FileUtils();
+        public:
+            static bool createDirectory(const char* path);
+            static bool checkIfDirectoryExists(const char* path);
+            static bool checkIfFileExists(const char* path);
+            static std::string getFileNameFromPath(const std::string& s);
+            static std::string getFileName(const std::string& s);
+            static std::string getBinaryFileName(const char* fileName, const char* oldExt, const char* newExt);
+        private:
+        };
+    }
 }
 
 #endif  // _FILEUTILS_H_

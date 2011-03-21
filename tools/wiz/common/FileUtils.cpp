@@ -44,7 +44,8 @@
 #include <cstring>
 #include <iostream>
 
-using namespace WizUtils;
+using namespace assembly3d;
+using namespace utils;
 
 FileUtils::FileUtils()
 {

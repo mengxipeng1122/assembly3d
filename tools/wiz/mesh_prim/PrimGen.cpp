@@ -40,6 +40,9 @@
 #include <stdarg.h>
 
 using namespace std;
+using namespace assembly3d;
+using namespace prim;
+using namespace mesh;
 
 PrimGen::PrimGen() : m_prim(0)
 {

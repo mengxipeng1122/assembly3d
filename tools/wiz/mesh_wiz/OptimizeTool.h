@@ -36,27 +36,36 @@
 
 #include "Mesh.h"
 
-class OptimizeTool
+namespace assembly3d
 {
-public:
-	OptimizeTool();
-	~OptimizeTool();
+    namespace wiz
+    {
+        namespace mesh
+        {
+            class OptimizeTool
+            {
+            public:
+                OptimizeTool();
+                ~OptimizeTool();
 
-    enum Attribute{
-        POSITION=0,
-        NORMAL,
-        TEXCOORD,
-        TANGENT,
-        BITANGENT
-    };
+                enum Attribute{
+                    POSITION=0,
+                    NORMAL,
+                    TEXCOORD,
+                    TANGENT,
+                    BITANGENT
+                };
 
-    void stitch(Mesh* m);
-    void stitch(Mesh* m, Attribute a, float epsilon);
+                void stitch(Mesh* m);
+                void stitch(Mesh* m, Attribute a, float epsilon);
 
-protected:
-private:
-	
-};
+            protected:
+            private:
+
+            };
+        }
+    }
+}
 
 
 

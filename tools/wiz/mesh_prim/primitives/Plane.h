@@ -37,18 +37,27 @@
 #include "../Primitive.h"
 
 
-class Plane : public Primitive
+namespace assembly3d
 {
-public:
-    Plane(float halfExtend);
-    virtual ~Plane();
+    namespace prim
+    {
+        namespace mesh
+        {
+            class Plane : public Primitive
+            {
+            public:
+                Plane(float halfExtend);
+                virtual ~Plane();
 
-    void create(Mesh* mesh);
+                void create(Mesh* mesh);
 
-private:
-    float m_halfExtend;
+            private:
+                float m_halfExtend;
 
-};
+            };
+        }
+    }
+}
 
 
 #endif // PLANE_H

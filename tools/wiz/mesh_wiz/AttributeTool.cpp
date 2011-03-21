@@ -39,7 +39,9 @@
 #include "AttributeTool.h"
 #include <cmath>
 
-using namespace Wiz;
+using namespace assembly3d;
+using namespace wiz;
+using namespace mesh;
 
 AttributeTool::AttributeTool()
 {

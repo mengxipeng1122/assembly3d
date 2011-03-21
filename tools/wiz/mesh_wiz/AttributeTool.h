@@ -36,28 +36,33 @@
 
 #include "Mesh.h"
 
-class AttributeTool
+namespace assembly3d
 {
-public:
-	AttributeTool();
-	~AttributeTool();
-    
-    void addNormals(Mesh* m);
-    void addTangents(Mesh* m);
-    void addBitangents(Mesh* m);
-    void removeNormals(Mesh* m);
-    void removeTangents(Mesh* m);
-    void removeBitangents(Mesh* m);
-    
-    
-protected:
-private:
-    void generateNormals(Mesh* m);
-    void generateTangents(Mesh* m);
-    
-	
-};
+    namespace wiz
+    {
+        namespace mesh
+        {
+            class AttributeTool
+            {
+            public:
+                AttributeTool();
+                ~AttributeTool();
 
+                void addNormals(Mesh* m);
+                void addTangents(Mesh* m);
+                void addBitangents(Mesh* m);
+                void removeNormals(Mesh* m);
+                void removeTangents(Mesh* m);
+                void removeBitangents(Mesh* m);
+
+            protected:
+            private:
+                void generateNormals(Mesh* m);
+                void generateTangents(Mesh* m);
+            };
+        }
+    }
+}
 
 
 #endif  // _ATTRIBUTETOOL_H_

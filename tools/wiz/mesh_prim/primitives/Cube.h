@@ -36,15 +36,24 @@
 
 #include "../Primitive.h"
 
-class Cube : public Primitive
+namespace assembly3d
 {
-public:
-    Cube(float halfExtend);
-    virtual ~Cube();
+    namespace prim
+    {
+        namespace mesh
+        {
+            class Cube : public Primitive
+            {
+            public:
+                Cube(float halfExtend);
+                virtual ~Cube();
 
-    void create(Mesh* mesh);
-private:
-    float m_halfExtend;
-};
+                void create(Mesh* mesh);
+            private:
+                float m_halfExtend;
+            };
+        }
+    }
+}
 
 #endif // CUBE_H

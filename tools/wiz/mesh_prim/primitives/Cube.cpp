@@ -35,7 +35,9 @@
 
 #include <iostream>
 using namespace std;
-using namespace Wiz;
+using namespace assembly3d;
+using namespace prim;
+using namespace mesh;
 
 Cube::Cube(float halfExtend)
     :
@@ -159,8 +161,8 @@ void Cube::create(Mesh *mesh)
     for (int i = 0; i < numVertices; i++)
     {
         Vertex vert = {{0.0f,0.0f,0.0f},
-                       {0.0f,0.0f},
                        {0.0f,0.0f,0.0f},
+                       {0.0f,0.0f},
                        {0.0f,0.0f,0.0f},
                        {0.0f,0.0f,0.0f}};
 

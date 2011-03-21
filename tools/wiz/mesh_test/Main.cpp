@@ -34,9 +34,12 @@
 #include "MeshTestIncludes.h"
 #include <tclap/CmdLine.h>
 #include "TesterTool.h"
-#include "WizUtils.h"
+#include "Assembly3DUtils.h"
 
-using namespace WizUtils;
+using namespace assembly3d;
+using namespace utils;
+using namespace test;
+using namespace mesh;
 
 
 int main (int argc, char* argv[])
@@ -44,7 +47,7 @@ int main (int argc, char* argv[])
     try {
         TCLAP::CmdLine cmd("MeshTester - Utility for comparing Assembly3D mesh files.",
                            '=',
-                           MeshTest::ProjectInfo::versionString);
+                           ProjectInfo::versionString);
 
         // -------------------------------------------------------------------
 
@@ -78,10 +81,10 @@ int main (int argc, char* argv[])
                                           0.0f,
                                           "val");
 
-//        TCLAP::SwitchArg ignoreOrderAttributes("", "ignore-order-attributes", "Ignore attribute order");
+        TCLAP::SwitchArg ignoreOrderAttributes("", "ignore-order-attributes", "Ignore attribute order");
 //        TCLAP::SwitchArg ignoreOrderGroups("", "ignore-order-groups", "Ignore group order");
 
-//        cmd.add(ignoreOrderAttributes);
+        cmd.add(ignoreOrderAttributes);
 //        cmd.add(ignoreOrderGroups);
         cmd.add(epsilonArg);
         cmd.add(expectedBinaryArg);

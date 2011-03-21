@@ -34,23 +34,26 @@
 #ifndef _STRINGUTILS_H_
 #define _STRINGUTILS_H_
 
-#include "WizIncludes.h"
+#include "Assembly3DIncludes.h"
 #include <string>
 #include <vector>
 
-namespace WizUtils
+namespace assembly3d
 {
-    class StringUtils
+    namespace utils
     {
-    private:
-        StringUtils();
-        ~StringUtils();
-    public:
-        static int findOccurensesOf(const std::string& cmdStr, const std::string& stringToSearch);
-        static void getValueFromCmdString(const std::string& cmdStr, float& val);
-        static void getValuesFromCmdString(const std::string& cmdStr, std::vector<float>& vals);
-    private:
-    };
+        class StringUtils
+        {
+        private:
+            StringUtils();
+            ~StringUtils();
+        public:
+            static int findOccurensesOf(const std::string& cmdStr, const std::string& stringToSearch);
+            static void getValueFromCmdString(const std::string& cmdStr, float& val);
+            static void getValuesFromCmdString(const std::string& cmdStr, std::vector<float>& vals);
+        private:
+        };
 
+    }
 }
 #endif  // _STRINGUTILS_H_

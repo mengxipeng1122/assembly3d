@@ -33,6 +33,10 @@
 
 #include "RenameTool.h"
 
+using namespace assembly3d;
+using namespace wiz;
+using namespace mesh;
+
 RenameTool::RenameTool()
 {
     

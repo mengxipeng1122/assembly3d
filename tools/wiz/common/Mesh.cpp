@@ -35,7 +35,7 @@
 #include <limits>
 #include <cmath>
 
-using namespace Wiz;
+using namespace assembly3d;
 
 Mesh::Mesh()
 :

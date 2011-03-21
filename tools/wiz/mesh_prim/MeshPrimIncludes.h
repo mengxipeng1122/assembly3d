@@ -36,19 +36,24 @@
 
 // -----------------------------------------------------------------------------
 
-#include "WizIncludes.h"
+#include "Assembly3DIncludes.h"
 
 // -----------------------------------------------------------------------------
 
-namespace MeshPrim
+namespace assembly3d
 {
-    namespace ProjectInfo
+    namespace prim
     {
-        const char* const  projectName    = "MeshPrim";
-        const char* const  versionString  = "1.0.0";
-        const int          versionNumber  = 0x10000;
+        namespace mesh
+        {
+            namespace ProjectInfo
+            {
+                const char* const  projectName    = "MeshPrim";
+                const char* const  versionString  = "1.0.0";
+                const int          versionNumber  = 0x10000;
+            }
+        }
     }
 }
-
 
 #endif // MESHPRIMINCLUDES_H

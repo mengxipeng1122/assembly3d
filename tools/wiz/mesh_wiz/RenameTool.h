@@ -34,16 +34,23 @@
 #ifndef _RENAMETOOL_H_
 #define _RENAMETOOL_H_
 
-class RenameTool
+namespace assembly3d
 {
-public:
-	RenameTool();
-	~RenameTool();
-protected:
-private:
-	
-};
+    namespace wiz
+    {
+        namespace mesh
+        {
+            class RenameTool
+            {
+            public:
+                RenameTool();
+                ~RenameTool();
+            protected:
+            private:
 
-
+            };
+        }
+    }
+}
 
 #endif  // _RENAMETOOL_H_

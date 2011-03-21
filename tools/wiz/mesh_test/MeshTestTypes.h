@@ -34,25 +34,30 @@
 #ifndef MESHTESTERTYPES_H
 #define MESHTESTERTYPES_H
 
-namespace MeshTest
+namespace assembly3d
 {
-    struct Attribute
+    namespace test
     {
-        char* name;
-        int size;
-        int count;
-        float* values;
-    };
+        namespace mesh
+        {
+            struct Attribute
+            {
+                char* name;
+                int size;
+                int count;
+                float* values;
+            };
 
-    struct Group
-    {
-        char* name;
-        char* type;
-        int count;
-        unsigned char* bytes;
-        int numBytes;
-    };
-
+            struct Group
+            {
+                char* name;
+                char* type;
+                int count;
+                unsigned char* bytes;
+                int numBytes;
+            };
+        }
+    }
 }
 
 #endif // MESHTESTERTYPES_H

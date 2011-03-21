@@ -40,39 +40,48 @@
 #include "AttributeTool.h"
 #include "OptimizeTool.h"
 
-class Mesh;
-class ToolManager
+namespace assembly3d
 {
-public:
-	ToolManager(Mesh* mesh, bool verbose);
-	~ToolManager();
-    
-    bool convertIndexType(const char* type);
-    void translate(float tx, float ty, float tz);
-    void rotate(float rangle, float rx, float ry, float rz);
-    void scale(float sx, float sy, float sz);
-    void resize(float rsx, float rsy, float rsz);
-    void resize(const char* axis, float val);
-    void center(int axisX, int axisY, int axisZ);
-    void generateNormals();
-    void removeNormals();
-    void generateTangents();
-    void removeTangents();
-    void generateBitangents();
-    void removeBitangents();
-    void stitch();
-    void stitchEps(const char* attributeName, float epsilon);
+    class Mesh;
+    namespace wiz
+    {
+        namespace mesh
+        {
+            class ToolManager
+            {
+            public:
+                ToolManager(Mesh* mesh, bool verbose);
+                ~ToolManager();
 
-protected:
-private:
-    Mesh* m_mesh;
-    bool m_verboseOutput;
-    
-    ConvertTool* m_convertTool;
-    TransformTool* m_transformTool;
-    AttributeTool* m_attributeTool;
-    OptimizeTool* m_optimizeTool;
-    
-};
+                bool convertIndexType(const char* type);
+                void translate(float tx, float ty, float tz);
+                void rotate(float rangle, float rx, float ry, float rz);
+                void scale(float sx, float sy, float sz);
+                void resize(float rsx, float rsy, float rsz);
+                void resize(const char* axis, float val);
+                void center(int axisX, int axisY, int axisZ);
+                void generateNormals();
+                void removeNormals();
+                void generateTangents();
+                void removeTangents();
+                void generateBitangents();
+                void removeBitangents();
+                void stitch();
+                void stitchEps(const char* attributeName, float epsilon);
+
+            protected:
+            private:
+                Mesh* m_mesh;
+                bool m_verboseOutput;
+
+                ConvertTool* m_convertTool;
+                TransformTool* m_transformTool;
+                AttributeTool* m_attributeTool;
+                OptimizeTool* m_optimizeTool;
+
+            };
+        }
+    }
+}
 
 #endif  // _TOOLMANAGER_H_

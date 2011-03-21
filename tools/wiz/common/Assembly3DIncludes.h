@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef __WIZINCLUDES_H_
-#define __WIZINCLUDES_H_
+#ifndef __ASSEMBLY3DINCLUDES_H_
+#define __ASSEMBLY3DINCLUDES_H_
 
 #if defined( __WIN32__ ) || defined( _WIN32 )
 #define TARGET_WIN32
@@ -55,8 +55,8 @@
 
 // -----------------------------------------------------------------------------
 
-#include "WizTypes.h"
+#include "Assembly3DTypes.h"
 
 // -----------------------------------------------------------------------------
 
-#endif  // __WIZINCLUDES_H_
+#endif  // __ASSEMBLY3DINCLUDES_H_

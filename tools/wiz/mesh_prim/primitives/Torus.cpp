@@ -36,7 +36,9 @@
 #include <cmath>
 #include <iostream>
 using namespace std;
-using namespace Wiz;
+using namespace assembly3d;
+using namespace prim;
+using namespace mesh;
 
 #define PIf		3.1415926535897932384626433832795f
 
@@ -98,8 +100,8 @@ void Torus::create(Mesh* mesh)
             sin2PIt = (float)sin (2.0f*(float)M_PI*t);
 
             Vertex vert = {{0.0f,0.0f,0.0f},
-                           {0.0f,0.0f},
                            {0.0f,0.0f,0.0f},
+                           {0.0f,0.0f},
                            {0.0f,0.0f,0.0f},
                            {0.0f,0.0f,0.0f}};
 
@@ -118,7 +120,7 @@ void Torus::create(Mesh* mesh)
 
             // generate texture coordinates and stores it in the right position
             vert.texCoord[0] = t;
-            vert.position[1] = s;
+            vert.texCoord[1] = s;
 
             mesh->addVertex(vert);
 

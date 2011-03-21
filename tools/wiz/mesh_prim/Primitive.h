@@ -37,14 +37,23 @@
 #include "MeshPrimIncludes.h"
 #include "Mesh.h"
 
-class Primitive
+namespace assembly3d
 {
-public:
-    Primitive() {}
-    virtual ~Primitive(){}
+    namespace prim
+    {
+        namespace mesh
+        {
+            class Primitive
+            {
+            public:
+                Primitive() {}
+                virtual ~Primitive(){}
 
-    virtual void create(Mesh* mesh) = 0;
+                virtual void create(Mesh* mesh) = 0;
 
-};
+            };
+        }
+    }
+}
 
 #endif // PRIMITIVE_H

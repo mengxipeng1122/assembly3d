@@ -38,23 +38,32 @@
 #include "Primitive.h"
 #include "Mesh.h"
 
-class PrimGen
+namespace assembly3d
 {
-public:
-    static const int PRIM_TYPE_PLANE = 0;
-    static const int PRIM_TYPE_CUBE = 1;
-    static const int PRIM_TYPE_SPHERE = 2;
-    static const int PRIM_TYPE_TORUS = 3;
+    namespace prim
+    {
+        namespace mesh
+        {
+            class PrimGen
+            {
+            public:
+                static const int PRIM_TYPE_PLANE = 0;
+                static const int PRIM_TYPE_CUBE = 1;
+                static const int PRIM_TYPE_SPHERE = 2;
+                static const int PRIM_TYPE_TORUS = 3;
 
-    PrimGen();
-    ~PrimGen();
+                PrimGen();
+                ~PrimGen();
 
-    void createMesh(Mesh* mesh, int primType, std::vector<float> values);
+                void createMesh(Mesh* mesh, int primType, std::vector<float> values);
 
-private:
+            private:
 
-    Primitive* m_prim;
+                Primitive* m_prim;
 
-};
+            };
+        }
+    }
+}
 
 #endif // PRIMGEN_H
