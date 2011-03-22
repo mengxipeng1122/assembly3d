@@ -34,6 +34,7 @@
 #include "TesterTool.h"
 #include "A3DUtils.h"
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 using namespace assembly3d;
@@ -164,54 +165,58 @@ void TesterTool::compare(const char* actual,
     loadMesh(actual, actualBinary, attributesActual, groupsActual);
     loadMesh(expected, expectedBinary, attributesExpected, groupsExpected);
 
-    bool attribsPass = false;
-    bool groupsPass = false;
+    bool attribsPass = true;
+    bool groupsPass = true;
 
     // compare attributes
     if(attributesActual.size() == attributesExpected.size())
     {
         for(unsigned int i = 0; i < attributesExpected.size(); ++i)
         {
-            const Attribute* attribA;
-            const Attribute* attribE;
-            if(ignoreOrderAttributes)
+            if(attributeIgnored(attributesExpected[i].name) == false)
             {
-                int idx = getAttributeIndexWithName(attributesExpected[i].name,
-                                                    attributesActual);
-                if(idx > -1 && idx < attributesExpected.size())
+                const Attribute* attribA;
+                const Attribute* attribE;
+                if(ignoreOrderAttributes)
                 {
-                    attribA = &attributesActual[idx];
+                    int idx = getAttributeIndexWithName(attributesExpected[i].name,
+                                                        attributesActual);
+                    if(idx > -1 && idx < attributesExpected.size())
+                    {
+                        attribA = &attributesActual[idx];
+                    }
+                    else
+                    {
+                        attribsPass = false;
+                        break;
+                    }
                 }
                 else
                 {
-                    break;
+                    attribA = &attributesActual[i];
                 }
-            }
-            else
-            {
-                attribA = &attributesActual[i];
-            }
-            attribE = &attributesExpected[i];
+                attribE = &attributesExpected[i];
 
-            if(attribA->count == attribE->count)
-            {
-                if(compare(attribE->count,
-                           attribA->values,
-                           attribE->values,
-                           epsilon) == 0)
+                if(attribA->count == attribE->count)
                 {
-                    attribsPass = true;
+                    if(compare(attribE->count,
+                               attribA->values,
+                               attribE->values,
+                               epsilon) == 0)
+                    {
+                        attribsPass = true;
+                    }
+                    else
+                    {
+                        attribsPass = false;
+                        break;
+                    }
                 }
                 else
                 {
                     attribsPass = false;
                     break;
                 }
-            }
-            else
-            {
-                attribsPass = false;
-                break;
             }
         }
     }
@@ -221,45 +226,49 @@ void TesterTool::compare(const char* actual,
     {
         for(unsigned int i = 0; i < groupsExpected.size(); ++i)
         {
-            const Group* groupA;
-            const Group* groupE;
-            if(ignoreOrderGroups)
+            if(groupIgnored(groupsExpected[i].name) == false)
             {
-                int idx = getGroupIndexWithName(groupsExpected[i].name,
-                                                groupsActual);
-                if(idx > -1 && idx < groupsExpected.size())
+                const Group* groupA;
+                const Group* groupE;
+                if(ignoreOrderGroups)
                 {
-                    groupA = &groupsActual[idx];
+                    int idx = getGroupIndexWithName(groupsExpected[i].name,
+                                                    groupsActual);
+                    if(idx > -1 && idx < groupsExpected.size())
+                    {
+                        groupA = &groupsActual[idx];
+                    }
+                    else
+                    {
+                        groupsPass = false;
+                        break;
+                    }
                 }
                 else
                 {
-                    break;
+                    groupA = &groupsActual[i];
                 }
-            }
-            else
-            {
-                groupA = &groupsActual[i];
-            }
-            groupE = &groupsExpected[i];
+                groupE = &groupsExpected[i];
 
-            if(groupA->numBytes == groupE->numBytes)
-            {
-                if(compare(groupE->numBytes,
-                           groupA->bytes,
-                           groupE->bytes) == 0)
+                if(groupA->numBytes == groupE->numBytes)
                 {
-                    groupsPass = true;
+                    if(compare(groupE->numBytes,
+                               groupA->bytes,
+                               groupE->bytes) == 0)
+                    {
+                        groupsPass = true;
+                    }
+                    else
+                    {
+                        groupsPass = false;
+                        break;
+                    }
                 }
                 else
                 {
                     groupsPass = false;
                     break;
                 }
-            }
-            else
-            {
-                groupsPass = false;
-                break;
             }
         }
     }
@@ -334,4 +343,40 @@ int TesterTool::getGroupIndexWithName(const char *groupName,
             return i;
     }
     return -1;
+}
+
+void TesterTool::setIgnoreListAttributes(std::vector<std::string> ignoreListAttributes)
+{
+    m_ignoreListAttributes.clear();
+    m_ignoreListAttributes = ignoreListAttributes;
+}
+
+void TesterTool::setIgnoreListGroups(std::vector<std::string> ignoreListGroups)
+{
+    m_ignoreListGroups.clear();
+    m_ignoreListGroups = ignoreListGroups;
+}
+
+bool TesterTool::attributeIgnored(const char *attribName)
+{
+    vector<string>::iterator result;
+    result = find(m_ignoreListAttributes.begin(),
+                  m_ignoreListAttributes.end(),
+                  attribName);
+    if(result == m_ignoreListAttributes.end())
+        return false;
+    else
+        return true;
+}
+
+bool TesterTool::groupIgnored(const char *groupName)
+{
+    vector<string>::iterator result;
+    result = find(m_ignoreListGroups.begin(),
+                  m_ignoreListGroups.end(),
+                  groupName);
+    if(result == m_ignoreListGroups.end())
+        return false;
+    else
+        return true;
 }

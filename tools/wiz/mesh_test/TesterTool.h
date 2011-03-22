@@ -49,6 +49,9 @@ namespace assembly3d
             public:
                 TesterTool();
 
+                void setIgnoreListAttributes(std::vector<std::string> ignoreListAttributes);
+                void setIgnoreListGroups(std::vector<std::string> ignoreListGroups);
+
                 void compare(const char* actual,
                              const char* actualBinary,
                              const char* expected,
@@ -74,6 +77,12 @@ namespace assembly3d
                                               std::vector<Attribute>& attribs);
                 int getGroupIndexWithName(const char* groupName,
                                           std::vector<Group> &groups);
+
+                bool attributeIgnored(const char* attribName);
+                bool groupIgnored(const char* groupName);
+
+                std::vector<std::string> m_ignoreListAttributes;
+                std::vector<std::string> m_ignoreListGroups;
 
             };
         }
