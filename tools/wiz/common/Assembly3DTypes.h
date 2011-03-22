@@ -38,21 +38,24 @@
 
 namespace assembly3d
 {
-    struct Vertex
+    namespace mesh
     {
-        float position[3];
-        float normal[3];
-        float texCoord[2];
-        float tangent[3];
-        float bitangent[3];
-    };
+        struct Vertex
+        {
+            float position[3];
+            float normal[3];
+            float texCoord[2];
+            float tangent[3];
+            float bitangent[3];
+        };
 
-    struct Group
-    {
-        const char* name;
-        int startIndex;
-        int triangleCount;
-    };
+        struct Group
+        {
+            const char* name;
+            int startIndex;
+            int triangleCount;
+        };
+    }
 }
 
 #endif // _ASSEMBLY3DTYPES_H_

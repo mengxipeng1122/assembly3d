@@ -39,9 +39,8 @@
 #include "ToolManager.h"
 
 using namespace assembly3d;
-using namespace utils;
-using namespace wiz;
-using namespace mesh;
+using namespace assembly3d::utils;
+using namespace assembly3d::wiz::mesh;
 
 //==============================================================================
 int main (int argc, char* argv[])

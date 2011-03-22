@@ -37,9 +37,8 @@
 #include "Assembly3DUtils.h"
 
 using namespace assembly3d;
-using namespace utils;
-using namespace test;
-using namespace mesh;
+using namespace assembly3d::utils;
+using namespace assembly3d::test::mesh;
 
 
 int main (int argc, char* argv[])

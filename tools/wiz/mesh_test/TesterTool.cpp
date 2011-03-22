@@ -37,8 +37,8 @@
 
 using namespace std;
 using namespace assembly3d;
-using namespace utils;
-using namespace test::mesh;
+using namespace assembly3d::utils;
+using namespace assembly3d::test::mesh;
 
 TesterTool::TesterTool()
 {
@@ -46,8 +46,8 @@ TesterTool::TesterTool()
 
 void TesterTool::loadMesh(const string& xmlFile,
                           const string& binaryFile,
-                          vector<test::mesh::Attribute>& attribs,
-                          vector<test::mesh::Group>& groups)
+                          vector<Attribute>& attribs,
+                          vector<Group>& groups)
 {
     XmlParser xml;
     xml.loadFile(xmlFile);
@@ -154,10 +154,10 @@ void TesterTool::compare(const char* actual,
                          const char* expectedBinary,
                          float epsilon)
 {
-    vector<test::mesh::Attribute> attributesActual;
-    vector<test::mesh::Attribute> attributesExpected;
-    vector<test::mesh::Group> groupsActual;
-    vector<test::mesh::Group> groupsExpected;
+    vector<Attribute> attributesActual;
+    vector<Attribute> attributesExpected;
+    vector<Group> groupsActual;
+    vector<Group> groupsExpected;
 
     loadMesh(actual, actualBinary, attributesActual, groupsActual);
     loadMesh(expected, expectedBinary, attributesExpected, groupsExpected);
@@ -170,8 +170,8 @@ void TesterTool::compare(const char* actual,
     {
         for(unsigned int i = 0; i < attributesExpected.size(); ++i)
         {
-            const test::mesh::Attribute& attribA = attributesActual[i];
-            const test::mesh::Attribute& attribE = attributesExpected[i];
+            const Attribute& attribA = attributesActual[i];
+            const Attribute& attribE = attributesExpected[i];
             if(attribA.count == attribE.count)
             {
                 if(compare(attribE.count,
@@ -200,8 +200,8 @@ void TesterTool::compare(const char* actual,
     {
         for(unsigned int i = 0; i < groupsExpected.size(); ++i)
         {
-            const test::mesh::Group& groupA = groupsActual[i];
-            const test::mesh::Group& groupE = groupsExpected[i];
+            const Group& groupA = groupsActual[i];
+            const Group& groupE = groupsExpected[i];
             if(groupA.numBytes == groupE.numBytes)
             {
                 if(compare(groupE.numBytes,
@@ -240,8 +240,8 @@ void TesterTool::compare(const char* actual,
 
 }
 
-void TesterTool::clear(vector<test::mesh::Attribute>& attribs,
-                       vector<test::mesh::Group>& groups)
+void TesterTool::clear(vector<Attribute>& attribs,
+                       vector<Group>& groups)
 {
     for(unsigned int i = 0; i < attribs.size(); ++i)
     {
