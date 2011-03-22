@@ -33,7 +33,7 @@
 
 #include "MeshIO.h"
 #include <fstream>
-#include "Assembly3DUtils.h"
+#include "A3DUtils.h"
 
 using namespace assembly3d;
 using namespace utils;

@@ -33,7 +33,7 @@
 
 #include "MeshPrimIncludes.h"
 #include <tclap/CmdLine.h>
-#include "Assembly3DUtils.h"
+#include "A3DUtils.h"
 #include "MeshIO.h"
 
 #include "PrimGen.h"

@@ -32,7 +32,7 @@
  */
 
 #include "MeshWizIncludes.h"
-#include "Assembly3DUtils.h"
+#include "A3DUtils.h"
 #include <tclap/CmdLine.h>
 #include "Mesh.h"
 #include "MeshIO.h"

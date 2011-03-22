@@ -34,7 +34,7 @@
 #ifndef _MESHIO_H_
 #define _MESHIO_H_
 
-#include "Assembly3DIncludes.h"
+#include "A3DIncludes.h"
 #include "Mesh.h"
 
 namespace assembly3d
