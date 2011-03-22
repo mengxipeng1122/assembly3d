@@ -87,7 +87,9 @@ int main (int argc, char* argv[])
                                                           false, "", "name-list");
         TCLAP::ValueArg<std::string> excludeGroupsArg("", "exclude-groups", "List with groups to exclude",
                                                       false, "", "name-list");
+        TCLAP::SwitchArg quiteArg("q", "quite", "No output verbosity.", false);
 
+        cmd.add(quiteArg);
         cmd.add(excludeAttributesArg);
         cmd.add(excludeGroupsArg);
         cmd.add(ignoreOrderAttributesArg);
@@ -154,7 +156,9 @@ int main (int argc, char* argv[])
         bool ignoreOrderAttributes = ignoreOrderAttributesArg.getValue();
         bool ignoreOrderGroups = ignoreOrderGroupsArg.getValue();
 
-        TesterTool tester;
+        bool verboseOutput = !quiteArg.getValue();
+
+        TesterTool tester(verboseOutput);
 
         if(excludeAttributesArg.isSet())
         {

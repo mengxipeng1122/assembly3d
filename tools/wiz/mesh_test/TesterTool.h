@@ -47,7 +47,7 @@ namespace assembly3d
             class TesterTool
             {
             public:
-                TesterTool();
+                TesterTool(bool verbose=true);
 
                 void setIgnoreListAttributes(std::vector<std::string> ignoreListAttributes);
                 void setIgnoreListGroups(std::vector<std::string> ignoreListGroups);
@@ -83,6 +83,8 @@ namespace assembly3d
 
                 std::vector<std::string> m_ignoreListAttributes;
                 std::vector<std::string> m_ignoreListGroups;
+
+                bool m_verbose;
 
             };
         }
