@@ -43,6 +43,7 @@
 #include <stdlib.h>
 #include <cstring>
 #include <iostream>
+#include <algorithm>
 
 using namespace assembly3d;
 using namespace assembly3d::utils;
@@ -117,4 +118,13 @@ int StringUtils::findOccurensesOf(const std::string& cmdStr, const std::string& 
     return result;
 }
 
-
+void StringUtils::transformStringValuesToUpperCase(std::vector<std::string>& values)
+{
+    for(unsigned int i = 0; i < values.size(); ++i)
+    {
+        std::transform(values[i].begin(),
+                       values[i].end(),
+                       values[i].begin(),
+                       (int (*)(int))toupper);
+    }
+}
