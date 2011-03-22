@@ -80,9 +80,16 @@ int main (int argc, char* argv[])
                                           0.0f,
                                           "val");
 
-        TCLAP::SwitchArg ignoreOrderAttributesArg("", "ignore-order-attributes", "Ignore attribute order", false);
-        TCLAP::SwitchArg ignoreOrderGroupsArg("", "ignore-order-groups", "Ignore group order", false);
+        TCLAP::SwitchArg ignoreOrderAttributesArg("", "ignore-order-attributes", "Ignores attribute order.", false);
+        TCLAP::SwitchArg ignoreOrderGroupsArg("", "ignore-order-groups", "Ignores group order.", false);
 
+        TCLAP::ValueArg<std::string> excludeAttributesArg("", "exclude-attributes", "List with attributes to exclude.",
+                                                          false, "", "name-list");
+        TCLAP::ValueArg<std::string> excludeGroupsArg("", "exclude-groups", "List with groups to exclude",
+                                                      false, "", "name-list");
+
+        cmd.add(excludeAttributesArg);
+        cmd.add(excludeGroupsArg);
         cmd.add(ignoreOrderAttributesArg);
         cmd.add(ignoreOrderGroupsArg);
         cmd.add(epsilonArg);
@@ -146,7 +153,28 @@ int main (int argc, char* argv[])
 
         bool ignoreOrderAttributes = ignoreOrderAttributesArg.getValue();
         bool ignoreOrderGroups = ignoreOrderGroupsArg.getValue();
+
         TesterTool tester;
+
+        if(excludeAttributesArg.isSet())
+        {
+            std::string argsStr = excludeAttributesArg.getValue();
+            std::vector<std::string> values;
+
+            StringUtils::getStrValuesFromCmdString(argsStr, values);
+
+            tester.setIgnoreListAttributes(values);
+
+        }
+        if(excludeGroupsArg.isSet())
+        {
+            std::string argsStr = excludeGroupsArg.getValue();
+            std::vector<std::string> values;
+
+            StringUtils::getStrValuesFromCmdString(argsStr, values);
+
+            tester.setIgnoreListGroups(values);
+        }
 
         tester.compare(actualFile.c_str(),
                        actualBinaryFile.c_str(),
