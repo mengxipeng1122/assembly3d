@@ -52,6 +52,7 @@ namespace assembly3d
             static void getValueFromCmdString(const std::string& cmdStr, float& val);
             static void getValuesFromCmdString(const std::string& cmdStr, std::vector<float>& vals);
             static void getStrValuesFromCmdString(const std::string& cmdStr, std::vector<std::string>& vals);
+            static void transformStringValuesToUpperCase(std::vector<std::string>& values);
         private:
         };
 

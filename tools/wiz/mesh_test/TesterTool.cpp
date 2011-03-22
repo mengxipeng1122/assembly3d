@@ -165,8 +165,10 @@ void TesterTool::compare(const char* actual,
     loadMesh(actual, actualBinary, attributesActual, groupsActual);
     loadMesh(expected, expectedBinary, attributesExpected, groupsExpected);
 
-    bool attribsPass = true;
-    bool groupsPass = true;
+    bool attribsPass = false;
+    bool groupsPass = false;
+    bool noAttribsCompared = true;
+    bool noGroupsCompared = true;
 
     // compare attributes
     if(attributesActual.size() == attributesExpected.size())
@@ -175,13 +177,14 @@ void TesterTool::compare(const char* actual,
         {
             if(attributeIgnored(attributesExpected[i].name) == false)
             {
+                noAttribsCompared = false;
                 const Attribute* attribA;
                 const Attribute* attribE;
                 if(ignoreOrderAttributes)
                 {
                     int idx = getAttributeIndexWithName(attributesExpected[i].name,
                                                         attributesActual);
-                    if(idx > -1 && idx < attributesExpected.size())
+                    if(idx > -1 && idx < (int)attributesExpected.size())
                     {
                         attribA = &attributesActual[idx];
                     }
@@ -228,13 +231,14 @@ void TesterTool::compare(const char* actual,
         {
             if(groupIgnored(groupsExpected[i].name) == false)
             {
+                noGroupsCompared = false;
                 const Group* groupA;
                 const Group* groupE;
                 if(ignoreOrderGroups)
                 {
                     int idx = getGroupIndexWithName(groupsExpected[i].name,
                                                     groupsActual);
-                    if(idx > -1 && idx < groupsExpected.size())
+                    if(idx > -1 && idx < (int)groupsExpected.size())
                     {
                         groupA = &groupsActual[idx];
                     }
@@ -274,14 +278,45 @@ void TesterTool::compare(const char* actual,
     }
 
     // print result
-    if(attribsPass && groupsPass)
+    if(noAttribsCompared)
     {
-        cout << "Passed!" << endl;
+        cout << "No attributes compared!" << endl;
     }
     else
     {
-        cout << "Failed!" << endl;
+        if(attribsPass)
+        {
+            cout << "Attributes passed!" << endl;
+        }
+        else
+        {
+            cout << "Attributes failed!" << endl;
+        }
+
     }
+    if(noGroupsCompared)
+    {
+        cout << "No groups compared!" << endl;
+    }
+    else
+    {
+        if(groupsPass)
+        {
+            cout << "Groups passed!" << endl;
+        }
+        else
+        {
+            cout << "Groups failed!" << endl;
+        }
+    }
+//    if(attribsPass && groupsPass)
+//    {
+//        cout << "Passed!" << endl;
+//    }
+//    else
+//    {
+//        cout << "Failed!" << endl;
+//    }
 
     // delete allocated memory
     clear(attributesActual, groupsActual);

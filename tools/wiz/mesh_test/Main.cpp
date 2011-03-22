@@ -163,6 +163,9 @@ int main (int argc, char* argv[])
 
             StringUtils::getStrValuesFromCmdString(argsStr, values);
 
+            //transform values to uuper case.
+            StringUtils::transformStringValuesToUpperCase(values);
+
             tester.setIgnoreListAttributes(values);
 
         }
@@ -172,6 +175,9 @@ int main (int argc, char* argv[])
             std::vector<std::string> values;
 
             StringUtils::getStrValuesFromCmdString(argsStr, values);
+
+            //transform values to uuper case.
+            StringUtils::transformStringValuesToUpperCase(values);
 
             tester.setIgnoreListGroups(values);
         }
