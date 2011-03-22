@@ -39,7 +39,7 @@
 // http://www.openframeworks.cc/
 //--------------------------------------------------------------------------
 
-#include "Assembly3DIncludes.h"
+#include "A3DIncludes.h"
 #include "tinyxml.h"
 #include <vector>
 

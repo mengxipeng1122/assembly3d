@@ -34,7 +34,7 @@
 #ifndef _STRINGUTILS_H_
 #define _STRINGUTILS_H_
 
-#include "Assembly3DIncludes.h"
+#include "A3DIncludes.h"
 #include <string>
 #include <vector>
 

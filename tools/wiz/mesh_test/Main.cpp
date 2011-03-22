@@ -34,7 +34,7 @@
 #include "MeshTestIncludes.h"
 #include <tclap/CmdLine.h>
 #include "TesterTool.h"
-#include "Assembly3DUtils.h"
+#include "A3DUtils.h"
 
 using namespace assembly3d;
 using namespace assembly3d::utils;

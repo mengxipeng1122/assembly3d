@@ -32,7 +32,7 @@
  */
 
 #include "TesterTool.h"
-#include "Assembly3DUtils.h"
+#include "A3DUtils.h"
 #include <fstream>
 
 using namespace std;
