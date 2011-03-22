@@ -41,7 +41,9 @@ using namespace assembly3d;
 using namespace assembly3d::utils;
 using namespace assembly3d::test::mesh;
 
-TesterTool::TesterTool()
+TesterTool::TesterTool(bool verbose)
+    :
+    m_verbose(verbose)
 {
 }
 
@@ -202,15 +204,25 @@ void TesterTool::compare(const char* actual,
 
                 if(attribA->count == attribE->count)
                 {
+                    if(m_verbose)
+                    {
+                        cout << "Comparing attribute '";
+                        cout << attribE->name;
+                        cout << "': ";
+                    }
                     if(compare(attribE->count,
                                attribA->values,
                                attribE->values,
                                epsilon) == 0)
                     {
+                        if(m_verbose)
+                            cout << "passed!" << endl;
                         attribsPass = true;
                     }
                     else
                     {
+                        if(m_verbose)
+                            cout << "failed!" << endl;
                         attribsPass = false;
                         break;
                     }
@@ -256,14 +268,24 @@ void TesterTool::compare(const char* actual,
 
                 if(groupA->numBytes == groupE->numBytes)
                 {
+                    if(m_verbose)
+                    {
+                        cout << "Comparing group '";
+                        cout << groupE->name;
+                        cout << "': ";
+                    }
                     if(compare(groupE->numBytes,
                                groupA->bytes,
                                groupE->bytes) == 0)
                     {
+                        if(m_verbose)
+                            cout << "passed!" << endl;
                         groupsPass = true;
                     }
                     else
                     {
+                        if(m_verbose)
+                            cout << "failed!" << endl;
                         groupsPass = false;
                         break;
                     }
@@ -309,14 +331,6 @@ void TesterTool::compare(const char* actual,
             cout << "Groups failed!" << endl;
         }
     }
-//    if(attribsPass && groupsPass)
-//    {
-//        cout << "Passed!" << endl;
-//    }
-//    else
-//    {
-//        cout << "Failed!" << endl;
-//    }
 
     // delete allocated memory
     clear(attributesActual, groupsActual);
