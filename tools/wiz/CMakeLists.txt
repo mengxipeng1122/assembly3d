@@ -1,4 +1,4 @@
-project(Assembly3DWiz)
+project(Assembly3DTools)
 
 cmake_minimum_required(VERSION 2.6)
 
