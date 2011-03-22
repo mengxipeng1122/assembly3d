@@ -127,8 +127,6 @@ namespace assembly3d
             bool readDoubleAttribute(const std::string& tag, const std::string& attribute, double& outValue, int which);
             bool readStringAttribute(const std::string& tag, const std::string& attribute, std::string& outValue, int which);
 
-
-
         };
     }
 }

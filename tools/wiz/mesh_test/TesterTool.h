@@ -53,7 +53,9 @@ namespace assembly3d
                              const char* actualBinary,
                              const char* expected,
                              const char* expectedBinary,
-                             float epsilon);
+                             float epsilon,
+                             bool ignoreOrderAttributes,
+                             bool ignoreOrderGroups);
 
             private:
 

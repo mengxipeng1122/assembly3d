@@ -152,7 +152,9 @@ void TesterTool::compare(const char* actual,
                          const char* actualBinary,
                          const char* expected,
                          const char* expectedBinary,
-                         float epsilon)
+                         float epsilon,
+                         bool ignoreOrderAttributes,
+                         bool ignoreOrderGroups)
 {
     vector<Attribute> attributesActual;
     vector<Attribute> attributesExpected;
@@ -170,13 +172,32 @@ void TesterTool::compare(const char* actual,
     {
         for(unsigned int i = 0; i < attributesExpected.size(); ++i)
         {
-            const Attribute& attribA = attributesActual[i];
-            const Attribute& attribE = attributesExpected[i];
-            if(attribA.count == attribE.count)
+            const Attribute* attribA;
+            const Attribute* attribE;
+            if(ignoreOrderAttributes)
             {
-                if(compare(attribE.count,
-                           attribA.values,
-                           attribE.values,
+                int idx = getAttributeIndexWithName(attributesExpected[i].name,
+                                                    attributesActual);
+                if(idx > -1 && idx < attributesExpected.size())
+                {
+                    attribA = &attributesActual[idx];
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else
+            {
+                attribA = &attributesActual[i];
+            }
+            attribE = &attributesExpected[i];
+
+            if(attribA->count == attribE->count)
+            {
+                if(compare(attribE->count,
+                           attribA->values,
+                           attribE->values,
                            epsilon) == 0)
                 {
                     attribsPass = true;
@@ -200,13 +221,32 @@ void TesterTool::compare(const char* actual,
     {
         for(unsigned int i = 0; i < groupsExpected.size(); ++i)
         {
-            const Group& groupA = groupsActual[i];
-            const Group& groupE = groupsExpected[i];
-            if(groupA.numBytes == groupE.numBytes)
+            const Group* groupA;
+            const Group* groupE;
+            if(ignoreOrderGroups)
             {
-                if(compare(groupE.numBytes,
-                           groupA.bytes,
-                           groupE.bytes) == 0)
+                int idx = getGroupIndexWithName(groupsExpected[i].name,
+                                                groupsActual);
+                if(idx > -1 && idx < groupsExpected.size())
+                {
+                    groupA = &groupsActual[idx];
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else
+            {
+                groupA = &groupsActual[i];
+            }
+            groupE = &groupsExpected[i];
+
+            if(groupA->numBytes == groupE->numBytes)
+            {
+                if(compare(groupE->numBytes,
+                           groupA->bytes,
+                           groupE->bytes) == 0)
                 {
                     groupsPass = true;
                 }

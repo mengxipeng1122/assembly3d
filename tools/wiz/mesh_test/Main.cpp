@@ -80,11 +80,11 @@ int main (int argc, char* argv[])
                                           0.0f,
                                           "val");
 
-        TCLAP::SwitchArg ignoreOrderAttributes("", "ignore-order-attributes", "Ignore attribute order");
-//        TCLAP::SwitchArg ignoreOrderGroups("", "ignore-order-groups", "Ignore group order");
+        TCLAP::SwitchArg ignoreOrderAttributesArg("", "ignore-order-attributes", "Ignore attribute order", false);
+        TCLAP::SwitchArg ignoreOrderGroupsArg("", "ignore-order-groups", "Ignore group order", false);
 
-        cmd.add(ignoreOrderAttributes);
-//        cmd.add(ignoreOrderGroups);
+        cmd.add(ignoreOrderAttributesArg);
+        cmd.add(ignoreOrderGroupsArg);
         cmd.add(epsilonArg);
         cmd.add(expectedBinaryArg);
         cmd.add(expectedArg);
@@ -144,13 +144,17 @@ int main (int argc, char* argv[])
 
         float eps = epsilonArg.getValue();
 
+        bool ignoreOrderAttributes = ignoreOrderAttributesArg.getValue();
+        bool ignoreOrderGroups = ignoreOrderGroupsArg.getValue();
         TesterTool tester;
 
         tester.compare(actualFile.c_str(),
                        actualBinaryFile.c_str(),
                        expectedFile.c_str(),
                        expectedBinaryFile.c_str(),
-                       eps);
+                       eps,
+                       ignoreOrderAttributes,
+                       ignoreOrderGroups);
 
     } catch (TCLAP::ArgException &e)  // catch any exceptions
     { std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; }
