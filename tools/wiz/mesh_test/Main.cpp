@@ -176,9 +176,6 @@ int main (int argc, char* argv[])
 
             StringUtils::getStrValuesFromCmdString(argsStr, values);
 
-            //transform values to uuper case.
-            StringUtils::transformStringValuesToUpperCase(values);
-
             tester.setIgnoreListGroups(values);
         }
 
