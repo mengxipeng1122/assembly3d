@@ -37,8 +37,7 @@
 #include <iostream>
 using namespace std;
 using namespace assembly3d;
-using namespace prim;
-using namespace mesh;
+using namespace assembly3d::prim::mesh;
 
 #define PIf		3.1415926535897932384626433832795f
 

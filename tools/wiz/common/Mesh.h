@@ -39,6 +39,8 @@
 #include <iostream>
 #include <string>
 
+using namespace assembly3d::mesh;
+
 namespace assembly3d
 {
     class Mesh
@@ -95,7 +97,7 @@ namespace assembly3d
         void addIndex(unsigned int index);
         void clearIndices();
 
-        void addGroup(assembly3d::Group group);
+        void addGroup(Group group);
         void setNumTriangles(int numTriangles);
 
 

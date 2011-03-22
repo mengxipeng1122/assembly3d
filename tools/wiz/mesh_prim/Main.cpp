@@ -39,9 +39,8 @@
 #include "PrimGen.h"
 
 using namespace assembly3d;
-using namespace utils;
-using namespace prim;
-using namespace mesh;
+using namespace assembly3d::utils;
+using namespace assembly3d::prim::mesh;
 
 int main (int argc, char* argv[])
 {
