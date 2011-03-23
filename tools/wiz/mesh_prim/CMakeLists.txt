@@ -6,35 +6,36 @@ include_directories(${A3DCommon_INCLUDE}
                     ${Tinyxml_INCLUDE}
                     ${TCLAP_INCLUDE})
 
-add_executable(MeshPrim Main.cpp
-                        MeshPrimIncludes.h
-                        PrimGen.h
-                        PrimGen.cpp
-                        Primitive.h
-                        primitives/Plane.h
-                        primitives/Plane.cpp
-                        primitives/Rectangle.h
-                        primitives/Rectangle.cpp
-                        primitives/Cube.h
-                        primitives/Cube.cpp
-                        primitives/Sphere.h
-                        primitives/Sphere.cpp
-                        primitives/Torus.h
-                        primitives/Torus.cpp
-                        primitives/Trapezoid.h
-                        primitives/Trapezoid.cpp
-                        primitives/Cylinder.h
-                        primitives/Cylinder.cpp
-                        primitives/Disk.h
-                        primitives/Disk.cpp
-                        primitives/PartialCylinder.h
-                        primitives/PartialCylinder.cpp
-                        primitives/PartialDisk.h
-                        primitives/PartialDisk.cpp)
+set(MeshPrim_SOURCE Main.cpp
+                    MeshPrimIncludes.h
+                    PrimGen.h
+                    PrimGen.cpp
+                    Primitive.h
+                    primitives/Plane.h
+                    primitives/Plane.cpp
+                    primitives/Rectangle.h
+                    primitives/Rectangle.cpp
+                    primitives/Cube.h
+                    primitives/Cube.cpp
+                    primitives/Sphere.h
+                    primitives/Sphere.cpp
+                    primitives/Torus.h
+                    primitives/Torus.cpp
+                    primitives/Trapezoid.h
+                    primitives/Trapezoid.cpp
+                    primitives/Cylinder.h
+                    primitives/Cylinder.cpp
+                    primitives/Disk.h
+                    primitives/Disk.cpp
+                    primitives/PartialCylinder.h
+                    primitives/PartialCylinder.cpp
+                    primitives/PartialDisk.h
+                    primitives/PartialDisk.cpp)
+
+add_executable(MeshPrim ${MeshPrim_SOURCE})
 
 target_link_libraries(MeshPrim A3DCommon)
 
-#install(TARGETS MeshTest DESTINATION ${CMAKE_SOURCE_DIR}/testsuite)
 if(WIN32)
     install(TARGETS MeshPrim RUNTIME DESTINATION .)
 else()

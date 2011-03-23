@@ -119,7 +119,6 @@ void Cylinder::create(Mesh* mesh, bool positions, bool normals,
             vert.texCoord[1] = t;
 
             mesh->addVertex(vert);
-
         }
     }
 
@@ -131,9 +130,8 @@ void Cylinder::create(Mesh* mesh, bool positions, bool normals,
     mesh->hasBitangents(bitangents);
     mesh->initializeMeshFormat();
 
-    calculateIndices(mesh);
+    generateIndices(mesh);
 
-    mesh->setNumTriangles(numberOfTriangles());
     Group g = {"Cylinder", 0, numberOfTriangles()};
     mesh->addGroup(g);
 

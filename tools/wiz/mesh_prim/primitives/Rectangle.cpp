@@ -99,9 +99,8 @@ void Rectangle::create(Mesh *mesh, bool positions, bool normals,
     mesh->hasBitangents(bitangents);
     mesh->initializeMeshFormat();
 
-    calculateIndices(mesh);
+    generateIndices(mesh);
 
-    mesh->setNumTriangles(numberOfTriangles());
     Group g = {"Rectangle", 0, numberOfTriangles()};
     mesh->addGroup(g);
 

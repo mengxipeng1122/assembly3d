@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Peter Vasil
+ * Copyright (c) 2011 Peter Vasil, Michael Nischt
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -53,7 +53,7 @@ namespace assembly3d
                 virtual void create(Mesh* mesh, bool positions, bool normals,
                                     bool texCoords, bool tangents, bool bitangents) = 0;
 
-                virtual void calculateIndices(Mesh* mesh)
+                void generateIndices(Mesh* mesh)
                 {
                     for(int stack = 0; stack < m_stacks; ++stack)
                     {
@@ -84,6 +84,7 @@ namespace assembly3d
                             mesh->addIndex(d);
                         }
                     }
+                    mesh->setNumTriangles(numberOfTriangles());
                 }
 
                 int numberOfTriangles()
