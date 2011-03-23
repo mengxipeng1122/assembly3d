@@ -283,6 +283,11 @@ int main (int argc, char* argv[])
 
     //---------------------------------------------------------------------------------------------------------
 
+    std::string sep = "/";
+#ifdef TARGET_WIN32
+    sep = "\\";
+#endif
+
     inputfile = inputArg.getValue();
     if(FileUtils::checkIfFileExists(inputfile.c_str()) == false)
     {
@@ -297,18 +302,19 @@ int main (int argc, char* argv[])
             FileUtils::createDirectory(outputdir.c_str());
         }
         std::string infilename = FileUtils::getFileName(inputfile);
-        outputfile = outputdir+"/"+infilename;
+        outputfile = outputdir+sep+infilename;
 
     }
     
     //---------------------------------------------------------------------------------------------------------
+
     std::string binaryInFileName;
     std::string binaryOutFileName;
 
     if(binaryOutputArg.isSet())
     {
         binaryInFileName = binaryOutputArg.getValue();
-        binaryOutFileName = outputArg.getValue()+"/"+binaryOutputArg.getValue();
+        binaryOutFileName = outputArg.getValue()+sep+binaryOutputArg.getValue();
     }
     else
     {
@@ -322,7 +328,7 @@ int main (int argc, char* argv[])
         
         
         binaryOutFileName = outputArg.getValue();
-        binaryOutFileName.append("/"+tmp);
+        binaryOutFileName.append(sep+tmp);
         binaryOutFileName.append(".dat");
     }
 
@@ -481,7 +487,7 @@ int main (int argc, char* argv[])
         x = y = z = 0.0f;
         std::vector<float> values;
         
-        int numSlashes = StringUtils::findOccurensesOf(args, "/");
+        int numSlashes = StringUtils::findOccurensesOf(args, sep);
         if(numSlashes == 2)
         {
             StringUtils::getValuesFromCmdString(args, values);
@@ -498,7 +504,7 @@ int main (int argc, char* argv[])
         else if(numSlashes == 1)
         {
             std::string cmdStr = args;
-            int pos = cmdStr.find("/");
+            int pos = cmdStr.find(sep);
             std::string axis = cmdStr.substr(0, pos);
             cmdStr = cmdStr.erase(0, pos+1);
 
@@ -525,11 +531,11 @@ int main (int argc, char* argv[])
         float eps = 0.0f;
         std::vector<float> values;
 
-        int numSlashes = StringUtils::findOccurensesOf(args, "/");
+        int numSlashes = StringUtils::findOccurensesOf(args, sep);
         if(numSlashes == 1)
         {
             std::string cmdStr = args;
-            int pos = cmdStr.find("/");
+            int pos = cmdStr.find(sep);
             std::string attributeName = cmdStr.substr(0, pos);
             cmdStr = cmdStr.erase(0, pos+1);
 
