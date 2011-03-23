@@ -14,7 +14,7 @@ MeshWiz $OUTPUT_DIR/Plane$FILE_EXT -o=$OUTPUT_DIR --dump-txt -q
 MeshPrim -d=$OUTPUT_DIR -o=Cube$FILE_EXT --cube=1
 MeshWiz $OUTPUT_DIR/Cube$FILE_EXT -o=$OUTPUT_DIR --dump-txt -q
 
-MeshPrim -d=$OUTPUT_DIR -o=Sphere$FILE_EXT --sphere=1/32
+MeshPrim -d=$OUTPUT_DIR -o=Sphere$FILE_EXT --sphere=1/32/32
 MeshWiz $OUTPUT_DIR/Sphere$FILE_EXT -o=$OUTPUT_DIR --dump-txt -q
 
 MeshPrim -d=$OUTPUT_DIR -o=Torus$FILE_EXT --torus=0.5/1.0/32/32
