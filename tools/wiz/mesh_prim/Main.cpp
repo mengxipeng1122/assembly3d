@@ -57,8 +57,8 @@ int main (int argc, char* argv[])
 
         ValueArg<std::string> outputNameArg("o", "output-file-name", "Output file name",
                                             true, "Prim.mesh.xml", "output-name");
-        ValueArg<std::string> outputDirArg("d", "output-dir", "Output directory (default=./)",
-                                           false, "./", "path");
+        ValueArg<std::string> outputDirArg("d", "output-dir", "Output directory (default=.)",
+                                           false, ".", "path");
 
         ValueArg<std::string> planeArg("", "plane", "Generates plane geometry.",
                                        false, "", "half-extend");
@@ -114,7 +114,13 @@ int main (int argc, char* argv[])
 
         outputDir = outputDirArg.getValue();
 
-        outputFile = outputDir + outputNameArg.getValue();
+        char sep = '/';
+
+#ifdef TARGET_WIN32
+        sep = '\\';
+#endif
+
+        outputFile = outputDir + sep + outputNameArg.getValue();
 
         outputBinaryFile = FileUtils::getBinaryFileName(outputFile.c_str(), ".xml", ".dat");
 
