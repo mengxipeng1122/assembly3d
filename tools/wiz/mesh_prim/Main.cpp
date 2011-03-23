@@ -191,7 +191,7 @@ int main (int argc, char* argv[])
             std::vector<float> values;
             StringUtils::getValuesFromCmdString(sphereArg.getValue(), values);
 
-            if(values.size() == 2)
+            if(values.size() == 3)
             {
                 primGen.createMesh(&mesh, PrimGen::PRIM_TYPE_SPHERE, values);
             }
