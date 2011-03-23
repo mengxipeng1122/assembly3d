@@ -49,12 +49,8 @@ Plane::~Plane()
 {
 }
 
-void Plane::create(Mesh* mesh,
-                   bool positions,
-                   bool normals,
-                   bool texCoords,
-                   bool tangents,
-                   bool bitangents)
+void Plane::create(Mesh* mesh, bool positions, bool normals,
+                   bool texCoords, bool tangents, bool bitangents)
 {
     cout << "Create plane" << endl;
 

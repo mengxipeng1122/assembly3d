@@ -48,14 +48,10 @@ Cube::~Cube()
 {
 }
 
-void Cube::create(Mesh *mesh,
-                  bool positions,
-                  bool normals,
-                  bool texCoords,
-                  bool tangents,
-                  bool bitangents)
+void Cube::create(Mesh* mesh, bool positions, bool normals,
+                  bool texCoords, bool tangents, bool bitangents)
 {
-    cout << "Create cube" << endl;
+    cout << "Create Cube" << endl;
 
     int numVertices = 24;
     int numTriangles = 12;
@@ -200,7 +196,7 @@ void Cube::create(Mesh *mesh,
         mesh->addIndex(cube_indices[i]);
     }
     mesh->setNumTriangles(numTriangles);
-    Group g = {"cube", 0, numTriangles};
+    Group g = {"Cube", 0, numTriangles};
     mesh->addGroup(g);
 
 }

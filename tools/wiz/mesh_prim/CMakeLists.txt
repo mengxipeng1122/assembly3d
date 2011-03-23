@@ -13,12 +13,24 @@ add_executable(MeshPrim Main.cpp
                         Primitive.h
                         primitives/Plane.h
                         primitives/Plane.cpp
+                        primitives/Rectangle.h
+                        primitives/Rectangle.cpp
                         primitives/Cube.h
                         primitives/Cube.cpp
                         primitives/Sphere.h
                         primitives/Sphere.cpp
                         primitives/Torus.h
-                        primitives/Torus.cpp)
+                        primitives/Torus.cpp
+                        primitives/Trapezoid.h
+                        primitives/Trapezoid.cpp
+                        primitives/Cylinder.h
+                        primitives/Cylinder.cpp
+                        primitives/Disk.h
+                        primitives/Disk.cpp
+                        primitives/PartialCylinder.h
+                        primitives/PartialCylinder.cpp
+                        primitives/PartialDisk.h
+                        primitives/PartialDisk.cpp)
 
 target_link_libraries(MeshPrim A3DCommon)
 

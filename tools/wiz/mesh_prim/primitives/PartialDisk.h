@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Peter Vasil
+ * Copyright (c) 2011 Peter Vasil, Michael Nischt
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -31,12 +31,10 @@
  *
  */
 
-#ifndef PRIMGEN_H
-#define PRIMGEN_H
+#ifndef PARTIALDISK_H
+#define PARTIALDISK_H
 
-#include "MeshPrimIncludes.h"
-#include "Primitive.h"
-#include "Mesh.h"
+#include "../Primitive.h"
 
 namespace assembly3d
 {
@@ -44,39 +42,26 @@ namespace assembly3d
     {
         namespace mesh
         {
-            class PrimGen
+            class PartialDisk : public Primitive
             {
             public:
-                static const int PRIM_TYPE_PLANE = 0;
-                static const int PRIM_TYPE_CUBE = 1;
-                static const int PRIM_TYPE_SPHERE = 2;
-                static const int PRIM_TYPE_TORUS = 3;
-                static const int PRIM_TYPE_TRAPEZOID = 4;
-                static const int PRIM_TYPE_CYLINDER = 5;
-                static const int PRIM_TYPE_DISK = 6;
-                static const int PRIM_TYPE_PARTIAL_CYLINDER = 7;
-                static const int PRIM_TYPE_PARTIAL_DISK = 8;
-                static const int PRIM_TYPE_RECTANGLE = 9;
+                PartialDisk(float inner, float outer, int slices,
+                            int stacks, float start, float sweep);
+                virtual ~PartialDisk();
 
-                PrimGen(bool generatePositions=true, bool generateNormals=true,
-                        bool generateTexCoords=true, bool generateTangents=false,
-                        bool generateBitangents= false);
-                ~PrimGen();
-
-                void createMesh(Mesh* mesh, int primType, std::vector<float> values);
+                void create(Mesh* mesh, bool positions, bool normals,
+                            bool texCoords, bool tangents, bool bitangents);
 
             private:
-
-                Primitive* m_prim;
-                bool m_generatePositions;
-                bool m_generateNormals;
-                bool m_generateTexCoords;
-                bool m_generateTangents;
-                bool m_generateBitangents;
-
+                float m_inner;
+                float m_outer;
+                int m_slices;
+                int m_stacks;
+                float m_start;
+                float m_sweep;
             };
         }
     }
 }
 
-#endif // PRIMGEN_H
+#endif // PARTIALDISK_H

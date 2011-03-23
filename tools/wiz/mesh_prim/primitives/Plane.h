@@ -36,7 +36,6 @@
 
 #include "../Primitive.h"
 
-
 namespace assembly3d
 {
     namespace prim
@@ -49,12 +48,8 @@ namespace assembly3d
                 Plane(float halfExtend);
                 virtual ~Plane();
 
-                void create(Mesh* mesh,
-                            bool positions,
-                            bool normals,
-                            bool texCoords,
-                            bool tangents,
-                            bool bitangents);
+                void create(Mesh* mesh, bool positions, bool normals,
+                            bool texCoords, bool tangents, bool bitangents);
 
             private:
                 float m_halfExtend;

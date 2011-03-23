@@ -49,13 +49,42 @@ namespace assembly3d
                 Primitive() {}
                 virtual ~Primitive(){}
 
-                virtual void create(Mesh* mesh,
-                                    bool positions,
-                                    bool normals,
-                                    bool texCoords,
-                                    bool tangents,
-                                    bool bitangents) = 0;
+                virtual void create(Mesh* mesh, bool positions, bool normals,
+                                    bool texCoords, bool tangents, bool bitangents) = 0;
 
+                virtual void calculateIndices(Mesh* mesh, int stacks, int slices)
+                {
+                    for(int stack = 0; stack < stacks; ++stack)
+                    {
+                        for(int slice = 0; slice < slices; ++slice)
+                        {
+                            // x - right
+                            // y -  up
+                            //
+                            //b --- c
+                            //|     |
+                            //| CCW |
+                            //|     |
+                            //a --- d
+                            unsigned int start = stack * (slices + 1);
+                            unsigned int a = start + slice;
+                            unsigned int b = a + 1;
+                            unsigned int d = a + (slices + 1);
+                            unsigned int c = d + 1;
+
+                            // first triangle of the face, counter clock wise winding
+                            mesh->addIndex(a);
+                            mesh->addIndex(b);
+                            mesh->addIndex(c);
+
+                            // second triangle of the face, counter clock wise winding
+                            mesh->addIndex(a);
+                            mesh->addIndex(c);
+                            mesh->addIndex(d);
+
+                        }
+                    }
+                }
             };
         }
     }
