@@ -43,8 +43,8 @@ using namespace assembly3d::prim::mesh;
 
 Sphere::Sphere(float radius, int slices)
     :
-    m_radius(radius),
-    m_slices(slices)
+    Primitive(slices, 0),
+    m_radius(radius)
 {
 }
 

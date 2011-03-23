@@ -42,11 +42,10 @@ using namespace assembly3d::prim::mesh;
 Trapezoid::Trapezoid(float base, float top, float height,
                      int slices, int stacks)
     :
+    Primitive(slices, stacks),
     m_base(base),
     m_top(top),
-    m_height(height),
-    m_slices(slices),
-    m_stacks(stacks)
+    m_height(height)
 {
 }
 
@@ -106,7 +105,7 @@ void Trapezoid::create(Mesh* mesh, bool positions, bool normals,
     mesh->hasBitangents(bitangents);
     mesh->initializeMeshFormat();
 
-    calculateIndices(mesh, m_stacks, m_slices);
+    calculateIndices(mesh);
 
     int numberTriangles = m_slices * m_stacks * 2;
     mesh->setNumTriangles(numberTriangles);

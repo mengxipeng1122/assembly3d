@@ -46,17 +46,18 @@ namespace assembly3d
             class Primitive
             {
             public:
-                Primitive() {}
+                Primitive(int slices, int stacks)
+                    : m_slices(slices), m_stacks(stacks) {}
                 virtual ~Primitive(){}
 
                 virtual void create(Mesh* mesh, bool positions, bool normals,
                                     bool texCoords, bool tangents, bool bitangents) = 0;
 
-                virtual void calculateIndices(Mesh* mesh, int stacks, int slices)
+                virtual void calculateIndices(Mesh* mesh)
                 {
-                    for(int stack = 0; stack < stacks; ++stack)
+                    for(int stack = 0; stack < m_stacks; ++stack)
                     {
-                        for(int slice = 0; slice < slices; ++slice)
+                        for(int slice = 0; slice < m_slices; ++slice)
                         {
                             // x - right
                             // y -  up
@@ -66,10 +67,10 @@ namespace assembly3d
                             //| CCW |
                             //|     |
                             //a --- d
-                            unsigned int start = stack * (slices + 1);
+                            unsigned int start = stack * (m_slices + 1);
                             unsigned int a = start + slice;
                             unsigned int b = a + 1;
-                            unsigned int d = a + (slices + 1);
+                            unsigned int d = a + (m_slices + 1);
                             unsigned int c = d + 1;
 
                             // first triangle of the face, counter clock wise winding
@@ -81,10 +82,13 @@ namespace assembly3d
                             mesh->addIndex(a);
                             mesh->addIndex(c);
                             mesh->addIndex(d);
-
                         }
                     }
                 }
+
+            protected:
+                int m_slices;
+                int m_stacks;
             };
         }
     }

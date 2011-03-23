@@ -44,6 +44,7 @@ using namespace assembly3d::prim::mesh;
 Torus::Torus(float innerRadius, float outerRadius,
              int numSides, int numFaces)
                  :
+                 Primitive(0, 0),
                  m_innerRadius(innerRadius),
                  m_outerRadius(outerRadius),
                  m_numSides(numSides),

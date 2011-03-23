@@ -40,6 +40,7 @@ using namespace assembly3d::prim::mesh;
 
 Cube::Cube(float halfExtend)
     :
+    Primitive(0, 0),
     m_halfExtend(halfExtend)
 {
 }

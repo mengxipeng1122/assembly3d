@@ -58,8 +58,6 @@ namespace assembly3d
             private:
                 float m_inner;
                 float m_outer;
-                int m_slices;
-                int m_stacks;
             };
         }
     }

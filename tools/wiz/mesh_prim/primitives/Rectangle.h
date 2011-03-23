@@ -54,9 +54,6 @@ namespace assembly3d
             private:
                 float m_extX;
                 float m_extY;
-                int m_slices;
-                int m_stacks;
-
             };
         }
     }

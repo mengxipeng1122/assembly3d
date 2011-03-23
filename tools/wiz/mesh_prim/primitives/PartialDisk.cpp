@@ -45,10 +45,9 @@ using namespace assembly3d::prim::mesh;
 PartialDisk::PartialDisk(float inner, float outer, int slices,
                          int stacks, float start, float sweep)
     :
+    Primitive(slices, stacks),
     m_inner(inner),
     m_outer(outer),
-    m_slices(slices),
-    m_stacks(stacks),
     m_start(start),
     m_sweep(sweep)
 {
@@ -108,7 +107,7 @@ void PartialDisk::create(Mesh* mesh, bool positions, bool normals,
     mesh->hasBitangents(bitangents);
     mesh->initializeMeshFormat();
 
-    calculateIndices(mesh, m_stacks, m_slices);
+    calculateIndices(mesh);
 
     int numberTriangles = m_slices * m_stacks * 2;
     mesh->setNumTriangles(numberTriangles);

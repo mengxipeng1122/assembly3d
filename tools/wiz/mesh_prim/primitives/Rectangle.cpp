@@ -40,10 +40,9 @@ using namespace assembly3d::prim::mesh;
 
 Rectangle::Rectangle(float extX, float extY, int slices, int stacks)
     :
+    Primitive(slices, stacks),
     m_extX(extX),
-    m_extY(extY),
-    m_slices(slices),
-    m_stacks(stacks)
+    m_extY(extY)
 {
 }
 
@@ -100,7 +99,7 @@ void Rectangle::create(Mesh *mesh, bool positions, bool normals,
     mesh->hasBitangents(bitangents);
     mesh->initializeMeshFormat();
 
-    calculateIndices(mesh, m_stacks, m_slices);
+    calculateIndices(mesh);
 
     int numberTriangles = m_slices * m_stacks * 2;
     mesh->setNumTriangles(numberTriangles);
