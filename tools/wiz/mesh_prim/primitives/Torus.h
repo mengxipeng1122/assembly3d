@@ -45,19 +45,13 @@ namespace assembly3d
             class Torus : public Primitive
             {
             public:
-                Torus(float innerRadius,
-                      float outerRadius,
-                      int numSides,
-                      int numFaces);
+                Torus(float innerRadius, float outerRadius,
+                      int numSides, int numFaces);
 
                 virtual ~Torus();
 
-                void create(Mesh* mesh,
-                            bool positions,
-                            bool normals,
-                            bool texCoords,
-                            bool tangents,
-                            bool bitangents);
+                void create(Mesh* mesh, bool positions, bool normals,
+                            bool texCoords, bool tangents, bool bitangents);
             private:
                 float m_innerRadius;
                 float m_outerRadius;

@@ -48,12 +48,8 @@ namespace assembly3d
                 Cube(float halfExtend);
                 virtual ~Cube();
 
-                void create(Mesh* mesh,
-                            bool positions,
-                            bool normals,
-                            bool texCoords,
-                            bool tangents,
-                            bool bitangents);
+                void create(Mesh* mesh, bool positions, bool normals,
+                            bool texCoords, bool tangents, bool bitangents);
             private:
                 float m_halfExtend;
             };

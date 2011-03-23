@@ -41,41 +41,63 @@
 using namespace assembly3d;
 using namespace assembly3d::utils;
 using namespace assembly3d::prim::mesh;
+using namespace TCLAP;
 
 int main (int argc, char* argv[])
 {
     try {
-        TCLAP::CmdLine cmd("MeshPrim - Utility for generating Assembly3D primitives.",
+
+        CmdLine cmd("MeshPrim - Utility for generating Assembly3D primitives.",
                            '=',
                            ProjectInfo::versionString);
 
         // -------------------------------------------------------------------
-        TCLAP::ValueArg<std::string> outputNameArg("o", "output-file-name", "Output file name",
-                                                   true, "Prim.mesh.xml", "output-name");
-        TCLAP::ValueArg<std::string> outputDirArg("d", "output-dir", "Output directory (default=./)",
-                                                  false, "./", "path");
 
-        TCLAP::ValueArg<std::string> planeArg("p", "plane", "Generates plane geometry.",
-                                              false, "", "half-extend");
-        TCLAP::ValueArg<std::string> cubeArg("c", "cube", "Generates cube geometry.",
-                                             false, "", "half-extend");
-        TCLAP::ValueArg<std::string> sphereArg("s", "sphere", "Generates sphere geometry.",
-                                               false, "", "radius/slices");
-        TCLAP::ValueArg<std::string> torusArg("t", "torus", "Generates torus geometry.",
-                                              false, "", "inner-radius/outer-radius/sides/faces");
-        TCLAP::ValueArg<std::string> generateAttribsArg("",
-                                                        "generate-attributes",
-                                                        "Specifies which attribute to generate (default: positions/normals/texCoords",
-                                                        false,
-                                                        "positions/normals/texcoords",
-                                                        "attributes");
+        // TODO: set default values
+
+        ValueArg<std::string> outputNameArg("o", "output-file-name", "Output file name",
+                                            true, "Prim.mesh.xml", "output-name");
+        ValueArg<std::string> outputDirArg("d", "output-dir", "Output directory (default=./)",
+                                           false, "./", "path");
+
+        ValueArg<std::string> planeArg("", "plane", "Generates plane geometry.",
+                                       false, "", "half-extend");
+        ValueArg<std::string> cubeArg("", "cube", "Generates cube geometry.",
+                                      false, "", "half-extend");
+        ValueArg<std::string> sphereArg("", "sphere", "Generates sphere geometry.",
+                                        false, "", "radius/slices");
+        ValueArg<std::string> torusArg("", "torus", "Generates torus geometry.",
+                                       false, "", "inner-radius/outer-radius/sides/faces");
+
+        ValueArg<std::string> diskArg("", "disk", "Generates disk primitive",
+                                      false, "", "inner/outer/slices/stacks");
+        ValueArg<std::string> cylinderArg("", "cylinder", "Generates cylinder primitive",
+                                          false, "", "base/top/height/slices/stacks");
+        ValueArg<std::string> trapezoidArg("", "trapezoid", "Generates trapezoid primitive",
+                                           false, "", "base/top/height/slices/stacks");
+        ValueArg<std::string> rectangleArg("", "recatangle", "Generates rectangle primitive",
+                                           false, "", "extX/extY/slices/stacks");
+        ValueArg<std::string> partialDiskArg("", "partial-disk", "Generates partial disk primitive",
+                                             false, "", "inner/outer/slices/stacks/start/sweep");
+        ValueArg<std::string> partialCylinderArg("", "partial-cylinder", "Generates partial cylinder primitive",
+                                                 false, "", "base/top/height/slices/stacks/start/sweep");
+
+        ValueArg<std::string> generateAttribsArg("", "generate-attributes", "Specifies which attribute to generate",
+                                                 false, "positions/normals/texcoords", "positions/normals/texcoords");
+
         // -------------------------------------------------------------------
 
-        std::vector<TCLAP::Arg*> xorlist;
+        std::vector<Arg*> xorlist;
         xorlist.push_back(&planeArg);
         xorlist.push_back(&cubeArg);
         xorlist.push_back(&sphereArg);
         xorlist.push_back(&torusArg);
+        xorlist.push_back(&diskArg);
+        xorlist.push_back(&cylinderArg);
+        xorlist.push_back(&trapezoidArg);
+        xorlist.push_back(&rectangleArg);
+        xorlist.push_back(&partialDiskArg);
+        xorlist.push_back(&partialCylinderArg);
         cmd.xorAdd(xorlist);
 
         cmd.add(outputDirArg);
@@ -135,14 +157,17 @@ int main (int argc, char* argv[])
             }
         }
 
+        // -------------------------------------------------------------------
+
         Mesh* mesh = new Mesh();
         PrimGen primGen(genPos, genNorm, genTex);
 
+        // -------------------------------------------------------------------
+
         if(planeArg.isSet())
         {
-            std::string args = planeArg.getValue();
             float val = 0.0f;
-            StringUtils::getValueFromCmdString(args, val);
+            StringUtils::getValueFromCmdString(planeArg.getValue(), val);
             std::vector<float> values;
             values.push_back(val);
 
@@ -150,9 +175,8 @@ int main (int argc, char* argv[])
         }
         else if(cubeArg.isSet())
         {
-            std::string args = cubeArg.getValue();
             float val = 0.0f;
-            StringUtils::getValueFromCmdString(args, val);
+            StringUtils::getValueFromCmdString(cubeArg.getValue(), val);
             std::vector<float> values;
             values.push_back(val);
 
@@ -160,10 +184,8 @@ int main (int argc, char* argv[])
         }
         else if(sphereArg.isSet())
         {
-            std::string args = sphereArg.getValue();
-
             std::vector<float> values;
-            StringUtils::getValuesFromCmdString(args, values);
+            StringUtils::getValuesFromCmdString(sphereArg.getValue(), values);
 
             if(values.size() == 2)
             {
@@ -172,22 +194,84 @@ int main (int argc, char* argv[])
         }
         else if(torusArg.isSet())
         {
-            std::string args = torusArg.getValue();
-
             std::vector<float> values;
-            StringUtils::getValuesFromCmdString(args, values);
+            StringUtils::getValuesFromCmdString(torusArg.getValue(), values);
 
             if(values.size() == 4)
             {
                 primGen.createMesh(mesh, PrimGen::PRIM_TYPE_TORUS, values);
             }
         }
-        else
+        else if(diskArg.isSet())
         {
-            return 1;
+            std::vector<float> values;
+            StringUtils::getValuesFromCmdString(diskArg.getValue(), values);
+
+            if(values.size() == 4)
+            {
+                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_DISK, values);
+            }
         }
+        else if(cylinderArg.isSet())
+        {
+            std::vector<float> values;
+            StringUtils::getValuesFromCmdString(cylinderArg.getValue(), values);
+
+            if(values.size() == 5)
+            {
+                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_CYLINDER, values);
+            }
+        }
+        else if(rectangleArg.isSet())
+        {
+            std::vector<float> values;
+            StringUtils::getValuesFromCmdString(rectangleArg.getValue(), values);
+
+            if(values.size() == 4)
+            {
+                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_RECTANGLE, values);
+            }
+        }
+        else if(trapezoidArg.isSet())
+        {
+            std::vector<float> values;
+            StringUtils::getValuesFromCmdString(trapezoidArg.getValue(), values);
+
+            if(values.size() == 5)
+            {
+                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_TRAPEZOID, values);
+            }
+        }
+        else if(partialDiskArg.isSet())
+        {
+            std::vector<float> values;
+            StringUtils::getValuesFromCmdString(partialDiskArg.getValue(), values);
+
+            if(values.size() == 6)
+            {
+                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_PARTIAL_DISK, values);
+            }
+        }
+        else if(partialCylinderArg.isSet())
+        {
+            std::vector<float> values;
+            StringUtils::getValuesFromCmdString(partialCylinderArg.getValue(), values);
+
+            if(values.size() == 7)
+            {
+                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_PARTIAL_CYLINDER, values);
+            }
+        }
+        else
+            // Should never get here because TCLAP will note that one of the
+            // required args above has not been set.
+            throw("Very bad things...");
+
+        // -------------------------------------------------------------------
+
         MeshIO::saveFile(mesh, outputFile.c_str(), outputBinaryFile.c_str());
 
+        // -------------------------------------------------------------------
 
     } catch (TCLAP::ArgException &e)  // catch any exceptions
     { std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; }

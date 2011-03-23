@@ -36,6 +36,12 @@
 #include "primitives/Cube.h"
 #include "primitives/Sphere.h"
 #include "primitives/Torus.h"
+#include "primitives/Trapezoid.h"
+#include "primitives/Cylinder.h"
+#include "primitives/Disk.h"
+#include "primitives/PartialCylinder.h"
+#include "primitives/PartialDisk.h"
+#include "primitives/Rectangle.h"
 #include <stdio.h>
 #include <stdarg.h>
 
@@ -43,11 +49,8 @@ using namespace std;
 using namespace assembly3d;
 using namespace assembly3d::prim::mesh;
 
-PrimGen::PrimGen(bool generatePositions,
-                 bool generateNormals,
-                 bool generateTexCoords,
-                 bool generateTangents,
-                 bool generateBitangents)
+PrimGen::PrimGen(bool generatePositions, bool generateNormals, bool generateTexCoords,
+                 bool generateTangents, bool generateBitangents)
                      :
                      m_prim(0),
                      m_generatePositions(generatePositions),
@@ -77,17 +80,33 @@ void PrimGen::createMesh(Mesh* mesh, int primType, std::vector<float> values)
         m_prim = new Sphere(values[0], (int)values[1]);
         break;
     case PRIM_TYPE_TORUS:
-        m_prim = new Torus(values[0], values[1],
-                           (int)values[2], (int)values[3]);
+        m_prim = new Torus(values[0], values[1], (int)values[2], (int)values[3]);
+        break;
+    case PRIM_TYPE_TRAPEZOID:
+        m_prim = new Trapezoid(values[0], values[1], values[2]);
+        break;
+    case PRIM_TYPE_CYLINDER:
+        m_prim = new Cylinder(values[0], values[1], values[2],
+                              (int)values[3], (int)values[4]);
+        break;
+    case PRIM_TYPE_DISK:
+        m_prim = new Disk(values[0], values[1], (int)values[2], (int)values[3]);
+        break;
+    case PRIM_TYPE_PARTIAL_CYLINDER:
+        m_prim = new PartialCylinder(values[0], values[1], values[2], (int)values[3],
+                                     (int)values[4], values[5], values[6]);
+        break;
+    case PRIM_TYPE_PARTIAL_DISK:
+        m_prim = new PartialDisk(values[0], values[1], (int)values[2], (int)values[3],
+                                 values[4], values[5]);
+        break;
+    case PRIM_TYPE_RECTANGLE:
+        m_prim = new Rectangle(values[0], values[1], (int)values[2], (int)values[3]);
         break;
     default:
         m_prim = 0;
     }
-    m_prim->create(mesh,
-                   m_generatePositions,
-                   m_generateNormals,
-                   m_generateTexCoords,
-                   m_generateTangents,
-                   m_generateBitangents);
+    m_prim->create(mesh, m_generatePositions, m_generateNormals, m_generateTexCoords,
+                   m_generateTangents, m_generateBitangents);
 
 }

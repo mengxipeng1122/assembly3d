@@ -41,10 +41,8 @@ using namespace assembly3d::prim::mesh;
 
 #define PIf		3.1415926535897932384626433832795f
 
-Torus::Torus(float innerRadius,
-             float outerRadius,
-             int numSides,
-             int numFaces)
+Torus::Torus(float innerRadius, float outerRadius,
+             int numSides, int numFaces)
                  :
                  m_innerRadius(innerRadius),
                  m_outerRadius(outerRadius),
@@ -57,12 +55,8 @@ Torus::~Torus()
 {
 }
 
-void Torus::create(Mesh* mesh,
-                   bool positions,
-                   bool normals,
-                   bool texCoords,
-                   bool tangents,
-                   bool bitangents)
+void Torus::create(Mesh* mesh, bool positions, bool normals,
+                   bool texCoords, bool tangents, bool bitangents)
 {
     cout << "Create torus" << endl;
 
@@ -161,7 +155,7 @@ void Torus::create(Mesh* mesh,
         }
     }
     mesh->setNumTriangles(numberTriangles);
-    Group g = {"torus", 0, numberTriangles};
+    Group g = {"Torus", 0, numberTriangles};
     mesh->addGroup(g);
 
 }

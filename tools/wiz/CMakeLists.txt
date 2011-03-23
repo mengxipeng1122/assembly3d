@@ -8,8 +8,8 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(UNIX)
-  set(CMAKE_C_FLAGS_DEBUG "-g -Wall -DDEBUG -D_DEBUG")
-  set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -DDEBUG -D_DEBUG")
+  set(CMAKE_C_FLAGS_DEBUG "-g -Wall -Wextra -DDEBUG -D_DEBUG")
+  set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -Wextra -DDEBUG -D_DEBUG")
 endif(UNIX)
 
 if(MSVC)
