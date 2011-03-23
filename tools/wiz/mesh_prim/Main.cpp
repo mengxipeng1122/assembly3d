@@ -75,7 +75,7 @@ int main (int argc, char* argv[])
                                           false, "", "base/top/height/slices/stacks");
         ValueArg<std::string> trapezoidArg("", "trapezoid", "Generates trapezoid primitive",
                                            false, "", "base/top/height/slices/stacks");
-        ValueArg<std::string> rectangleArg("", "recatangle", "Generates rectangle primitive",
+        ValueArg<std::string> rectangleArg("", "rectangle", "Generates rectangle primitive",
                                            false, "", "extX/extY/slices/stacks");
         ValueArg<std::string> partialDiskArg("", "partial-disk", "Generates partial disk primitive",
                                              false, "", "inner/outer/slices/stacks/start/sweep");
