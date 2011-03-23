@@ -51,7 +51,6 @@ Trapezoid::Trapezoid(float base, float top, float height,
 
 Trapezoid::~Trapezoid()
 {
-
 }
 
 void Trapezoid::create(Mesh* mesh, bool positions, bool normals,
@@ -96,8 +95,6 @@ void Trapezoid::create(Mesh* mesh, bool positions, bool normals,
         }
     }
 
-
-
     mesh->hasPositions(positions);
     mesh->hasNormals(normals);
     mesh->hasTexCoords(texCoords);
@@ -105,9 +102,8 @@ void Trapezoid::create(Mesh* mesh, bool positions, bool normals,
     mesh->hasBitangents(bitangents);
     mesh->initializeMeshFormat();
 
-    calculateIndices(mesh);
+    generateIndices(mesh);
 
-    mesh->setNumTriangles(numberOfTriangles());
     Group g = {"Trapezoid", 0, numberOfTriangles()};
     mesh->addGroup(g);
 

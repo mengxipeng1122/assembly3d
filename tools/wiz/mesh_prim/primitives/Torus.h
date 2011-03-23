@@ -45,8 +45,7 @@ namespace assembly3d
             class Torus : public Primitive
             {
             public:
-                Torus(float inner, float outer,
-                      int stacks, int slices);
+                Torus(float inner, float outer, int stacks, int slices);
 
                 virtual ~Torus();
 

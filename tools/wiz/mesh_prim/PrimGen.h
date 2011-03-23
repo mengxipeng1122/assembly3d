@@ -66,7 +66,6 @@ namespace assembly3d
                 void createMesh(Mesh* mesh, int primType, std::vector<float> values);
 
             private:
-
                 Primitive* m_prim;
                 bool m_generatePositions;
                 bool m_generateNormals;

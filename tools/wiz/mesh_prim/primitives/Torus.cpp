@@ -41,12 +41,11 @@ using namespace assembly3d::prim::mesh;
 
 #define PIf		3.1415926535897932384626433832795f
 
-Torus::Torus(float inner, float outer,
-             int slices, int stacks)
-                 :
-                 Primitive(slices, stacks),
-                 m_inner(inner),
-                 m_outer(outer)
+Torus::Torus(float inner, float outer, int slices, int stacks)
+    :
+    Primitive(slices, stacks),
+    m_inner(inner),
+    m_outer(outer)
 {
 }
 
@@ -118,9 +117,8 @@ void Torus::create(Mesh* mesh, bool positions, bool normals,
     mesh->hasBitangents(bitangents);
     mesh->initializeMeshFormat();
 
-    calculateIndices(mesh);
+    generateIndices(mesh);
 
-    mesh->setNumTriangles(numberOfTriangles());
     Group g = {"Torus", 0, numberOfTriangles()};
     mesh->addGroup(g);
 

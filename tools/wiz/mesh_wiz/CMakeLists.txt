@@ -10,7 +10,6 @@ include_directories(${A3DCommon_INCLUDE}
 file(GLOB MeshWiz_SOURCE *.cpp)
 file(GLOB MeshWiz_INCLUDE *.h)
 
-
 add_executable(MeshWiz ${MeshWiz_SOURCE}
                        ${MeshWiz_INCLUDE})
 

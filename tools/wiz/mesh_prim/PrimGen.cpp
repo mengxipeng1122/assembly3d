@@ -42,8 +42,6 @@
 #include "primitives/PartialCylinder.h"
 #include "primitives/PartialDisk.h"
 #include "primitives/Rectangle.h"
-#include <stdio.h>
-#include <stdarg.h>
 
 using namespace std;
 using namespace assembly3d;

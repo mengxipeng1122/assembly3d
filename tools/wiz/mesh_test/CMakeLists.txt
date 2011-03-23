@@ -15,7 +15,6 @@ add_executable(MeshTest Main.cpp
 
 target_link_libraries(MeshTest A3DCommon)
 
-#install(TARGETS MeshTest DESTINATION ${CMAKE_SOURCE_DIR}/testsuite)
 if(WIN32)
     install(TARGETS MeshTest RUNTIME DESTINATION .)
 else()
