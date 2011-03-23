@@ -41,14 +41,12 @@ using namespace assembly3d::prim::mesh;
 
 #define PIf		3.1415926535897932384626433832795f
 
-Torus::Torus(float innerRadius, float outerRadius,
-             int numSides, int numFaces)
+Torus::Torus(float inner, float outer,
+             int slices, int stacks)
                  :
-                 Primitive(0, 0),
-                 m_innerRadius(innerRadius),
-                 m_outerRadius(outerRadius),
-                 m_numSides(numSides),
-                 m_numFaces(numFaces)
+                 Primitive(slices, stacks),
+                 m_inner(inner),
+                 m_outer(outer)
 {
 }
 
@@ -72,31 +70,22 @@ void Torus::create(Mesh* mesh, bool positions, bool normals,
     // to store precomputed sin and cos values
     float cos2PIt, sin2PIt, cos2PIs, sin2PIs;
 
-    // loop counters
-    unsigned int sideCount, faceCount;
-
-    // used to generate the indices
-    unsigned int v0, v1, v2, v3;
-
-//    int numberVertices = (m_numFaces+1) * (m_numSides+1);
-    int numberTriangles = m_numFaces * m_numSides * 2; // 2 triangles per face
-
-    tIncr = 1.0f/(float)m_numFaces;
-    sIncr = 1.0f/(float)m_numSides;
+    tIncr = 1.0f/(float)m_slices;
+    sIncr = 1.0f/(float)m_stacks;
 
     // generate vertices and its attributes
-    for (sideCount = 0; sideCount <= (unsigned int)m_numSides; ++sideCount, s+=sIncr)
+    for (int stack = 0; stack <= m_stacks; ++stack, s+=sIncr)
     {
         // precompute some values
         cos2PIs = (float)cos (2.0f*PIf*s);
         sin2PIs = (float)sin (2.0f*PIf*s);
 
         t=0.0f;
-        for (faceCount = 0; faceCount <= (unsigned int)m_numFaces; ++faceCount, t+=tIncr)
+        for (int slice = 0; slice <= m_slices; ++slice, t+=tIncr)
         {
             // precompute some values
-            cos2PIt = (float)cos (2.0f*PIf*t);
-            sin2PIt = (float)sin (2.0f*PIf*t);
+            cos2PIt = cos(2.0f*PIf*t);
+            sin2PIt = sin(2.0f*PIf*t);
 
             Vertex vert = {{0.0f,0.0f,0.0f},
                            {0.0f,0.0f,0.0f},
@@ -104,11 +93,9 @@ void Torus::create(Mesh* mesh, bool positions, bool normals,
                            {0.0f,0.0f,0.0f},
                            {0.0f,0.0f,0.0f}};
 
-            // generate vertex and stores it in the right position
-//            indexVertices = ((sideCount * (m_numFaces +1)) + faceCount)* 4;
-            vert.position[0] = (m_outerRadius + m_innerRadius * cos2PIt) * cos2PIs;
-            vert.position[1] = (m_outerRadius + m_innerRadius * cos2PIt) * sin2PIs;
-            vert.position[2] = m_innerRadius * sin2PIt;
+            vert.position[0] = (m_outer + m_inner * cos2PIt) * cos2PIs;
+            vert.position[1] = (m_outer + m_inner * cos2PIt) * sin2PIs;
+            vert.position[2] = m_inner * sin2PIt;
 
             // generate normal and stores it in the right position
             // NOTE: cos (2PIx) = cos (x) and sin (2PIx) = sin (x) so, we can use this formula
@@ -117,12 +104,10 @@ void Torus::create(Mesh* mesh, bool positions, bool normals,
             vert.normal[1] = sin2PIs * cos2PIt;
             vert.normal[2] = sin2PIt;
 
-            // generate texture coordinates and stores it in the right position
             vert.texCoord[0] = t;
             vert.texCoord[1] = s;
 
             mesh->addVertex(vert);
-
         }
     }
 
@@ -133,30 +118,10 @@ void Torus::create(Mesh* mesh, bool positions, bool normals,
     mesh->hasBitangents(bitangents);
     mesh->initializeMeshFormat();
 
-    // generate indices
-    for (sideCount = 0; sideCount < (unsigned int)m_numSides; ++sideCount)
-    {
-        for (faceCount = 0; faceCount < (unsigned int)m_numFaces; ++faceCount)
-        {
-            // get the number of the vertices for a face of the torus. They must be < numVertices
-            v0 = ((sideCount * (m_numFaces +1)) + faceCount);
-            v1 = (((sideCount+1) * (m_numFaces +1)) + faceCount);
-            v2 = (((sideCount+1) * (m_numFaces +1)) + (faceCount+1));
-            v3 = ((sideCount * (m_numFaces +1)) + (faceCount+1));
+    calculateIndices(mesh);
 
-            // first triangle of the face, counter clock wise winding
-            mesh->addIndex(v0);
-            mesh->addIndex(v1);
-            mesh->addIndex(v2);
-
-            // second triangle of the face, counter clock wise winding
-            mesh->addIndex(v0);
-            mesh->addIndex(v2);
-            mesh->addIndex(v3);
-        }
-    }
-    mesh->setNumTriangles(numberTriangles);
-    Group g = {"Torus", 0, numberTriangles};
+    mesh->setNumTriangles(numberOfTriangles());
+    Group g = {"Torus", 0, numberOfTriangles()};
     mesh->addGroup(g);
 
 }

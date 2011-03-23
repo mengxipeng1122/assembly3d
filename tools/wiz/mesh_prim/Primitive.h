@@ -86,6 +86,11 @@ namespace assembly3d
                     }
                 }
 
+                int numberOfTriangles()
+                {
+                    return m_slices * m_stacks * 2;
+                }
+
             protected:
                 int m_slices;
                 int m_stacks;

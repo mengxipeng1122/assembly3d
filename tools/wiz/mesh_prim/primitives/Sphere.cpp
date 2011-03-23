@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Peter Vasil
+ * Copyright (c) 2011 Peter Vasil, Michael Nischt
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -41,9 +41,9 @@ using namespace assembly3d::prim::mesh;
 
 #define PIf		3.1415926535897932384626433832795f
 
-Sphere::Sphere(float radius, int slices)
+Sphere::Sphere(float radius, int slices, int stacks)
     :
-    Primitive(slices, 0),
+    Primitive(slices, stacks),
     m_radius(radius)
 {
 }
@@ -57,16 +57,21 @@ void Sphere::create(Mesh* mesh, bool positions, bool normals,
 {
     cout << "Create sphere" << endl;
 
-    unsigned int i,j;
+    for (int stack = 0; stack <= m_stacks; ++stack)
+    {
+        float t = (float)stack/ (float)m_stacks;
+        float z = -cos(t*PIf);
+        float r = sin(t*PIf);
 
-    int numberParallels = m_slices;
-    int numberIndices = numberParallels * m_slices * 6;
-    int numberTriangles = numberIndices / 3;
-
-    float angleStep = (2.0f * PIf) / ((float) m_slices);
-
-    for (i = 0; i < (unsigned int)numberParallels + 1; i++ ) {
-        for (j = 0; j < (unsigned int)m_slices + 1; j++ ) {
+        for (int slice = 0; slice <= m_slices; ++slice)
+        {
+            float s = (float)slice / (float)m_slices;
+            float x, y;
+            {
+                float angle = 2.0f*PIf*s;
+                x = r*cos(angle);
+                y = r*sin(angle);
+            }
 
             Vertex vert = {{0.0f,0.0f,0.0f},
                            {0.0f,0.0f,0.0f},
@@ -74,16 +79,20 @@ void Sphere::create(Mesh* mesh, bool positions, bool normals,
                            {0.0f,0.0f,0.0f},
                            {0.0f,0.0f,0.0f}};
 
-            vert.position[0] = m_radius * sinf ( angleStep * (float)i ) * sinf ( angleStep * (float)j );
-            vert.position[1] = m_radius * cosf ( angleStep * (float)i );
-            vert.position[2] = m_radius * sinf ( angleStep * (float)i ) * cosf ( angleStep * (float)j );
+            vert.position[0] = x * m_radius;
+            vert.position[1] = y * m_radius;
+            vert.position[2] = z * m_radius;
 
-            vert.normal[0] = vert.position[0] / m_radius;
-            vert.normal[1] = vert.position[1] / m_radius;
-            vert.normal[2] = vert.position[2] / m_radius;
+            vert.normal[0] = x;
+            vert.normal[1] = y;
+            vert.normal[2] = z;
 
-            vert.texCoord[0] = (float) j / (float) m_slices;
-            vert.texCoord[1] = ( 1.0f - (float) i ) / (float) (numberParallels - 1 );
+            vert.tangent[0] = 1.0f;
+            vert.tangent[1] = 0.0f;
+            vert.tangent[2] = 0.0f;
+
+            vert.texCoord[0] = s;
+            vert.texCoord[1] = t;
 
             mesh->addVertex(vert);
         }
@@ -96,27 +105,10 @@ void Sphere::create(Mesh* mesh, bool positions, bool normals,
     mesh->hasBitangents(bitangents);
     mesh->initializeMeshFormat();
 
-    for (i = 0; i < (unsigned int)numberParallels ; i++ ) {
-        for (j = 0; j < (unsigned int)m_slices; j++ ) {
+    calculateIndices(mesh);
 
-            unsigned int tris[6] = {0,0,0,0,0,0};
-
-            tris[0] = i * ( m_slices + 1 ) + j;
-            tris[1] = ( i + 1 ) * ( m_slices + 1 ) + j;
-            tris[2] = ( i + 1 ) * ( m_slices + 1 ) + ( j + 1 );
-
-            tris[3] = i * ( m_slices + 1 ) + j;
-            tris[4] = ( i + 1 ) * ( m_slices + 1 ) + ( j + 1 );
-            tris[5] = i * ( m_slices + 1 ) + ( j + 1 );
-
-            for(unsigned int k = 0; k < 6; ++k)
-            {
-                mesh->addIndex(tris[k]);
-            }
-        }
-    }
-    mesh->setNumTriangles(numberTriangles);
-    Group g = {"Sphere", 0, numberTriangles};
+    mesh->setNumTriangles(numberOfTriangles());
+    Group g = {"Sphere", 0, numberOfTriangles()};
     mesh->addGroup(g);
 
 }
