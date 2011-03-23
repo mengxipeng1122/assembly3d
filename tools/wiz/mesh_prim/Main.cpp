@@ -115,11 +115,9 @@ int main (int argc, char* argv[])
         outputDir = outputDirArg.getValue();
 
         char sep = '/';
-
 #ifdef TARGET_WIN32
         sep = '\\';
 #endif
-
         outputFile = outputDir + sep + outputNameArg.getValue();
 
         outputBinaryFile = FileUtils::getBinaryFileName(outputFile.c_str(), ".xml", ".dat");
@@ -165,7 +163,7 @@ int main (int argc, char* argv[])
 
         // -------------------------------------------------------------------
 
-        Mesh* mesh = new Mesh();
+        Mesh mesh;
         PrimGen primGen(genPos, genNorm, genTex);
 
         // -------------------------------------------------------------------
@@ -177,7 +175,7 @@ int main (int argc, char* argv[])
             std::vector<float> values;
             values.push_back(val);
 
-            primGen.createMesh(mesh, PrimGen::PRIM_TYPE_PLANE, values);
+            primGen.createMesh(&mesh, PrimGen::PRIM_TYPE_PLANE, values);
         }
         else if(cubeArg.isSet())
         {
@@ -186,7 +184,7 @@ int main (int argc, char* argv[])
             std::vector<float> values;
             values.push_back(val);
 
-            primGen.createMesh(mesh, PrimGen::PRIM_TYPE_CUBE, values);
+            primGen.createMesh(&mesh, PrimGen::PRIM_TYPE_CUBE, values);
         }
         else if(sphereArg.isSet())
         {
@@ -195,7 +193,7 @@ int main (int argc, char* argv[])
 
             if(values.size() == 2)
             {
-                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_SPHERE, values);
+                primGen.createMesh(&mesh, PrimGen::PRIM_TYPE_SPHERE, values);
             }
         }
         else if(torusArg.isSet())
@@ -205,7 +203,7 @@ int main (int argc, char* argv[])
 
             if(values.size() == 4)
             {
-                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_TORUS, values);
+                primGen.createMesh(&mesh, PrimGen::PRIM_TYPE_TORUS, values);
             }
         }
         else if(diskArg.isSet())
@@ -215,7 +213,7 @@ int main (int argc, char* argv[])
 
             if(values.size() == 4)
             {
-                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_DISK, values);
+                primGen.createMesh(&mesh, PrimGen::PRIM_TYPE_DISK, values);
             }
         }
         else if(cylinderArg.isSet())
@@ -225,7 +223,7 @@ int main (int argc, char* argv[])
 
             if(values.size() == 5)
             {
-                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_CYLINDER, values);
+                primGen.createMesh(&mesh, PrimGen::PRIM_TYPE_CYLINDER, values);
             }
         }
         else if(rectangleArg.isSet())
@@ -235,7 +233,7 @@ int main (int argc, char* argv[])
 
             if(values.size() == 4)
             {
-                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_RECTANGLE, values);
+                primGen.createMesh(&mesh, PrimGen::PRIM_TYPE_RECTANGLE, values);
             }
         }
         else if(trapezoidArg.isSet())
@@ -245,7 +243,7 @@ int main (int argc, char* argv[])
 
             if(values.size() == 5)
             {
-                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_TRAPEZOID, values);
+                primGen.createMesh(&mesh, PrimGen::PRIM_TYPE_TRAPEZOID, values);
             }
         }
         else if(partialDiskArg.isSet())
@@ -255,7 +253,7 @@ int main (int argc, char* argv[])
 
             if(values.size() == 6)
             {
-                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_PARTIAL_DISK, values);
+                primGen.createMesh(&mesh, PrimGen::PRIM_TYPE_PARTIAL_DISK, values);
             }
         }
         else if(partialCylinderArg.isSet())
@@ -265,7 +263,7 @@ int main (int argc, char* argv[])
 
             if(values.size() == 7)
             {
-                primGen.createMesh(mesh, PrimGen::PRIM_TYPE_PARTIAL_CYLINDER, values);
+                primGen.createMesh(&mesh, PrimGen::PRIM_TYPE_PARTIAL_CYLINDER, values);
             }
         }
         else
@@ -275,7 +273,7 @@ int main (int argc, char* argv[])
 
         // -------------------------------------------------------------------
 
-        MeshIO::saveFile(mesh, outputFile.c_str(), outputBinaryFile.c_str());
+        MeshIO::saveFile(&mesh, outputFile.c_str(), outputBinaryFile.c_str());
 
         // -------------------------------------------------------------------
 

@@ -53,7 +53,6 @@ namespace assembly3d
 
             private:
                 float m_halfExtend;
-
             };
         }
     }

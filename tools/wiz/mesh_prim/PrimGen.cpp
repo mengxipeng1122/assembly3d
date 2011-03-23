@@ -77,7 +77,7 @@ void PrimGen::createMesh(Mesh* mesh, int primType, std::vector<float> values)
         m_prim = new Cube(values[0]);
         break;
     case PRIM_TYPE_SPHERE:
-        m_prim = new Sphere(values[0], (int)values[1]);
+        m_prim = new Sphere(values[0], (int)values[1], (int)values[2]);
         break;
     case PRIM_TYPE_TORUS:
         m_prim = new Torus(values[0], values[1], (int)values[2], (int)values[3]);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Peter Vasil
+ * Copyright (c) 2011 Peter Vasil, Michael Nischt
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -45,7 +45,7 @@ namespace assembly3d
             class Sphere : public Primitive
             {
             public:
-                Sphere(float radius, int slices);
+                Sphere(float radius, int slices, int stacks);
                 virtual ~Sphere();
 
                 void create(Mesh* mesh, bool positions, bool normals,

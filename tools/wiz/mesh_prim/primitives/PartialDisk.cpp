@@ -72,7 +72,7 @@ void PartialDisk::create(Mesh* mesh, bool positions, bool normals,
         {
             float cosinus,sinus;
             {
-                float angle = -2.0*PIf*slice/m_slices;
+                float angle = -2.0f*PIf*slice/m_slices;
                 cosinus = cos(angle);
                 sinus = sin(angle);
             }
@@ -109,9 +109,8 @@ void PartialDisk::create(Mesh* mesh, bool positions, bool normals,
 
     calculateIndices(mesh);
 
-    int numberTriangles = m_slices * m_stacks * 2;
-    mesh->setNumTriangles(numberTriangles);
-    Group g = {"PartialDisk", 0, numberTriangles};
+    mesh->setNumTriangles(numberOfTriangles());
+    Group g = {"PartialDisk", 0, numberOfTriangles()};
     mesh->addGroup(g);
 
 

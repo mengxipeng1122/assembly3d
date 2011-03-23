@@ -106,9 +106,8 @@ void Disk::create(Mesh* mesh, bool positions, bool normals,
 
     calculateIndices(mesh);
 
-    int numberTriangles = m_slices * m_stacks * 2;
-    mesh->setNumTriangles(numberTriangles);
-    Group g = {"Disk", 0, numberTriangles};
+    mesh->setNumTriangles(numberOfTriangles());
+    Group g = {"Disk", 0, numberOfTriangles()};
     mesh->addGroup(g);
 
 
