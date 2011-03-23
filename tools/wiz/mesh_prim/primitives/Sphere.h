@@ -52,7 +52,6 @@ namespace assembly3d
                             bool texCoords, bool tangents, bool bitangents);
             private:
                 float m_radius;
-                int m_slices;
             };
         }
     }
