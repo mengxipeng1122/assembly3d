@@ -55,9 +55,9 @@ int main (int argc, char* argv[])
 
         // TODO: set default values
 
-        ValueArg<std::string> outputNameArg("o", "output-file-name", "Output file name",
+        ValueArg<std::string> outputNameArg("o", "output-file-name", "Output file name.",
                                             true, "Prim.mesh.xml", "output-name");
-        ValueArg<std::string> outputDirArg("d", "output-dir", "Output directory (default=.)",
+        ValueArg<std::string> outputDirArg("d", "output-dir", "Output directory (default=.).",
                                            false, ".", "path");
 
         ValueArg<std::string> planeArg("", "plane", "Generates plane geometry.",
@@ -65,24 +65,24 @@ int main (int argc, char* argv[])
         ValueArg<std::string> cubeArg("", "cube", "Generates cube geometry.",
                                       false, "", "half-extend");
         ValueArg<std::string> sphereArg("", "sphere", "Generates sphere geometry.",
-                                        false, "", "radius/slices");
+                                        false, "", "radius/slices/stacks");
         ValueArg<std::string> torusArg("", "torus", "Generates torus geometry.",
-                                       false, "", "inner-radius/outer-radius/sides/faces");
+                                       false, "", "inner/outer/slices/stacks");
 
-        ValueArg<std::string> diskArg("", "disk", "Generates disk primitive",
+        ValueArg<std::string> diskArg("", "disk", "Generates disk primitive.",
                                       false, "", "inner/outer/slices/stacks");
-        ValueArg<std::string> cylinderArg("", "cylinder", "Generates cylinder primitive",
+        ValueArg<std::string> cylinderArg("", "cylinder", "Generates cylinder primitive.",
                                           false, "", "base/top/height/slices/stacks");
-        ValueArg<std::string> trapezoidArg("", "trapezoid", "Generates trapezoid primitive",
+        ValueArg<std::string> trapezoidArg("", "trapezoid", "Generates trapezoid primitive.",
                                            false, "", "base/top/height/slices/stacks");
-        ValueArg<std::string> rectangleArg("", "rectangle", "Generates rectangle primitive",
+        ValueArg<std::string> rectangleArg("", "rectangle", "Generates rectangle primitive.",
                                            false, "", "extX/extY/slices/stacks");
-        ValueArg<std::string> partialDiskArg("", "partial-disk", "Generates partial disk primitive",
+        ValueArg<std::string> partialDiskArg("", "partial-disk", "Generates partial disk primitive.",
                                              false, "", "inner/outer/slices/stacks/start/sweep");
-        ValueArg<std::string> partialCylinderArg("", "partial-cylinder", "Generates partial cylinder primitive",
+        ValueArg<std::string> partialCylinderArg("", "partial-cylinder", "Generates partial cylinder primitive.",
                                                  false, "", "base/top/height/slices/stacks/start/sweep");
 
-        ValueArg<std::string> generateAttribsArg("", "generate-attributes", "Specifies which attribute to generate",
+        ValueArg<std::string> generateAttribsArg("", "generate-attributes", "Specifies which attribute to generate.",
                                                  false, "positions/normals/texcoords", "positions/normals/texcoords");
 
         // -------------------------------------------------------------------

@@ -48,12 +48,8 @@ namespace assembly3d
                 Disk(float inner, float outer, int slices, int stacks);
                 virtual ~Disk();
 
-                void create(Mesh* mesh,
-                            bool positions,
-                            bool normals,
-                            bool texCoords,
-                            bool tangents,
-                            bool bitangents);
+                void create(Mesh* mesh, bool positions, bool normals,
+                            bool texCoords, bool tangents, bool bitangents);
 
             private:
                 float m_inner;
