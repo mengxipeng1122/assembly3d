@@ -56,9 +56,6 @@ namespace assembly3d
                 float m_base;
                 float m_top;
                 float m_height;
-                int m_slices;
-                int m_stacks;
-
             };
         }
     }
