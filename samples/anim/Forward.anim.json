@@ -1,0 +1,17 @@
+{
+	"duration": 1.0,	
+	"channels": 
+	[
+		{
+			"name": "Root",
+			"keyframes": 2,
+			"attributes":  
+			[						
+				{ "name": "TIME", "size": 1, "type": "FLOAT" },
+				{ "name": "TRANSLATE", "size": 3, "type": "FLOAT" },
+				{ "name": "ROTATE", "size": 4, "type": "FLOAT" }				
+			]
+		}
+	]
+}
+
