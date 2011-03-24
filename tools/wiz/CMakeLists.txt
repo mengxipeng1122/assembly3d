@@ -7,10 +7,10 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-if(UNIX)
+if(CMAKE_COMPILER_IS_GNUCXX)
   set(CMAKE_C_FLAGS_DEBUG "-g -Wall -Wextra -DDEBUG -D_DEBUG")
   set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -Wextra -DDEBUG -D_DEBUG")
-endif(UNIX)
+endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
