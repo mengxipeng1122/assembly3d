@@ -62,11 +62,11 @@ namespace assembly3d
                             // x - right
                             // y -  up
                             //
-                            //b --- c
+                            //d --- c
                             //|     |
                             //| CCW |
                             //|     |
-                            //a --- d
+                            //a --- b
                             unsigned int start = stack * (m_slices + 1);
                             unsigned int a = start + slice;
                             unsigned int b = a + 1;
