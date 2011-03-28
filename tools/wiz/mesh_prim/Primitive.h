@@ -62,7 +62,7 @@ namespace assembly3d
                             // x - right
                             // y -  up
                             //
-                            //c --- d
+                            //d --- c
                             //|     |
                             //| CCW |
                             //|     |
