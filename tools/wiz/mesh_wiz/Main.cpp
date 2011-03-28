@@ -212,17 +212,19 @@ int main (int argc, char* argv[])
     //---------------------------------------------------------------------------------------------------------
     // Other mesh related stuff
     //---------------------------------------------------------------------------------------------------------
-    std::vector<std::string> flipAllowed;
-    flipAllowed.push_back("cw");
-    flipAllowed.push_back("ccw");
-    TCLAP::ValuesConstraint<std::string> flipAllowedVals( flipAllowed );
-    TCLAP::ValueArg<std::string> flipArg("",
-                                         "flip",
-                                         "Flips front-face clockwise or counterclockwise.",
-                                         false,
-                                         "",
-                                         &flipAllowedVals);
-    
+////    std::vector<std::string> flipAllowed;
+////    flipAllowed.push_back("cw");
+////    flipAllowed.push_back("ccw");
+////    TCLAP::ValuesConstraint<std::string> flipAllowedVals( flipAllowed );
+//    TCLAP::ValueArg<std::string> flipArg("",
+//                                         "flip",
+//                                         "Flips front-face clockwise or counterclockwise.",
+//                                         false,
+//                                         "",
+//                                         &flipAllowedVals);
+
+    TCLAP::SwitchArg flipArg("", "flip-front-face", "Flips fron-faces.");
+
     TCLAP::SwitchArg checkWithNormalsArg("",
                                          "check-with-normals",
                                          "Checks with normals (if present).",
@@ -250,7 +252,7 @@ int main (int argc, char* argv[])
     cmd.add(binaryOutputArg);
     cmd.add(inputArg);
     cmd.add(outputArg);
-//    cmd.add(flipArg);
+    cmd.add(flipArg);
 //    cmd.add(checkWithNormalsArg);
 //    cmd.add(validateAndChangeArg);
 //    cmd.add(optimizeIndicesArg);
@@ -568,15 +570,20 @@ int main (int argc, char* argv[])
         
             modelChanged = true;
         }
-        
-        
     }
     else if(centerAllArg.isSet())
     {
         toolMgr.center(1, 1, 1);
         modelChanged = true;
     }
-    
+
+    //---------------------------------------------------------------------------------------------------------
+    if(flipArg.isSet())
+    {
+        toolMgr.flip();
+        modelChanged = true;
+    }
+
     //---------------------------------------------------------------------------------------------------------
     if(dumpArg.isSet())
     {

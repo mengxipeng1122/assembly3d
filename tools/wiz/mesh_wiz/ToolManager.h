@@ -39,6 +39,8 @@
 #include "TransformTool.h"
 #include "AttributeTool.h"
 #include "OptimizeTool.h"
+#include "FrontFaceTool.h"
+
 
 namespace assembly3d
 {
@@ -68,6 +70,7 @@ namespace assembly3d
                 void removeBitangents();
                 void stitch();
                 void stitchEps(const char* attributeName, float epsilon);
+                void flip();
 
             protected:
             private:
@@ -78,7 +81,7 @@ namespace assembly3d
                 TransformTool* m_transformTool;
                 AttributeTool* m_attributeTool;
                 OptimizeTool* m_optimizeTool;
-
+                FrontFaceTool* m_frontFaceTool;
             };
         }
     }
