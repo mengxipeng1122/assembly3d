@@ -223,7 +223,7 @@ int main (int argc, char* argv[])
 //                                         "",
 //                                         &flipAllowedVals);
 
-    TCLAP::SwitchArg flipArg("", "flip-front-face", "Flips fron-faces.");
+    TCLAP::SwitchArg flipArg("", "flip-front-face", "Flips front-faces.");
 
     TCLAP::SwitchArg checkWithNormalsArg("",
                                          "check-with-normals",
