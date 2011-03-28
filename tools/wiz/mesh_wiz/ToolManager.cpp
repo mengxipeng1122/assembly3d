@@ -44,7 +44,8 @@ m_verboseOutput(verbose),
 m_convertTool(new ConvertTool()),
 m_transformTool(new TransformTool()),
 m_attributeTool(new AttributeTool()),
-m_optimizeTool(new OptimizeTool())
+m_optimizeTool(new OptimizeTool()),
+m_frontFaceTool(new FrontFaceTool())
 {
     
 }
@@ -55,6 +56,7 @@ ToolManager::~ToolManager()
     SAFE_DELETE(m_transformTool)
     SAFE_DELETE(m_attributeTool)
     SAFE_DELETE(m_optimizeTool)
+    SAFE_DELETE(m_frontFaceTool)
 }
 bool ToolManager::convertIndexType(const char* type)
 {
@@ -238,4 +240,12 @@ void ToolManager::stitchEps(const char* attributeName, float epsilon)
     }
     m_optimizeTool->stitch(m_mesh, attrib, epsilon);
 
+}
+
+void ToolManager::flip()
+{
+    if(m_verboseOutput)
+        std::cout << "Flipping Front-Face" << std::endl;
+
+//    m_frontFaceTool->fl
 }
