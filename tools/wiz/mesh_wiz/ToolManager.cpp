@@ -247,5 +247,5 @@ void ToolManager::flip()
     if(m_verboseOutput)
         std::cout << "Flipping Front-Face" << std::endl;
 
-//    m_frontFaceTool->fl
+    m_frontFaceTool->flip(m_mesh);
 }
