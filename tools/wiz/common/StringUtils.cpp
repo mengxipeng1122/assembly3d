@@ -55,6 +55,23 @@ StringUtils::~StringUtils()
 {
 }
 
+std::vector<std::string> StringUtils::tokenize(const std::string & str, const std::string & delim)
+{
+  std::vector<std::string> tokens;
+
+  size_t p0 = 0, p1 = std::string::npos;
+  while(p0 != std::string::npos)
+  {
+    p1 = str.find_first_of(delim, p0);
+    if(p1 != p0)
+    {
+      std::string token = str.substr(p0, p1 - p0);
+      tokens.push_back(token);
+    }
+    p0 = str.find_first_not_of(delim, p1);
+  }
+  return tokens;
+}
 
 void StringUtils::getValuesFromCmdString(const std::string& cmdStr, std::vector<float>& vals)
 {

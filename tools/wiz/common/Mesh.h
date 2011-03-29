@@ -58,6 +58,7 @@ namespace assembly3d
         };
 
         Mesh();
+        Mesh(const Mesh& m);
         ~Mesh();
 
         void destroy();
@@ -124,6 +125,8 @@ namespace assembly3d
         const char* getMeshPath() const;
 
         void initializeMeshFormat();
+
+        Mesh& operator=(const Mesh& m);
 
     private:
 

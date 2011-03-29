@@ -40,8 +40,10 @@
 //--------------------------------------------------------------------------
 
 #include "A3DIncludes.h"
-#include "tinyxml.h"
+#include <string>
 #include <vector>
+#include "tinyxml.h"
+
 
 namespace assembly3d
 {
