@@ -48,6 +48,7 @@ namespace assembly3d
             StringUtils();
             ~StringUtils();
         public:
+            static std::vector<std::string> tokenize(const std::string & str, const std::string & delim);
             static int findOccurensesOf(const std::string& cmdStr, const std::string& stringToSearch);
             static void getValueFromCmdString(const std::string& cmdStr, float& val);
             static void getValuesFromCmdString(const std::string& cmdStr, std::vector<float>& vals);

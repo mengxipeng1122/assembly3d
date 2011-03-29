@@ -34,8 +34,6 @@
 #ifndef _ASSEMBLY3DTYPES_H_
 #define _ASSEMBLY3DTYPES_H_
 
-//#include <string>
-
 namespace assembly3d
 {
     namespace mesh

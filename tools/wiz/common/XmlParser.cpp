@@ -32,32 +32,11 @@
  */
 
 #include "XmlParser.h"
-
+#include "A3DUtils.h"
 //--------------------------------------------------------------------------
 // This class is a modified version of openFrameworks' ofxXmlSettings addon
 // http://www.openframeworks.cc/
 //--------------------------------------------------------------------------
-
-//----------------------------------------
-// a pretty useful tokenization system:
-static std::vector<std::string> tokenize(const std::string & str, const std::string & delim);
-static std::vector<std::string> tokenize(const std::string & str, const std::string & delim)
-{
-  std::vector<std::string> tokens;
-
-  size_t p0 = 0, p1 = std::string::npos;
-  while(p0 != std::string::npos)
-  {
-    p1 = str.find_first_of(delim, p0);
-    if(p1 != p0)
-    {
-      std::string token = str.substr(p0, p1 - p0);
-      tokens.push_back(token);
-    }
-    p0 = str.find_first_not_of(delim, p1);
-  }
-  return tokens;
-}
 
 using namespace assembly3d;
 using namespace assembly3d::utils;
@@ -127,7 +106,7 @@ std::string XmlParser::getValue(const std::string& tag, const std::string& defau
 
 bool XmlParser::readTag(const std::string& tag, TiXmlHandle& valHandle, int which)
 {
-	std::vector<std::string> tokens = tokenize(tag,":");
+    std::vector<std::string> tokens = StringUtils::tokenize(tag,":");
 
 	TiXmlHandle tagHandle = storedHandle;
 	for(unsigned int x=0;x<tokens.size();x++){
@@ -184,7 +163,7 @@ int XmlParser::getPushLevel() const
 
 bool XmlParser::tagExists(const std::string& tag, int which)
 {
-	std::vector<std::string> tokens = tokenize(tag,":");
+    std::vector<std::string> tokens = StringUtils::tokenize(tag,":");
 
 	bool found = false;
 
@@ -244,7 +223,7 @@ int XmlParser::getNumTags(const std::string& tag)
 }
 int XmlParser::getNumAttributes(const std::string& tag, int which)
 {
-	std::vector<std::string> tokens = tokenize(tag,":");
+    std::vector<std::string> tokens = StringUtils::tokenize(tag,":");
 	TiXmlHandle tagHandle = storedHandle;
 	for (unsigned int x = 0; x < tokens.size(); x++) {
 		if (x == 0)
@@ -269,7 +248,7 @@ int XmlParser::getNumAttributes(const std::string& tag, int which)
 }
 bool XmlParser::attributeExists(const std::string& tag, const std::string& attribute, int which)
 {
-	std::vector<std::string> tokens = tokenize(tag,":");
+    std::vector<std::string> tokens = StringUtils::tokenize(tag,":");
 	TiXmlHandle tagHandle = storedHandle;
 	for (unsigned int x = 0; x < tokens.size(); x++) {
 		if (x == 0)
@@ -291,7 +270,7 @@ bool XmlParser::attributeExists(const std::string& tag, const std::string& attri
 }
 bool XmlParser::getAttributeNames(const std::string& tag, std::vector<std::string>& outNames, int which)
 {
-	std::vector<std::string> tokens = tokenize(tag,":");
+    std::vector<std::string> tokens = StringUtils::tokenize(tag,":");
 	TiXmlHandle tagHandle = storedHandle;
 	for (unsigned int x = 0; x < tokens.size(); x++) {
 		if (x == 0)
@@ -331,7 +310,7 @@ std::string XmlParser::getAttribute(const std::string& tag, const std::string& a
 
 TiXmlElement* XmlParser::getElementForAttribute(const std::string& tag, int which)
 {
-	std::vector<std::string> tokens = tokenize(tag,":");
+    std::vector<std::string> tokens = StringUtils::tokenize(tag,":");
 	TiXmlHandle tagHandle = storedHandle;
 	for (unsigned int x = 0; x < tokens.size(); x++) {
 		if (x == 0)
@@ -379,7 +358,7 @@ bool XmlParser::readStringAttribute(const std::string& tag, const std::string& a
 
 int XmlParser::writeTag(const std::string&  tag, const std::string& valueStr, int which, bool endTag){
 
-	std::vector<std::string> tokens = tokenize(tag,":");
+    std::vector<std::string> tokens = StringUtils::tokenize(tag,":");
 
 	// allocate on the stack
     std::vector<TiXmlElement> elements;
@@ -535,7 +514,7 @@ int XmlParser::addAttribute(const std::string& tag, const std::string& attribute
 
 //---------------------------------------------------------
 int XmlParser::writeAttribute(const std::string& tag, const std::string& attribute, const std::string& valueString, int which){
-	std::vector<std::string> tokens = tokenize(tag,":");
+    std::vector<std::string> tokens = StringUtils::tokenize(tag,":");
 	TiXmlHandle tagHandle = storedHandle;
 	for (unsigned int x = 0; x < tokens.size(); x++) {
 		if (x == 0)

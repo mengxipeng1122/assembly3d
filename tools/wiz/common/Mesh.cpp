@@ -60,9 +60,76 @@ m_radius(0.0f)
     m_extent[2] = 0.0f;
 }
 
+Mesh::Mesh(const Mesh &m)
+{
+    m_vertices = m.m_vertices;
+    m_indices = m.m_indices;
+    m_groups = m.m_groups;
+
+    m_meshPath = m.m_meshPath;
+    m_format = m.m_format;
+
+    m_numTriangles = m.m_numTriangles;
+    m_hasPositions = m.m_hasPositions;
+    m_hasNormals = m.m_hasNormals;
+    m_hasTexCoords = m.m_hasTexCoords;
+    m_hasTangents = m.m_hasTangents;
+    m_hasBitangents = m.m_hasBitangents;
+    m_width = m.m_width;
+    m_height = m.m_height;
+    m_length = m.m_length;
+    m_radius = m.m_radius;
+
+    m_center[0] = m.m_center[0];
+    m_center[1] = m.m_center[1];
+    m_center[2] = m.m_center[2];
+
+    m_extent[0] = m.m_extent[0];
+    m_extent[1] = m.m_extent[1];
+    m_extent[2] = m.m_extent[2];
+
+}
+
 Mesh::~Mesh()
 {
-    
+    destroy();
+}
+
+Mesh& Mesh::operator=(const Mesh& m)
+{
+    if(this != &m)
+    {
+        destroy();
+
+        m_vertices = m.m_vertices;
+        m_indices = m.m_indices;
+        m_groups = m.m_groups;
+
+        m_meshPath = m.m_meshPath;
+        m_format = m.m_format;
+
+        m_numTriangles = m.m_numTriangles;
+        m_hasPositions = m.m_hasPositions;
+        m_hasNormals = m.m_hasNormals;
+        m_hasTexCoords = m.m_hasTexCoords;
+        m_hasTangents = m.m_hasTangents;
+        m_hasBitangents = m.m_hasBitangents;
+        m_width = m.m_width;
+        m_height = m.m_height;
+        m_length = m.m_length;
+        m_radius = m.m_radius;
+
+        m_center[0] = m.m_center[0];
+        m_center[1] = m.m_center[1];
+        m_center[2] = m.m_center[2];
+
+        m_extent[0] = m.m_extent[0];
+        m_extent[1] = m.m_extent[1];
+        m_extent[2] = m.m_extent[2];
+
+
+    }
+    return *this;
 }
 
 void Mesh::bounds(float center[3], float &width, float &height,
