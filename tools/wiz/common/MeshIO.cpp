@@ -34,6 +34,7 @@
 #include "MeshIO.h"
 #include <fstream>
 #include "A3DUtils.h"
+#include "XmlParser.h"
 
 using namespace assembly3d;
 using namespace utils;

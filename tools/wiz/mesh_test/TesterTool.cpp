@@ -33,6 +33,7 @@
 
 #include "TesterTool.h"
 #include "A3DUtils.h"
+#include "XmlParser.h"
 #include <fstream>
 #include <algorithm>
 

@@ -36,6 +36,6 @@
 
 #include "FileUtils.h"
 #include "StringUtils.h"
-#include "XmlParser.h"
+//#include "XmlParser.h"
 
 #endif // _ASSEMBLY3DUTILS_H_
