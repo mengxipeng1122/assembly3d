@@ -249,3 +249,19 @@ void ToolManager::flip()
 
     m_frontFaceTool->flip(m_mesh);
 }
+
+bool ToolManager::testNormalConsitancy()
+{
+    bool modelChanged = false;
+    if(m_verboseOutput)
+        std::cout << "Testing normal conistancy" << std::endl;
+
+    std::string resMsg;
+
+    modelChanged = m_frontFaceTool->testNormalConsitency(m_mesh, resMsg);
+
+    if(m_verboseOutput)
+        std::cout << resMsg << std::endl;
+
+    return modelChanged;
+}

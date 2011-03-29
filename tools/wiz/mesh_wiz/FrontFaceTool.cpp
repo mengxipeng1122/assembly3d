@@ -32,6 +32,10 @@
  */
 
 #include "FrontFaceTool.h"
+#include <cmath>
+#include <sstream>
+
+#define PIf		3.1415926535897932384626433832795f
 
 using namespace assembly3d;
 using namespace assembly3d::wiz::mesh;
@@ -66,4 +70,70 @@ void FrontFaceTool::flip(Mesh* mesh)
         vert->normal[1] *= -1.0f;
         vert->normal[2] *= -1.0f;
     }
+}
+
+bool FrontFaceTool::testNormalConsitency(Mesh *mesh, std::string& resultMsg)
+{
+    bool modelChanged = false;
+    Mesh* mesh2 = new Mesh(*mesh);
+    mesh2->generateNormals();
+
+    std::vector<int> verticesOutwards;
+    std::vector<int> verticesInwards;
+
+    std::stringstream strStr;
+
+    for(size_t i = 0; i < mesh->getNumberOfVertices(); ++i)
+    {
+        Vertex* v1 = &mesh->getVertex(i);
+        Vertex* v2 = &mesh2->getVertex(i);
+
+        float dotVec1Vec2 =  v1->normal[0]*v2->normal[0] +
+                             v1->normal[1]*v2->normal[1] +
+                             v1->normal[2]*v2->normal[2];
+
+        float angle = (float)acos(dotVec1Vec2);
+
+        if(angle < (PIf / 2))
+        {
+            verticesOutwards.push_back(i);
+        }
+        else
+        {
+            verticesInwards.push_back(i);
+        }
+    }
+    SAFE_DELETE(mesh2)
+
+    strStr << verticesOutwards.size() << " outward vertices.\n";
+    strStr << verticesInwards.size() << " inward vertices.\n";
+
+    if(verticesOutwards.size() > verticesInwards.size() && !verticesInwards.empty())
+    {
+        strStr << "Flipping inward vertices...\n";
+        for(size_t i = 0; i < verticesInwards.size(); ++i)
+        {
+            Vertex* vert = &mesh->getVertex(verticesInwards[i]);
+
+            vert->normal[0] *= -1.0f;
+            vert->normal[1] *= -1.0f;
+            vert->normal[2] *= -1.0f;
+        }
+        modelChanged = true;
+    }
+    else if(verticesOutwards.size() < verticesInwards.size() && !verticesOutwards.empty())
+    {
+        strStr << "Flipping outward vertices...\n";
+        for(size_t i = 0; i < verticesOutwards.size(); ++i)
+        {
+            Vertex* vert = &mesh->getVertex(verticesOutwards[i]);
+
+            vert->normal[0] *= -1.0f;
+            vert->normal[1] *= -1.0f;
+            vert->normal[2] *= -1.0f;
+        }
+        modelChanged = true;
+    }
+    resultMsg = strStr.str();
+    return modelChanged;
 }
