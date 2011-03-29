@@ -168,10 +168,10 @@ int main (int argc, char* argv[])
 
     TCLAP::SwitchArg flipArg("", "flip-front-face", "Flips front-faces.");
 
-    TCLAP::SwitchArg checkWithNormalsArg("",
-                                         "check-with-normals",
-                                         "Checks with normals (if present).",
-                                         false);
+    TCLAP::SwitchArg testNormalConsistencyArg("", "test-normal-consistency",
+                                              "Tests normal consistency by comparing file and generating normals: "\
+                                              "angle < PI/2 means facing outwards otherwise inwards.",
+                                              false);
 
     TCLAP::SwitchArg validateAndChangeArg("", "validate-and-change",
                                           "Validates and changes mesh.", false);
@@ -194,7 +194,7 @@ int main (int argc, char* argv[])
     cmd.add(inputArg);
     cmd.add(outputArg);
     cmd.add(flipArg);
-//    cmd.add(checkWithNormalsArg);
+    cmd.add(testNormalConsistencyArg);
 //    cmd.add(validateAndChangeArg);
 //    cmd.add(optimizeIndicesArg);
 //    cmd.add(optimizeVerticesArg);
@@ -516,6 +516,15 @@ int main (int argc, char* argv[])
     {
         toolMgr.center(1, 1, 1);
         modelChanged = true;
+    }
+
+    //---------------------------------------------------------------------------------------------------------
+    if(testNormalConsistencyArg.isSet())
+    {
+        if(toolMgr.testNormalConsitancy())
+        {
+            modelChanged = true;
+        }
     }
 
     //---------------------------------------------------------------------------------------------------------

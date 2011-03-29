@@ -49,6 +49,7 @@ namespace assembly3d
                 ~FrontFaceTool();
 
                 void flip(Mesh* mesh);
+                bool testNormalConsitency(Mesh* mesh, std::string& resultMsg);
             };
         }
     }

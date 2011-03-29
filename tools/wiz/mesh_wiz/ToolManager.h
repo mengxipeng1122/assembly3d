@@ -71,6 +71,7 @@ namespace assembly3d
                 void stitch();
                 void stitchEps(const char* attributeName, float epsilon);
                 void flip();
+                bool testNormalConsitancy();
 
             protected:
             private:
