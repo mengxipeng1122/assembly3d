@@ -40,6 +40,10 @@ namespace assembly3d
     {
         namespace mesh
         {
+            /**
+             * @brief Class for renaming group names.
+             *
+            */
             class RenameTool
             {
             public:

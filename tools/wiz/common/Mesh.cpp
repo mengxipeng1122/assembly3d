@@ -68,6 +68,10 @@ Mesh::Mesh(const Mesh &m)
     m_indices = m.m_indices;
     m_groups = m.m_groups;
 
+    m_positions = m.m_positions;
+    m_normals = m.m_normals;
+    m_texCoords = m.m_texCoords;
+
     m_meshPath = m.m_meshPath;
     m_format = m.m_format;
 
@@ -106,6 +110,10 @@ Mesh& Mesh::operator=(const Mesh& m)
         m_vertices = m.m_vertices;
         m_indices = m.m_indices;
         m_groups = m.m_groups;
+
+        m_positions = m.m_positions;
+        m_normals = m.m_normals;
+        m_texCoords = m.m_texCoords;
 
         m_meshPath = m.m_meshPath;
         m_format = m.m_format;
@@ -311,6 +319,10 @@ void Mesh::destroy()
     m_groups.clear();
     m_vertices.clear();
     m_indices.clear();
+
+    m_positions.clear();
+    m_normals.clear();
+    m_texCoords.clear();
     
     m_format.name = "Assembly3D.mesh";
     m_format.attributeName.clear();
@@ -542,7 +554,7 @@ void Mesh::generateNormals()
 
     //this->printData();
     this->hasNormals(true);
-
+    updateVecs();
 }
 
 void Mesh::generateTangents()
@@ -717,4 +729,25 @@ void Mesh::generateTangents()
 
     this->hasTangents(true);
     this->hasBitangents(true);
+}
+
+void Mesh::updateVecs()
+{
+    m_positions.clear();
+    m_normals.clear();
+    m_texCoords.clear();
+
+    using namespace std;
+    for(size_t idx = 0; idx < m_vertices.size(); ++idx)
+    {
+        Vertex* vert = &m_vertices[idx];
+        m_positions.push_back(vert->position[0]);
+        m_positions.push_back(vert->position[1]);
+        m_positions.push_back(vert->position[2]);
+        m_normals.push_back(vert->normal[0]);
+        m_normals.push_back(vert->normal[1]);
+        m_normals.push_back(vert->normal[2]);
+        m_texCoords.push_back(vert->texCoord[0]);
+        m_texCoords.push_back(vert->texCoord[1]);
+    }
 }

@@ -44,6 +44,10 @@ namespace assembly3d
     {
         namespace mesh
         {
+            /**
+             * @brief Controller class for generating primitives.
+             *
+            */
             class PrimGen
             {
             public:

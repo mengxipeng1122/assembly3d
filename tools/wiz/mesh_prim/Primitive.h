@@ -43,6 +43,10 @@ namespace assembly3d
     {
         namespace mesh
         {
+            /**
+             * @brief Base class for primitives.
+             *
+            */
             class Primitive
             {
             public:
