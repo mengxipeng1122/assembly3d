@@ -31,6 +31,7 @@
  *
  */
 
+#include "A3DIncludes.h"
 #include "StringUtils.h"
 #ifdef TARGET_WIN32
 #include <direct.h>

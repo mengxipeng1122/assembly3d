@@ -31,6 +31,7 @@
  *
  */
 
+#include "MeshWizIncludes.h"
 #include "RenameTool.h"
 
 using namespace assembly3d;

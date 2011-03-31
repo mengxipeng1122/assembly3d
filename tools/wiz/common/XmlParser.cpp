@@ -31,6 +31,7 @@
  *
  */
 
+#include "A3DIncludes.h"
 #include "XmlParser.h"
 #include "A3DUtils.h"
 //--------------------------------------------------------------------------

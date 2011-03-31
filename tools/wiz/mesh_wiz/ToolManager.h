@@ -34,7 +34,6 @@
 #ifndef _TOOLMANAGER_H_
 #define _TOOLMANAGER_H_
 
-#include "MeshWizIncludes.h"
 #include "ConvertTool.h"
 #include "TransformTool.h"
 #include "AttributeTool.h"

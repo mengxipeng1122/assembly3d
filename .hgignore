@@ -54,6 +54,7 @@ Release/*
 */codelite_workspace/*
 */external_libs/*
 *testdata/
+*/docs/html/
 
 # switch to regexp syntax.
 #syntax: regexp

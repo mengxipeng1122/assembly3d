@@ -57,7 +57,7 @@ namespace assembly3d
 
             protected:
             private:
-                void multiplyVertexWithTransformMatrix(Vertex* vec, float matrix[3][4], float inverseTransposedMatrix[3][3]);
+                void multiplyVertexWithTransformMatrix(assembly3d::mesh::Vertex* vec, float matrix[3][4], float inverseTransposedMatrix[3][3]);
                 void normalize(float vector[3]);
             };
         }
