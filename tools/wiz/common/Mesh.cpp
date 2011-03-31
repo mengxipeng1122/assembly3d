@@ -31,12 +31,14 @@
  *
  */
 
+#include "A3DIncludes.h"
 #include "Mesh.h"
 #include <limits>
 #include <cmath>
 #include <algorithm>
 
 using namespace assembly3d;
+using namespace assembly3d::mesh;
 
 Mesh::Mesh()
 :
@@ -362,6 +364,14 @@ void Mesh::hasBitangents(bool val)
 void Mesh::addVertex(Vertex vertex)
 {
     m_vertices.push_back(vertex);
+    m_positions.push_back(vertex.position[0]);
+    m_positions.push_back(vertex.position[1]);
+    m_positions.push_back(vertex.position[2]);
+    m_normals.push_back(vertex.normal[0]);
+    m_normals.push_back(vertex.normal[1]);
+    m_normals.push_back(vertex.normal[2]);
+    m_texCoords.push_back(vertex.texCoord[0]);
+    m_texCoords.push_back(vertex.texCoord[1]);
 }
 void Mesh::clearVertices()
 {

@@ -36,10 +36,12 @@
 // Penjin game engine. http://code.google.com/p/penjin/
 //------------------------------------------------------------------------------
 
+#include "MeshWizIncludes.h"
 #include "AttributeTool.h"
 #include <cmath>
 
 using namespace assembly3d;
+using namespace assembly3d::mesh;
 using namespace assembly3d::wiz::mesh;
 
 AttributeTool::AttributeTool()

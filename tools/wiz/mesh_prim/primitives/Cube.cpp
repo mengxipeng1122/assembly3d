@@ -36,6 +36,7 @@
 #include <iostream>
 using namespace std;
 using namespace assembly3d;
+using namespace assembly3d::mesh;
 using namespace assembly3d::prim::mesh;
 
 Cube::Cube(float halfExtend)

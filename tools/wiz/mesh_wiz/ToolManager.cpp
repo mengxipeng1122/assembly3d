@@ -31,6 +31,7 @@
  *
  */
 
+#include "MeshWizIncludes.h"
 #include "ToolManager.h"
 #include <cmath>
 

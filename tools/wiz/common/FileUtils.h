@@ -34,7 +34,7 @@
 #ifndef _FILEUTILS_H_
 #define _FILEUTILS_H_
 
-#include "A3DIncludes.h"
+#include "A3DTypes.h"
 #include <string>
 #include <vector>
 
@@ -48,11 +48,49 @@ namespace assembly3d
             FileUtils();
             ~FileUtils();
         public:
+            /**
+             * @brief
+             *
+             * @param path
+             * @return bool
+            */
             static bool createDirectory(const char* path);
+            /**
+             * @brief
+             *
+             * @param path
+             * @return bool
+            */
             static bool checkIfDirectoryExists(const char* path);
+            /**
+             * @brief
+             *
+             * @param path
+             * @return bool
+            */
             static bool checkIfFileExists(const char* path);
+            /**
+             * @brief
+             *
+             * @param s
+             * @return std::string
+            */
             static std::string getFileNameFromPath(const std::string& s);
+            /**
+             * @brief
+             *
+             * @param s
+             * @return std::string
+            */
             static std::string getFileName(const std::string& s);
+            /**
+             * @brief
+             *
+             * @param fileName
+             * @param oldExt
+             * @param newExt
+             * @return std::string
+            */
             static std::string getBinaryFileName(const char* fileName, const char* oldExt, const char* newExt);
         private:
         };

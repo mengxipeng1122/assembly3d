@@ -34,12 +34,10 @@
 #ifndef _MESH_H_
 #define _MESH_H_
 
-#include "A3DIncludes.h"
+#include "A3DTypes.h"
 #include <vector>
 #include <iostream>
 #include <string>
-
-using namespace assembly3d::mesh;
 
 namespace assembly3d
 {
@@ -70,8 +68,8 @@ namespace assembly3d
         void generateNormals();
         void generateTangents();
 
-        Vertex& getVertex(unsigned int index);
-        Group& getGroup(unsigned int index);
+        assembly3d::mesh::Vertex& getVertex(unsigned int index);
+        assembly3d::mesh::Group& getGroup(unsigned int index);
         unsigned int* getTriangle(unsigned int index);
 
         int getNumberOfTriangles() const;
@@ -92,13 +90,13 @@ namespace assembly3d
 
         MeshFormat& getMeshFormat();
 
-        void addVertex(Vertex vertex);
+        void addVertex(assembly3d::mesh::Vertex vertex);
         void clearVertices();
 
         void addIndex(unsigned int index);
         void clearIndices();
 
-        void addGroup(Group group);
+        void addGroup(assembly3d::mesh::Group group);
         void setNumTriangles(int numTriangles);
 
 
@@ -128,14 +126,23 @@ namespace assembly3d
 
         Mesh& operator=(const Mesh& m);
 
+        float* getPositionsPointer();
+        float* getNormalsPointer();
+        float* getTexCoordsPointer();
+        unsigned int* getIndicesPointer();
+
     private:
 
         void bounds(float center[3], float &width, float &height,
         float &length, float &radius, float extent[3]) const;
 
-        std::vector<Vertex> m_vertices;
+        std::vector<assembly3d::mesh::Vertex> m_vertices;
         std::vector<unsigned int> m_indices;
-        std::vector<Group> m_groups;
+        std::vector<assembly3d::mesh::Group> m_groups;
+
+        std::vector<float> m_positions;
+        std::vector<float> m_normals;
+        std::vector<float> m_texCoords;
 
         MeshFormat m_format;
 
@@ -206,10 +213,10 @@ namespace assembly3d
     inline void Mesh::getExtent(float &x, float &y, float &z) const
     { x = m_extent[0]; y = m_extent[1]; z = m_extent[2]; }
 
-    inline Vertex& Mesh::getVertex(unsigned int index)
+    inline assembly3d::mesh::Vertex& Mesh::getVertex(unsigned int index)
     { return m_vertices[index]; }
 
-    inline Group& Mesh::getGroup(unsigned int index)
+    inline assembly3d::mesh::Group& Mesh::getGroup(unsigned int index)
     { return m_groups[index]; }
 
     inline unsigned int* Mesh::getTriangle(unsigned int index)
@@ -244,6 +251,18 @@ namespace assembly3d
 
     inline const char* Mesh::getMeshPath() const
     { return m_meshPath.c_str(); }
+
+    inline float* Mesh::getPositionsPointer()
+    { return &m_positions[0]; }
+
+    inline float* Mesh::getNormalsPointer()
+    { return &m_normals[0]; }
+
+    inline float* Mesh::getTexCoordsPointer()
+    { return &m_texCoords[0]; }
+
+    inline unsigned int* Mesh::getIndicesPointer()
+    { return &m_indices[0]; }
 
 }
 #endif  // _MESH_H_

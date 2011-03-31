@@ -31,13 +31,15 @@
  *
  */
 
+#include "A3DIncludes.h"
 #include "MeshIO.h"
 #include <fstream>
 #include "A3DUtils.h"
 #include "XmlParser.h"
 
 using namespace assembly3d;
-using namespace utils;
+using namespace assembly3d::mesh;
+using namespace assembly3d::utils;
 
 MeshIO::MeshIO()
 {
@@ -322,6 +324,7 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
             }
             mesh->addVertex(vert);
         }
+
             
     }
     xml.popTag();
