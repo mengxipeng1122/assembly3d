@@ -2,6 +2,7 @@ set(TCLAP_INCLUDE ${CMAKE_SOURCE_DIR}/external_libs/tclap-1.2.0/include)
 set(A3DCommon_INCLUDE ${CMAKE_SOURCE_DIR}/common)
 
 set(MeshWiz_HEADERS
+    MeshWiz.h
     MeshWizIncludes.h
     AttributeTool.h
     ConvertTool.h

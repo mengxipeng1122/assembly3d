@@ -3,7 +3,8 @@ set(A3DCommon_INCLUDE ${CMAKE_SOURCE_DIR}/common)
 
 include_directories(${A3DCommon_INCLUDE} ${TCLAP_INCLUDE})
 
-set(MeshPrim_HEADER MeshPrimIncludes.h
+set(MeshPrim_HEADER MeshPrim.h
+                    MeshPrimIncludes.h
                     PrimGen.h
                     Primitive.h
                     primitives/Plane.h
@@ -50,6 +51,7 @@ else()
 endif()
 
 install(FILES
+MeshPrim.h
 MeshPrimIncludes.h
 PrimGen.h
 Primitive.h
