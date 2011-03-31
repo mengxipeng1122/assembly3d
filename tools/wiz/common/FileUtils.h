@@ -42,6 +42,12 @@ namespace assembly3d
 {
     namespace utils
     {
+        /**
+         * @brief A utility class for file and directory operations.
+         *
+         * @author Peter Vasil
+         *
+        */
         class FileUtils
         {
         private:
@@ -49,47 +55,47 @@ namespace assembly3d
             ~FileUtils();
         public:
             /**
-             * @brief
+             * @brief Creates a directory.
              *
-             * @param path
-             * @return bool
+             * @param path directory to create.
+             * @return True on success.
             */
             static bool createDirectory(const char* path);
             /**
-             * @brief
+             * @brief Checks if directory exists
              *
-             * @param path
-             * @return bool
+             * @param path directory to check.
+             * @return True if directory exists.
             */
             static bool checkIfDirectoryExists(const char* path);
             /**
-             * @brief
+             * @brief Checks if file exists
              *
-             * @param path
-             * @return bool
+             * @param path file to check.
+             * @return True if file exists.
             */
             static bool checkIfFileExists(const char* path);
             /**
-             * @brief
+             * @brief Gets filename from a path
              *
-             * @param s
-             * @return std::string
+             * @param s The path string.
+             * @return Filename string
             */
             static std::string getFileNameFromPath(const std::string& s);
             /**
-             * @brief
+             * @brief Gets filename.
              *
-             * @param s
-             * @return std::string
+             * @param s A path string
+             * @return Filename
             */
             static std::string getFileName(const std::string& s);
             /**
-             * @brief
+             * @brief Changes extension of a file
              *
-             * @param fileName
-             * @param oldExt
-             * @param newExt
-             * @return std::string
+             * @param fileName The file name.
+             * @param oldExt Extension to remove
+             * @param newExt Extension to append.
+             * @return The filename with new extension
             */
             static std::string getBinaryFileName(const char* fileName, const char* oldExt, const char* newExt);
         private:

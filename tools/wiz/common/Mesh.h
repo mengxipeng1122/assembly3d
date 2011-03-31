@@ -41,9 +41,17 @@
 
 namespace assembly3d
 {
+    /**
+     * @brief The mesh class.
+     *
+    */
     class Mesh
     {
     public:
+        /**
+         * @brief Mesh format information.
+         *
+        */
         struct MeshFormat
         {
             std::string name;
@@ -59,82 +67,311 @@ namespace assembly3d
         Mesh(const Mesh& m);
         ~Mesh();
 
+        /**
+         * @brief Clears the mesh values.
+         *
+        */
         void destroy();
 
+        /**
+         * @brief Prints mesh datat to console.
+         *
+        */
         void printData();
 
+        /**
+         * @brief Sets the format of mesh indices.
+         *
+         * @param format A format string for indices (UNSIGNED_BYTE, UNSIGNED_SHORT or UNSIGNED_INT)
+        */
         void setIndexFormat(const char* format);
 
+        /**
+         * @brief Generates normals for mesh.
+         *
+        */
         void generateNormals();
+        /**
+         * @brief Generates tangents and bitangents for mesh.
+         *
+        */
         void generateTangents();
 
+        /**
+         * @brief Gets a vertex for an index.
+         *
+         * @param index A vertex index.
+         * @return Vertex at index.
+        */
         assembly3d::mesh::Vertex& getVertex(unsigned int index);
+        /**
+         * @brief Gets a group for an index.
+         *
+         * @param index A group index.
+         * @return Group at index.
+        */
         assembly3d::mesh::Group& getGroup(unsigned int index);
+        /**
+         * @brief Gets a triangle for an index.
+         *
+         * @param index A triangle index.
+         * @return triangle at index.
+        */
         unsigned int* getTriangle(unsigned int index);
 
+        /**
+         * @brief Gets total number of triangles.
+         *
+        */
         int getNumberOfTriangles() const;
+        /**
+         * @brief Gets total number of vertices.
+         *
+        */
         unsigned int getNumberOfVertices() const;
+        /**
+         * @brief Gets total number of groups.
+         *
+        */
         unsigned int getNumberOfGroups() const;
 
+        /**
+         * @param val True if mesh has positions.
+        */
         void hasPositions(bool val);
+        /**
+         * @param val True if mesh has normals.
+        */
         void hasNormals(bool val);
+        /**
+         * @param val True if mesh has texture coordinates.
+        */
         void hasTexCoords(bool val);
+        /**
+         * @param val True if mesh has tangents.
+        */
         void hasTangents(bool val);
+        /**
+         * @param val True if mesh has bitangents
+        */
         void hasBitangents(bool val);
 
+        /**
+         * @brief Returns true if mesh has positions.
+         *
+        */
         bool hasPositions() const;
+        /**
+         * @brief Returns true if mesh has normals.
+         *
+        */
         bool hasNormals() const;
+        /**
+         * @brief Returns true if mesh has texture coordinates.
+         *
+        */
         bool hasTexCoords() const;
+        /**
+         * @brief Returns true if mesh has tangents.
+         *
+        */
         bool hasTangents() const;
+        /**
+         * @brief Returns true if mesh has bitangents.
+         *
+        */
         bool hasBitangents() const;
 
+        /**
+         * @brief Gets the mesh format.
+         *
+         * @return MeshFormat &
+        */
         MeshFormat& getMeshFormat();
 
+        /**
+         * @brief Adds a vertex to the mesh.
+         *
+         * @param vertex A vertex.
+        */
         void addVertex(assembly3d::mesh::Vertex vertex);
+        /**
+         * @brief Clears vertices.
+         *
+        */
         void clearVertices();
 
+        /**
+         * @brief Adds an index to the mesh.
+         *
+         * @param index An index.
+        */
         void addIndex(unsigned int index);
+        /**
+         * @brief Clears indices.
+         *
+        */
         void clearIndices();
 
+        /**
+         * @brief Adds a group to the mesh.
+         *
+         * @param group A group.
+        */
         void addGroup(assembly3d::mesh::Group group);
+        /**
+         * @brief Sets the number of triangles.
+         *
+         * @param numTriangles The new number of triangles.
+        */
         void setNumTriangles(int numTriangles);
 
 
+        /**
+         * @brief Adds an attribute.
+         *
+         * @param name Attribute name. (POSITION, NORMAL, TEXTURE, TANGENT and BITANGENT)
+         * @param attrSize Attribute size.
+         * @param attrType Attribute type. (i.e. "FLOAT")
+        */
         void addAttribute(const char* name, int attrSize, const char* attrType);
+        /**
+         * @brief Removes an attribute.
+         *
+         * @param attributeName Attribute name.
+        */
         void removeAttribute(const char* attributeName);
+        /**
+         * @brief Checks if the mesh contains a particular attribute.
+         *
+         * @param attrName Attribute name to check.
+         * @return True if meshh contains attribute.
+        */
         bool containsAttribute(const char* attrName);
+        /**
+         * @brief Gets the attribute's index.
+         *
+         * @param attrName Attribute name to get index for.
+         * @return Index of the attribute or -1 if attribute not exits.
+        */
         int getAttributeIndexWithName(const char* attrName);
+        /**
+         * @brief Gets the groups's index.
+         *
+         * @param groupName Group name to get index for.
+         * @return Index of the group or -1 if group not exits.
+        */
         int getGroupIndexWithName(const char* groupName);
     //    void normalize(float scaleTo = 1.0f, bool center = true);
     //    void reverseWinding();
 
         // Getter methods.
 
+        /**
+         * @brief Gets center coordinates of mesh.
+         *
+         * @param x X position variable of center to write in.
+         * @param y Y position variable of center to write in.
+         * @param z Z position variable of center to write in.
+        */
         void getCenter(float &x, float &y, float &z) const;
+        /**
+         * @brief Gets mesh width.
+         *
+        */
         float getWidth() const;
+        /**
+         * @brief Gets mesh height.
+         *
+        */
         float getHeight() const;
+        /**
+         * @brief Gets mesh length.
+         *
+        */
         float getLength() const;
+        /**
+         * @brief Gets mesh radius.
+         *
+        */
         float getRadius() const;
+        /**
+         * @brief Gets mesh extents.
+         *
+         * @param x X extent variable of center to write in.
+         * @param y Y extent variable of center to write in.
+         * @param z Z extent variable of center to write in.
+        */
         void getExtent(float &x, float &y, float &z) const;
 
+        /**
+         * @brief Calculates bounds for the mesh.
+         *
+        */
         void calculateBounds();
 
+        /**
+         * @brief Sets path of mesh file.
+         *
+         * @param path Mesh path string.
+        */
         void setMeshPath(const char* path);
+        /**
+         * @brief Gets mesh path.
+         *
+         * @return const char *
+        */
         const char* getMeshPath() const;
 
+        /**
+         * @brief Initilizes the mesh format.
+         *
+        */
         void initializeMeshFormat();
 
         Mesh& operator=(const Mesh& m);
 
+        /**
+         * @brief Gets a pointer to positions vector.
+         *
+         * @return float *
+        */
         float* getPositionsPointer();
+        /**
+         * @brief Gets a pointer to normals vector.
+         *
+         * @return float *
+        */
         float* getNormalsPointer();
+        /**
+         * @brief Gets a pointer to text coordinates vector.
+         *
+         * @return float *
+        */
         float* getTexCoordsPointer();
+        /**
+         * @brief Gets pointer to indices vector.
+         *
+         * @return unsigned int *
+        */
         unsigned int* getIndicesPointer();
 
     private:
 
+        /**
+         * @brief Calculates bounds for a mesh.
+         *
+         * @param center[]
+         * @param width
+         * @param height
+         * @param length
+         * @param radius
+         * @param extent[]
+        */
         void bounds(float center[3], float &width, float &height,
         float &length, float &radius, float extent[3]) const;
+
+        void updateVecs();
 
         std::vector<assembly3d::mesh::Vertex> m_vertices;
         std::vector<unsigned int> m_indices;

@@ -40,18 +40,56 @@ namespace assembly3d
 {
     namespace utils
     {
+        /**
+         * @brief Utility class for mesh input/output.
+         *
+        */
         class MeshIO
         {
         private:
             MeshIO();
             ~MeshIO();
         public:
+            /**
+             * @brief Loads a mesh from a file.
+             *
+             * @param mesh Mesh object to write in.
+             * @param file Path of the mesh file
+             * @param binaryFile Path of the binary file.
+             * @return True is load has been successful.
+            */
             static bool load(Mesh* mesh, const char* file, const char* binaryFile);
+            /**
+             * @brief Saves the mesh to a file.
+             *
+             * @param mesh Mesh object to save.
+             * @param outFilePath Output file path.
+             * @param binaryFilePath Output binary file path.
+            */
             static void saveFile(Mesh* mesh, const char* outFilePath, const char* binaryFilePath);
+            /**
+             * @brief Dumps mesh to a .txt file for debugging.
+             *
+             * @param mesh Mesh object to dump.
+             * @param outFilePath Output file path.
+            */
             static void dumpTxt(Mesh* mesh, const char* outFilePath);
 
         private:
+            /**
+             * @brief Gets attribute indices of mesh format.
+             *
+             * @param mesh Mesh object to read from.
+             * @param aIndices Vector to write in.
+            */
             static void getAttributeIndices(Mesh* mesh, std::vector<int>& aIndices);
+            /**
+             * @brief Gets group indices for a particular order.
+             *
+             * @param mesh Mesh object to read from.
+             * @param names Vector with atrtibute name order.
+             * @param gIndices Vector to write group indices in.
+            */
             static void getGroupIndices(Mesh* mesh, std::vector<std::string>& names, std::vector<int>& gIndices);
         };
     }

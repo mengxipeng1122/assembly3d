@@ -42,6 +42,10 @@ namespace assembly3d
     {
         namespace mesh
         {
+            /**
+             * @brief Class for mesh attribute operations.
+             *
+            */
             class AttributeTool
             {
             public:

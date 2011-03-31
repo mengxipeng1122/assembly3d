@@ -48,6 +48,13 @@ namespace assembly3d
 {
     namespace utils
     {
+        /**
+         * @brief Wrapper class for tinyxml.
+         *
+         * This class is taken from openFrameworks ofxXmlSettings addon
+         * http://www.openframeworks.cc/
+         *
+        */
         class XmlParser
         {
 

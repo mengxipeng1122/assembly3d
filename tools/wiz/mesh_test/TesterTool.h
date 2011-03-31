@@ -44,6 +44,10 @@ namespace assembly3d
     {
         namespace mesh
         {
+            /**
+             * @brief Class with mesh testing/comparing functions.
+             *
+            */
             class TesterTool
             {
             public:

@@ -48,6 +48,10 @@ namespace assembly3d
     {
         namespace mesh
         {
+            /**
+             * @brief Class for managing the different tool classes.
+             *
+            */
             class ToolManager
             {
             public:
