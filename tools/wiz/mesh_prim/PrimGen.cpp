@@ -31,6 +31,7 @@
  *
  */
 
+#include "MeshPrimIncludes.h"
 #include "PrimGen.h"
 #include "primitives/Plane.h"
 #include "primitives/Cube.h"

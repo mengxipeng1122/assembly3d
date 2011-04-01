@@ -34,7 +34,6 @@
 #ifndef PRIMGEN_H
 #define PRIMGEN_H
 
-#include "MeshPrimIncludes.h"
 #include "Primitive.h"
 #include "Mesh.h"
 
