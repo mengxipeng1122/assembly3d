@@ -38,6 +38,10 @@ namespace assembly3d
 {
     namespace mesh
     {
+        /**
+         * @brief Vertex structure.
+         *
+         */
         struct Vertex
         {
             float position[3];
@@ -47,6 +51,10 @@ namespace assembly3d
             float bitangent[3];
         };
 
+        /**
+         * @brief Group structure.
+         *
+         */
         struct Group
         {
             const char* name;

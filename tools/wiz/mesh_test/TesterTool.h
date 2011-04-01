@@ -66,21 +66,21 @@ namespace assembly3d
 
             private:
 
-                void clear(std::vector<Attribute>& attribs,
-                           std::vector<Group>& groups);
+                void clear(std::vector<AttributeT>& attribs,
+                           std::vector<GroupT>& groups);
 
                 int compare(int n, float* array_a, float* array_e, float epsilon);
                 int compare(int n, unsigned char* array_a, unsigned char* array_e);
 
                 void loadMesh(const std::string& xmlFile,
                               const std::string& binaryFile,
-                              std::vector<Attribute>& attribs,
-                              std::vector<Group>& m_groupsActual);
+                              std::vector<AttributeT>& attribs,
+                              std::vector<GroupT>& m_groupsActual);
 
                 int getAttributeIndexWithName(const char* attrName,
-                                              std::vector<Attribute>& attribs);
+                                              std::vector<AttributeT>& attribs);
                 int getGroupIndexWithName(const char* groupName,
-                                          std::vector<Group> &groups);
+                                          std::vector<GroupT> &groups);
 
                 bool attributeIgnored(const char* attribName);
                 bool groupIgnored(const char* groupName);

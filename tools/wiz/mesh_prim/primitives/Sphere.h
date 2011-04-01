@@ -42,12 +42,33 @@ namespace assembly3d
     {
         namespace mesh
         {
+            /**
+             * @brief Sphere primitive class.
+             *
+             */
             class Sphere : public Primitive
             {
             public:
+                /**
+                 * @brief Constructor.
+                 *
+                 * @param radius
+                 * @param slices
+                 * @param stacks
+                 */
                 Sphere(float radius, int slices, int stacks);
                 virtual ~Sphere();
 
+                /**
+                 * @brief
+                 *
+                 * @param mesh The mesh object to write in.
+                 * @param positions True if positions should be generated.
+                 * @param normals True if normals should be generated.
+                 * @param texCoords True if texCoords should be generated.
+                 * @param tangents True if tangents should be generated.
+                 * @param bitangents True if bitangents should be generated.
+                 */
                 void create(Mesh* mesh, bool positions, bool normals,
                             bool texCoords, bool tangents, bool bitangents);
             private:

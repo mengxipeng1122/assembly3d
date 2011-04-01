@@ -62,11 +62,27 @@ namespace assembly3d
                 static const int PRIM_TYPE_PARTIAL_DISK = 8;
                 static const int PRIM_TYPE_RECTANGLE = 9;
 
+                /**
+                 * @brief Constructor
+                 *
+                 * @param generatePositions True is positions should be generated.
+                 * @param generateNormals True is normals should be generated.
+                 * @param generateTexCoords True is texCoords should be generated.
+                 * @param generateTangents True is tangents should be generated.
+                 * @param generateBitangents True is bitangents should be generated.
+                 */
                 PrimGen(bool generatePositions=true, bool generateNormals=true,
                         bool generateTexCoords=true, bool generateTangents=false,
                         bool generateBitangents= false);
                 ~PrimGen();
 
+                /**
+                 * @brief Creates mesh.
+                 *
+                 * @param mesh The mesh object to write in.
+                 * @param primType Ptimitive type
+                 * @param values Parameters for primitive.
+                 */
                 void createMesh(Mesh* mesh, int primType, std::vector<float> values);
 
             private:

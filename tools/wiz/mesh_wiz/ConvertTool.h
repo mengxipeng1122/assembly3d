@@ -52,8 +52,23 @@ namespace assembly3d
                 ConvertTool();
                 ~ConvertTool();
 
+                /**
+                 * @brief Changes index type to "UNSIGNED_INT".
+                 *
+                 * @param m The mesh to work on.
+                 */
                 void convertIndicesToUnsignedInt(Mesh* m);
+                /**
+                 * @brief Changes index type to "UNSIGNED_SHORT".
+                 *
+                 * @param m The mesh to work on.
+                 */
                 void convertIndicesToUnsignedShort(Mesh* m);
+                /**
+                 * @brief Changes index type to "UNSIGNED_BYTE".
+                 *
+                 * @param m The mesh to work on.
+                 */
                 void convertIndicesToUnsignedByte(Mesh* m);
 
             protected:

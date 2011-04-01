@@ -40,7 +40,11 @@ namespace assembly3d
     {
         namespace mesh
         {
-            struct Attribute
+            /**
+             * @brief Attribute structure for tests.
+             *
+             */
+            struct AttributeT
             {
                 char* name;
                 int size;
@@ -48,7 +52,11 @@ namespace assembly3d
                 float* values;
             };
 
-            struct Group
+            /**
+             * @brief Group structure for tests
+             *
+             */
+            struct GroupT
             {
                 char* name;
                 char* type;
