@@ -50,8 +50,8 @@ TesterTool::TesterTool(bool verbose)
 
 void TesterTool::loadMesh(const string& xmlFile,
                           const string& binaryFile,
-                          vector<Attribute>& attribs,
-                          vector<Group>& groups)
+                          vector<AttributeT>& attribs,
+                          vector<GroupT>& groups)
 {
     XmlParser xml;
     xml.loadFile(xmlFile);
@@ -67,7 +67,7 @@ void TesterTool::loadMesh(const string& xmlFile,
         {
             for(int i = 0; i < numAtributes; ++i)
             {
-                Attribute attrib;
+                AttributeT attrib;
 
                 std::string tmpAttribName = xml.getAttribute("Attribute", "name", "", i);
                 attrib.name = new char[tmpAttribName.length()+1];
@@ -102,7 +102,7 @@ void TesterTool::loadMesh(const string& xmlFile,
         {
             for(int i = 0; i < numGroups; ++i)
             {
-                Group group;
+                GroupT group;
                 group.type = new char[typeIndices.length()+1];
                 group.type[typeIndices.length()] = 0;
                 memcpy(group.type, typeIndices.c_str(), typeIndices.size());
@@ -160,10 +160,10 @@ void TesterTool::compare(const char* actual,
                          bool ignoreOrderAttributes,
                          bool ignoreOrderGroups)
 {
-    vector<Attribute> attributesActual;
-    vector<Attribute> attributesExpected;
-    vector<Group> groupsActual;
-    vector<Group> groupsExpected;
+    vector<AttributeT> attributesActual;
+    vector<AttributeT> attributesExpected;
+    vector<GroupT> groupsActual;
+    vector<GroupT> groupsExpected;
 
     loadMesh(actual, actualBinary, attributesActual, groupsActual);
     loadMesh(expected, expectedBinary, attributesExpected, groupsExpected);
@@ -181,8 +181,8 @@ void TesterTool::compare(const char* actual,
             if(attributeIgnored(attributesExpected[i].name) == false)
             {
                 noAttribsCompared = false;
-                const Attribute* attribA;
-                const Attribute* attribE;
+                const AttributeT* attribA;
+                const AttributeT* attribE;
                 if(ignoreOrderAttributes)
                 {
                     int idx = getAttributeIndexWithName(attributesExpected[i].name,
@@ -245,8 +245,8 @@ void TesterTool::compare(const char* actual,
             if(groupIgnored(groupsExpected[i].name) == false)
             {
                 noGroupsCompared = false;
-                const Group* groupA;
-                const Group* groupE;
+                const GroupT* groupA;
+                const GroupT* groupE;
                 if(ignoreOrderGroups)
                 {
                     int idx = getGroupIndexWithName(groupsExpected[i].name,
@@ -339,8 +339,8 @@ void TesterTool::compare(const char* actual,
 
 }
 
-void TesterTool::clear(vector<Attribute>& attribs,
-                       vector<Group>& groups)
+void TesterTool::clear(vector<AttributeT>& attribs,
+                       vector<GroupT>& groups)
 {
     for(unsigned int i = 0; i < attribs.size(); ++i)
     {
@@ -374,7 +374,7 @@ int TesterTool::compare(int n, unsigned char* array_a, unsigned char* array_e)
 }
 
 int TesterTool::getAttributeIndexWithName(const char *attrName,
-                                          std::vector<Attribute>& attribs)
+                                          std::vector<AttributeT>& attribs)
 {
     for(unsigned int i = 0; i < attribs.size(); ++i)
     {
@@ -385,7 +385,7 @@ int TesterTool::getAttributeIndexWithName(const char *attrName,
 }
 
 int TesterTool::getGroupIndexWithName(const char *groupName,
-                                      std::vector<Group> &groups)
+                                      std::vector<GroupT> &groups)
 {
     for(unsigned int i = 0; i < groups.size(); ++i)
     {

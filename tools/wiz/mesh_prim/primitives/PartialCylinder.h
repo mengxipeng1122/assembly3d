@@ -42,13 +42,38 @@ namespace assembly3d
     {
         namespace mesh
         {
+            /**
+             * @brief Partial cylinder primitive class.
+             *
+             */
             class PartialCylinder : public Primitive
             {
             public:
+                /**
+                 * @brief Constructor.
+                 *
+                 * @param base
+                 * @param top
+                 * @param height
+                 * @param slices
+                 * @param stacks
+                 * @param start
+                 * @param sweep
+                 */
                 PartialCylinder(float base, float top, float height, int slices,
                                 int stacks, float start, float sweep);
                 virtual ~PartialCylinder();
 
+                /**
+                 * @brief
+                 *
+                 * @param mesh The mesh object to write in.
+                 * @param positions True if positions should be generated.
+                 * @param normals True if normals should be generated.
+                 * @param texCoords True if texCoords should be generated.
+                 * @param tangents True if tangents should be generated.
+                 * @param bitangents True if bitangents should be generated.
+                 */
                 void create(Mesh* mesh, bool positions, bool normals,
                             bool texCoords, bool tangents, bool bitangents);
 

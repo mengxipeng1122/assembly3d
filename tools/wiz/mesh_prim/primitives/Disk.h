@@ -42,12 +42,34 @@ namespace assembly3d
     {
         namespace mesh
         {
+            /**
+             * @brief Disk primitive class.
+             *
+             */
             class Disk : public Primitive
             {
             public:
+                /**
+                 * @brief Constructor.
+                 *
+                 * @param inner
+                 * @param outer
+                 * @param slices
+                 * @param stacks
+                 */
                 Disk(float inner, float outer, int slices, int stacks);
                 virtual ~Disk();
 
+                /**
+                 * @brief
+                 *
+                 * @param mesh The mesh object to write in.
+                 * @param positions True if positions should be generated.
+                 * @param normals True if normals should be generated.
+                 * @param texCoords True if texCoords should be generated.
+                 * @param tangents True if tangents should be generated.
+                 * @param bitangents True if bitangents should be generated.
+                 */
                 void create(Mesh* mesh, bool positions, bool normals,
                             bool texCoords, bool tangents, bool bitangents);
 

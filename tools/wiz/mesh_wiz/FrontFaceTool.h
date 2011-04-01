@@ -52,7 +52,18 @@ namespace assembly3d
                 FrontFaceTool();
                 ~FrontFaceTool();
 
+                /**
+                 * @brief Flips front-face winding.
+                 *
+                 * @param mesh The mesh to work on.
+                 */
                 void flip(Mesh* mesh);
+                /**
+                 * @brief Test normal consitency.
+                 *
+                 * @param mesh The mesh to work on.
+                 * @param resultMsg Veriable to write status message in
+                 */
                 bool testNormalConsitency(Mesh* mesh, std::string& resultMsg);
             };
         }

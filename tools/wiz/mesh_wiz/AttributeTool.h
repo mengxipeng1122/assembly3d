@@ -52,16 +52,56 @@ namespace assembly3d
                 AttributeTool();
                 ~AttributeTool();
 
+                /**
+                 * @brief Adds normals to the mesh
+                 *
+                 * @param m The mesh to work on.
+                 */
                 void addNormals(Mesh* m);
+                /**
+                 * @brief Adds tangents to the mesh.
+                 *
+                 * @param m The mesh to work on.
+                 */
                 void addTangents(Mesh* m);
+                /**
+                 * @brief Addds bitangents to the mesh
+                 *
+                 * @param m The mesh to work on.
+                 */
                 void addBitangents(Mesh* m);
+                /**
+                 * @brief Removes normals from the mesh.
+                 *
+                 * @param m The mesh to work on.
+                 */
                 void removeNormals(Mesh* m);
+                /**
+                 * @brief Removes tangents from the mesh.
+                 *
+                 * @param m The mesh to work on.
+                 */
                 void removeTangents(Mesh* m);
+                /**
+                 * @brief Removes bitangents from the mesh.
+                 *
+                 * @param m The mesh to work on.
+                 */
                 void removeBitangents(Mesh* m);
 
             protected:
             private:
+                /**
+                 * @brief Generates normals.
+                 *
+                 * @param m The mesh to work on.
+                 */
                 void generateNormals(Mesh* m);
+                /**
+                 * @brief Generates tangents and bitangents.
+                 *
+                 * @param m The mesh to work on.
+                 */
                 void generateTangents(Mesh* m);
             };
         }

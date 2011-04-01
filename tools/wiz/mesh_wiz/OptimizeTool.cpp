@@ -47,15 +47,15 @@ OptimizeTool::~OptimizeTool()
 {
     
 }
-bool isInRange(float lhs, float rhs, float eps)
+bool OptimizeTool::isInRange(float lhs, float rhs, float eps)
 {
-    if(lhs > rhs + eps/2.0f || lhs < rhs - eps/2.0f)
+    if(lhs > rhs + eps || lhs < rhs - eps)
         return false;
     else
         return true;
 }
 
-bool vertexPosEquals(const Vertex& lhs, const Vertex& rhs, float eps)
+bool OptimizeTool::vertexPosEquals(const Vertex& lhs, const Vertex& rhs, float eps)
 {
     if(isInRange(lhs.position[0], rhs.position[0], eps) &&
        isInRange(lhs.position[1], rhs.position[1], eps) &&
@@ -69,7 +69,7 @@ bool vertexPosEquals(const Vertex& lhs, const Vertex& rhs, float eps)
     }
 }
 
-bool vertexNormalEquals(const Vertex& lhs, const Vertex& rhs, float eps)
+bool OptimizeTool::vertexNormalEquals(const Vertex& lhs, const Vertex& rhs, float eps)
 {
     if(isInRange(lhs.normal[0], rhs.normal[0], eps) &&
        isInRange(lhs.normal[1], rhs.normal[1], eps) &&
@@ -82,7 +82,7 @@ bool vertexNormalEquals(const Vertex& lhs, const Vertex& rhs, float eps)
         return false;
     }
 }
-bool vertexTexCoordEquals(const Vertex& lhs, const Vertex& rhs, float eps)
+bool OptimizeTool::vertexTexCoordEquals(const Vertex& lhs, const Vertex& rhs, float eps)
 {
     if(isInRange(lhs.texCoord[0], rhs.texCoord[0], eps) &&
        isInRange(lhs.texCoord[1], rhs.texCoord[1], eps))
@@ -95,7 +95,7 @@ bool vertexTexCoordEquals(const Vertex& lhs, const Vertex& rhs, float eps)
     }
 }
 
-bool vertexTangentEquals(const Vertex& lhs, const Vertex& rhs, float eps)
+bool OptimizeTool::vertexTangentEquals(const Vertex& lhs, const Vertex& rhs, float eps)
 {
     if(isInRange(lhs.tangent[0], rhs.tangent[0], eps) &&
        isInRange(lhs.tangent[1], rhs.tangent[1], eps) &&
@@ -108,7 +108,7 @@ bool vertexTangentEquals(const Vertex& lhs, const Vertex& rhs, float eps)
         return false;
     }
 }
-bool vertexBitangentEquals(const Vertex& lhs, const Vertex& rhs, float eps)
+bool OptimizeTool::vertexBitangentEquals(const Vertex& lhs, const Vertex& rhs, float eps)
 {
     if(isInRange(lhs.bitangent[0], rhs.bitangent[0], eps) &&
        isInRange(lhs.bitangent[1], rhs.bitangent[1], eps) &&
@@ -122,7 +122,7 @@ bool vertexBitangentEquals(const Vertex& lhs, const Vertex& rhs, float eps)
     }
 }
 
-int findFirstIndexEqualsEps(std::vector<Vertex> verts, Vertex v, OptimizeTool::Attribute a, float e)
+int OptimizeTool::findFirstIndexEqualsEps(std::vector<Vertex> verts, Vertex v, OptimizeTool::Attribute a, float e)
 {
     float epsilon[5] = {0.0f};
     switch(a)
@@ -160,7 +160,7 @@ int findFirstIndexEqualsEps(std::vector<Vertex> verts, Vertex v, OptimizeTool::A
 
 }
 
-bool vertexEquals(const Vertex& lhs, const Vertex& rhs)
+bool OptimizeTool::vertexEquals(const Vertex& lhs, const Vertex& rhs)
 {
     bool positionEqual = false;
     bool normalEqual = false;
@@ -229,7 +229,7 @@ bool vertexEquals(const Vertex& lhs, const Vertex& rhs)
     }
 }
 
-int findFirstIndexEquals(std::vector<Vertex> verts, Vertex v)
+int OptimizeTool::findFirstIndexEquals(std::vector<Vertex> verts, Vertex v)
 {
 
     for(unsigned int i = 0; i < verts.size(); ++i)

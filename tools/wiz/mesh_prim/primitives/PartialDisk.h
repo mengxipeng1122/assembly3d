@@ -42,13 +42,37 @@ namespace assembly3d
     {
         namespace mesh
         {
+            /**
+             * @brief Partial dik primitive class.
+             *
+             */
             class PartialDisk : public Primitive
             {
             public:
+                /**
+                 * @brief Constructor.
+                 *
+                 * @param inner
+                 * @param outer
+                 * @param slices
+                 * @param stacks
+                 * @param start
+                 * @param sweep
+                 */
                 PartialDisk(float inner, float outer, int slices,
                             int stacks, float start, float sweep);
                 virtual ~PartialDisk();
 
+                /**
+                 * @brief
+                 *
+                 * @param mesh The mesh object to write in.
+                 * @param positions True if positions should be generated.
+                 * @param normals True if normals should be generated.
+                 * @param texCoords True if texCoords should be generated.
+                 * @param tangents True if tangents should be generated.
+                 * @param bitangents True if bitangents should be generated.
+                 */
                 void create(Mesh* mesh, bool positions, bool normals,
                             bool texCoords, bool tangents, bool bitangents);
 

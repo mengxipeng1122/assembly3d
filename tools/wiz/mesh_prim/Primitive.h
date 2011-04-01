@@ -54,9 +54,24 @@ namespace assembly3d
                     : m_slices(slices), m_stacks(stacks) {}
                 virtual ~Primitive(){}
 
+                /**
+                 * @brief Creates mesh.
+                 *
+                 * @param mesh The mesh object to write in.
+                 * @param positions True if positions should be generated.
+                 * @param normals True if normals should be generated.
+                 * @param texCoords True if texCoords should be generated.
+                 * @param tangents True if tangents should be generated.
+                 * @param bitangents True if bitangents should be generated.
+                 */
                 virtual void create(Mesh* mesh, bool positions, bool normals,
                                     bool texCoords, bool tangents, bool bitangents) = 0;
 
+                /**
+                 * @brief Generates indices for mesh.
+                 *
+                 * @param mesh The mesh object to generate indices for.
+                 */
                 void generateIndices(Mesh* mesh)
                 {
                     for(int stack = 0; stack < m_stacks; ++stack)
@@ -91,6 +106,11 @@ namespace assembly3d
                     mesh->setNumTriangles(numberOfTriangles());
                 }
 
+                /**
+                 * @brief Gets number of triangles.
+                 *
+                 * @return int
+                 */
                 int numberOfTriangles()
                 {
                     return m_slices * m_stacks * 2;

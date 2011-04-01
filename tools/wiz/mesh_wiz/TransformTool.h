@@ -52,16 +52,76 @@ namespace assembly3d
                 TransformTool();
                 ~TransformTool();
 
+                /**
+                 * @brief
+                 *
+                 * @param m The mesh to work on.
+                 * @param tx
+                 * @param ty
+                 * @param tz
+                 */
                 void translate(Mesh* m, float tx, float ty, float tz);
+                /**
+                 * @brief
+                 *
+                 * @param m The mesh to work on.
+                 * @param rangle
+                 * @param rx
+                 * @param ry
+                 * @param rz
+                 */
                 void rotate(Mesh* m, float rangle, float rx, float ry, float rz);
+                /**
+                 * @brief
+                 *
+                 * @param m The mesh to work on.
+                 * @param sx
+                 * @param sy
+                 * @param sz
+                 */
                 void scale(Mesh* m, float sx, float sy, float sz);
+                /**
+                 * @brief
+                 *
+                 * @param m The mesh to work on.
+                 * @param rsx
+                 * @param rsy
+                 * @param rsz
+                 */
                 void resize(Mesh* m, float rsx, float rsy, float rsz);
+                /**
+                 * @brief
+                 *
+                 * @param m The mesh to work on.
+                 * @param axis
+                 * @param val
+                 */
                 void resize(Mesh* m, const char axis, float val);
+                /**
+                 * @brief
+                 *
+                 * @param m The mesh to work on.
+                 * @param ax
+                 * @param ay
+                 * @param az
+                 */
                 void center(Mesh* m, int ax, int ay, int az);
 
             protected:
             private:
+                /**
+                 * @brief Multiplies a vertex with a matrix and an inverse transposed matrix.
+                 *
+                 * @param vec A vector.
+                 * @param matrix[][] Transformation matrix.
+                 * @param inverseTransposedMatrix[][] Inverse transposed matrix.
+                 */
                 void multiplyVertexWithTransformMatrix(assembly3d::mesh::Vertex* vec, float matrix[3][4], float inverseTransposedMatrix[3][3]);
+                /**
+                 * @brief Normalizes a vector.
+                 *
+                 * @param vector[] A vector to normalize.
+                 */
                 void normalize(float vector[3]);
             };
         }
