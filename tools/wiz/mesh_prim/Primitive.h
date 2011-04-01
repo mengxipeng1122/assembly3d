@@ -34,7 +34,6 @@
 #ifndef PRIMITIVE_H
 #define PRIMITIVE_H
 
-#include "MeshPrimIncludes.h"
 #include "Mesh.h"
 
 namespace assembly3d
