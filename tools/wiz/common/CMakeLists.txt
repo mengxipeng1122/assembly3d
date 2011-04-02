@@ -40,4 +40,4 @@ MeshIO.h
 StringUtils.h
 FileUtils.h
 XmlParser.h
-DESTINATION ${CMAKE_INSTALL_PREFIX}/include/a3dtools)
+DESTINATION ${CMAKE_INSTALL_PREFIX}/include/a3dtools/include)

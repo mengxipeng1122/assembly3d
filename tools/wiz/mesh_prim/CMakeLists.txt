@@ -54,7 +54,7 @@ install(FILES
 MeshPrim.h
 PrimGen.h
 Primitive.h
-DESTINATION ${CMAKE_INSTALL_PREFIX}/include/a3dtools)
+DESTINATION ${CMAKE_INSTALL_PREFIX}/include/a3dtools/include)
 
 install(FILES
 primitives/Plane.h
@@ -68,5 +68,5 @@ primitives/Torus.cpp
 primitives/Disk.h
 primitives/PartialCylinder.h
 primitives/PartialDisk.h
-DESTINATION ${CMAKE_INSTALL_PREFIX}/include/a3dtools/primitives)
+DESTINATION ${CMAKE_INSTALL_PREFIX}/include/a3dtools/include/primitives)
 
