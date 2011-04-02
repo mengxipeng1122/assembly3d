@@ -36,4 +36,4 @@ install(FILES
 MeshTest.h
 MeshTestTypes.h
 TesterTool.h
-DESTINATION ${CMAKE_INSTALL_PREFIX}/include/a3dtools)
+DESTINATION ${CMAKE_INSTALL_PREFIX}/include/a3dtools/include)
