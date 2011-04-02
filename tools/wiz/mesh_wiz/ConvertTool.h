@@ -40,42 +40,39 @@ namespace assembly3d
 {
     namespace wiz
     {
-        namespace mesh
+        /**
+         * @brief Class for mesh converting operations.
+         *
+        */
+        class ConvertTool
         {
+        public:
+            ConvertTool();
+            ~ConvertTool();
+
             /**
-             * @brief Class for mesh converting operations.
+             * @brief Changes index type to "UNSIGNED_INT".
              *
-            */
-            class ConvertTool
-            {
-            public:
-                ConvertTool();
-                ~ConvertTool();
+             * @param m The mesh to work on.
+             */
+            void convertIndicesToUnsignedInt(Mesh* m);
+            /**
+             * @brief Changes index type to "UNSIGNED_SHORT".
+             *
+             * @param m The mesh to work on.
+             */
+            void convertIndicesToUnsignedShort(Mesh* m);
+            /**
+             * @brief Changes index type to "UNSIGNED_BYTE".
+             *
+             * @param m The mesh to work on.
+             */
+            void convertIndicesToUnsignedByte(Mesh* m);
 
-                /**
-                 * @brief Changes index type to "UNSIGNED_INT".
-                 *
-                 * @param m The mesh to work on.
-                 */
-                void convertIndicesToUnsignedInt(Mesh* m);
-                /**
-                 * @brief Changes index type to "UNSIGNED_SHORT".
-                 *
-                 * @param m The mesh to work on.
-                 */
-                void convertIndicesToUnsignedShort(Mesh* m);
-                /**
-                 * @brief Changes index type to "UNSIGNED_BYTE".
-                 *
-                 * @param m The mesh to work on.
-                 */
-                void convertIndicesToUnsignedByte(Mesh* m);
+        protected:
+        private:
 
-            protected:
-            private:
-
-            };
-        }
+        };
     }
 }
 

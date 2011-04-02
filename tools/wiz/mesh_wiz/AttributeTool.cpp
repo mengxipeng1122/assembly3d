@@ -41,8 +41,7 @@
 #include <cmath>
 
 using namespace assembly3d;
-using namespace assembly3d::mesh;
-using namespace assembly3d::wiz::mesh;
+using namespace assembly3d::wiz;
 
 AttributeTool::AttributeTool()
 {

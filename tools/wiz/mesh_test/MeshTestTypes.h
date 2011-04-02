@@ -38,33 +38,30 @@ namespace assembly3d
 {
     namespace test
     {
-        namespace mesh
+        /**
+         * @brief Attribute structure for tests.
+         *
+         */
+        struct AttributeT
         {
-            /**
-             * @brief Attribute structure for tests.
-             *
-             */
-            struct AttributeT
-            {
-                char* name;
-                int size;
-                int count;
-                float* values;
-            };
+            char* name;
+            int size;
+            int count;
+            float* values;
+        };
 
-            /**
-             * @brief Group structure for tests
-             *
-             */
-            struct GroupT
-            {
-                char* name;
-                char* type;
-                int count;
-                unsigned char* bytes;
-                int numBytes;
-            };
-        }
+        /**
+         * @brief Group structure for tests
+         *
+         */
+        struct GroupT
+        {
+            char* name;
+            char* type;
+            int count;
+            unsigned char* bytes;
+            int numBytes;
+        };
     }
 }
 

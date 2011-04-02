@@ -40,39 +40,36 @@ namespace assembly3d
 {
     namespace prim
     {
-        namespace mesh
+        /**
+         * @brief Cube geometry class.
+         *
+         */
+        class Cube : public Primitive
         {
+        public:
             /**
-             * @brief Cube geometry class.
+             * @brief Constructor
              *
+             * @param halfExtend
              */
-            class Cube : public Primitive
-            {
-            public:
-                /**
-                 * @brief Constructor
-                 *
-                 * @param halfExtend
-                 */
-                Cube(float halfExtend);
-                virtual ~Cube();
+            Cube(float halfExtend);
+            virtual ~Cube();
 
-                /**
-                 * @brief Creates  cube mesh.
-                 *
-                 * @param mesh The mesh object to write in.
-                 * @param positions True if positions should be generated.
-                 * @param normals True if normals should be generated.
-                 * @param texCoords True if texCoords should be generated.
-                 * @param tangents True if tangents should be generated.
-                 * @param bitangents True if bitangents should be generated.
-                 */
-                void create(Mesh* mesh, bool positions, bool normals,
-                            bool texCoords, bool tangents, bool bitangents);
-            private:
-                float m_halfExtend;
-            };
-        }
+            /**
+             * @brief Creates  cube mesh.
+             *
+             * @param mesh The mesh object to write in.
+             * @param positions True if positions should be generated.
+             * @param normals True if normals should be generated.
+             * @param texCoords True if texCoords should be generated.
+             * @param tangents True if tangents should be generated.
+             * @param bitangents True if bitangents should be generated.
+             */
+            void create(Mesh* mesh, bool positions, bool normals,
+                        bool texCoords, bool tangents, bool bitangents);
+        private:
+            float m_halfExtend;
+        };
     }
 }
 

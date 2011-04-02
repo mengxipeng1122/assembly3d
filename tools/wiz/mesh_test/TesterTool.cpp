@@ -40,7 +40,7 @@
 using namespace std;
 using namespace assembly3d;
 using namespace assembly3d::utils;
-using namespace assembly3d::test::mesh;
+using namespace assembly3d::test;
 
 TesterTool::TesterTool(bool verbose)
     :

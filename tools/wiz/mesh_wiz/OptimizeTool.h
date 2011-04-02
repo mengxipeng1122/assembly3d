@@ -40,64 +40,61 @@ namespace assembly3d
 {
     namespace wiz
     {
-        namespace mesh
+        /**
+         * @brief Class for mesh optimizations.
+         *
+        */
+        class OptimizeTool
         {
-            /**
-             * @brief Class for mesh optimizations.
-             *
-            */
-            class OptimizeTool
-            {
-            public:
-                OptimizeTool();
-                ~OptimizeTool();
+        public:
+            OptimizeTool();
+            ~OptimizeTool();
 
-                enum Attribute{
-                    POSITION=0,
-                    NORMAL,
-                    TEXCOORD,
-                    TANGENT,
-                    BITANGENT
-                };
-
-                /**
-                 * @brief Removes duplicate vertices from mesh.
-                 *
-                 * @param m The mesh to work on.
-                 */
-                void stitch(Mesh* m);
-                /**
-                 * @brief Removes duplicate vertices from mesh.
-                 *
-                 * @param m The mesh to work on.
-                 * @param a Attribute to check with epsilon.
-                 * @param epsilon
-                 */
-                void stitch(Mesh* m, Attribute a, float epsilon);
-
-            protected:
-            private:
-                bool isInRange(float lhs, float rhs, float eps);
-                bool vertexPosEquals(const assembly3d::mesh::Vertex& lhs,
-                                     const assembly3d::mesh::Vertex& rhs, float eps);
-                bool vertexNormalEquals(const assembly3d::mesh::Vertex& lhs,
-                                        const assembly3d::mesh::Vertex& rhs, float eps);
-                bool vertexTexCoordEquals(const assembly3d::mesh::Vertex& lhs,
-                                          const assembly3d::mesh::Vertex& rhs, float eps);
-                bool vertexTangentEquals(const assembly3d::mesh::Vertex& lhs,
-                                         const assembly3d::mesh::Vertex& rhs, float eps);
-                bool vertexBitangentEquals(const assembly3d::mesh::Vertex& lhs,
-                                           const assembly3d::mesh::Vertex& rhs, float eps);
-                int findFirstIndexEqualsEps(std::vector<assembly3d::mesh::Vertex> verts,
-                                            assembly3d::mesh::Vertex v,
-                                            OptimizeTool::Attribute a, float e);
-                bool vertexEquals(const assembly3d::mesh::Vertex& lhs,
-                                  const assembly3d::mesh::Vertex& rhs);
-                int findFirstIndexEquals(std::vector<assembly3d::mesh::Vertex> verts,
-                                         assembly3d::mesh::Vertex v);
-
+            enum Attribute{
+                POSITION=0,
+                NORMAL,
+                TEXCOORD,
+                TANGENT,
+                BITANGENT
             };
-        }
+
+            /**
+             * @brief Removes duplicate vertices from mesh.
+             *
+             * @param m The mesh to work on.
+             */
+            void stitch(Mesh* m);
+            /**
+             * @brief Removes duplicate vertices from mesh.
+             *
+             * @param m The mesh to work on.
+             * @param a Attribute to check with epsilon.
+             * @param epsilon
+             */
+            void stitch(Mesh* m, Attribute a, float epsilon);
+
+        protected:
+        private:
+            bool isInRange(float lhs, float rhs, float eps);
+            bool vertexPosEquals(const assembly3d::Vertex& lhs,
+                                 const assembly3d::Vertex& rhs, float eps);
+            bool vertexNormalEquals(const assembly3d::Vertex& lhs,
+                                    const assembly3d::Vertex& rhs, float eps);
+            bool vertexTexCoordEquals(const assembly3d::Vertex& lhs,
+                                      const assembly3d::Vertex& rhs, float eps);
+            bool vertexTangentEquals(const assembly3d::Vertex& lhs,
+                                     const assembly3d::Vertex& rhs, float eps);
+            bool vertexBitangentEquals(const assembly3d::Vertex& lhs,
+                                       const assembly3d::Vertex& rhs, float eps);
+            int findFirstIndexEqualsEps(std::vector<assembly3d::Vertex> verts,
+                                        assembly3d::Vertex v,
+                                        OptimizeTool::Attribute a, float e);
+            bool vertexEquals(const assembly3d::Vertex& lhs,
+                              const assembly3d::Vertex& rhs);
+            int findFirstIndexEquals(std::vector<assembly3d::Vertex> verts,
+                                     assembly3d::Vertex v);
+
+        };
     }
 }
 

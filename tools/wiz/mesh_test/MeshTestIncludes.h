@@ -48,14 +48,11 @@ namespace assembly3d
 {
     namespace test
     {
-        namespace mesh
+        namespace ProjectInfo
         {
-            namespace ProjectInfo
-            {
-                const char* const  projectName    = "MeshTest";
-                const char* const  versionString  = "1.0.0";
-                const int          versionNumber  = 0x10000;
-            }
+            const char* const  projectName    = "MeshTest";
+            const char* const  versionString  = "1.0.0";
+            const int          versionNumber  = 0x10000;
         }
     }
 }

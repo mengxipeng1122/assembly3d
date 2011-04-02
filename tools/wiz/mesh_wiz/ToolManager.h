@@ -46,143 +46,140 @@ namespace assembly3d
     class Mesh;
     namespace wiz
     {
-        namespace mesh
+        /**
+         * @brief Class for managing the different tool classes.
+         *
+        */
+        class ToolManager
         {
+        public:
             /**
-             * @brief Class for managing the different tool classes.
+             * @brief Constructor.
              *
-            */
-            class ToolManager
-            {
-            public:
-                /**
-                 * @brief Constructor.
-                 *
-                 * @param mesh The mesh to work on.
-                 * @param verbose True for verbose output.
-                 */
-                ToolManager(Mesh* mesh, bool verbose);
-                ~ToolManager();
+             * @param mesh The mesh to work on.
+             * @param verbose True for verbose output.
+             */
+            ToolManager(Mesh* mesh, bool verbose);
+            ~ToolManager();
 
-                /**
-                 * @brief Converts index type.
-                 *
-                 * @param type The new index type (UNSIGNED_BYTE, UNSIGNED_SHORT and UNSIGNED_INT)
-                 */
-                bool convertIndexType(const char* type);
-                /**
-                 * @brief Translates mesh.
-                 *
-                 * @param tx
-                 * @param ty
-                 * @param tz
-                 */
-                void translate(float tx, float ty, float tz);
-                /**
-                 * @brief Rotates mesh.
-                 *
-                 * @param rangle
-                 * @param rx
-                 * @param ry
-                 * @param rz
-                 */
-                void rotate(float rangle, float rx, float ry, float rz);
-                /**
-                 * @brief Scales mesh.
-                 *
-                 * @param sx
-                 * @param sy
-                 * @param sz
-                 */
-                void scale(float sx, float sy, float sz);
-                /**
-                 * @brief Resizes mesh.
-                 *
-                 * @param rsx
-                 * @param rsy
-                 * @param rsz
-                 */
-                void resize(float rsx, float rsy, float rsz);
-                /**
-                 * @brief Resizes mesh.
-                 *
-                 * @param axis
-                 * @param val
-                 */
-                void resize(const char* axis, float val);
-                /**
-                 * @brief Centers mesh.
-                 *
-                 * @param axisX
-                 * @param axisY
-                 * @param axisZ
-                 */
-                void center(int axisX, int axisY, int axisZ);
-                /**
-                 * @brief Generates normals.
-                 *
-                 */
-                void generateNormals();
-                /**
-                 * @brief Removes normals.
-                 *
-                 */
-                void removeNormals();
-                /**
-                 * @brief Generates tangents.
-                 *
-                 */
-                void generateTangents();
-                /**
-                 * @brief Removes tangents.
-                 *
-                 */
-                void removeTangents();
-                /**
-                 * @brief Generates bitangents.
-                 *
-                 */
-                void generateBitangents();
-                /**
-                 * @brief Removes bitangents.
-                 *
-                 */
-                void removeBitangents();
-                /**
-                 * @brief Stiches mesh.
-                 *
-                 */
-                void stitch();
-                /**
-                 * @brief Stiches mesh.
-                 *
-                 * @param attributeName
-                 * @param epsilon
-                 */
-                void stitchEps(const char* attributeName, float epsilon);
-                /**
-                 * @brief Flips front-face.
-                 *
-                 */
-                void flip();
-                /**
-                 * @brief Tests normal consitency.
-                 *
-                 */
-                bool testNormalConsitancy();
+            /**
+             * @brief Converts index type.
+             *
+             * @param type The new index type (UNSIGNED_BYTE, UNSIGNED_SHORT and UNSIGNED_INT)
+             */
+            bool convertIndexType(const char* type);
+            /**
+             * @brief Translates mesh.
+             *
+             * @param tx
+             * @param ty
+             * @param tz
+             */
+            void translate(float tx, float ty, float tz);
+            /**
+             * @brief Rotates mesh.
+             *
+             * @param rangle
+             * @param rx
+             * @param ry
+             * @param rz
+             */
+            void rotate(float rangle, float rx, float ry, float rz);
+            /**
+             * @brief Scales mesh.
+             *
+             * @param sx
+             * @param sy
+             * @param sz
+             */
+            void scale(float sx, float sy, float sz);
+            /**
+             * @brief Resizes mesh.
+             *
+             * @param rsx
+             * @param rsy
+             * @param rsz
+             */
+            void resize(float rsx, float rsy, float rsz);
+            /**
+             * @brief Resizes mesh.
+             *
+             * @param axis
+             * @param val
+             */
+            void resize(const char* axis, float val);
+            /**
+             * @brief Centers mesh.
+             *
+             * @param axisX
+             * @param axisY
+             * @param axisZ
+             */
+            void center(int axisX, int axisY, int axisZ);
+            /**
+             * @brief Generates normals.
+             *
+             */
+            void generateNormals();
+            /**
+             * @brief Removes normals.
+             *
+             */
+            void removeNormals();
+            /**
+             * @brief Generates tangents.
+             *
+             */
+            void generateTangents();
+            /**
+             * @brief Removes tangents.
+             *
+             */
+            void removeTangents();
+            /**
+             * @brief Generates bitangents.
+             *
+             */
+            void generateBitangents();
+            /**
+             * @brief Removes bitangents.
+             *
+             */
+            void removeBitangents();
+            /**
+             * @brief Stiches mesh.
+             *
+             */
+            void stitch();
+            /**
+             * @brief Stiches mesh.
+             *
+             * @param attributeName
+             * @param epsilon
+             */
+            void stitchEps(const char* attributeName, float epsilon);
+            /**
+             * @brief Flips front-face.
+             *
+             */
+            void flip();
+            /**
+             * @brief Tests normal consitency.
+             *
+             */
+            bool testNormalConsitancy();
 
-            protected:
-            private:
-                Mesh* m_mesh;
-                bool m_verboseOutput;
+        protected:
+        private:
+            Mesh* m_mesh;
+            bool m_verboseOutput;
 
-                ConvertTool* m_convertTool;
-                TransformTool* m_transformTool;
-                AttributeTool* m_attributeTool;
-                OptimizeTool* m_optimizeTool;
-                FrontFaceTool* m_frontFaceTool;
-            };
-        }
+            ConvertTool* m_convertTool;
+            TransformTool* m_transformTool;
+            AttributeTool* m_attributeTool;
+            OptimizeTool* m_optimizeTool;
+            FrontFaceTool* m_frontFaceTool;
+        };
     }
 }
 

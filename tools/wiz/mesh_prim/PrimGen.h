@@ -41,59 +41,56 @@ namespace assembly3d
 {
     namespace prim
     {
-        namespace mesh
+        /**
+         * @brief Controller class for generating primitives.
+         *
+        */
+        class PrimGen
         {
+        public:
+            static const int PRIM_TYPE_PLANE = 0;
+            static const int PRIM_TYPE_CUBE = 1;
+            static const int PRIM_TYPE_SPHERE = 2;
+            static const int PRIM_TYPE_TORUS = 3;
+            static const int PRIM_TYPE_TRAPEZOID = 4;
+            static const int PRIM_TYPE_CYLINDER = 5;
+            static const int PRIM_TYPE_DISK = 6;
+            static const int PRIM_TYPE_PARTIAL_CYLINDER = 7;
+            static const int PRIM_TYPE_PARTIAL_DISK = 8;
+            static const int PRIM_TYPE_RECTANGLE = 9;
+
             /**
-             * @brief Controller class for generating primitives.
+             * @brief Constructor
              *
-            */
-            class PrimGen
-            {
-            public:
-                static const int PRIM_TYPE_PLANE = 0;
-                static const int PRIM_TYPE_CUBE = 1;
-                static const int PRIM_TYPE_SPHERE = 2;
-                static const int PRIM_TYPE_TORUS = 3;
-                static const int PRIM_TYPE_TRAPEZOID = 4;
-                static const int PRIM_TYPE_CYLINDER = 5;
-                static const int PRIM_TYPE_DISK = 6;
-                static const int PRIM_TYPE_PARTIAL_CYLINDER = 7;
-                static const int PRIM_TYPE_PARTIAL_DISK = 8;
-                static const int PRIM_TYPE_RECTANGLE = 9;
+             * @param generatePositions True is positions should be generated.
+             * @param generateNormals True is normals should be generated.
+             * @param generateTexCoords True is texCoords should be generated.
+             * @param generateTangents True is tangents should be generated.
+             * @param generateBitangents True is bitangents should be generated.
+             */
+            PrimGen(bool generatePositions=true, bool generateNormals=true,
+                    bool generateTexCoords=true, bool generateTangents=false,
+                    bool generateBitangents= false);
+            ~PrimGen();
 
-                /**
-                 * @brief Constructor
-                 *
-                 * @param generatePositions True is positions should be generated.
-                 * @param generateNormals True is normals should be generated.
-                 * @param generateTexCoords True is texCoords should be generated.
-                 * @param generateTangents True is tangents should be generated.
-                 * @param generateBitangents True is bitangents should be generated.
-                 */
-                PrimGen(bool generatePositions=true, bool generateNormals=true,
-                        bool generateTexCoords=true, bool generateTangents=false,
-                        bool generateBitangents= false);
-                ~PrimGen();
+            /**
+             * @brief Creates mesh.
+             *
+             * @param mesh The mesh object to write in.
+             * @param primType Ptimitive type
+             * @param values Parameters for primitive.
+             */
+            void createMesh(Mesh* mesh, int primType, std::vector<float> values);
 
-                /**
-                 * @brief Creates mesh.
-                 *
-                 * @param mesh The mesh object to write in.
-                 * @param primType Ptimitive type
-                 * @param values Parameters for primitive.
-                 */
-                void createMesh(Mesh* mesh, int primType, std::vector<float> values);
+        private:
+            Primitive* m_prim;
+            bool m_generatePositions;
+            bool m_generateNormals;
+            bool m_generateTexCoords;
+            bool m_generateTangents;
+            bool m_generateBitangents;
 
-            private:
-                Primitive* m_prim;
-                bool m_generatePositions;
-                bool m_generateNormals;
-                bool m_generateTexCoords;
-                bool m_generateTangents;
-                bool m_generateBitangents;
-
-            };
-        }
+        };
     }
 }
 

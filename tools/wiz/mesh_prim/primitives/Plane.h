@@ -40,40 +40,37 @@ namespace assembly3d
 {
     namespace prim
     {
-        namespace mesh
+        /**
+         * @brief Plane primitive class.
+         *
+         */
+        class Plane : public Primitive
         {
+        public:
             /**
-             * @brief Plane primitive class.
+             * @brief Constructor.
              *
+             * @param halfExtend
              */
-            class Plane : public Primitive
-            {
-            public:
-                /**
-                 * @brief Constructor.
-                 *
-                 * @param halfExtend
-                 */
-                Plane(float halfExtend);
-                virtual ~Plane();
+            Plane(float halfExtend);
+            virtual ~Plane();
 
-                /**
-                 * @brief
-                 *
-                 * @param mesh The mesh object to write in.
-                 * @param positions True if positions should be generated.
-                 * @param normals True if normals should be generated.
-                 * @param texCoords True if texCoords should be generated.
-                 * @param tangents True if tangents should be generated.
-                 * @param bitangents True if bitangents should be generated.
-                 */
-                void create(Mesh* mesh, bool positions, bool normals,
-                            bool texCoords, bool tangents, bool bitangents);
+            /**
+             * @brief
+             *
+             * @param mesh The mesh object to write in.
+             * @param positions True if positions should be generated.
+             * @param normals True if normals should be generated.
+             * @param texCoords True if texCoords should be generated.
+             * @param tangents True if tangents should be generated.
+             * @param bitangents True if bitangents should be generated.
+             */
+            void create(Mesh* mesh, bool positions, bool normals,
+                        bool texCoords, bool tangents, bool bitangents);
 
-            private:
-                float m_halfExtend;
-            };
-        }
+        private:
+            float m_halfExtend;
+        };
     }
 }
 

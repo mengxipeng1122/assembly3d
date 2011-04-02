@@ -40,86 +40,83 @@ namespace assembly3d
 {
     namespace prim
     {
-        namespace mesh
+        /**
+         * @brief Base class for primitives.
+         *
+        */
+        class Primitive
         {
+        public:
+            Primitive(int slices, int stacks)
+                : m_slices(slices), m_stacks(stacks) {}
+            virtual ~Primitive(){}
+
             /**
-             * @brief Base class for primitives.
+             * @brief Creates mesh.
              *
-            */
-            class Primitive
+             * @param mesh The mesh object to write in.
+             * @param positions True if positions should be generated.
+             * @param normals True if normals should be generated.
+             * @param texCoords True if texCoords should be generated.
+             * @param tangents True if tangents should be generated.
+             * @param bitangents True if bitangents should be generated.
+             */
+            virtual void create(Mesh* mesh, bool positions, bool normals,
+                                bool texCoords, bool tangents, bool bitangents) = 0;
+
+            /**
+             * @brief Generates indices for mesh.
+             *
+             * @param mesh The mesh object to generate indices for.
+             */
+            void generateIndices(Mesh* mesh)
             {
-            public:
-                Primitive(int slices, int stacks)
-                    : m_slices(slices), m_stacks(stacks) {}
-                virtual ~Primitive(){}
-
-                /**
-                 * @brief Creates mesh.
-                 *
-                 * @param mesh The mesh object to write in.
-                 * @param positions True if positions should be generated.
-                 * @param normals True if normals should be generated.
-                 * @param texCoords True if texCoords should be generated.
-                 * @param tangents True if tangents should be generated.
-                 * @param bitangents True if bitangents should be generated.
-                 */
-                virtual void create(Mesh* mesh, bool positions, bool normals,
-                                    bool texCoords, bool tangents, bool bitangents) = 0;
-
-                /**
-                 * @brief Generates indices for mesh.
-                 *
-                 * @param mesh The mesh object to generate indices for.
-                 */
-                void generateIndices(Mesh* mesh)
+                for(int stack = 0; stack < m_stacks; ++stack)
                 {
-                    for(int stack = 0; stack < m_stacks; ++stack)
+                    for(int slice = 0; slice < m_slices; ++slice)
                     {
-                        for(int slice = 0; slice < m_slices; ++slice)
-                        {
-                            // x - right
-                            // y -  up
-                            //
-                            //d --- c
-                            //|     |
-                            //| CCW |
-                            //|     |
-                            //a --- b
-                            unsigned int start = stack * (m_slices + 1);
-                            unsigned int a = start + slice;
-                            unsigned int b = a + 1;
-                            unsigned int d = a + (m_slices + 1);
-                            unsigned int c = d + 1;
+                        // x - right
+                        // y -  up
+                        //
+                        //d --- c
+                        //|     |
+                        //| CCW |
+                        //|     |
+                        //a --- b
+                        unsigned int start = stack * (m_slices + 1);
+                        unsigned int a = start + slice;
+                        unsigned int b = a + 1;
+                        unsigned int d = a + (m_slices + 1);
+                        unsigned int c = d + 1;
 
-                            // first triangle of the face, counter clock wise winding
-                            mesh->addIndex(a);
-                            mesh->addIndex(b);
-                            mesh->addIndex(c);
+                        // first triangle of the face, counter clock wise winding
+                        mesh->addIndex(a);
+                        mesh->addIndex(b);
+                        mesh->addIndex(c);
 
-                            // second triangle of the face, counter clock wise winding
-                            mesh->addIndex(a);
-                            mesh->addIndex(c);
-                            mesh->addIndex(d);
-                        }
+                        // second triangle of the face, counter clock wise winding
+                        mesh->addIndex(a);
+                        mesh->addIndex(c);
+                        mesh->addIndex(d);
                     }
-                    mesh->setNumTriangles(numberOfTriangles());
                 }
+                mesh->setNumTriangles(numberOfTriangles());
+            }
 
-                /**
-                 * @brief Gets number of triangles.
-                 *
-                 * @return int
-                 */
-                int numberOfTriangles()
-                {
-                    return m_slices * m_stacks * 2;
-                }
+            /**
+             * @brief Gets number of triangles.
+             *
+             * @return int
+             */
+            int numberOfTriangles()
+            {
+                return m_slices * m_stacks * 2;
+            }
 
-            protected:
-                int m_slices;
-                int m_stacks;
-            };
-        }
+        protected:
+            int m_slices;
+            int m_stacks;
+        };
     }
 }
 

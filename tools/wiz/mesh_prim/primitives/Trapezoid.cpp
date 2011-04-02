@@ -37,8 +37,7 @@
 
 using namespace std;
 using namespace assembly3d;
-using namespace assembly3d::mesh;
-using namespace assembly3d::prim::mesh;
+using namespace assembly3d::prim;
 
 Trapezoid::Trapezoid(float base, float top, float height,
                      int slices, int stacks)

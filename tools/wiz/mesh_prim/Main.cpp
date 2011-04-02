@@ -40,7 +40,7 @@
 
 using namespace assembly3d;
 using namespace assembly3d::utils;
-using namespace assembly3d::prim::mesh;
+using namespace assembly3d::prim;
 using namespace TCLAP;
 
 int main (int argc, char* argv[])

@@ -40,47 +40,44 @@ namespace assembly3d
 {
     namespace prim
     {
-        namespace mesh
+        /**
+         * @brief Trapezoid primitive class.
+         *
+         */
+        class Trapezoid : public Primitive
         {
+        public:
             /**
-             * @brief Trapezoid primitive class.
+             * @brief Constructor
              *
+             * @param base
+             * @param top
+             * @param height
+             * @param slices
+             * @param stacks
              */
-            class Trapezoid : public Primitive
-            {
-            public:
-                /**
-                 * @brief Constructor
-                 *
-                 * @param base
-                 * @param top
-                 * @param height
-                 * @param slices
-                 * @param stacks
-                 */
-                Trapezoid(float base, float top, float height,
-                          int slices=1, int stacks=1);
-                virtual ~Trapezoid();
+            Trapezoid(float base, float top, float height,
+                      int slices=1, int stacks=1);
+            virtual ~Trapezoid();
 
-                /**
-                 * @brief Creates trapezoid mesh.
-                 *
-                 * @param mesh The mesh object to write in.
-                 * @param positions True if positions should be generated.
-                 * @param normals True if normals should be generated.
-                 * @param texCoords True if texCoords should be generated.
-                 * @param tangents True if tangents should be generated.
-                 * @param bitangents True if bitangents should be generated.
-                 */
-                void create(Mesh* mesh, bool positions, bool normals,
-                            bool texCoords, bool tangents, bool bitangents);
+            /**
+             * @brief Creates trapezoid mesh.
+             *
+             * @param mesh The mesh object to write in.
+             * @param positions True if positions should be generated.
+             * @param normals True if normals should be generated.
+             * @param texCoords True if texCoords should be generated.
+             * @param tangents True if tangents should be generated.
+             * @param bitangents True if bitangents should be generated.
+             */
+            void create(Mesh* mesh, bool positions, bool normals,
+                        bool texCoords, bool tangents, bool bitangents);
 
-            private:
-                float m_base;
-                float m_top;
-                float m_height;
-            };
-        }
+        private:
+            float m_base;
+            float m_top;
+            float m_height;
+        };
     }
 }
 
