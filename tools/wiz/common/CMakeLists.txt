@@ -31,5 +31,13 @@ install(TARGETS A3DCommon
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)
 
-install(FILES ${A3DCommon_HEADER}
+install(FILES
+Assembly3D.h
+A3DTypes.h
+A3DUtils.h
+Mesh.h
+MeshIO.h
+StringUtils.h
+FileUtils.h
+XmlParser.h
 DESTINATION ${CMAKE_INSTALL_PREFIX}/include/a3dtools)

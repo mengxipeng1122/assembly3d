@@ -31,6 +31,7 @@
  *
  */
 
+#include "MeshTestIncludes.h"
 #include "TesterTool.h"
 #include "A3DUtils.h"
 #include "XmlParser.h"

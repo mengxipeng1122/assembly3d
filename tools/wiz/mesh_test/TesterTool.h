@@ -34,7 +34,7 @@
 #ifndef TESTERTOOL_H
 #define TESTERTOOL_H
 
-#include "MeshTestIncludes.h"
+#include "MeshTestTypes.h"
 #include <string>
 #include <vector>
 
