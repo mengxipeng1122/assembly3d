@@ -1,3 +1,4 @@
+
 set(TCLAP_INCLUDE ${CMAKE_SOURCE_DIR}/external_libs/tclap-1.2.0/include)
 set(A3DCommon_INCLUDE ${CMAKE_SOURCE_DIR}/common)
 
@@ -46,5 +47,13 @@ else()
         ARCHIVE DESTINATION lib)
 endif()
 
-install(FILES ${MeshWiz_HEADERS}
+install(FILES
+MeshWiz.h
+AttributeTool.h
+ConvertTool.h
+OptimizeTool.h
+RenameTool.h
+ToolManager.h
+TransformTool.h
+FrontFaceTool.h
 DESTINATION ${CMAKE_INSTALL_PREFIX}/include/a3dtools)
