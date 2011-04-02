@@ -44,14 +44,11 @@ namespace assembly3d
 {
     namespace wiz
     {
-        namespace mesh
+        namespace ProjectInfo
         {
-            namespace ProjectInfo
-            {
-                const char* const  projectName    = "MeshWiz";
-                const char* const  versionString  = "1.2.0";
-                const int          versionNumber  = 0x10200;
-            }
+            const char* const  projectName    = "MeshWiz";
+            const char* const  versionString  = "1.2.0";
+            const int          versionNumber  = 0x10200;
         }
     }
 }

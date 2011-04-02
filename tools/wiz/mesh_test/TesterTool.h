@@ -42,56 +42,53 @@ namespace assembly3d
 {
     namespace test
     {
-        namespace mesh
+        /**
+         * @brief Class with mesh testing/comparing functions.
+         *
+        */
+        class TesterTool
         {
-            /**
-             * @brief Class with mesh testing/comparing functions.
-             *
-            */
-            class TesterTool
-            {
-            public:
-                TesterTool(bool verbose=true);
+        public:
+            TesterTool(bool verbose=true);
 
-                void setIgnoreListAttributes(std::vector<std::string> ignoreListAttributes);
-                void setIgnoreListGroups(std::vector<std::string> ignoreListGroups);
+            void setIgnoreListAttributes(std::vector<std::string> ignoreListAttributes);
+            void setIgnoreListGroups(std::vector<std::string> ignoreListGroups);
 
-                void compare(const char* actual,
-                             const char* actualBinary,
-                             const char* expected,
-                             const char* expectedBinary,
-                             float epsilon,
-                             bool ignoreOrderAttributes,
-                             bool ignoreOrderGroups);
+            void compare(const char* actual,
+                         const char* actualBinary,
+                         const char* expected,
+                         const char* expectedBinary,
+                         float epsilon,
+                         bool ignoreOrderAttributes,
+                         bool ignoreOrderGroups);
 
-            private:
+        private:
 
-                void clear(std::vector<AttributeT>& attribs,
-                           std::vector<GroupT>& groups);
+            void clear(std::vector<AttributeT>& attribs,
+                       std::vector<GroupT>& groups);
 
-                int compare(int n, float* array_a, float* array_e, float epsilon);
-                int compare(int n, unsigned char* array_a, unsigned char* array_e);
+            int compare(int n, float* array_a, float* array_e, float epsilon);
+            int compare(int n, unsigned char* array_a, unsigned char* array_e);
 
-                void loadMesh(const std::string& xmlFile,
-                              const std::string& binaryFile,
-                              std::vector<AttributeT>& attribs,
-                              std::vector<GroupT>& m_groupsActual);
+            void loadMesh(const std::string& xmlFile,
+                          const std::string& binaryFile,
+                          std::vector<AttributeT>& attribs,
+                          std::vector<GroupT>& m_groupsActual);
 
-                int getAttributeIndexWithName(const char* attrName,
-                                              std::vector<AttributeT>& attribs);
-                int getGroupIndexWithName(const char* groupName,
-                                          std::vector<GroupT> &groups);
+            int getAttributeIndexWithName(const char* attrName,
+                                          std::vector<AttributeT>& attribs);
+            int getGroupIndexWithName(const char* groupName,
+                                      std::vector<GroupT> &groups);
 
-                bool attributeIgnored(const char* attribName);
-                bool groupIgnored(const char* groupName);
+            bool attributeIgnored(const char* attribName);
+            bool groupIgnored(const char* groupName);
 
-                std::vector<std::string> m_ignoreListAttributes;
-                std::vector<std::string> m_ignoreListGroups;
+            std::vector<std::string> m_ignoreListAttributes;
+            std::vector<std::string> m_ignoreListGroups;
 
-                bool m_verbose;
+            bool m_verbose;
 
-            };
-        }
+        };
     }
 }
 

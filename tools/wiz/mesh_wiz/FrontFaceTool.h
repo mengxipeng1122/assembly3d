@@ -40,33 +40,30 @@ namespace assembly3d
 {
     namespace wiz
     {
-        namespace mesh
+        /**
+         * @brief Class for mesh front-face operations.
+         *
+        */
+        class FrontFaceTool
         {
-            /**
-             * @brief Class for mesh front-face operations.
-             *
-            */
-            class FrontFaceTool
-            {
-            public:
-                FrontFaceTool();
-                ~FrontFaceTool();
+        public:
+            FrontFaceTool();
+            ~FrontFaceTool();
 
-                /**
-                 * @brief Flips front-face winding.
-                 *
-                 * @param mesh The mesh to work on.
-                 */
-                void flip(Mesh* mesh);
-                /**
-                 * @brief Test normal consitency.
-                 *
-                 * @param mesh The mesh to work on.
-                 * @param resultMsg Veriable to write status message in
-                 */
-                bool testNormalConsitency(Mesh* mesh, std::string& resultMsg);
-            };
-        }
+            /**
+             * @brief Flips front-face winding.
+             *
+             * @param mesh The mesh to work on.
+             */
+            void flip(Mesh* mesh);
+            /**
+             * @brief Test normal consitency.
+             *
+             * @param mesh The mesh to work on.
+             * @param resultMsg Veriable to write status message in
+             */
+            bool testNormalConsitency(Mesh* mesh, std::string& resultMsg);
+        };
     }
 }
 

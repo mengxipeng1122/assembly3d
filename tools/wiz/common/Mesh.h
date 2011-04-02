@@ -103,14 +103,14 @@ namespace assembly3d
          * @param index A vertex index.
          * @return Vertex at index.
         */
-        assembly3d::mesh::Vertex& getVertex(unsigned int index);
+        assembly3d::Vertex& getVertex(unsigned int index);
         /**
          * @brief Gets a group for an index.
          *
          * @param index A group index.
          * @return Group at index.
         */
-        assembly3d::mesh::Group& getGroup(unsigned int index);
+        assembly3d::Group& getGroup(unsigned int index);
         /**
          * @brief Gets a triangle for an index.
          *
@@ -194,7 +194,7 @@ namespace assembly3d
          *
          * @param vertex A vertex.
         */
-        void addVertex(assembly3d::mesh::Vertex vertex);
+        void addVertex(assembly3d::Vertex vertex);
         /**
          * @brief Clears vertices.
          *
@@ -218,7 +218,7 @@ namespace assembly3d
          *
          * @param group A group.
         */
-        void addGroup(assembly3d::mesh::Group group);
+        void addGroup(assembly3d::Group group);
         /**
          * @brief Sets the number of triangles.
          *
@@ -373,9 +373,9 @@ namespace assembly3d
 
         void updateVecs();
 
-        std::vector<assembly3d::mesh::Vertex> m_vertices;
+        std::vector<assembly3d::Vertex> m_vertices;
         std::vector<unsigned int> m_indices;
-        std::vector<assembly3d::mesh::Group> m_groups;
+        std::vector<assembly3d::Group> m_groups;
 
         std::vector<float> m_positions;
         std::vector<float> m_normals;
@@ -450,10 +450,10 @@ namespace assembly3d
     inline void Mesh::getExtent(float &x, float &y, float &z) const
     { x = m_extent[0]; y = m_extent[1]; z = m_extent[2]; }
 
-    inline assembly3d::mesh::Vertex& Mesh::getVertex(unsigned int index)
+    inline assembly3d::Vertex& Mesh::getVertex(unsigned int index)
     { return m_vertices[index]; }
 
-    inline assembly3d::mesh::Group& Mesh::getGroup(unsigned int index)
+    inline assembly3d::Group& Mesh::getGroup(unsigned int index)
     { return m_groups[index]; }
 
     inline unsigned int* Mesh::getTriangle(unsigned int index)

@@ -38,7 +38,7 @@
 
 using namespace assembly3d;
 using namespace assembly3d::utils;
-using namespace assembly3d::test::mesh;
+using namespace assembly3d::test;
 
 
 int main (int argc, char* argv[])

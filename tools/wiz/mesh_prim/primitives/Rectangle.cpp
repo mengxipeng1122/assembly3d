@@ -36,8 +36,7 @@
 #include <iostream>
 using namespace std;
 using namespace assembly3d;
-using namespace assembly3d::mesh;
-using namespace assembly3d::prim::mesh;
+using namespace assembly3d::prim;
 
 Rectangle::Rectangle(float extX, float extY, int slices, int stacks)
     :

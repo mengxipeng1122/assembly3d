@@ -40,7 +40,7 @@
 
 using namespace assembly3d;
 using namespace assembly3d::utils;
-using namespace assembly3d::wiz::mesh;
+using namespace assembly3d::wiz;
 
 //==============================================================================
 int main (int argc, char* argv[])

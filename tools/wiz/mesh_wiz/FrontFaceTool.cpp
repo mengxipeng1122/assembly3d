@@ -39,8 +39,7 @@
 #define PIf		3.1415926535897932384626433832795f
 
 using namespace assembly3d;
-using namespace assembly3d::mesh;
-using namespace assembly3d::wiz::mesh;
+using namespace assembly3d::wiz;
 
 FrontFaceTool::FrontFaceTool()
 {

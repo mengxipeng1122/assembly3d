@@ -38,7 +38,6 @@
 #include <algorithm>
 
 using namespace assembly3d;
-using namespace assembly3d::mesh;
 
 Mesh::Mesh()
 :

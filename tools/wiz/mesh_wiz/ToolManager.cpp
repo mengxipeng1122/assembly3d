@@ -36,7 +36,7 @@
 #include <cmath>
 
 using namespace assembly3d;
-using namespace assembly3d::wiz::mesh;
+using namespace assembly3d::wiz;
 
 ToolManager::ToolManager(Mesh* mesh, bool verbose) 
 :

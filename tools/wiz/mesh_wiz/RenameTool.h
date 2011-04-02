@@ -38,22 +38,19 @@ namespace assembly3d
 {
     namespace wiz
     {
-        namespace mesh
+        /**
+         * @brief Class for renaming group names.
+         *
+        */
+        class RenameTool
         {
-            /**
-             * @brief Class for renaming group names.
-             *
-            */
-            class RenameTool
-            {
-            public:
-                RenameTool();
-                ~RenameTool();
-            protected:
-            private:
+        public:
+            RenameTool();
+            ~RenameTool();
+        protected:
+        private:
 
-            };
-        }
+        };
     }
 }
 

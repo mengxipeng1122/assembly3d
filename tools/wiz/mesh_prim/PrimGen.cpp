@@ -46,7 +46,7 @@
 
 using namespace std;
 using namespace assembly3d;
-using namespace assembly3d::prim::mesh;
+using namespace assembly3d::prim;
 
 PrimGen::PrimGen(bool generatePositions, bool generateNormals, bool generateTexCoords,
                  bool generateTangents, bool generateBitangents)

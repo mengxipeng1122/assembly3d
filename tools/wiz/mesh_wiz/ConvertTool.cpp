@@ -35,7 +35,7 @@
 #include "ConvertTool.h"
 
 using namespace assembly3d;
-using namespace assembly3d::wiz::mesh;
+using namespace assembly3d::wiz;
 
 ConvertTool::ConvertTool()
 {

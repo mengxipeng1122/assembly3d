@@ -38,7 +38,6 @@
 #include "XmlParser.h"
 
 using namespace assembly3d;
-using namespace assembly3d::mesh;
 using namespace assembly3d::utils;
 
 MeshIO::MeshIO()
