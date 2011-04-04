@@ -33,7 +33,7 @@ target_link_libraries(MeshWiz_lib A3DCommon)
 add_executable(MeshWiz_bin Main.cpp)
 set_target_properties(MeshWiz_bin PROPERTIES OUTPUT_NAME MeshWiz)
 
-target_link_libraries(MeshWiz_bin MeshWiz_lib A3DCommon tinyxml)
+target_link_libraries(MeshWiz_bin MeshWiz_lib A3DCommon)
 
 if(WIN32)
     install(TARGETS MeshWiz_bin MeshWiz_lib
