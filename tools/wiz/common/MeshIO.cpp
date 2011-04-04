@@ -95,7 +95,14 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
             for(int i = 0; i < numGroups; ++i)
             {
                 Group g;
-                g.name = xml.getAttribute("Group", "name", "", i).c_str();
+
+//                g.name = xml.getAttribute("Group", "name", "", i).c_str();
+
+                std::string tmpGroupName = xml.getAttribute("Group", "name", "", i).c_str();
+                g.name = new char[tmpGroupName.length()+1];
+                g.name[tmpGroupName.length()] = 0;
+                memcpy(g.name, tmpGroupName.c_str(), tmpGroupName.size());
+
                 g.triangleCount = xml.getAttribute("Group", "count", 0, i);
                 
                 if(groupIndex == 0)

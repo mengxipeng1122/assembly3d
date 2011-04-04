@@ -132,7 +132,7 @@ void Cylinder::create(Mesh* mesh, bool positions, bool normals,
 
     generateIndices(mesh);
 
-    Group g = {"Cylinder", 0, numberOfTriangles()};
+    Group g = {(char*)"Cylinder", 0, numberOfTriangles()};
     mesh->addGroup(g);
 
 }

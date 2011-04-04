@@ -25,7 +25,7 @@ include_directories(${Tinyxml_INCLUDE})
 add_library(A3DCommon ${A3DCommon_SOURCE}
                       ${A3DCommon_HEADER})
 
-target_link_libraries(A3DCommon tinyxml)
+target_link_libraries(A3DCommon)
 
 install(TARGETS A3DCommon
         LIBRARY DESTINATION lib

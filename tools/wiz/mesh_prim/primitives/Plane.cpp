@@ -103,8 +103,8 @@ void Plane::create(Mesh* mesh, bool positions, bool normals,
         vert.normal[1] = xy_normals[i*3 + 1];
         vert.normal[2] = xy_normals[i*3 + 2];
 
-        vert.texCoord[0] = xy_texCoords[i*3 + 0];
-        vert.texCoord[1] = xy_texCoords[i*3 + 1];
+        vert.texCoord[0] = xy_texCoords[i*2 + 0];
+        vert.texCoord[1] = xy_texCoords[i*2 + 1];
 
         vert.position[0] *= m_halfExtend;
         vert.position[1] *= m_halfExtend;
@@ -124,6 +124,6 @@ void Plane::create(Mesh* mesh, bool positions, bool normals,
         mesh->addIndex(xy_indices[i]);
     }
     mesh->setNumTriangles(numTriangles);
-    Group g = {"xy_plane", 0, 2};
+    Group g = {(char*)"xy_plane", 0, 2};
     mesh->addGroup(g);
 }

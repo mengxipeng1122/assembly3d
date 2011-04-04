@@ -20,8 +20,8 @@ add_custom_target(uninstall
 
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_C_FLAGS_DEBUG "-g -Wall -Wextra -DDEBUG -D_DEBUG")
-  set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -Wextra -DDEBUG -D_DEBUG")
+  set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -ggdb -Wall -Wextra -DDEBUG -D_DEBUG")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -ggdb -Wall -Wextra -DDEBUG -D_DEBUG")
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if(MSVC)

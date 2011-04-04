@@ -107,7 +107,7 @@ void Sphere::create(Mesh* mesh, bool positions, bool normals,
 
     generateIndices(mesh);
 
-    Group g = {"Sphere", 0, numberOfTriangles()};
+    Group g = {(char*)"Sphere", 0, numberOfTriangles()};
     mesh->addGroup(g);
 
 }

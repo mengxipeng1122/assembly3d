@@ -135,7 +135,7 @@ void PartialCylinder::create(Mesh* mesh, bool positions, bool normals,
 
     generateIndices(mesh);
 
-    Group g = {"PartialCylinder", 0, numberOfTriangles()};
+    Group g = {(char*)"PartialCylinder", 0, numberOfTriangles()};
     mesh->addGroup(g);
 
 }
