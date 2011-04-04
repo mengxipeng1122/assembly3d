@@ -18,7 +18,7 @@ set_target_properties(MeshTest_lib PROPERTIES OUTPUT_NAME MeshTest)
 
 add_executable(MeshTest_bin Main.cpp)
 set_target_properties(MeshTest_bin PROPERTIES OUTPUT_NAME MeshTest)
-target_link_libraries(MeshTest_bin MeshTest_lib A3DCommon tinyxml)
+target_link_libraries(MeshTest_bin MeshTest_lib A3DCommon)
 
 if(WIN32)
     install(TARGETS MeshTest_bin MeshTest_lib

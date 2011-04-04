@@ -14,7 +14,6 @@ set(MeshPrim_HEADER MeshPrim.h
                     primitives/Torus.h
                     primitives/Trapezoid.h
                     primitives/Cylinder.h
-                    primitives/Torus.cpp
                     primitives/Disk.h
                     primitives/PartialCylinder.h
                     primitives/PartialDisk.h)
@@ -24,6 +23,7 @@ set(MeshPrim_SOURCE PrimGen.cpp
                     primitives/Rectangle.cpp
                     primitives/Cube.cpp
                     primitives/Sphere.cpp
+                    primitives/Torus.cpp
                     primitives/Trapezoid.cpp
                     primitives/Cylinder.cpp
                     primitives/Disk.cpp
@@ -36,7 +36,7 @@ set_target_properties(MeshPrim_lib PROPERTIES OUTPUT_NAME MeshPrim)
 
 add_executable(MeshPrim_bin Main.cpp)
 set_target_properties(MeshPrim_bin PROPERTIES OUTPUT_NAME MeshPrim)
-target_link_libraries(MeshPrim_bin MeshPrim_lib A3DCommon tinyxml)
+target_link_libraries(MeshPrim_bin MeshPrim_lib A3DCommon)
 
 if(WIN32)
     install(TARGETS MeshPrim_bin MeshPrim_lib
@@ -64,7 +64,6 @@ primitives/Sphere.h
 primitives/Torus.h
 primitives/Trapezoid.h
 primitives/Cylinder.h
-primitives/Torus.cpp
 primitives/Disk.h
 primitives/PartialCylinder.h
 primitives/PartialDisk.h
