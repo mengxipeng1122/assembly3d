@@ -105,14 +105,7 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
 
                 g.triangleCount = xml.getAttribute("Group", "count", 0, i);
                 
-                if(groupIndex == 0)
-                {
-                    g.startIndex = numIndices;
-                }
-                else
-                {
-                    g.startIndex = numIndices+1;
-                }
+                g.startIndex = numIndices;
                 numIndices += g.triangleCount * 3;
                 ++groupIndex;
                 
