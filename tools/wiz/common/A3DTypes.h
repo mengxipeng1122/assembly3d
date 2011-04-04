@@ -34,6 +34,8 @@
 #ifndef _ASSEMBLY3DTYPES_H_
 #define _ASSEMBLY3DTYPES_H_
 
+#include <string>
+
 namespace assembly3d
 {
     /**
@@ -55,7 +57,7 @@ namespace assembly3d
      */
     struct Group
     {
-        const char* name;
+        char* name;
         int startIndex;
         int triangleCount;
     };

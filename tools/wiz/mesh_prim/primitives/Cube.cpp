@@ -175,8 +175,8 @@ void Cube::create(Mesh* mesh, bool positions, bool normals,
         vert.normal[1] = cube_normals[i*3 + 1];
         vert.normal[2] = cube_normals[i*3 + 2];
 
-        vert.texCoord[0] = cube_texCoords[i*3 + 0];
-        vert.texCoord[1] = cube_texCoords[i*3 + 1];
+        vert.texCoord[0] = cube_texCoords[i*2 + 0];
+        vert.texCoord[1] = cube_texCoords[i*2 + 1];
 
         vert.position[0] *= m_halfExtend;
         vert.position[1] *= m_halfExtend;
@@ -197,7 +197,7 @@ void Cube::create(Mesh* mesh, bool positions, bool normals,
         mesh->addIndex(cube_indices[i]);
     }
     mesh->setNumTriangles(numTriangles);
-    Group g = {"Cube", 0, numTriangles};
+    Group g = {(char*)"Cube", 0, numTriangles};
     mesh->addGroup(g);
 
 }

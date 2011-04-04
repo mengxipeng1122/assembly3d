@@ -101,7 +101,7 @@ void Rectangle::create(Mesh *mesh, bool positions, bool normals,
 
     generateIndices(mesh);
 
-    Group g = {"Rectangle", 0, numberOfTriangles()};
+    Group g = {(char*)"Rectangle", 0, numberOfTriangles()};
     mesh->addGroup(g);
 
 

@@ -119,7 +119,7 @@ void Torus::create(Mesh* mesh, bool positions, bool normals,
 
     generateIndices(mesh);
 
-    Group g = {"Torus", 0, numberOfTriangles()};
+    Group g = {(char*)"Torus", 0, numberOfTriangles()};
     mesh->addGroup(g);
 
 }

@@ -104,7 +104,7 @@ void Trapezoid::create(Mesh* mesh, bool positions, bool normals,
 
     generateIndices(mesh);
 
-    Group g = {"Trapezoid", 0, numberOfTriangles()};
+    Group g = {(char*)"Trapezoid", 0, numberOfTriangles()};
     mesh->addGroup(g);
 
 }

@@ -36,7 +36,7 @@ set_target_properties(MeshPrim_lib PROPERTIES OUTPUT_NAME MeshPrim)
 
 add_executable(MeshPrim_bin Main.cpp)
 set_target_properties(MeshPrim_bin PROPERTIES OUTPUT_NAME MeshPrim)
-target_link_libraries(MeshPrim_bin MeshPrim_lib A3DCommon)
+target_link_libraries(MeshPrim_bin MeshPrim_lib A3DCommon tinyxml)
 
 if(WIN32)
     install(TARGETS MeshPrim_bin MeshPrim_lib

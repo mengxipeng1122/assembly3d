@@ -106,7 +106,7 @@ void Disk::create(Mesh* mesh, bool positions, bool normals,
 
     generateIndices(mesh);
 
-    Group g = {"Disk", 0, numberOfTriangles()};
+    Group g = {(char*)"Disk", 0, numberOfTriangles()};
     mesh->addGroup(g);
 
 
