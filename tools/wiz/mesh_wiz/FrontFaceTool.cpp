@@ -67,10 +67,12 @@ void FrontFaceTool::flip(Mesh* mesh)
     {
         Vertex* vert = &mesh->getVertex(i);
 
-        vert->normal[0] *= -1.0f;
-        vert->normal[1] *= -1.0f;
-        vert->normal[2] *= -1.0f;
+        vert->normal[0] = -vert->normal[0];
+        vert->normal[1] = -vert->normal[1];
+        vert->normal[2] = -vert->normal[2];
     }
+    if(mesh->hasTangents())
+        mesh->generateTangents();
 }
 
 //bool FrontFaceTool::testNormalConsitency(Mesh *mesh, std::string& resultMsg)
