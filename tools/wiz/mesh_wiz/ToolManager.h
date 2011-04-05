@@ -167,7 +167,8 @@ namespace assembly3d
              * @brief Tests normal consitency.
              *
              */
-            bool testNormalConsitancy();
+            bool makeNormalsConsistent();
+            bool checkFrontFaceConsistenty(int& numOutwards, int& numInwards);
 
         protected:
         private:

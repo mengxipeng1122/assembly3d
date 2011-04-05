@@ -251,7 +251,7 @@ void ToolManager::flip()
     m_frontFaceTool->flip(m_mesh);
 }
 
-bool ToolManager::testNormalConsitancy()
+bool ToolManager::makeNormalsConsistent()
 {
     bool modelChanged = false;
     if(m_verboseOutput)
@@ -259,10 +259,26 @@ bool ToolManager::testNormalConsitancy()
 
     std::string resMsg;
 
-    modelChanged = m_frontFaceTool->testNormalConsitency(m_mesh, resMsg);
+    modelChanged = m_frontFaceTool->makeConsistent(m_mesh, resMsg);
 
     if(m_verboseOutput)
         std::cout << resMsg << std::endl;
 
     return modelChanged;
+}
+
+bool ToolManager::checkFrontFaceConsistenty(int& numOutwards, int& numInwards)
+{
+    std::vector<int> vertsOutwards;
+    std::vector<int> vertsInwards;
+
+    bool consistent = m_frontFaceTool->isConsistent(m_mesh, vertsOutwards, vertsInwards);
+    numOutwards = (int)vertsOutwards.size();
+    numInwards = (int)vertsInwards.size();
+
+    if(consistent)
+        return true;
+    else
+        return false;
+
 }
