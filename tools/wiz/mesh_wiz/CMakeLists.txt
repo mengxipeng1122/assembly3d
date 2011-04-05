@@ -1,6 +1,6 @@
 
 set(TCLAP_INCLUDE ${CMAKE_SOURCE_DIR}/external_libs/tclap-1.2.0/include)
-set(A3DCommon_INCLUDE ${CMAKE_SOURCE_DIR}/common)
+set(A3DTools_INCLUDE ${CMAKE_SOURCE_DIR}/common)
 
 set(MeshWiz_HEADERS
     MeshWiz.h
@@ -24,16 +24,16 @@ set(MeshWiz_SOURCE
     FrontFaceTool.cpp
     )
 
-include_directories(${A3DCommon_INCLUDE} ${TCLAP_INCLUDE})
+include_directories(${A3DTools_INCLUDE} ${TCLAP_INCLUDE})
 
 add_library(MeshWiz_lib STATIC ${MeshWiz_SOURCE} ${MeshWiz_HEADERS})
 set_target_properties(MeshWiz_lib PROPERTIES OUTPUT_NAME MeshWiz)
-#target_link_libraries(MeshWiz_lib A3DCommon)
+#target_link_libraries(MeshWiz_lib A3DTools)
 
 add_executable(MeshWiz_bin Main.cpp)
 set_target_properties(MeshWiz_bin PROPERTIES OUTPUT_NAME MeshWiz)
 
-target_link_libraries(MeshWiz_bin MeshWiz_lib A3DCommon)
+target_link_libraries(MeshWiz_bin MeshWiz_lib A3DTools)
 
 if(WIN32)
     install(TARGETS MeshWiz_bin MeshWiz_lib

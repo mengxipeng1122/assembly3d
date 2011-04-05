@@ -1,7 +1,7 @@
 set(TCLAP_INCLUDE ${CMAKE_SOURCE_DIR}/external_libs/tclap-1.2.0/include)
-set(A3DCommon_INCLUDE ${CMAKE_SOURCE_DIR}/common)
+set(A3DTools_INCLUDE ${CMAKE_SOURCE_DIR}/common)
 
-include_directories(${A3DCommon_INCLUDE} ${TCLAP_INCLUDE})
+include_directories(${A3DTools_INCLUDE} ${TCLAP_INCLUDE})
 
 set(MeshPrim_HEADER MeshPrim.h
                     MeshPrimIncludes.h
@@ -35,7 +35,7 @@ set_target_properties(MeshPrim_lib PROPERTIES OUTPUT_NAME MeshPrim)
 
 add_executable(MeshPrim_bin Main.cpp)
 set_target_properties(MeshPrim_bin PROPERTIES OUTPUT_NAME MeshPrim)
-target_link_libraries(MeshPrim_bin MeshPrim_lib A3DCommon)
+target_link_libraries(MeshPrim_bin MeshPrim_lib A3DTools)
 
 if(WIN32)
     install(TARGETS MeshPrim_bin MeshPrim_lib

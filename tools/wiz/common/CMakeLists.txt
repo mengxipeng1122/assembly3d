@@ -1,12 +1,12 @@
 
-set(A3DCommon_SOURCE
+set(A3DTools_SOURCE
     Mesh.cpp
     MeshIO.cpp
     StringUtils.cpp
     FileUtils.cpp
     XmlParser.cpp
   )
-set(A3DCommon_HEADER
+set(A3DTools_HEADER
     Assembly3D.h
     A3DIncludes.h
     A3DTypes.h
@@ -27,10 +27,10 @@ set(Tinyxml_INCLUDE
   tinyxml/tinyxml.h
   )
 
-add_library(A3DCommon ${A3DCommon_SOURCE} ${A3DCommon_HEADER}
+add_library(A3DTools ${A3DTools_SOURCE} ${A3DTools_HEADER}
                       ${Tinyxml_SOURCE} ${Tinyxml_INCLUDE})
 
-install(TARGETS A3DCommon
+install(TARGETS A3DTools
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)
 
