@@ -168,10 +168,11 @@ int main (int argc, char* argv[])
 
     TCLAP::SwitchArg flipArg("", "flip-front-face", "Flips front-faces.");
 
-    TCLAP::SwitchArg testNormalConsistencyArg("", "test-normal-consistency",
-                                              "Tests normal consistency by comparing file and generating normals: "\
-                                              "angle < PI/2 means facing outwards otherwise inwards.",
-                                              false);
+    TCLAP::SwitchArg makeNormalsConsistent("", "make-normals-consistent",
+                                           "Makes normals consistent if neccesary, by comparing file "\
+                                           "and generating normals: angle < PI/2 means facing outwards "\
+                                           "otherwise inwards.",
+                                           false);
 
     TCLAP::SwitchArg validateAndChangeArg("", "validate-and-change",
                                           "Validates and changes mesh.", false);
@@ -194,7 +195,7 @@ int main (int argc, char* argv[])
     cmd.add(inputArg);
     cmd.add(outputArg);
     cmd.add(flipArg);
-    cmd.add(testNormalConsistencyArg);
+    cmd.add(makeNormalsConsistent);
 //    cmd.add(validateAndChangeArg);
 //    cmd.add(optimizeIndicesArg);
 //    cmd.add(optimizeVerticesArg);
@@ -307,6 +308,18 @@ int main (int argc, char* argv[])
     if(infoArg.getValue())
     {
         std::cout << mesh << std::endl;
+        int numOutwards = 0;
+        int numInwards = 0;
+        bool normalsConsitency = toolMgr.checkFrontFaceConsistenty(numOutwards, numInwards);
+        std::cout << "Normals consistent: ";
+
+        if(normalsConsitency)
+            std::cout << "yes";
+        else
+            std::cout << "no";
+
+        std::cout << " (number outwards/inwards: " << numOutwards << "/" << numInwards << ")" << std::endl;
+        std::cout << std::endl;
         return 0;
     }
     
@@ -519,9 +532,9 @@ int main (int argc, char* argv[])
     }
 
     //---------------------------------------------------------------------------------------------------------
-    if(testNormalConsistencyArg.isSet())
+    if(makeNormalsConsistent.isSet())
     {
-        if(toolMgr.testNormalConsitancy())
+        if(toolMgr.makeNormalsConsistent())
         {
             modelChanged = true;
         }

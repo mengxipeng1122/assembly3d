@@ -62,7 +62,12 @@ namespace assembly3d
              * @param mesh The mesh to work on.
              * @param resultMsg Veriable to write status message in
              */
-            bool testNormalConsitency(Mesh* mesh, std::string& resultMsg);
+//            bool testNormalConsitency(Mesh* mesh, std::string& resultMsg);
+            bool makeConsistent(Mesh* mesh, std::string& resultMsg);
+
+            bool isConsistent(Mesh* mesh, std::vector<int>& verticesOutwards,
+                              std::vector<int>& verticesInwards);
+
         };
     }
 }

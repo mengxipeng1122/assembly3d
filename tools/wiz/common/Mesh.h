@@ -428,6 +428,7 @@ namespace assembly3d
         obj.getExtent(x, y, z);
         os << "Extent:      " << x << " / " << y << " / " << z << "\n";
         os << "Radius:      " << obj.getRadius() << "\n";
+        os << "---------------------------";
     //    os << "Format: ";
         return os;
     }
