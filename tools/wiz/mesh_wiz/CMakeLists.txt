@@ -28,7 +28,7 @@ include_directories(${A3DCommon_INCLUDE} ${TCLAP_INCLUDE})
 
 add_library(MeshWiz_lib STATIC ${MeshWiz_SOURCE} ${MeshWiz_HEADERS})
 set_target_properties(MeshWiz_lib PROPERTIES OUTPUT_NAME MeshWiz)
-target_link_libraries(MeshWiz_lib A3DCommon)
+#target_link_libraries(MeshWiz_lib A3DCommon)
 
 add_executable(MeshWiz_bin Main.cpp)
 set_target_properties(MeshWiz_bin PROPERTIES OUTPUT_NAME MeshWiz)

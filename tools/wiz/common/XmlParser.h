@@ -41,7 +41,7 @@
 
 #include <string>
 #include <vector>
-#include "tinyxml.h"
+#include "tinyxml/tinyxml.h"
 
 
 namespace assembly3d

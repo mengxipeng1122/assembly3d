@@ -28,9 +28,6 @@ if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif(MSVC)
 
-add_definitions(-DTIXML_USE_STL)
-
-#add_subdirectory(external_libs)
 add_subdirectory(common)
 add_subdirectory(mesh_wiz)
 add_subdirectory(mesh_test)
