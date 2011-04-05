@@ -32,7 +32,6 @@ set(MeshPrim_SOURCE PrimGen.cpp
 
 add_library(MeshPrim_lib ${MeshPrim_SOURCE} ${MeshPrim_HEADER})
 set_target_properties(MeshPrim_lib PROPERTIES OUTPUT_NAME MeshPrim)
-#target_link_libraries(MeshPrim_lib)
 
 add_executable(MeshPrim_bin Main.cpp)
 set_target_properties(MeshPrim_bin PROPERTIES OUTPUT_NAME MeshPrim)
