@@ -1,0 +1,25 @@
+{ 
+	"vertices": 
+	{ 
+		"count": 24, 
+		"attributes": 
+		[ 
+			{ "name": "POSITION", "size": 3, "type": "FLOAT" }, 
+			{ "name": "NORMAL", "size": 3, "type": "FLOAT" }, 
+			{ "name": "TEXTURE", "size": 2, "type": "FLOAT" }
+		]
+	}, 
+	"triangles": 
+	{ 
+		"type": "UNSIGNED_BYTE", 
+		"groups": 
+		[
+			{ "name": "NEGATIVE_X", "count": 2 }, 
+			{ "name": "POSITIVE_X", "count": 2 },
+			{ "name": "NEGATIVE_Y", "count": 2 }, 
+			{ "name": "POSITIVE_Y", "count": 2 }, 
+			{ "name": "NEGATIVE_Z", "count": 2 }, 
+			{ "name": "POSITIVE_Z", "count": 2 }
+		]
+	}
+}
