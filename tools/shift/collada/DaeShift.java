@@ -32,29 +32,20 @@
  */
 package org.interaction3d.assembly.tools.shift.collada;
 
-import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import org.interaction3d.assembly.tools.shift.util.Assembly;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import org.interaction3d.assembly.tools.shift.util.Path;
 
@@ -95,16 +86,11 @@ public final class DaeShift
 		{
 		}
 
-		boolean multiple = false;
 		String src = null, dst = null;
 		
 		for(String arg : args)
 		{
-			if(arg.equals("-m") || arg.equals("--multiple"))
-			{
-				multiple = true;
-			}
-			else if(src == null)
+			if(src == null)
 			{
 				src = arg;
 			}
@@ -140,31 +126,24 @@ public final class DaeShift
 		String name = Path.trunkObj(Path.filename(inputFile));                
 //	  DaeProcessor proc = new DaeProcessor(name, multiple);
 	  
-	  // load
-		readDae(inputFile);
-	  
-	  // save
+    
 	  final String path = outputDir;
-//	  Mesh.Assembly assembly = new Mesh.Assembly() 
-//    {
-//    		public void assemble(String name, CharSequence xml, ByteBuffer data)
-//    		{
-//    			try 
-//    			{
-//    				writeXml(xml, path + File.separator + name + ".mesh.xml");
-//	          writeData(data, path + File.separator + name + ".mesh.dat");			
-//          }
-//          catch(IOException ioe) { throw new RuntimeException(ioe); }
-//    		}
-//    };
-//	  
-//	  for(Mesh mesh : proc.getMeshes())
-//	  {            	  	
-//	    mesh.convert(assembly);
-//	  }
+		readDae(inputFile).find(new Assembly() 
+    {
+      @Override
+      public void assemble(String name, CharSequence xml, ByteBuffer data)
+      {
+        try 
+        {
+          writeXml(xml, path + File.separator + name + ".mesh.xml");
+          writeData(data, path + File.separator + name + ".mesh.dat");			
+        }
+        catch(IOException ioe) { throw new RuntimeException(ioe); }
+      }
+    });
 	}
 	
-	private static void readDae(String inputFile) throws Exception
+	private static MeshProcessor readDae(String inputFile) throws Exception
 	{
     DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
     domFactory.setNamespaceAware(false);
@@ -176,7 +155,7 @@ public final class DaeShift
     String version = (String) xpath.compile("COLLADA/@version").evaluate(document, XPathConstants.STRING);
     System.out.println("Collada version: " + version);
     
-    MeshProcessor meshProcessor = new MeshProcessor(document, xpath);
+    return new MeshProcessor(document, xpath);
 	}
 
 	private static void writeXml(CharSequence xml, String outputFile) throws IOException

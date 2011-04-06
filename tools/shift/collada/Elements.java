@@ -84,7 +84,7 @@ final class Elements
     
     // [input][poly][vertex]
     public static int[][][] parsePolylist(String text, int primitives, int inputs, int[] vcounts)
-    {
+    {    
         int[][][] polylist = new int[inputs][primitives][];
         for(int p=0; p<primitives; p++)
         {
@@ -114,7 +114,7 @@ final class Elements
         return polylist;
     }    
 
-    //TODO: needs fixing? at least adjsut style to similiar than above!
+    //TODO: needs fixing? at least adjust style to similiar than above!
     public static float[][] paraseFloatArray(String data, int count, int stride, int offset)
     {
         float[][] vertexElements = new float[count][stride];

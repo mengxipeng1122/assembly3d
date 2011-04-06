@@ -36,12 +36,12 @@ import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import org.interaction3d.assembly.tools.shift.util.Assembly;
 
 import org.interaction3d.assembly.tools.shift.util.Path;
 
@@ -130,8 +130,9 @@ public final class ObjShift
 	  
 	  // save
 	  final String path = outputDir;
-	  Mesh.Assembly assembly = new Mesh.Assembly() 
+	  Assembly assembly = new Assembly() 
     {
+      @Override
     		public void assemble(String name, CharSequence xml, ByteBuffer data)
     		{
     			try 

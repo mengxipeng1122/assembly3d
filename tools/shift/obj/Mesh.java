@@ -40,11 +40,12 @@ import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.interaction3d.assembly.tools.shift.util.Assembly;
 
 import static java.lang.String.format;
 import static org.interaction3d.assembly.tools.shift.obj.Vertex.POSITION;
-import static org.interaction3d.assembly.tools.shift.obj.Vertex.TEXTURE;
 import static org.interaction3d.assembly.tools.shift.obj.Vertex.NORMAL;
+import static org.interaction3d.assembly.tools.shift.obj.Vertex.TEXTURE;
 import static org.interaction3d.assembly.tools.shift.obj.Triangulization.triangulize;
 
 
@@ -53,12 +54,7 @@ import static org.interaction3d.assembly.tools.shift.obj.Triangulization.triangu
  * @author Michael Nischt
  */
 final class Mesh
-{
-		interface Assembly
-		{
-			void assemble(String name, CharSequence xml, ByteBuffer data);
-		}
-		
+{		
     private static final String DEFAULT_MATERIAL = "off";
 
     private final String name;
