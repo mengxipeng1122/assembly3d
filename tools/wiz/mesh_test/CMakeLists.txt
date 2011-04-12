@@ -1,8 +1,8 @@
 
 set(TCLAP_INCLUDE ${CMAKE_SOURCE_DIR}/external_libs/tclap-1.2.0/include)
-set(A3DCommon_INCLUDE ${CMAKE_SOURCE_DIR}/common)
+set(A3DTools_INCLUDE ${CMAKE_SOURCE_DIR}/common)
 
-include_directories(${A3DCommon_INCLUDE} ${TCLAP_INCLUDE})
+include_directories(${A3DTools_INCLUDE} ${TCLAP_INCLUDE})
 
 set(MeshTest_HEADER
     MeshTest.h
@@ -17,7 +17,7 @@ set_target_properties(MeshTest_lib PROPERTIES OUTPUT_NAME MeshTest)
 
 add_executable(MeshTest_bin Main.cpp)
 set_target_properties(MeshTest_bin PROPERTIES OUTPUT_NAME MeshTest)
-target_link_libraries(MeshTest_bin MeshTest_lib A3DCommon)
+target_link_libraries(MeshTest_bin MeshTest_lib A3DTools)
 
 if(WIN32)
     install(TARGETS MeshTest_bin MeshTest_lib
