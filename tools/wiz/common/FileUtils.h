@@ -98,6 +98,12 @@ namespace assembly3d
              * @return The filename with new extension
             */
             static std::string getBinaryFileName(const char* fileName, const char* oldExt, const char* newExt);
+            /**
+             * @brief Gets file extension.
+             *
+             * @param s File name string.
+             */
+            static std::string getFileExtension(const std::string& s);
         private:
         };
     }

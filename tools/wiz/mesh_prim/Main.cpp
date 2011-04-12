@@ -120,6 +120,10 @@ int main (int argc, char* argv[])
 #endif
         outputFile = outputDir + sep + outputNameArg.getValue();
 
+        if(FileUtils::getFileExtension(outputFile).compare("xml") != 0)
+        {
+            outputFile.append(".xml");
+        }
         outputBinaryFile = FileUtils::getBinaryFileName(outputFile.c_str(), ".xml", ".dat");
 
         bool genPos = true;
