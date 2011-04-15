@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Mesh xmlns="http://assembly.interaction3d.org/mesh" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://assembly.interaction3d.org/mesh http://assembly.interaction3d.org/xml/schema/mesh.xsd">
+  <Vertices count="9223" attributes="3">
+    <Attribute name="POSITION" size="3" type="FLOAT"/>
+    <Attribute name="NORMAL" size="3" type="FLOAT"/>
+    <Attribute name="TEXTURE" size="2" type="FLOAT"/>
+  </Vertices>
+  <Triangles type="UNSIGNED_SHORT" groups="1">
+    <Group name="Infinite" count="17684"/>
+  </Triangles>
+</Mesh>
