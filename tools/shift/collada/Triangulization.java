@@ -39,30 +39,55 @@ package org.interaction3d.assembly.tools.shift.collada;
  */
 final class PolyListTriangulization
 {
-    public static int[][] triangulizePolylist(int[][] polylist)
+  public static int[] triangulizePolylist(int[] elements, int[] vcounts)
+  {
+      int triangles = 0;
+      for(int c : vcounts)
+      {
+          assert(c >= 3);
+          triangles += (c - 2);
+      }
+
+      int[] indices = new int[triangles*3];
+
+      int index=0, index2=0;
+      for(int i=0; i<vcounts.length; i++)
+      {
+          for(int j=0, N=vcounts[i]-2; j<N; j++)
+          {
+            int ndx = index2++;
+            indices[index++] = elements[ndx+0];
+            indices[index++] = elements[ndx+1];
+            indices[index++] = elements[ndx+2];
+          }
+      }
+
+      return indices;
+  }  
+
+  public static int[][] triangulizePolylist(int[][] polylist)
+  {
+    int numTriangless = 0;
+    for(int[] poly : polylist)
     {
-        int numTriangless = 0;
-        for(int[] poly : polylist)
-        {
-            assert(poly.length > 2);
-            numTriangless += poly.length - 2;
-        }
-        
-        int[][] triangles = new int[numTriangless][3];
-        
-        int index = 0;
-        for(int[] poly : polylist)
-        {
-            numTriangless = poly.length - 2;
-            for(int i=0; i<numTriangless; i++)
-            {
-                int[] triangle = triangles[index++];
-                triangle[0] = poly[i+0];
-                triangle[1] = poly[i+1];
-                triangle[2] = poly[i+2];                
-            }
-        }
-        
-        return triangles;
+      assert(poly.length > 2);
+      numTriangless += poly.length - 2;
     }
+
+    int[][] triangles = new int[numTriangless][3];
+
+    int index = 0;
+    for(int[] poly : polylist)
+    {
+      numTriangless = poly.length - 2;
+      for(int i=0; i<numTriangless; i++)
+      {
+        int[] triangle = triangles[index++];
+        triangle[0] = poly[i+0];
+        triangle[1] = poly[i+1];
+        triangle[2] = poly[i+2];
+      }
+    }
+    return triangles;
+  }
 }

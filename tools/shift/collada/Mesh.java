@@ -38,10 +38,8 @@ import java.nio.FloatBuffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import org.interaction3d.assembly.tools.shift.util.Assembly;
 
-import static org.interaction3d.assembly.tools.shift.collada.PolyListTriangulization.triangulizePolylist;
 import static java.lang.String.format;
 
 final class Mesh
@@ -49,14 +47,16 @@ final class Mesh
   private static class Attribute
   {
     final String name;
-    final float[][] coordinates;
-    final int size, index;
+    final float[] elements;
+    final int count, dimension, index;
 
-    public Attribute(String name, float[][] coordinates, int size, int index)
+    Attribute(String name, float[] elements, int count, int dimension, int index)
     {
+      assert(count*dimension == elements.length);
       this.name = name;
-      this.coordinates = coordinates;
-      this.size = size;
+      this.elements = elements;
+      this.count = count;
+      this.dimension = dimension;
       this.index = index;
     }
   }
@@ -64,85 +64,46 @@ final class Mesh
   private static class Group
   {
     final String name;
-    final int[][] triangles;
+    final int[] elements;
+    final int triangles;
 
-    public Group(String name, int[][] triangles)
+    Group(String name, int[] elements)
     {
+      assert(elements.length % 3 == 0);
       this.name = name;
-      this.triangles = triangles;
+      this.elements = elements;
+      this.triangles = elements.length / 3;
     }
   }
+  
   private final ArrayList<Attribute> attributes = new ArrayList<Attribute>();
   private final ArrayList<int[]> vertices = new ArrayList<int[]>();
   private final ArrayList<Group> triangles = new ArrayList<Group>();
-  private final HashMap<int[], Integer> vertexMap = new HashMap<int[], Integer>();
-
-  Mesh()
+  private final SingleIndexSet triangleVertices = new SingleIndexSet(new SingleIndexSet.Vertices() 
   {
-  }
-
-  void triangles(String material, int[][][] triangles, int primitives, int inputs)
-  {
-    int[][] tri = new int[primitives][3];
-
-    for (int p = 0; p < primitives; p++)
+    @Override
+    public void vertex(int... elements)
     {
-      for (int v = 0; v < 3; v++)
-      {
-        int[] vertex = new int[inputs];
-        for (int i = 0; i < vertex.length; i++)
-        {
-          vertex[i] = triangles[i][p][v];
-        }
-        tri[p][v] = vertex(vertex);
-      }
+      vertices.add(elements);
     }
-
-    this.triangles.add(new Group(material, tri));
-  }
-
-  void polylist(String material, int[][][] polylist, int[] vcounts, int inputs)
-  {    
-    int[][] poly = new int[vcounts.length][];
-
-    for (int p = 0; p < vcounts.length; p++)
-    {
-      poly[p] = new int[vcounts[p]];
-
-      for (int v = 0; v < vcounts[p]; v++)
-      {
-        int[] vertex = new int[inputs];
-        for (int i = 0; i < vertex.length; i++)
-        {
-          vertex[i] = polylist[i][p][v];
-        }
-        poly[p][v] = vertex(vertex);
-      }
-    }
-
-    this.triangles.add(new Group(material, triangulizePolylist(poly)));
-  }
-
+  });
   
-  void attribute(String name, float[][] coordinates, int size, int index)
-  {
-    attributes.add(new Attribute(name, coordinates, size, index));
+  void triangles(String material, int[] elements, int triangles, int inputs)
+  {    
+    this.triangles.add(new Group(material, triangleVertices.triangles(elements, triangles, inputs)));
   }
+  
+  void polylist(String material, int[] elements, int[] vcounts, int inputs)
+  {    
+    this.triangles.add(new Group(material, triangleVertices.polylist(elements, vcounts, inputs)));
+  }  
 
-  private int vertex(int[] vertex)
+  void attribute(String name, float[] coordinates, int count, int dimension, int index)
   {
-    Integer index = vertexMap.get(vertex);
-    if (index != null)
-    {
-      return index;
-    }
-
-    index = vertices.size();
-    vertices.add(vertex);
-    return index;
+    attributes.add(new Attribute(name, coordinates, count, dimension, index));
   }
-
-  public void convert(String name, Assembly assembly)
+  
+  void convert(String name, Assembly assembly)
   {
     StringBuilder xml = new StringBuilder();
 
@@ -167,23 +128,19 @@ final class Mesh
     xml.append(format("\t<Vertices count=\"%d\" attributes=\"%d\">\n", numVertices, attributes.size()));
     for (Attribute attribute : attributes)
     {
-      geomBytes += numVertices * attribute.size * 4;
-      xml.append(format("\t\t<Attribute name=\"%s\" size=\"%d\" type=\"%s\" />\n", attribute.name, attribute.size, "FLOAT"));
+      geomBytes += numVertices * attribute.dimension * 4;
+      xml.append(format("\t\t<Attribute name=\"%s\" size=\"%d\" type=\"%s\" />\n", attribute.name, attribute.dimension, "FLOAT"));
     }
     xml.append("\t</Vertices>\n");
 
     xml.append(format("\t<Triangles type=\"%s\" groups=\"%d\" >\n", indexType, triangles.size()));
     for (Group group : triangles)
     {
-      topoBytes += indexBytes * 3 * group.triangles.length;
-      xml.append(format("\t\t<Group name=\"%s\" count=\"%d\" />\n", group.name, group.triangles.length));
+      topoBytes += indexBytes * group.elements.length;
+      xml.append(format("\t\t<Group name=\"%s\" count=\"%d\" />\n", group.name, group.elements.length/3));
     }
     xml.append("\t</Triangles>\n");
     xml.append("</Mesh>\n");
-
-
-    System.out.println(xml);
-    System.out.println("  ------------  ");
 
     ByteBuffer buffer = ByteBuffer.allocateDirect(geomBytes + topoBytes).order(ByteOrder.LITTLE_ENDIAN);
 
@@ -192,7 +149,8 @@ final class Mesh
     {
       for (int[] vertex : vertices)
       {
-        fBuffer.put(attribute.coordinates[vertex[attribute.index]]);
+        int vIndex = vertex[attribute.index]*attribute.dimension;
+        fBuffer.put(attribute.elements, vIndex, attribute.dimension);
       }
     }
 
@@ -202,53 +160,43 @@ final class Mesh
     IntBuffer iBuffer = buffer.asIntBuffer();
     buffer.rewind();
 
-
     for (Group group : triangles)
     {
       if (indexBytes == 1)
       {
-        putBytes(bBuffer, group.triangles);
+        putBytes(bBuffer, group.elements);
       }
       else if (indexBytes == 2)
       {
-        putShorts(sBuffer, group.triangles);
+        putShorts(sBuffer, group.elements);
       }
       else
       {
-        putInts(iBuffer, group.triangles);
+        putInts(iBuffer, group.elements);
       }
     }
     
     assembly.assemble(name, xml, buffer);
   }
-
-  private static void putInts(IntBuffer buffer, int[][] coordinates)
+  
+  private static void putInts(IntBuffer buffer, int[] coordinates)
   {
-    for (int[] element : coordinates)
+    buffer.put(coordinates);
+  }
+
+  private static void putShorts(ShortBuffer buffer, int[] coordinates)
+  {
+    for (int element : coordinates)
     {
-      buffer.put(element);
+      buffer.put((short) element);
     }
   }
 
-  private static void putShorts(ShortBuffer buffer, int[][] coordinates)
+  private static void putBytes(ByteBuffer buffer, int[] coordinates)
   {
-    for (int[] element : coordinates)
+    for (int element : coordinates)
     {
-      for (int e : element)
-      {
-        buffer.put((short) e);
-      }
-    }
-  }
-
-  private static void putBytes(ByteBuffer buffer, int[][] coordinates)
-  {
-    for (int[] element : coordinates)
-    {
-      for (int e : element)
-      {
-        buffer.put((byte) e);
-      }
+      buffer.put((byte) element);
     }
   }
 }

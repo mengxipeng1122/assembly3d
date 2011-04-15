@@ -32,38 +32,26 @@
  */
 package org.interaction3d.assembly.tools.shift.collada;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-
 /**
  *
  * @author Michael Nischt
  */
- final class InputParser
- {
-	public static Input parseInput(Node inputNode)
-	{
-	  NamedNodeMap inputAttributes = inputNode.getAttributes();
-	  String semantic = inputAttributes.getNamedItem("semantic").getTextContent();
-	  String source = inputAttributes.getNamedItem("source").getTextContent();
-	  
-	  int set = 0, offset = 0;
-	  {
-	      Node offsetNode = inputAttributes.getNamedItem("offset");
-	      if (offsetNode != null)
-	          offset = Integer.parseInt(offsetNode.getTextContent());
-	  }
-	  {
-	      Node setNode = inputAttributes.getNamedItem("set");
-	      if (setNode != null)
-	          set = Integer.parseInt(setNode.getTextContent());
-	  }
-	  
-	  return new Input(offset, semantic, source, set);
-	}
-	
-	private InputParser() { /* static class */ }
-} 
+final class Accessor
+{
+  final String source;
+  final int count, stride;
+  final int offset;
+
+  Accessor(String source, int count, int stride, int offset)
+  {
+    this.source = source;
+    this.count = count;
+    this.stride = stride;
+    this.offset = offset;
+  }
+  
+  boolean hasExternalSource()
+  {
+    return source.charAt(0) != '#';
+  }  
+}

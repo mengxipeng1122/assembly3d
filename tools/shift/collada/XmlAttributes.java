@@ -30,48 +30,84 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-
 package org.interaction3d.assembly.tools.shift.collada;
+
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
+import static java.lang.Integer.parseInt;
+import static java.lang.Float.parseFloat;
 
 /**
  *
  * @author Michael Nischt
  */
-final class InputCmp 
+final class XmlAttributes
 {
-	private Input[] reference;
+  private final NamedNodeMap attributes;
 
-	public Input[] reference() 
-	{
-		return reference;
-	}
-
-	public boolean compare(Input[] inputs) 
-	{
-		if (reference == null) 
-		{
-			reference = inputs.clone();
-		}
-		return compare(reference, inputs);
-	}
-	
-	public static boolean compare(Input[] a, Input[] b) 
-	{
-		if(a.length != b.length) 
-		{
-				return false;
-		}
-		for(int i=0; i<a.length; i++) if (!compare(a[i], a[i])) 
+  public XmlAttributes(Node node)
+  {
+    this(node.getAttributes());
+  }
+  
+  public XmlAttributes(NamedNodeMap attributes)
+  {
+    if(attributes == null)
     {
-        return false;
-		}
-		return true;
-	}	
+      throw new NullPointerException();
+    }    
+    this.attributes = attributes;
+  }
 
-	public static boolean compare(Input a, Input b) 
-	{
-	  return a.semantic.equals(b.semantic)
-        && b.set == b.set
-        && a.offset == b.offset;
-	}
+  public String getString(String name)
+  {
+    Node node = attributes.getNamedItem(name);
+    return node.getNodeValue();
+  }   
+
+  
+  public String getString(String name, String value)
+  {
+    Node node = attributes.getNamedItem(name);
+    if(node == null) 
+    {
+      return value;
+    }
+    return node.getNodeValue();
+  }  
+  
+  public int getInt(String name)
+  {
+    Node node = attributes.getNamedItem(name);
+    return parseInt(node.getNodeValue());    
+  }  
+  
+  public int getInt(String name, int value)
+  {
+    Node node = attributes.getNamedItem(name);
+    if(node == null) 
+    {
+      return value;
+    }
+    return parseInt(node.getNodeValue());    
+  }
+  
+  
+  public float getFloat(String name)
+  {
+    Node node = attributes.getNamedItem(name);
+    return parseFloat(node.getNodeValue());    
+  }    
+    
+  
+  public float getFloat(String name, float value)
+  {
+    Node node = attributes.getNamedItem(name);
+    if(node == null) 
+    {
+      return value;
+    }
+    return parseFloat(node.getNodeValue());    
+  }  
 }

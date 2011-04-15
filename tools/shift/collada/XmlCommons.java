@@ -32,76 +32,37 @@
  */
 package org.interaction3d.assembly.tools.shift.collada;
 
+import org.w3c.dom.Node;
+
 /**
  *
  * @author Michael Nischt
  */
-final class Input
+final class XmlCommons
 {
-  final int offset;
-  final String semantic;
-  final String source;
-  final int set;
-
-  Input(int offset, String semantic, String source, int set)
-  {
-    if(semantic == null || source == null)
-    {
-        throw new NullPointerException();
-    }
-
-    this.offset = offset;
-    this.semantic = semantic;
-    this.source = source;
-    this.set = set;
-  }
-
-  boolean hasExternalSource()
-  {
-    return source.charAt(0) != '#';
-  }
-
-  static int groups(Input... inputs)
-  {
-    int groups = 0;
-
-    for(Input input : inputs)
-    {
-        groups = Math.max(groups, input.offset+1);
-    }
-    return groups;
-  }
-
-  static Input select(String semantic, int set, Input... inputs)
-  {
-    for(Input input : inputs)
-    {
-        if(input.set == set && input.semantic.equals(semantic))
-        {
-            return input;
-        }
-    }
-    return null;
-  }
-
-  public static boolean compare(Input[] a, Input[] b) 
-  {
-    if(a.length != b.length) 
-    {
-        return false;
-    }
-    for(int i=0; i<a.length; i++) if (!compare(a[i], b[i])) 
-    {
-        return false;
-    }
-    return true;
-  }	
-
-  public static boolean compare(Input a, Input b) 
-  {
-    return a.semantic.equals(b.semantic)
-        && b.set == b.set
-        && a.offset == b.offset
-        && a.source.equals(b.source);
-  }    
+	static Accessor parseAccessor(Node accessorNode)
+	{
+    XmlAttributes attributes = new XmlAttributes(accessorNode);
+	  String source = attributes.getString("source");	  
+	  int count = attributes.getInt("count");
+	  int stride = attributes.getInt("stride", 1);
+    int offset = attributes.getInt("offset", 0);	  
+	  return new Accessor(source, count, stride, offset);
+	}  
+  
+	static Input parseInput(Node inputNode)
+	{
+    XmlAttributes attributes = new XmlAttributes(inputNode);
+	  String semantic = attributes.getString("semantic");
+	  String source = attributes.getString("source");	  
+    int offset = attributes.getInt("offset", 0);
+	  int set = attributes.getInt("set", 0);
+	  
+	  return new Input(offset, semantic, source, set);
+	}  
+  
+	static String parseParamType(Node paramNode)
+	{
+    return new XmlAttributes(paramNode).getString("type");
+	}    
 }

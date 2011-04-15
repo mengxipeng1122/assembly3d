@@ -39,31 +39,29 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import org.interaction3d.assembly.tools.shift.util.Assembly;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import static javax.xml.xpath.XPathConstants.NODE;
 import static javax.xml.xpath.XPathConstants.NODESET;
-import static java.lang.Integer.parseInt;
 import static org.interaction3d.assembly.tools.shift.collada.Elements.parseInts;
 import static org.interaction3d.assembly.tools.shift.collada.Elements.parsePolylist;
 import static org.interaction3d.assembly.tools.shift.collada.Elements.parseTriangles;
-import static org.interaction3d.assembly.tools.shift.collada.Elements.paraseFloatArray;
-import static org.interaction3d.assembly.tools.shift.collada.InputParser.parseInput;
+import static org.interaction3d.assembly.tools.shift.collada.Elements.parseFloatArray;
+import static org.interaction3d.assembly.tools.shift.collada.XmlCommons.parseAccessor;
+import static org.interaction3d.assembly.tools.shift.collada.XmlCommons.parseInput;
+import static org.interaction3d.assembly.tools.shift.collada.XmlCommons.parseParamType;
 
 
- 
 final class MeshProcessor
 {
 	private final Document document;
 	private final XPath xpath;
 
-	private final XPathExpression exprMesh, exprSource, exprAccessor, exprParam, exprFloatArray;
+	private final XPathExpression exprMesh, exprAccessor, exprParam;
 	private final XPathExpression exprSupportedPrimitives, exprVertices, exprInput, exprP, exprVcount;
 	private final XPathExpression exprNotSupportedPrimitives;        
 
-	private Input[] inputs;	
 	private Mesh mesh;
 
 	MeshProcessor(Document document, XPath xpath) throws XPathExpressionException
@@ -79,58 +77,57 @@ final class MeshProcessor
     exprVertices = xpath.compile("vertices");
         
     exprInput = xpath.compile("input");
-    exprSource = xpath.compile("source");
     
     exprP = xpath.compile("p");
     exprVcount = xpath.compile("vcount");
     
     exprAccessor = xpath.compile("technique_common/accessor");
     exprParam = xpath.compile("param");
-    exprFloatArray = xpath.compile("float_array"); 		
  	}
  	
- 	
- 	
-	void find(Assembly assembly) 
+
+  void find(Assembly assembly) 
 	throws XPathExpressionException
 	{
 	  NodeList meshNodes = (NodeList) exprMesh.evaluate(document, NODESET);
 	  
 	  int numMeshes = meshNodes.getLength();
-	  System.out.println("Meshes: " + numMeshes);
 	  for (int i = 0; i < numMeshes; i++)
 	  {      
       Node meshNode = meshNodes.item(i);
-      
-      String meshId = meshNode.getParentNode().getAttributes().getNamedItem("id").getTextContent();      
-      processMesh(meshId, meshNode);
-      
-      mesh.convert(meshId, assembly);
-      mesh = null;      
+      processMesh(meshNode);
+            
+      String id = new XmlAttributes(meshNode.getParentNode()).getString("id");      
+      if(mesh != null)
+      {        
+        mesh.convert(id, assembly);
+        mesh = null;
+      }
 	  }
 	}
 	
-	private void processMesh(String meshId, Node meshNode) 
+	private void processMesh(Node meshNode) 
 	throws XPathExpressionException
 	{
-	  System.out.println("Mesh: " + meshId);
-	 	inputs = null;
-	 
-	  
-	  if(true)
-	  {
-		  NodeList notSupportedPrimitiveNode = (NodeList) exprNotSupportedPrimitives.evaluate(meshNode, NODESET);
-		  if( notSupportedPrimitiveNode.getLength() > 0) return;
-	  }
-	  	  
+    mesh = new Mesh();
+    
+    Input[] inputs = null;
+
+    if(true)
+    {
+      NodeList notSupportedPrimitiveNode = (NodeList) exprNotSupportedPrimitives.evaluate(meshNode, NODESET);
+      if( notSupportedPrimitiveNode.getLength() > 0) return;
+    }
+
     NodeList primitiveNodes = (NodeList) exprSupportedPrimitives.evaluate(meshNode, NODESET);
     for (int p=0, count=primitiveNodes.getLength(); p<count; p++)
     {
-      processPrimitves( primitiveNodes.item(p) );
+      if((inputs = processPrimitves( primitiveNodes.item(p), inputs)) == null)
+      {
+        mesh = null;
+        return;
+      }
     }
-
-		if(mesh == null) return;
-    
     		
     HashSet<Integer> offsets = new HashSet<Integer>();
 		for(int i=0; i<inputs.length; i++)
@@ -148,7 +145,6 @@ final class MeshProcessor
             processInputSource(meshNode, input, input.offset);
           }					
 				}
-
 			}
 			else
 			{
@@ -161,30 +157,28 @@ final class MeshProcessor
 		}		
 	}
 
-	private void processPrimitves(Node primitivesNode) 
+	private Input[] processPrimitves(Node primitivesNode, Input[] inputs) 
 	throws XPathExpressionException
-	{
-	  int primitives; 
-    String material;
-    {
-    	NamedNodeMap attributes = primitivesNode.getAttributes();
-    	primitives = parseInt(attributes.getNamedItem("count").getTextContent());    	
-    	material = attributes.getNamedItem("material").getNodeValue();
-    }
-    
+	{    
  		Input[] pInputs = parseInputs(primitivesNode);
 		if(inputs == null)
 		{
 			inputs = pInputs;
-      mesh = new Mesh();
 		}
-		else if(!InputCmp.compare(inputs, pInputs))
+		else if(!Input.compare(inputs, pInputs))
 		{
-			System.out.println("warning: mesh primitives have different inputs!");
-			mesh = null;
-			return;
+			System.err.println("warning: mesh primitives have different inputs!");
+			return null;
 		}
-		
+	
+	  int primitives; 
+    String material;
+    {
+      XmlAttributes attributes = new XmlAttributes(primitivesNode);
+    	primitives = attributes.getInt("count");    	
+    	material = attributes.getString("material");
+    }
+    
     if(primitivesNode.getNodeName().equals("triangles"))
     {
     	processTriangles(primitivesNode, primitives, Input.groups(inputs), material);
@@ -192,7 +186,9 @@ final class MeshProcessor
     else if(primitivesNode.getNodeName().equals("polylist"))
     {
     	processPolylist(primitivesNode, primitives, Input.groups(inputs), material);
-    } 		
+    }
+    
+    return inputs;
 	}
 
 	private void processPolylist(Node polylistNode, int primitives, int inputs, String material) 
@@ -202,12 +198,9 @@ final class MeshProcessor
 	  Node pNode = (Node) exprP.evaluate(polylistNode, NODE);
 
 	  int[] vcounts = parseInts(vcountNode.getTextContent(), primitives);            
-	  int[][][] polylist = parsePolylist(pNode.getTextContent(), primitives, inputs, vcounts);
+    int[] polylist = parsePolylist(pNode.getTextContent(), vcounts, inputs);
 	  
-	  if(mesh != null)
-	  {
-	  	mesh.polylist(material, polylist, vcounts, inputs);
-	  }
+    mesh.polylist(material, polylist, vcounts, inputs);
 	}	
 	
 	private void processTriangles(Node trianglesNode, int primitives, int inputs, String material) 
@@ -215,25 +208,9 @@ final class MeshProcessor
 	{
 	  Node primitiveElementsNode = (Node) exprP.evaluate(trianglesNode, NODE);
 
-	  int[][][] triangles = parseTriangles(primitiveElementsNode.getTextContent(), primitives, inputs);	  
+    int[] triangles = parseTriangles(primitiveElementsNode.getTextContent(), primitives, inputs);	  
 	  
-	  if(mesh != null)
-	  {
-	  	mesh.triangles(material, triangles, primitives, inputs);
-	  }	  	  
-	}
-	
-
-	private void processInputSource(Node meshNode, Input input, int index) 
-	throws XPathExpressionException
-	{
-	  String id = input.source.substring(1);
-	  Node sourceNode = (Node) xpath.evaluate("child::source[@id=\'" + id + "']", meshNode, NODE);
-	  
-	  String name = input.semantic;
-	  if(input.set != 0 ) name += input.set;
-	  
-		proccessSource(sourceNode, name, index);
+    mesh.triangles(material, triangles, primitives, inputs);
 	}
 	
 	private void proccessSource(Node sourceNode, String name, int index) 
@@ -243,44 +220,46 @@ final class MeshProcessor
 		
 		int params;
 		{
-			NodeList paramNodes = (NodeList) exprParam.evaluate(accessorNode, NODESET);
-			params = paramNodes.getLength();
-			for(int i=0; i<params; i++)
-			{
-				Node paramNode = paramNodes.item(i);
-				String type = paramNode.getAttributes().getNamedItem("type").getTextContent();
-				if(!type.equals("float")) return;
+      String[] paramTypes = parseParamTypes(accessorNode);
+			for(String paramType : paramTypes)
+			{				
+				if(!"float".equals(paramType)) return;
 			}
+      params = paramTypes.length;
 		}
 		
-		int count;
-		int offset = 0, stride = 1; //default values
-		{
-			NamedNodeMap attributes = accessorNode.getAttributes();
-			count = parseInt( attributes.getNamedItem("count").getTextContent() );
-			
-			Node offsetNode = attributes.getNamedItem("offset");
-			if(offsetNode != null) offset = parseInt( offsetNode.getTextContent() );
-
-			Node strideNode = attributes.getNamedItem("stride");
-			if(strideNode != null) stride = parseInt( strideNode.getTextContent() );
-			
-			if(offset != 0 || stride != params) return;
-		}
-		
-		String source = accessorNode.getAttributes().getNamedItem("source").getTextContent();
+    Accessor accessor = parseAccessor(accessorNode);
+    				
 		// no external sources
-		if(source.length() == 0 || source.charAt(0) != '#') return;
+		if(accessor.hasExternalSource())
+    {
+      return;
+    }		
 		
-		
-		source = source.substring(1);		
+		String source = accessor.source.substring(1);		
 		Node float_arrayNode = (Node) xpath.evaluate("child::float_array[@id=\"" +  source +  "\"]", sourceNode, NODE);
 		// only float_array sources local to the mesh node
 		if(float_arrayNode == null) return;
 		
-		float[][] data = paraseFloatArray(float_arrayNode.getTextContent(), count, stride, offset);						
-		mesh.attribute(name, data, stride, index);
+		float[] data = parseFloatArray(float_arrayNode.getTextContent(), 
+      accessor.count, params, accessor.stride, accessor.offset);    
+		mesh.attribute(name, data, accessor.count, params, index);
 	}
+  
+	private void processInputSource(Node meshNode, Input input, int index) 
+	throws XPathExpressionException
+	{
+    //new SourceParser(xpath).parseSourceFloats(meshNode, input.source);
+    
+	  String id = input.source.substring(1);
+	  Node sourceNode = (Node) xpath.evaluate("child::source[@id=\'" + id + "']", meshNode, NODE);
+	  
+	  String name = input.semantic;
+	  if(input.set != 0 ) name += input.set;
+	          
+		proccessSource(sourceNode, name, index);
+	}
+	  
 	
 	private Input[] parseInputs(Node parenteNode) 
 	throws XPathExpressionException
@@ -295,4 +274,19 @@ final class MeshProcessor
 
 	  return primitiveInputs;
 	}
+  
+	private String[] parseParamTypes(Node accerssorNode) 
+	throws XPathExpressionException
+	{
+	  NodeList inputNodes = (NodeList) exprParam.evaluate(accerssorNode, NODESET);
+	  
+	  String[] paramTypes = new String[inputNodes.getLength()];
+	  for (int i = 0; i < paramTypes.length; i++)
+	  {
+	  	paramTypes[i] = parseParamType((Node) inputNodes.item(i));
+	  }
+
+	  return paramTypes;
+	}  
+
 }

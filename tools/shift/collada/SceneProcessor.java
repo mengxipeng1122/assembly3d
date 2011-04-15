@@ -33,18 +33,15 @@
 
 package org.interaction3d.assembly.tools.shift.collada;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import static javax.xml.xpath.XPathConstants.NODESET;
+
 
 
 final class SceneProcessor
@@ -52,38 +49,68 @@ final class SceneProcessor
 	private final Document document;
 	private final XPath xpath;
 
+  private final XPathExpression exprScene;
+  
 	SceneProcessor(Document document, XPath xpath) throws XPathExpressionException
 	{
  		this.document = document;
  		this.xpath = xpath;
+    
+    exprScene = xpath.compile("/COLLADA/library_visual_scenes/visual_scene[@id]");
 	}
 
+	void find() 
+	throws XPathExpressionException
+	{
+    
+	  NodeList scenesNodes = (NodeList) exprScene.evaluate(document, NODESET);
+	  
+	  int numScenes = scenesNodes.getLength();
+	  for (int i = 0; i < numScenes; i++)
+	  {      
+      Node scenesNode = scenesNodes.item(i);
+                  
+      String id = scenesNode.getAttributes().getNamedItem("id").getTextContent();      
+      System.out.println("Scene: " + id);
+      proccessVisualScene(scenesNode);
+      
+//      mesh.convert(meshId, assembly);
+//      mesh = null;      
+	  }
+	}  
+  
 	void proccessVisualScene(Node visualSceneNode) throws XPathExpressionException
 	{
-		
+    NodeList childNodes = visualSceneNode.getChildNodes();
+		for(int i=0, count=childNodes.getLength(); i<count; i++)
+    {
+			Node child = childNodes.item(i);
+			if(child.getNodeName().equals("node"))
+			{
+				proccessNode(child);
+			}      
+    }
 	}
 	
 	void proccessNode(Node nodeNode) throws XPathExpressionException
 	{
-		String nodeId = "";
+    //'sid' important for joints (skin refers to them)
+		String name, id, sid, type = "NODE";
 		{
-			NamedNodeMap attributes = nodeNode.getAttributes();
+      XmlAttributes attributes = new XmlAttributes(nodeNode);
+      
+      name = attributes.getString("name", "");
+      id = attributes.getString("id", "");
+      sid = attributes.getString("sid", "");
+      type = attributes.getString("type", "NODE");      
+		}    
+    
+		System.out.println(type + ": " + id);	
 
-			String id = attributes.getNamedItem("id").getNodeValue();
-			if(id != null) nodeId = id;
-
-			if(nodeId.length() > 0) nodeId+= ".";
-
-			String name = attributes.getNamedItem("name").getNodeValue();
-			if(name != null) nodeId += name;			
-		} 
-		System.out.println("node: " + nodeId);	
-
-
-	  NodeList children = nodeNode.getChildNodes();
-		for(int i=0, count=children.getLength(); i<count; i++)	  
+	  NodeList childNodes = nodeNode.getChildNodes();
+		for(int i=0, count=childNodes.getLength(); i<count; i++)	  
 		{
-			Node child = children.item(i);
+			Node child = childNodes.item(i);
 			if(child.getNodeName().equals("node"))
 			{
 				proccessNode(child);
@@ -94,7 +121,7 @@ final class SceneProcessor
 			}
 			else if(child.getNodeName().equals("instance_geometry"))
 			{
-				proccessInstanceGeometry(child);				
+				proccessInstanceGeometry(child);
 			}
 		}
 	}

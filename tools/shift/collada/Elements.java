@@ -34,6 +34,7 @@ package org.interaction3d.assembly.tools.shift.collada;
 
 import java.util.StringTokenizer;
 import static java.lang.Integer.parseInt;
+import static java.lang.Float.parseFloat;
 
 /**
  *
@@ -41,96 +42,153 @@ import static java.lang.Integer.parseInt;
  */
 final class Elements
 {
-    public static int[] parseInts(String text, int primitives)
+  public static int[] parseInts(String text, int primitives)
+  {
+    int[] counts = new int[primitives];
+
+    StringTokenizer tokenizer = new StringTokenizer(text);
+    for(int i=0; i<primitives; i++)
     {
-        int[] counts = new int[primitives];
-        
-        StringTokenizer tokenizer = new StringTokenizer(text);
-        for(int i=0; i<primitives; i++)
-        {
-            assert( tokenizer.hasMoreTokens() );
-            
-            counts[i] = Integer.parseInt(tokenizer.nextToken());
-        }
-        
-        assert( !tokenizer.hasMoreTokens() );
-
-        return counts;
+      assert( tokenizer.hasMoreTokens() );
+      counts[i] = Integer.parseInt(tokenizer.nextToken());
     }
-    
-    // [input][tri][vertex]
-    public static int[][][] parseTriangles(String text, int primitives, int inputs)
+    assert( !tokenizer.hasMoreTokens() );
+
+    return counts;
+  }
+  
+  // [input][triangle][vertex]
+  public static int[] parseTriangles(String text, int primitives, int inputs)
+  {
+    return parseInts(text, primitives*3*inputs);
+  }  
+
+  // [input][poly][vertex] 
+  public static int[] parsePolylist(String text, int[] vcounts, int inputs)
+  {    
+    int elements = 0;
+    for(int c : vcounts)
     {
-        int[][][] triangles = new int[inputs][primitives][3];
-                
-        StringTokenizer tokenizer = new StringTokenizer(text);
-        for(int p=0; p<primitives; p++)
-        {
-            for(int v=0; v<3; v++)
-            {
-                for(int i=0; i<inputs; i++)
-                {
-                    assert( tokenizer.hasMoreTokens() );
-
-                    triangles[i][p][v] = parseInt( tokenizer.nextToken() );
-                }
-            }
-        }
-        
-        assert ( !tokenizer.hasMoreTokens() );
-        
-        return triangles;
+      elements += c;      
     }
-    
-    // [input][poly][vertex]
-    public static int[][][] parsePolylist(String text, int primitives, int inputs, int[] vcounts)
-    {    
-        int[][][] polylist = new int[inputs][primitives][];
-        for(int p=0; p<primitives; p++)
-        {
-            int c = vcounts[p];
-            for(int i=0; i<inputs; i++)
-            {
-                polylist[i][p] = new int[c];
-            }
-        }
-                
-        StringTokenizer tokenizer = new StringTokenizer(text);
-        for(int p=0; p<primitives; p++)
-        {
-            for(int v=0; v<vcounts[p]; v++)
-            {
-                for(int i=0; i<inputs; i++)
-                {
-                    assert( tokenizer.hasMoreTokens() );
+    return parseInts(text, elements*inputs);
+  }    
+  
+  // [input][tri][vertex]
+  public static int[][][] parseTrianglesOLD(String text, int primitives, int inputs)
+  {
+    int[][][] triangles = new int[inputs][primitives][3];
 
-                    polylist[i][p][v] = parseInt( tokenizer.nextToken() );
-                }
-            }
-        }
-        
-        assert ( !tokenizer.hasMoreTokens() );
-        
-        return polylist;
-    }    
-
-    //TODO: needs fixing? at least adjust style to similiar than above!
-    public static float[][] paraseFloatArray(String data, int count, int stride, int offset)
+    StringTokenizer tokenizer = new StringTokenizer(text);
+    for(int p=0; p<primitives; p++)
     {
-        float[][] vertexElements = new float[count][stride];
-
-        StringTokenizer tokenizer = new StringTokenizer(data);
-
-        int index = 0;
-        while(index < offset) tokenizer.nextToken();
-
-        index = 0;
-        for(int i=0; i<vertexElements.length; i++) for(int j=0; j<vertexElements[i].length; j++)
+      for(int v=0; v<3; v++)
+      {
+        for(int i=0; i<inputs; i++)
         {
-            vertexElements[i][j] = Float.parseFloat(tokenizer.nextToken());
+          assert( tokenizer.hasMoreTokens() );
+          triangles[i][p][v] = parseInt( tokenizer.nextToken() );
         }
-        return vertexElements;
+      }
     }
+    assert ( !tokenizer.hasMoreTokens() );
+
+    return triangles;
+  }
+  
+  
+  public static int[][][] parsePolylistOLD(String text, int[] vcounts, int inputs)
+  {    
+    int[][][] polylist = new int[inputs][vcounts.length][];
+    for(int p=0; p<vcounts.length; p++)
+    {
+      int c = vcounts[p];
+      for(int i=0; i<inputs; i++)
+      {
+        polylist[i][p] = new int[c];
+      }
+    }
+
+    StringTokenizer tokenizer = new StringTokenizer(text);
+    for(int p=0; p<vcounts.length; p++)
+    {
+      for(int v=0; v<vcounts[p]; v++)
+      {
+        for(int i=0; i<inputs; i++)
+        {
+          assert( tokenizer.hasMoreTokens() );
+          polylist[i][p][v] = parseInt( tokenizer.nextToken() );
+        }
+      }
+    }
+
+    assert ( !tokenizer.hasMoreTokens() );
+
+    return polylist;
+  }
+
+  
+  public static float[] identity4x4Float()
+  {
+    return new float[] 
+    {
+      1, 0, 0, 0, 
+      0, 1, 0, 0,
+      0, 0, 1, 0, 
+      0, 0, 0, 1, 
+    };
+  }
+  
+  //[index][dimension]
+  public static float[] parseFloatArray(String data, int count, int dimension, int stride, int offset)
+  {
+    float[] array = new float[count*dimension];
+
+    StringTokenizer tokenizer = new StringTokenizer(data);
+
+    int index = 0;
+    while(index < offset) tokenizer.nextToken();
     
-    private Elements() { /* static class */ }
+    index = 0;
+    for(int i=0; i<count; i++) 
+    {
+      for(int j=0; j<dimension; j++)
+      {
+        array[index++] = parseFloat(tokenizer.nextToken());
+      }
+
+      for(int j=0; j<dimension-stride; j++)
+      {
+        tokenizer.nextToken();
+      }
+    }
+    return array;    
+  }
+  
+  public static String[] parseIdRefArray(String data, int count, int dimension, int stride, int offset)
+  {
+    String[] array = new String[count*dimension];
+
+    StringTokenizer tokenizer = new StringTokenizer(data);
+
+    int index = 0;
+    while(index < offset) tokenizer.nextToken();
+
+    index = 0;
+    for(int i=0; i<count; i++) 
+    {
+      for(int j=0; j<dimension; j++)
+      {
+        array[index++] = tokenizer.nextToken();
+      }
+
+      for(int j=0; j<dimension-stride; j++)
+      {
+        tokenizer.nextToken();
+      }
+    }
+    return array;    
+  }
+    
+   private Elements() { /* static class */ }
 }

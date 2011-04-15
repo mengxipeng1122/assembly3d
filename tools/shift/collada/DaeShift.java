@@ -128,7 +128,37 @@ public final class DaeShift
 	  
     
 	  final String path = outputDir;
-		readDae(inputFile).find(new Assembly() 
+
+    DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+    domFactory.setNamespaceAware(false);
+    DocumentBuilder builder = domFactory.newDocumentBuilder();
+
+    Document document = builder.parse(inputFile);
+    XPath xpath = XPathFactory.newInstance().newXPath();
+    
+    String version = (String) xpath.compile("COLLADA/@version").evaluate(document, XPathConstants.STRING);
+    System.out.println("Collada version: " + version);
+        
+    if(true) processMeshes(new MeshProcessor(document, xpath), outputDir);
+    if(true) processModifiers(new ModifierProcessor(document, xpath), outputDir);
+    if(false) processScenes(new SceneProcessor(document, xpath), outputDir);
+    
+	}
+
+  private static void processScenes(SceneProcessor processor, final String path) throws Exception
+  {
+    processor.find();
+  }
+
+  private static void processModifiers(ModifierProcessor processor, final String path) throws Exception
+  {
+    processor.find();
+  }
+  
+  
+  private static void processMeshes(MeshProcessor processor, final String path) throws Exception
+  {
+    processor.find(new Assembly() 
     {
       @Override
       public void assemble(String name, CharSequence xml, ByteBuffer data)
@@ -141,23 +171,8 @@ public final class DaeShift
         catch(IOException ioe) { throw new RuntimeException(ioe); }
       }
     });
-	}
+  }
 	
-	private static MeshProcessor readDae(String inputFile) throws Exception
-	{
-    DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-    domFactory.setNamespaceAware(false);
-    DocumentBuilder builder = domFactory.newDocumentBuilder();
-
-    Document document = builder.parse(inputFile);
-    XPath xpath = XPathFactory.newInstance().newXPath();
-    
-    String version = (String) xpath.compile("COLLADA/@version").evaluate(document, XPathConstants.STRING);
-    System.out.println("Collada version: " + version);
-    
-    return new MeshProcessor(document, xpath);
-	}
-
 	private static void writeXml(CharSequence xml, String outputFile) throws IOException
 	{
 	  FileWriter writer = null;
