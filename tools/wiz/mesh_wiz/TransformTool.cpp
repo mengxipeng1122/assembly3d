@@ -82,8 +82,8 @@ void TransformTool::rotate(Mesh* m, float rangle, float rx, float ry, float rz)
     ry = rvec[1];
     rz = rvec[2];
 
-    float s = sin(2.0f*PIf*rangle/360.0f);
-    float c = cos(2.0f*PIf*rangle/360.0f);
+    float s = sinf(2.0f*PIf*rangle/360.0f);
+    float c = cosf(2.0f*PIf*rangle/360.0f);
     float t = 1.0f - c;
 
     float rMatrix[3][4] = {{rx*rx*t + c,      rx*ry*t - rz*s,   rx*rz*t + ry*s,   0.0f},

@@ -105,6 +105,13 @@ namespace assembly3d
              */
             void center(Mesh* m, int ax, int ay, int az);
 
+            /**
+             * @brief Normalizes a vector.
+             *
+             * @param vector[] A vector to normalize.
+             */
+            static void normalize(float vector[3]);
+
         protected:
         private:
             /**
@@ -115,12 +122,6 @@ namespace assembly3d
              * @param inverseTransposedMatrix[][] Inverse transposed matrix.
              */
             void multiplyVertexWithTransformMatrix(assembly3d::Vertex* vec, float matrix[3][4], float inverseTransposedMatrix[3][3]);
-            /**
-             * @brief Normalizes a vector.
-             *
-             * @param vector[] A vector to normalize.
-             */
-            void normalize(float vector[3]);
         };
     }
 }
