@@ -35,6 +35,7 @@
 #include "FrontFaceTool.h"
 #include <cmath>
 #include <sstream>
+#include "TransformTool.h"
 
 #define PIf		3.1415926535897932384626433832795f
 
@@ -208,11 +209,20 @@ bool FrontFaceTool::isConsistent(Mesh *mesh, std::vector<int>& verticesOutwards,
         Vertex* v1 = &mesh->getVertex(i);
         Vertex* v2 = &mesh2->getVertex(i);
 
-        float dotVec1Vec2 =  v1->normal[0]*v2->normal[0] +
-                             v1->normal[1]*v2->normal[1] +
-                             v1->normal[2]*v2->normal[2];
+        float normal[3] = {v1->normal[0],
+                           v1->normal[1],
+                           v1->normal[2]};
 
-        float angle = (float)acos(dotVec1Vec2);
+        TransformTool::normalize(normal);
+
+        float dotVec1Vec2 =  normal[0]*v2->normal[0] +
+                             normal[1]*v2->normal[1] +
+                             normal[2]*v2->normal[2];
+//        float dotVec1Vec2 =  v1->normal[0]*v2->normal[0] +
+//                             v1->normal[1]*v2->normal[1] +
+//                             v1->normal[2]*v2->normal[2];
+
+        float angle = (float)acos(std::min(dotVec1Vec2, 1.0f));
 
         if(angle < (PIf / 2))
         {
