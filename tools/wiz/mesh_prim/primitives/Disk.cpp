@@ -69,7 +69,7 @@ void Disk::create(Mesh* mesh, bool positions, bool normals,
         {
             float cosinus,sinus;
             {
-                float angle = -2.0f*PIf*slice/m_slices;
+                float angle = -2.0f*PIf*(float)slice/(float)m_slices;
                 cosinus = cos(angle);
                 sinus = sin(angle);
             }

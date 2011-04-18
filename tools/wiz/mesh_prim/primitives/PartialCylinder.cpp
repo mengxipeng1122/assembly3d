@@ -96,7 +96,7 @@ void PartialCylinder::create(Mesh* mesh, bool positions, bool normals,
             float s = (float)slice / (float)m_slices;
             float cosinus, sinus;
             {
-                float angle = m_start + m_sweep - (m_sweep*slice / m_slices);;
+                float angle = m_start + m_sweep - (m_sweep*(float)slice / (float)m_slices);;
                 cosinus = cos(angle);
                 sinus = sin(angle);
             }
