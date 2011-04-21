@@ -1,22 +1,22 @@
 /*
  * Copyright (c) 2011 Michael Nischt
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the project's author nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -54,30 +54,30 @@ import org.interaction3d.assembly.tools.shift.util.Path;
  *
  * @author Michael Nischt
  */
-public final class DaeShift 
-{ 
+public final class DaeShift
+{
 	private static final String USAGE;
 	static
 	{
 		String usage =  "PARSE ERROR: \n";
 		usage += "    Required argument missing: source-file\n\n";
-		
+
 		usage += "USAGE:\n";
 //		usage += "    java -jar DaeShift.jar [-m] <source-file> [output-dir]\n";
 //		usage += "    java -jar DaeShift.jar <source-file> [output-dir]\n";
 		usage += "\n\n";
-		
+
 //		usage += "    Where:\n\n";
 //		usage += "        -m, --multiple\n";
 //		usage += "         creates separate(multiple) mesh files for each object\n";
 //		usage += "         note that this applies to o(object name) but not g (group names)\n";
-		
-		usage += "\n\n\n";		
+
+		usage += "\n\n\n";
 		usage += "    DaeShift - Converter tool for .dae (collada) files\n";
-		
+
 		USAGE = usage;
 	}
-	
+
 
 	public static void main( String... args ) throws Exception
 	{
@@ -87,7 +87,7 @@ public final class DaeShift
 		}
 
 		String src = null, dst = null;
-		
+
 		for(String arg : args)
 		{
 			if(src == null)
@@ -101,32 +101,32 @@ public final class DaeShift
 			else
 			{
 				System.out.println(USAGE);
-				return;				
+				return;
 			}
 		}
 
-		if(src == null)		
+		if(src == null)
 		{
 				System.out.println(USAGE);
-				return;				
+				return;
 		}
 		if(dst == null)
-		{		
-				dst = System.getProperty("user.dir");		
+		{
+				dst = System.getProperty("user.dir");
 		}
-				    
+
 		DaeShift.convert(src, dst);
 	}
 
 	public static void convert(String inputFile, String outputDir) throws Exception
 	{
-	  File file = Path.file(outputDir);        
+	  File file = Path.file(outputDir);
 	  if(!file.isDirectory()) { file.mkdirs(); }
-	  
-		String name = Path.trunkObj(Path.filename(inputFile));                
+
+		String name = Path.trunkObj(Path.filename(inputFile));
 //	  DaeProcessor proc = new DaeProcessor(name, multiple);
-	  
-    
+
+
 	  final String path = outputDir;
 
     DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
@@ -135,52 +135,86 @@ public final class DaeShift
 
     Document document = builder.parse(inputFile);
     XPath xpath = XPathFactory.newInstance().newXPath();
-    
-    String version = (String) xpath.compile("COLLADA/@version").evaluate(document, XPathConstants.STRING);
+
+    String version = (String) xpath.evaluate("COLLADA/@version", document, XPathConstants.STRING);
     System.out.println("Collada version: " + version);
-        
-    if(true) processMeshes(new MeshProcessor(document, xpath), outputDir);
-    if(true) processModifiers(new ModifierProcessor(document, xpath), outputDir);
+
+    if(false) processMeshes(new MeshProcessor(document, xpath), outputDir);
+    if(true) processMorphers(new MorphProcessor(document, xpath), outputDir);
+    if(true) processSkin(new SkinProcessor(document, xpath), outputDir);
     if(false) processScenes(new SceneProcessor(document, xpath), outputDir);
-    
+
 	}
 
-  private static void processScenes(SceneProcessor processor, final String path) throws Exception
+  private static void processScenes(SceneProcessor processor, final String path)
+  throws Exception
   {
     processor.find();
   }
 
-  private static void processModifiers(ModifierProcessor processor, final String path) throws Exception
+  private static void processSkin(SkinProcessor processor, final String path)
+  throws Exception
   {
-    processor.find();
-  }
-  
-  
-  private static void processMeshes(MeshProcessor processor, final String path) throws Exception
-  {
-    processor.find(new Assembly() 
+    processor.find(new Assembly()
     {
       @Override
       public void assemble(String name, CharSequence xml, ByteBuffer data)
       {
-        try 
+        try
         {
-          writeXml(xml, path + File.separator + name + ".mesh.xml");
-          writeData(data, path + File.separator + name + ".mesh.dat");			
+          writeXml(xml, path + File.separator + name + ".skin.xml");
+          writeData(data, path + File.separator + name + ".skin.dat");
         }
         catch(IOException ioe) { throw new RuntimeException(ioe); }
       }
     });
   }
-	
+
+  private static void processMorphers(MorphProcessor processor, final String path)
+  throws Exception
+  {
+    processor.find(new Assembly()
+    {
+      @Override
+      public void assemble(String name, CharSequence xml, ByteBuffer data)
+      {
+        try
+        {
+          writeXml(xml, path + File.separator + name + ".morph.xml");
+          writeData(data, path + File.separator + name + ".morph.dat");
+        }
+        catch(IOException ioe) { throw new RuntimeException(ioe); }
+      }
+    });
+  }
+
+
+  private static void processMeshes(MeshProcessor processor, final String path)
+  throws Exception
+  {
+    processor.find(new Assembly()
+    {
+      @Override
+      public void assemble(String name, CharSequence xml, ByteBuffer data)
+      {
+        try
+        {
+          writeXml(xml, path + File.separator + name + ".mesh.xml");
+          writeData(data, path + File.separator + name + ".mesh.dat");
+        }
+        catch(IOException ioe) { throw new RuntimeException(ioe); }
+      }
+    });
+  }
+
 	private static void writeXml(CharSequence xml, String outputFile) throws IOException
 	{
 	  FileWriter writer = null;
 	  try
-	  { 
+	  {
 			writer = new FileWriter(Path.file(outputFile), false);
 	    writer.append(xml);
-		} 
+		}
 	  finally { close(writer); }
 	}
 
@@ -188,12 +222,12 @@ public final class DaeShift
 	{
 	  RandomAccessFile raf = null;
 	  try
-	  { 
+	  {
 			raf = new RandomAccessFile(Path.file(outputFile).getAbsolutePath(), "rw");
 	    raf.getChannel().write(dat);
 	  }
-	  finally { close(raf); }        
-	}    
+	  finally { close(raf); }
+	}
 
 	private static void close(Closeable c)
 	{
@@ -205,7 +239,7 @@ public final class DaeShift
 		  {
 		      throw new RuntimeException(e);
 		  }
-	}    
+	}
 
 	private DaeShift() { /* static class */ }
 }
