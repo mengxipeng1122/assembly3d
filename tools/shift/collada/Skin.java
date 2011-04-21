@@ -32,38 +32,27 @@
  */
 package org.interaction3d.assembly.tools.shift.collada;
 
-import org.w3c.dom.Node;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
+import java.nio.FloatBuffer;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
+import org.interaction3d.assembly.tools.shift.util.Assembly;
 
-/**
- *
- * @author Michael Nischt
- */
-final class XmlCommons
+import static java.lang.String.format;
+
+final class Skin
 {
-	static Accessor parseAccessor(Node accessorNode)
-	{
-    XmlAttributes attributes = new XmlAttributes(accessorNode);
-	  String source = attributes.getString("source");
-	  int count = attributes.getInt("count");
-	  int stride = attributes.getInt("stride", 1);
-    int offset = attributes.getInt("offset", 0);
-	  return new Accessor(source, count, stride, offset);
-	}
 
-	static Input parseInput(Node inputNode)
-	{
-    XmlAttributes attributes = new XmlAttributes(inputNode);
-	  String semantic = attributes.getString("semantic");
-	  String source = attributes.getString("source");
-    int offset = attributes.getInt("offset", 0);
-	  int set = attributes.getInt("set", 0);
 
-	  return new Input(offset, semantic, source, set);
-	}
+  void convert(String name, Assembly assembly)
+  {
+    StringBuilder xml = new StringBuilder();
 
-	static String parseParamType(Node paramNode)
-	{
-    return new XmlAttributes(paramNode).getString("type");
-	}
+    ByteBuffer buffer = ByteBuffer.allocateDirect(0).order(ByteOrder.LITTLE_ENDIAN);
+
+    //assembly.assemble(name, xml, buffer);
+  }
 
 }

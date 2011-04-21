@@ -1,22 +1,22 @@
 /*
  * Copyright (c) 2011 Michael Nischt
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the project's author nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -41,6 +41,9 @@ import java.util.ArrayList;
 import org.interaction3d.assembly.tools.shift.util.Assembly;
 
 import static java.lang.String.format;
+import static org.interaction3d.assembly.tools.shift.collada.BufferUtils.putInts;
+import static org.interaction3d.assembly.tools.shift.collada.BufferUtils.putShorts;
+import static org.interaction3d.assembly.tools.shift.collada.BufferUtils.putBytes;
 
 final class Mesh
 {
@@ -75,11 +78,11 @@ final class Mesh
       this.triangles = elements.length / 3;
     }
   }
-  
+
   private final ArrayList<Attribute> attributes = new ArrayList<Attribute>();
   private final ArrayList<int[]> vertices = new ArrayList<int[]>();
   private final ArrayList<Group> triangles = new ArrayList<Group>();
-  private final SingleIndexSet triangleVertices = new SingleIndexSet(new SingleIndexSet.Vertices() 
+  private final SingleIndexSet triangleVertices = new SingleIndexSet(new SingleIndexSet.Vertices()
   {
     @Override
     public void vertex(int... elements)
@@ -87,22 +90,22 @@ final class Mesh
       vertices.add(elements);
     }
   });
-  
+
   void triangles(String material, int[] elements, int triangles, int inputs)
-  {    
+  {
     this.triangles.add(new Group(material, triangleVertices.triangles(elements, triangles, inputs)));
   }
-  
+
   void polylist(String material, int[] elements, int[] vcounts, int inputs)
-  {    
+  {
     this.triangles.add(new Group(material, triangleVertices.polylist(elements, vcounts, inputs)));
-  }  
+  }
 
   void attribute(String name, float[] coordinates, int count, int dimension, int index)
   {
     attributes.add(new Attribute(name, coordinates, count, dimension, index));
   }
-  
+
   void convert(String name, Assembly assembly)
   {
     StringBuilder xml = new StringBuilder();
@@ -175,28 +178,7 @@ final class Mesh
         putInts(iBuffer, group.elements);
       }
     }
-    
+
     assembly.assemble(name, xml, buffer);
-  }
-  
-  private static void putInts(IntBuffer buffer, int[] coordinates)
-  {
-    buffer.put(coordinates);
-  }
-
-  private static void putShorts(ShortBuffer buffer, int[] coordinates)
-  {
-    for (int element : coordinates)
-    {
-      buffer.put((short) element);
-    }
-  }
-
-  private static void putBytes(ByteBuffer buffer, int[] coordinates)
-  {
-    for (int element : coordinates)
-    {
-      buffer.put((byte) element);
-    }
   }
 }

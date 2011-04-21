@@ -32,38 +32,32 @@
  */
 package org.interaction3d.assembly.tools.shift.collada;
 
-import org.w3c.dom.Node;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
-/**
- *
- * @author Michael Nischt
- */
-final class XmlCommons
+final class BufferUtils
 {
-	static Accessor parseAccessor(Node accessorNode)
-	{
-    XmlAttributes attributes = new XmlAttributes(accessorNode);
-	  String source = attributes.getString("source");
-	  int count = attributes.getInt("count");
-	  int stride = attributes.getInt("stride", 1);
-    int offset = attributes.getInt("offset", 0);
-	  return new Accessor(source, count, stride, offset);
-	}
+  static void putInts(IntBuffer buffer, int[] coordinates)
+  {
+    buffer.put(coordinates);
+  }
 
-	static Input parseInput(Node inputNode)
-	{
-    XmlAttributes attributes = new XmlAttributes(inputNode);
-	  String semantic = attributes.getString("semantic");
-	  String source = attributes.getString("source");
-    int offset = attributes.getInt("offset", 0);
-	  int set = attributes.getInt("set", 0);
+  static void putShorts(ShortBuffer buffer, int[] coordinates)
+  {
+    for (int element : coordinates)
+    {
+      buffer.put((short) element);
+    }
+  }
 
-	  return new Input(offset, semantic, source, set);
-	}
+  static void putBytes(ByteBuffer buffer, int[] coordinates)
+  {
+    for (int element : coordinates)
+    {
+      buffer.put((byte) element);
+    }
+  }
 
-	static String parseParamType(Node paramNode)
-	{
-    return new XmlAttributes(paramNode).getString("type");
-	}
-
+  private BufferUtils() { /* static class */ }
 }
