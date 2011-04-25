@@ -142,7 +142,7 @@ public final class DaeShift
     if(false) processMeshes(new MeshProcessor(document, xpath), outputDir);
     if(true) processMorphers(new MorphProcessor(document, xpath), outputDir);
     if(true) processSkin(new SkinProcessor(document, xpath), outputDir);
-    if(false) processScenes(new SceneProcessor(document, xpath), outputDir);
+    if(true) processScenes(new SceneProcessor(document, xpath), outputDir);
 
 	}
 

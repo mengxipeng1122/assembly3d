@@ -42,7 +42,7 @@ import static java.lang.Float.parseFloat;
  */
 final class Elements
 {
-  public static int count(int[] counts)
+  static int count(int[] counts)
   {
     int elements = 0;
     for(int c : counts)
@@ -53,13 +53,13 @@ final class Elements
   }
 
   // [input][triangle][vertex]
-  public static int[] parseTriangles(String text, int primitives, int inputs)
+  static int[] parseTriangles(String text, int primitives, int inputs)
   {
     return parseIntArray(text, primitives*3*inputs);
   }
 
   // [input][poly][vertex]
-  public static int[] parsePolylist(String text, int[] vcounts, int inputs)
+  static int[] parsePolylist(String text, int[] vcounts, int inputs)
   {
     int elements = 0;
     for(int c : vcounts)
@@ -69,20 +69,21 @@ final class Elements
     return parseIntArray(text, elements*inputs);
   }
 
-  public static float[] identity4x4Float()
+  static float[] parseFloatArray(String data, float[] array)
   {
-    return new float[]
+    StringTokenizer tokenizer = new StringTokenizer(data);
+
+    for(int i=0; i<array.length; i++)
     {
-      1, 0, 0, 0,
-      0, 1, 0, 0,
-      0, 0, 1, 0,
-      0, 0, 0, 1,
-    };
+      array[i] = parseFloat(tokenizer.nextToken());
+    }
+
+    assert (!tokenizer.hasMoreTokens());
+
+    return array;
   }
 
-
-
-  public static float[] parseFloatArray(String data, int count)
+  static float[] parseFloatArray(String data, int count)
   {
     float[] array = new float[count];
 
@@ -99,7 +100,7 @@ final class Elements
   }
 
   //[index][dimension]
-  public static float[] parseFloatArray(String data, int count, int dimension, int stride, int offset)
+  static float[] parseFloatArray(String data, int count, int dimension, int stride, int offset)
   {
     float[] array = new float[count*dimension];
 
@@ -126,7 +127,7 @@ final class Elements
     return array;
   }
 
-  public static int[] parseIntArray(String text, int primitives)
+  static int[] parseIntArray(String text, int primitives)
   {
     int[] counts = new int[primitives];
 
@@ -141,7 +142,7 @@ final class Elements
     return counts;
   }
 
-  public static String[] parseStringArray(String text, int primitives)
+  static String[] parseStringArray(String text, int primitives)
   {
     String[] names = new String[primitives];
 
@@ -157,7 +158,7 @@ final class Elements
   }
 
 
-  public static String[] parseStringArray(String data, int count, int dimension, int stride, int offset)
+  static String[] parseStringArray(String data, int count, int dimension, int stride, int offset)
   {
     String[] array = new String[count*dimension];
 
@@ -184,7 +185,7 @@ final class Elements
     return array;
   }
 
-  public static int[] parseIntArray(String data, int count, int dimension, int stride, int offset)
+  static int[] parseIntArray(String data, int count, int dimension, int stride, int offset)
   {
     int[] array = new int[count*dimension];
 

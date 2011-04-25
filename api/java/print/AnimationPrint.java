@@ -30,76 +30,45 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-package org.interaction3d.assembly.tools.shift.collada;
+package org.interaction3d.assembly.print;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import org.interaction3d.assembly.tools.shift.util.Assembly;
+import java.io.PrintStream;
+import org.interaction3d.assembly.Animation;
+import org.interaction3d.assembly.CoordinateType;
+import org.interaction3d.assembly.load.AnimLoad;
 
-
-final class Skin
+public class AnimationPrint implements Animation
 {
-  private float[] bindMatrix;
+  private final PrintStream out;
 
-  private String[] jointNames;
-  private float[] jointBinding;
-
-  float[] vertexWeights;
-
-  private int[] vertexCounts;
-  private int[] vertexJointIndices;
-  private int[] vertexWeightIndices;
-
-  void foo()
+  public AnimationPrint()
   {
-    int joints = jointNames.length;
-
-    int[][] vertices = new int[joints][];
-    float[][] weights = new float[joints][];
-
-
-    int[] counts = new int[joints];
-
-    int index = 0;
-    for(int v=0; v<vertexCounts.length; v++)
-    {
-      for(int i=0; i<vertexCounts[v]; i++)
-      {
-        int j = vertexJointIndices[index++];
-        counts[j]++;
-      }
-    }
-
-    for(int j=0; j<joints; j++)
-    {
-      int count = counts[j];
-      vertices[j] = new int[count];
-      weights[j] = new float[count];
-    }
-
-    index=0;
-    for(int v=0; v<vertexCounts.length; v++)
-    {
-      for(int i=0; i<vertexCounts[v]; i++)
-      {
-        int j = vertexJointIndices[index];
-        float w = vertexWeights[vertexWeightIndices[index]];
-        index++;
-        int ndx = --counts[j];
-        vertices[j][ndx] = v;
-        weights[j][ndx] = w;
-      }
-    }
+    this(System.out);
   }
 
-
-  void convert(String name, Assembly assembly)
+  public AnimationPrint(PrintStream out)
   {
-    StringBuilder xml = new StringBuilder();
+    if(out == null) throw new NullPointerException();
 
-    ByteBuffer buffer = ByteBuffer.allocateDirect(0).order(ByteOrder.LITTLE_ENDIAN);
-
-    //assembly.assemble(name, xml, buffer);
+    this.out = out;
   }
 
+  @Override
+  public void sampler(float duration, int channels)
+  {
+    System.out.printf("sampler[duration:%f,channels:%d]\n", duration, channels);
+  }
+
+  @Override
+  public void channel(String name, int keyframes, float from, float to, int attributes)
+  {
+    System.out.printf("  channel[name:%s,keyframes:%d,from:%f,to:%f,attributes:%d]\n",
+                                name, keyframes, from, to, attributes);
+  }
+
+  @Override
+  public void attribute(String name, int size, CoordinateType type)
+  {
+    System.out.printf("    attribute[name:%s,size:%d,type:%s]\n", name, size, type.toString());
+  }
 }

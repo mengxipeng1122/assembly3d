@@ -48,7 +48,6 @@ import static org.interaction3d.assembly.tools.shift.collada.Elements.count;
 import static org.interaction3d.assembly.tools.shift.collada.Elements.parseStringArray;
 import static org.interaction3d.assembly.tools.shift.collada.Elements.parseIntArray;
 import static org.interaction3d.assembly.tools.shift.collada.Elements.parseFloatArray;
-import static org.interaction3d.assembly.tools.shift.collada.Elements.identity4x4Float;
 import static org.interaction3d.assembly.tools.shift.collada.XmlCommons.parseAccessor;
 import static org.interaction3d.assembly.tools.shift.collada.XmlCommons.parseInput;
 
@@ -141,7 +140,6 @@ final class SkinProcessor
     int[] vertexWeightIndices = parseIntArray(vTxt, totalCount, 1, inputs, inputWeights.offset);
 
     float[] vertexWeights = parseWeightArray(inputWeights.source, skinNode, totalCount);
-    System.out.println(vertexWeights.length);
 
     return null;
   }
@@ -151,7 +149,7 @@ final class SkinProcessor
     String bindMatStr = (String) exprBindShape.evaluate(skinNode, STRING);
 
     return (bindMatStr == null)
-         ? identity4x4Float()
+         ? Matrix4x4.identity().elements
          : parseFloatArray(bindMatStr, 16);
   }
 
