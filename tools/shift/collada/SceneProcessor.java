@@ -41,6 +41,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import static javax.xml.xpath.XPathConstants.NODESET;
+import static org.interaction3d.assembly.tools.shift.collada.Elements.parseFloatArray;
+
 
 final class SceneProcessor
 {
@@ -48,6 +50,7 @@ final class SceneProcessor
 	private final XPath xpath;
 
   private final XPathExpression exprScene;
+  private final XPathExpression exprNodes;
 
 	SceneProcessor(Document document, XPath xpath) throws XPathExpressionException
 	{
@@ -55,6 +58,7 @@ final class SceneProcessor
  		this.xpath = xpath;
 
     exprScene = xpath.compile("/COLLADA/library_visual_scenes/visual_scene[@id]");
+    exprNodes = xpath.compile("node");
 	}
 
 	void find()
@@ -63,37 +67,30 @@ final class SceneProcessor
 
 	  NodeList scenesNodes = (NodeList) exprScene.evaluate(document, NODESET);
 
-	  int numScenes = scenesNodes.getLength();
-	  for (int i = 0; i < numScenes; i++)
+	  for (int i=0, count=scenesNodes.getLength(); i < count; i++)
 	  {
       Node scenesNode = scenesNodes.item(i);
 
       String id = scenesNode.getAttributes().getNamedItem("id").getTextContent();
       System.out.println("Scene: " + id);
       proccessVisualScene(scenesNode);
-
-//      mesh.convert(meshId, assembly);
-//      mesh = null;
 	  }
 	}
 
 	void proccessVisualScene(Node visualSceneNode) throws XPathExpressionException
 	{
-    NodeList childNodes = visualSceneNode.getChildNodes();
+    NodeList childNodes = (NodeList) exprNodes.evaluate(visualSceneNode, NODESET);
 		for(int i=0, count=childNodes.getLength(); i<count; i++)
     {
 			Node child = childNodes.item(i);
-			if(child.getNodeName().equals("node"))
-			{
-				proccessNode(child);
-			}
+      proccessNode(child);
     }
 	}
 
 	void proccessNode(Node nodeNode) throws XPathExpressionException
 	{
     //'sid' important for joints (skin refers to them)
-		String name, id, sid, type = "NODE";
+		String name, id, sid, type;
 		{
       XmlAttributes attributes = new XmlAttributes(nodeNode);
 
@@ -103,33 +100,92 @@ final class SceneProcessor
       type = attributes.getString("type", "NODE");
 		}
 
-		System.out.println(type + ": " + id);
+    Matrix4x4 transform = Matrix4x4.identity();
 
 	  NodeList childNodes = nodeNode.getChildNodes();
 		for(int i=0, count=childNodes.getLength(); i<count; i++)
 		{
 			Node child = childNodes.item(i);
-			if(child.getNodeName().equals("node"))
+			String childName = child.getNodeName();
+      if("node".equals(childName))
 			{
 				proccessNode(child);
 			}
-			else if(child.getNodeName().equals("instance_controller"))
+			else if("instance_controller".equals(childName))
 			{
 				proccessInstanceContoller(child);
 			}
-			else if(child.getNodeName().equals("instance_geometry"))
+			else if("instance_geometry".equals(childName))
 			{
 				proccessInstanceGeometry(child);
+			}
+			else if("lookAt".equals(childName))
+			{
+        lookAt(transform, child);
+			}
+			else if("matrix".equals(childName))
+			{
+        matrix(transform, child);
+			}
+			else if("rotate".equals(childName))
+			{
+        rotate(transform, child);
+			}
+			else if("translate".equals(childName))
+			{
+        translate(transform, child);
+			}
+			else if("scale".equals(childName))
+			{
+        scale(transform, child);
+			}
+			else if("skew".equals(childName))
+			{
+        skew(transform, child);
 			}
 		}
 	}
 
-	void proccessInstanceGeometry(Node instanceGeomretryNode) throws XPathExpressionException
+  private void lookAt(Matrix4x4 transform, Node node)
+  {
+    float[] data = parseFloatArray(node.getTextContent(), 9);
+    transform.lookAt(data[0], data[1], data[2],
+                     data[3], data[4], data[5], data[6], data[7], data[8]);
+  }
+  private void matrix(Matrix4x4 transform, Node node)
+  {
+    Matrix4x4 matrix = Matrix4x4.identity();
+    parseFloatArray(node.getTextContent(), matrix.elements);
+    transform.multiply(matrix);
+  }
+  private void rotate(Matrix4x4 transform, Node node)
+  {
+    float[] data = parseFloatArray(node.getTextContent(), 4);
+    transform.rotate(data[0], data[1], data[2], data[3]);
+  }
+  private void translate(Matrix4x4 transform, Node node)
+  {
+    float[] data = parseFloatArray(node.getTextContent(), 3);
+    transform.translate(data[0], data[1], data[2]);
+  }
+  private void scale(Matrix4x4 transform, Node node)
+  {
+    float[] data = parseFloatArray(node.getTextContent(), 3);
+    transform.scale(data[0], data[1], data[2]);
+  }
+  private void skew(Matrix4x4 transform, Node node)
+  {
+    float[] data = parseFloatArray(node.getTextContent(), 7);
+    transform.skew(data[0], data[1], data[2], data[3], data[4], data[5], data[6]);
+  }
+
+
+	private void proccessInstanceGeometry(Node instanceGeomretryNode) throws XPathExpressionException
 	{
 		System.out.println("instance_controller");
 	}
 
-	void proccessInstanceContoller(Node instanceControllerNode) throws XPathExpressionException
+	private void proccessInstanceContoller(Node instanceControllerNode) throws XPathExpressionException
 	{
 		System.out.println("instance_geometry");
 	}
