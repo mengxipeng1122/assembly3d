@@ -32,13 +32,14 @@
  */
 package org.interaction3d.assembly.tools.shift.collada;
 
-import org.interaction3d.assembly.tools.shift.util.Assembly;
+import java.util.Map;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.interaction3d.assembly.tools.shift.util.Assembly;
 
 import static javax.xml.xpath.XPathConstants.NUMBER;
 import static javax.xml.xpath.XPathConstants.STRING;
@@ -62,11 +63,16 @@ final class SkinProcessor
   private final XPathExpression exprVertexWeights;
   private final XPathExpression exprValidInputs, exprInputJoints, exprInputWeights;
   private final XPathExpression exprVertexWeightsVCount, exprVertexWeightsV;
+  
+	private final Map<String, Mesh> meshes;  
 
-  SkinProcessor(Document document, XPath xpath) throws XPathExpressionException
+  SkinProcessor(Document document, XPath xpath, Map<String, Mesh> meshes) 
+  throws XPathExpressionException
   {
     this.document = document;
     this.xpath = xpath;
+    
+    this.meshes = meshes;    
 
     exprSkin = xpath.compile("/COLLADA/library_controllers/controller[@id]/skin");
     exprBindShape = xpath.compile("bind_shape_matrix/text()");
@@ -87,70 +93,94 @@ final class SkinProcessor
     NodeList skinNodes = (NodeList) exprSkin.evaluate(document, NODESET);
 
     for (int i = 0, count=skinNodes.getLength(); i < count; i++)
-    {
+    {       
       Node skinNode = skinNodes.item(i);
-      String id = new XmlAttributes(skinNode.getParentNode()).getString("id");
+      String id = new XmlAttributes(skinNode.getParentNode()).getString("id");         
+//		Mesh mesh = findMesh(source);
+//		if(mesh == null)
+//		{
+//			return null;
+//		}    		
+      
       System.out.println("Skin: " + id);
-      //Skin modifier =
-      processSkin(skinNode);
-
-//      if(modifier != null)
-//      {
-//        modifier.convert(id, assembly);
-//      }
+      Skin skin = processSkin(id, skinNode);
+      if(skin != null)
+      {
+        skin.convert(id, assembly);
+      }
     }
   }
 
 
-  Object processSkin(Node skinNode) throws XPathExpressionException
-  {
+  Skin processSkin(String id, Node skinNode) throws XPathExpressionException
+  {           
     String source = new XmlAttributes(skinNode).getString("source");
+  
+		if(source.isEmpty() || source.charAt(0) != '#')
+		{
+			return null;
+		}
+		Mesh mesh = meshes.get(source.substring(1));
+		if(mesh == null)
+		{
+			return null;
+		}
+		int map[] = mesh.map("POSITION");
+		if(map == null)
+		{
+			return null;
+		}
+		
+  
+  	Skin skin = new Skin();		
 
-    float[] bindMatrix = parseBindMatrix(skinNode);
-
-    // Name_array
-    String sourceJointNames = (String) exprSourceJointNames.evaluate(skinNode, STRING);
-    String[] jointNames = parseNameArray(sourceJointNames, skinNode);
-
-    // float_array 4x4
-    String transformArraySource = (String) exprSourceBindPoses.evaluate(skinNode, STRING);
-    float[] transformArray = (transformArraySource == null)
-                           ? null
-                           : parseTransformArray(transformArraySource, skinNode);
-
-    Node vertexWeightsNode = (Node) exprVertexWeights.evaluate(skinNode, NODE);
-
-    int count = new XmlAttributes(vertexWeightsNode).getInt("count");
-    int inputs = ((Number) exprValidInputs.evaluate(vertexWeightsNode, NUMBER)).intValue();
-
-    int[] vcounts = parseIntArray((String) exprVertexWeightsVCount.evaluate(vertexWeightsNode,
-                    STRING), count);
-
-    int totalCount = count(vcounts);
-
-    Input inputJoints = parseInput( (Node) exprInputJoints.evaluate(vertexWeightsNode, NODE));
-    Input inputWeights = parseInput( (Node) exprInputWeights.evaluate(vertexWeightsNode, NODE));
-    if(inputJoints.hasExternalSource() || !inputJoints.source.endsWith(sourceJointNames))
-    {
-      return null;
-    }
-
-    String vTxt = (String) exprVertexWeightsV.evaluate(vertexWeightsNode, STRING);
-    int[] vertexJoints = parseIntArray(vTxt, totalCount, 1, inputs, inputJoints.offset);
-    int[] vertexWeightIndices = parseIntArray(vTxt, totalCount, 1, inputs, inputWeights.offset);
-
-    float[] vertexWeights = parseWeightArray(inputWeights.source, skinNode, totalCount);
-
-    return null;
-  }
-
-  private float[] parseBindMatrix(Node skinNode) throws XPathExpressionException
-  {
+		// bind-matrix
     String bindMatStr = (String) exprBindShape.evaluate(skinNode, STRING);
+		if(bindMatStr != null)
+		{
+			skin.binding( parseFloatArray(bindMatStr, 16) );
+		}
+		
+		// joints
+	  String sourceJointNames = (String) exprSourceJointNames.evaluate(skinNode, STRING);
+	  String[] jointNames = parseNameArray(sourceJointNames, skinNode);
+	  String transformArraySource = (String) exprSourceBindPoses.evaluate(skinNode, STRING);
+		if(transformArraySource == null)
+		{
+			skin.joints(jointNames);
+		}
+		else
+		{
+			skin.joints(jointNames, parseTransformArray(transformArraySource, skinNode));
+		}		
+		
+		// weights
+	  Node vertexWeightsNode = (Node) exprVertexWeights.evaluate(skinNode, NODE);
 
-    return (bindMatStr == null)
-         ? Matrix4x4.identity().elements
-         : parseFloatArray(bindMatStr, 16);
+	  int count = new XmlAttributes(vertexWeightsNode).getInt("count");
+	  int inputs = ((Number) exprValidInputs.evaluate(vertexWeightsNode, NUMBER)).intValue();
+
+	  int[] vcounts = parseIntArray((String) exprVertexWeightsVCount.evaluate(vertexWeightsNode,
+	                  STRING), count);
+
+	  int totalCount = count(vcounts);
+
+	  Input inputJoints = parseInput( (Node) exprInputJoints.evaluate(vertexWeightsNode, NODE));
+	  Input inputWeights = parseInput( (Node) exprInputWeights.evaluate(vertexWeightsNode, NODE));
+	  if(inputJoints.hasExternalSource() || !inputJoints.source.endsWith(sourceJointNames))
+	  {
+	    return null;
+	  }
+
+	  String vTxt = (String) exprVertexWeightsV.evaluate(vertexWeightsNode, STRING);
+	  int[] vertexJointIndices = parseIntArray(vTxt, totalCount, 1, inputs, inputJoints.offset);
+	  int[] vertexWeightIndices = parseIntArray(vTxt, totalCount, 1, inputs, inputWeights.offset);
+	  float[] vertexWeights = parseWeightArray(inputWeights.source, skinNode, totalCount);
+	  
+	  skin.weights(vertexWeights);
+	  skin.influences(vcounts, vertexJointIndices, vertexWeightIndices);				
+		
+    return skin.map(map);
   }
 
   private String[] parseNameArray(String source, Node baseNode)
@@ -224,9 +254,11 @@ final class SkinProcessor
       + "' and @count='" + (accessor.count*accessor.stride+accessor.offset) + "']/text()",
       baseNode, STRING);
 
-    return (accessor.count*accessor.stride) == count+1
-          ? parseFloatArray(transformArrayTxt, count, 1, accessor.stride, accessor.offset+1)
-          : parseFloatArray(transformArrayTxt, accessor.count, 1, accessor.stride, accessor.offset);
+    return parseFloatArray(transformArrayTxt, accessor.count, 1, accessor.stride, accessor.offset);
+
+//    return (accessor.count*accessor.stride) == count+1
+//          ? parseFloatArray(transformArrayTxt, count, 1, accessor.stride, accessor.offset+1)
+//          : parseFloatArray(transformArrayTxt, accessor.count, 1, accessor.stride, accessor.offset);
   }
 
 }

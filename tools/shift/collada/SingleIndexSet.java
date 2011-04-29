@@ -35,8 +35,6 @@ package org.interaction3d.assembly.tools.shift.collada;
 
 import java.util.HashMap;
 
-import static org.interaction3d.assembly.tools.shift.collada.PolyListTriangulization.triangulizePolylist;
-
 /**
  *
  * @author Michael Nischt
@@ -107,7 +105,7 @@ final class SingleIndexSet
       }
     }
 
-    return triangulizePolylist(indices, vcounts);
+    return indices;
   }    
   
   private int vertex(int[] vertex)
@@ -122,51 +120,5 @@ final class SingleIndexSet
     vertexMap.put(vertex, index);
     vertices.vertex(vertex);    
     return index;
-  }    
-  
-  
-  //[input][triangle][vertex]
-  int[][] triangles(String material, int[][][] triangles, int primitives, int inputs)
-  {
-    int[][] tri = new int[primitives][3];
-
-    for (int p = 0; p < primitives; p++)
-    {
-      for (int v = 0; v < 3; v++)
-      {
-        int[] vertex = new int[inputs];
-        for (int i = 0; i < vertex.length; i++)
-        {
-          vertex[i] = triangles[i][p][v];
-        }
-        tri[p][v] = vertex(vertex);
-      }
-    }
-
-    return tri;
-  }  
-  
-  //[input][poly][vertex]
-  int[][] polylist(String material, int[][][] polylist, int[] vcounts, int inputs)
-  {    
-    int[][] poly = new int[vcounts.length][];
-
-    for (int p = 0; p < vcounts.length; p++)
-    {
-      poly[p] = new int[vcounts[p]];
-
-      for (int v = 0; v < vcounts[p]; v++)
-      {
-        int[] vertex = new int[inputs];
-        for (int i = 0; i < vertex.length; i++)
-        {
-          vertex[i] = polylist[i][p][v];
-        }
-        poly[p][v] = vertex(vertex);
-      }
-    }
-
-    return triangulizePolylist(poly);
   }
-
 }

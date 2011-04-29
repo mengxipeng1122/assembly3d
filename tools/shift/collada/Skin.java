@@ -33,8 +33,13 @@
 package org.interaction3d.assembly.tools.shift.collada;
 
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.ByteOrder;
 import org.interaction3d.assembly.tools.shift.util.Assembly;
+import org.interaction3d.assembly.tools.shift.util.IndexType;
+
+import static java.lang.System.arraycopy;
+import static java.lang.String.format;
 
 
 final class Skin
@@ -44,62 +49,153 @@ final class Skin
   private String[] jointNames;
   private float[] jointBinding;
 
-  float[] vertexWeights;
+  private float[] vertexWeights;
 
   private int[] vertexCounts;
   private int[] vertexJointIndices;
   private int[] vertexWeightIndices;
 
-  void foo()
+  void Skin()
   {
-    int joints = jointNames.length;
-
-    int[][] vertices = new int[joints][];
-    float[][] weights = new float[joints][];
-
-
-    int[] counts = new int[joints];
-
-    int index = 0;
-    for(int v=0; v<vertexCounts.length; v++)
-    {
-      for(int i=0; i<vertexCounts[v]; i++)
-      {
-        int j = vertexJointIndices[index++];
-        counts[j]++;
-      }
-    }
-
-    for(int j=0; j<joints; j++)
-    {
-      int count = counts[j];
-      vertices[j] = new int[count];
-      weights[j] = new float[count];
-    }
-
-    index=0;
-    for(int v=0; v<vertexCounts.length; v++)
-    {
-      for(int i=0; i<vertexCounts[v]; i++)
-      {
-        int j = vertexJointIndices[index];
-        float w = vertexWeights[vertexWeightIndices[index]];
-        index++;
-        int ndx = --counts[j];
-        vertices[j][ndx] = v;
-        weights[j][ndx] = w;
-      }
-    }
+  	
+  }
+  
+  Skin map(int[] map)
+  {
+  	Skin skin = new Skin();
+  	
+  	skin.bindMatrix = bindMatrix;
+  	
+  	skin.jointNames = jointNames;
+  	skin.jointBinding = jointBinding;
+  	  	
+  	skin.vertexWeights = vertexWeights;
+  	
+  	int[] accum = new int[vertexCounts.length+1];
+  	for(int i=0; i<vertexCounts.length; i++ )
+  	{
+  		accum[i+1] = accum[i] + vertexCounts[i];
+  	}
+  	
+  	
+  	int N = map.length;
+  	
+  	skin.vertexCounts = new int[N];
+  	int count = 0;
+  	for(int i=0; i<N; i++)
+  	{
+			count += skin.vertexCounts[i] = vertexCounts[map[i]];
+  	}
+  	
+  	skin.vertexJointIndices = new int[count];
+  	skin.vertexWeightIndices = new int[count];  	
+  	
+  	count = 0;
+  	for(int i=0; i<N; i++)
+  	{
+			int M = skin.vertexCounts[i];			
+			int k = map[i];
+			
+			arraycopy(vertexJointIndices, accum[k], skin.vertexJointIndices, count, M);
+			arraycopy(vertexWeightIndices, accum[k], skin.vertexWeightIndices, count, M);			
+			count += M;			
+  	}
+  	
+  	return skin;
+  }
+  
+  void binding(float[] matrix) 
+  {  	
+		bindMatrix = matrix;
+  	assert(matrix == null || matrix.length == 16);  	
   }
 
+  void joints(String[] names)
+  {
+  	jointNames = names;
+		jointBinding = null;
+  }
+  
+  void joints(String[] names, float[] binding)
+  {
+  	jointNames = names;
+  	jointBinding = binding;
+		assert(binding == null || binding.length != 16*names.length);
+  }
+
+	void weights(float[] weights)	
+	{
+		vertexWeights = weights;
+	}
+
+	void influences(int[] counts, int[] jointIndices, int[] weightIndices)	
+	{
+		vertexCounts = counts;
+		vertexJointIndices = jointIndices;
+		vertexWeightIndices = weightIndices;
+		assert(jointIndices.length == weightIndices.length);
+	}
+	
 
   void convert(String name, Assembly assembly)
   {
     StringBuilder xml = new StringBuilder();
 
-    ByteBuffer buffer = ByteBuffer.allocateDirect(0).order(ByteOrder.LITTLE_ENDIAN);
+		IndexType countIndexType = IndexType.fromIndices(vertexCounts);
+		IndexType jointIndexType = IndexType.fromIndices(vertexJointIndices);
 
-    //assembly.assemble(name, xml, buffer);
+		int totalBytes = 0;
+		if(jointBinding != null)
+		{
+			totalBytes += jointBinding.length*4;
+		}		
+		totalBytes += vertexCounts.length * countIndexType.bytes();
+		totalBytes += vertexJointIndices.length * (4+jointIndexType.bytes());
+
+
+    xml.append("<Skin>\n");
+    
+    xml.append(format("\t<Joints count=\"%d\" binding=\"%s\">\n", 
+    									jointNames.length, jointBinding != null));
+    for (int i=0; i<jointNames.length; i++)
+    {
+      xml.append(format("\t\t<Joint name=\"%s\" />\n", jointNames[i]));
+    }
+    xml.append("\t</Joints>\n");
+    xml.append(format("\t<Influences count=\"%d\" type=\"%s\" />\n", 
+    										vertexCounts.length, countIndexType));
+
+    xml.append(format("\t<Vertices count=\"%d\" />\n", vertexJointIndices.length));
+    {
+      xml.append(format("\t\t<Attribute name=\"%s\" size=\"%d\" type=\"%s\" />\n", 
+      									"WEIGHT", 1, "FLOAT"));
+      									
+      xml.append(format("\t\t<Attribute name=\"%s\" size=\"%d\" type=\"%s\" />\n", 
+      									"JOINT", 1, jointIndexType));
+    }
+    xml.append("\t</Vertices>\n");
+    
+    xml.append("</Skin>\n");
+    
+    ByteBuffer buffer = ByteBuffer.allocateDirect(totalBytes).order(ByteOrder.LITTLE_ENDIAN);
+    if(jointBinding != null)
+		{
+			buffer.asFloatBuffer().put(jointBinding);
+			buffer.position(buffer.position() + jointBinding.length*4);
+		}
+		countIndexType.put(buffer, vertexCounts);
+		{
+			FloatBuffer weightBuffer = buffer.asFloatBuffer();
+			for(int index : vertexWeightIndices)
+			{
+				weightBuffer.put(vertexWeights[index]);
+			}
+			buffer.position(buffer.position() + vertexWeightIndices.length*4);
+		}
+		jointIndexType.put(buffer, vertexJointIndices);
+ 
+	  buffer.rewind();
+    assembly.assemble(name, xml, buffer);
   }
-
+  
 }
