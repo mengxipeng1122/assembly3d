@@ -96,13 +96,8 @@ final class SkinProcessor
     {       
       Node skinNode = skinNodes.item(i);
       String id = new XmlAttributes(skinNode.getParentNode()).getString("id");         
-//		Mesh mesh = findMesh(source);
-//		if(mesh == null)
-//		{
-//			return null;
-//		}    		
-      
-      System.out.println("Skin: " + id);
+
+      //System.out.println("Skin: " + id);
       Skin skin = processSkin(id, skinNode);
       if(skin != null)
       {

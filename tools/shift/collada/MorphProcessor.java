@@ -98,24 +98,40 @@ final class MorphProcessor
 
 		if(source.isEmpty() || source.charAt(0) != '#')
 		{
+			System.err.println("illegal morph source: " + source);
 			return null;
 		}
 
-		Mesh mesh = meshes.get(source.substring(1));
-		if(mesh == null)
+		Mesh baseMesh = meshes.get(source.substring(1));
+		if(baseMesh == null)
 		{
+			System.err.println("illegal morph source: " + source);		
 			return null;
 		}			
-		meshes.put(id, mesh);
+		meshes.put(id, baseMesh);
 
 
     // source is geometry
-    System.out.println("source: " + source);
+    //System.out.println("source: " + source);
 
-		Morph morph = new Morph();
+		Morph morph = new Morph(baseMesh, method.equals("NORMALIZED"));
 
     String[] targets = parseTargetArray(exprTargets.evaluate(morphNode), morphNode);
     float[] weights = parseWeightArray(exprWeights.evaluate(morphNode), morphNode);
+    
+    assert(targets.length == weights.length);
+    
+    for(int i=0; i<targets.length; i++)
+    {
+    	String target = targets[i];
+    	Mesh targetMesh = meshes.get(target) ;
+    	if(targetMesh == null)
+    	{
+				System.err.println("illegal morph target: " + target);    	
+    		continue;
+    	}        	
+    	morph.target(target, targetMesh);
+    }
     
     return morph;
   }

@@ -44,7 +44,26 @@ import static java.lang.String.format;
 
 final class Morph
 {
+	private final Mesh base;
+	private final boolean normalized;
 
+	private static class Target
+	{
+		//Attribute[] attributes;
+		//int[][] vertexMaps;
+	}
+
+	Morph(Mesh base, boolean normalized)
+	{
+		this.base = base;
+		this.normalized = normalized;
+	}
+	
+	void target(String name, Mesh target)
+	{
+		//compare attributes for name & size & length
+	}
+	
 
   void convert(String name, Assembly assembly)
   {
