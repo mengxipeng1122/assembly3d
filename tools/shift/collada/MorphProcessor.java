@@ -32,13 +32,14 @@
  */
 package org.interaction3d.assembly.tools.shift.collada;
 
-import org.interaction3d.assembly.tools.shift.util.Assembly;
+import java.util.Map;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.interaction3d.assembly.tools.shift.util.Assembly;
 
 import static javax.xml.xpath.XPathConstants.STRING;
 import static javax.xml.xpath.XPathConstants.NODE;
@@ -54,11 +55,14 @@ final class MorphProcessor
   private final XPathExpression exprMorph;
   private final XPathExpression exprTargets, exprWeights;
 
+	private final Map<String, Mesh> meshes;
 
-  MorphProcessor(Document document, XPath xpath) throws XPathExpressionException
+  MorphProcessor(Document document, XPath xpath, Map<String, Mesh> meshes) throws XPathExpressionException
   {
     this.document = document;
     this.xpath = xpath;
+    
+    this.meshes = meshes;
 
     exprMorph = xpath.compile("/COLLADA/library_controllers/controller[@id]/morph");
     exprTargets = xpath.compile("targets/input[@semantic='MORPH_TARGET']/@source");
@@ -75,17 +79,15 @@ final class MorphProcessor
       Node morphNode = morphNodes.item(i);
       String id = new XmlAttributes(morphNode.getParentNode()).getString("id");
       System.out.println("Morph: " + id);
-      //Morph modifier =
-      processMorph(morphNode);
-
-//      if(modifier != null)
-//      {
-//        modifier.convert(id, assembly);
-//      }
+      Morph morph = processMorph(id, morphNode);
+      if(morph != null)
+      {
+        morph.convert(id, assembly);
+      }
     }
   }
 
-  void processMorph(Node morphNode) throws XPathExpressionException
+  Morph processMorph(String id, Node morphNode) throws XPathExpressionException
   {
     String source, method;
     {
@@ -94,11 +96,28 @@ final class MorphProcessor
       method = attributes.getString("method", "NORMALIZED");
     }
 
+		if(source.isEmpty() || source.charAt(0) != '#')
+		{
+			return null;
+		}
+
+		Mesh mesh = meshes.get(source.substring(1));
+		if(mesh == null)
+		{
+			return null;
+		}			
+		meshes.put(id, mesh);
+
+
     // source is geometry
     System.out.println("source: " + source);
 
+		Morph morph = new Morph();
+
     String[] targets = parseTargetArray(exprTargets.evaluate(morphNode), morphNode);
     float[] weights = parseWeightArray(exprWeights.evaluate(morphNode), morphNode);
+    
+    return morph;
   }
 
 

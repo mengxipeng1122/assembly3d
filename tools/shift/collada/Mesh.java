@@ -39,11 +39,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import org.interaction3d.assembly.tools.shift.util.Assembly;
+import org.interaction3d.assembly.tools.shift.util.IndexType;
 
 import static java.lang.String.format;
-import static org.interaction3d.assembly.tools.shift.collada.BufferUtils.putInts;
-import static org.interaction3d.assembly.tools.shift.collada.BufferUtils.putShorts;
-import static org.interaction3d.assembly.tools.shift.collada.BufferUtils.putBytes;
+import static org.interaction3d.assembly.tools.shift.collada.PolyListTriangulization.triangulizePolylist;
+
+
 
 final class Mesh
 {
@@ -98,12 +99,39 @@ final class Mesh
 
   void polylist(String material, int[] elements, int[] vcounts, int inputs)
   {
-    this.triangles.add(new Group(material, triangleVertices.polylist(elements, vcounts, inputs)));
+  	int[] poly = triangleVertices.polylist(elements, vcounts, inputs);
+    this.triangles.add(new Group(material, triangulizePolylist(poly, vcounts)));
   }
 
   void attribute(String name, float[] coordinates, int count, int dimension, int index)
   {
     attributes.add(new Attribute(name, coordinates, count, dimension, index));
+  }
+  
+  int[] map(String attribute) 
+  {
+  	int index = -1;
+  	for(int i=0; i<attributes.size(); i++)
+  	{
+  		if(attribute.equals(attributes.get(i).name))
+  		{
+  			index = i;
+  			break;
+  		}
+  	}
+  	
+  	if(index < 0) 
+  	{
+  		return null;
+  	}
+  
+  	int[] map = new int[vertices.size()];
+  	for(int i=0; i<map.length; i++)
+  	{
+  		map[i] = vertices.get(i)[index];
+  	}
+  	
+  	return map;
   }
 
   void convert(String name, Assembly assembly)
@@ -114,18 +142,7 @@ final class Mesh
 
     int geomBytes = 0, topoBytes = 0;
 
-    int indexBytes = 4;
-    String indexType = "UNSIGNED_INT";
-    if (numVertices < (1 << 8))
-    {
-      indexBytes = 1;
-      indexType = "UNSIGNED_BYTE";
-    }
-    else if (numVertices < (1 << 16))
-    {
-      indexBytes = 2;
-      indexType = "UNSIGNED_SHORT";
-    }
+    IndexType indexType = IndexType.fromCount(numVertices);
 
     xml.append("<Mesh>\n");
     xml.append(format("\t<Vertices count=\"%d\" attributes=\"%d\">\n", numVertices, attributes.size()));
@@ -139,7 +156,7 @@ final class Mesh
     xml.append(format("\t<Triangles type=\"%s\" groups=\"%d\" >\n", indexType, triangles.size()));
     for (Group group : triangles)
     {
-      topoBytes += indexBytes * group.elements.length;
+      topoBytes += indexType.bytes() * group.elements.length;
       xml.append(format("\t\t<Group name=\"%s\" count=\"%d\" />\n", group.name, group.elements.length/3));
     }
     xml.append("\t</Triangles>\n");
@@ -158,26 +175,13 @@ final class Mesh
     }
 
     buffer.position(geomBytes);
-    ByteBuffer bBuffer = buffer.slice();
-    ShortBuffer sBuffer = buffer.asShortBuffer();
-    IntBuffer iBuffer = buffer.asIntBuffer();
-    buffer.rewind();
 
     for (Group group : triangles)
     {
-      if (indexBytes == 1)
-      {
-        putBytes(bBuffer, group.elements);
-      }
-      else if (indexBytes == 2)
-      {
-        putShorts(sBuffer, group.elements);
-      }
-      else
-      {
-        putInts(iBuffer, group.elements);
-      }
+    	indexType.put(buffer, group.elements);
     }
+
+    buffer.rewind();
 
     assembly.assemble(name, xml, buffer);
   }

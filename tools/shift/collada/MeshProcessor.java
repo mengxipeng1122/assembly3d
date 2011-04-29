@@ -33,6 +33,7 @@
 package org.interaction3d.assembly.tools.shift.collada;
 
 import java.util.HashSet;
+import java.util.Map;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
@@ -60,10 +61,15 @@ final class MeshProcessor
   private final XPathExpression exprSupportedPrimitives, exprVertices, exprInput, exprP, exprVcount;
   private final XPathExpression exprNotSupportedPrimitives;
 
-  MeshProcessor(Document document, XPath xpath) throws XPathExpressionException
+	private Map<String, Mesh> meshes;
+
+  MeshProcessor(Document document, XPath xpath, Map<String, Mesh> meshes) 
+  throws XPathExpressionException
   {
     this.document = document;
     this.xpath = xpath;
+
+		this.meshes = meshes;
 
     exprMesh = xpath.compile("/COLLADA/library_geometries/geometry[@id]/mesh");
 
@@ -95,6 +101,7 @@ final class MeshProcessor
       String id = new XmlAttributes(meshNode.getParentNode()).getString("id");
       if (mesh != null)
       {
+      	meshes.put(id, mesh);
         mesh.convert(id, assembly);
         mesh = null;
       }
@@ -106,7 +113,7 @@ final class MeshProcessor
   {
     if (true)
     {
-      boolean hasNotSupported = (boolean) exprNotSupportedPrimitives.evaluate(meshNode, BOOLEAN);
+      boolean hasNotSupported = (Boolean) exprNotSupportedPrimitives.evaluate(meshNode, BOOLEAN);
       if (hasNotSupported)
       {
         System.err.println("warning: mesh has unsupported primitives!");

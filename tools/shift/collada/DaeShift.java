@@ -32,6 +32,7 @@
  */
 package org.interaction3d.assembly.tools.shift.collada;
 
+import java.util.HashMap;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -137,13 +138,14 @@ public final class DaeShift
     XPath xpath = XPathFactory.newInstance().newXPath();
 
     String version = (String) xpath.evaluate("COLLADA/@version", document, XPathConstants.STRING);
-    System.out.println("Collada version: " + version);
+    System.out.println("Collada version: " + version);		
 
-    if(false) processMeshes(new MeshProcessor(document, xpath), outputDir);
-    if(true) processMorphers(new MorphProcessor(document, xpath), outputDir);
-    if(true) processSkin(new SkinProcessor(document, xpath), outputDir);
+		HashMap<String, Mesh> meshes = new HashMap<String, Mesh>();
+
+    if(true) processMeshes(new MeshProcessor(document, xpath, meshes), outputDir);
+    if(true) processMorphers(new MorphProcessor(document, xpath, meshes), outputDir);
+    if(true) processSkin(new SkinProcessor(document, xpath, meshes), outputDir);
     if(true) processScenes(new SceneProcessor(document, xpath), outputDir);
-
 	}
 
   private static void processScenes(SceneProcessor processor, final String path)
