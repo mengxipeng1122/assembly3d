@@ -82,7 +82,7 @@ int XmlParser::getValue(const std::string& tag, int defaultValue, int which)
 {
     TiXmlHandle valHandle(NULL);
 	if (readTag(tag, valHandle, which)){
-		return strtol(valHandle.ToText()->Value(), NULL, 0);
+                return static_cast<int>(strtol(valHandle.ToText()->Value(), NULL, 0));
 	}
 	return defaultValue;
 }
@@ -122,7 +122,7 @@ bool XmlParser::readTag(const std::string& tag, TiXmlHandle& valHandle, int whic
 
 bool XmlParser::pushTag(const std::string& tag, int which)
 {
-	int pos = tag.find(":");
+        int pos = static_cast<int>(tag.find(":"));
 
     // Either find the tag specified, or the first tag if colon-seperated.
     std::string tagToFind((pos > 0) ? tag.substr(0,pos) :tag);
@@ -201,7 +201,7 @@ int XmlParser::getNumTags(const std::string& tag)
 {
 	//this only works for tags at the current root level
 
-	int pos = tag.find(":");
+        int pos = static_cast<int>(tag.find(":"));
 
     // Either find the tag specified, or the first tag if colon-seperated.
     std::string tagToFind((pos > 0) ? tag.substr(0,pos) :tag);

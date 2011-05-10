@@ -355,6 +355,7 @@ namespace assembly3d
          * @return unsigned int *
         */
         unsigned int* getIndicesPointer();
+        void updateVecs();
 
     private:
 
@@ -371,7 +372,6 @@ namespace assembly3d
         void bounds(float center[3], float &width, float &height,
         float &length, float &radius, float extent[3]) const;
 
-        void updateVecs();
 
         std::vector<assembly3d::Vertex> m_vertices;
         std::vector<unsigned int> m_indices;
@@ -464,10 +464,10 @@ namespace assembly3d
     { return m_numTriangles; }
 
     inline unsigned int Mesh::getNumberOfVertices() const
-    { return m_vertices.size(); }
+    { return static_cast<unsigned int>(m_vertices.size()); }
 
     inline unsigned int Mesh::getNumberOfGroups() const
-    { return m_groups.size(); }
+    { return static_cast<unsigned int>(m_groups.size()); }
 
     inline bool Mesh::hasPositions() const
     { return m_hasPositions; }

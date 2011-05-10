@@ -71,9 +71,21 @@ void FrontFaceTool::flip(Mesh* mesh)
         vert->normal[0] = -vert->normal[0];
         vert->normal[1] = -vert->normal[1];
         vert->normal[2] = -vert->normal[2];
+//        if(mesh->hasTangents())
+//        {
+//            vert->tangent[0] = -vert->tangent[0];
+//            vert->tangent[1] = -vert->tangent[1];
+//            vert->tangent[2] = -vert->tangent[2];
+
+//            vert->bitangent[0] = -vert->bitangent[0];
+//            vert->bitangent[1] = -vert->bitangent[1];
+//            vert->bitangent[2] = -vert->bitangent[2];
+//        }
     }
     if(mesh->hasTangents())
         mesh->generateTangents();
+
+    mesh->updateVecs();
 }
 
 //bool FrontFaceTool::testNormalConsitency(Mesh *mesh, std::string& resultMsg)
@@ -166,6 +178,17 @@ bool FrontFaceTool::makeConsistent(Mesh *mesh, std::string& resultMsg)
                 vert->normal[0] = -vert->normal[0];
                 vert->normal[1] = -vert->normal[1];
                 vert->normal[2] = -vert->normal[2];
+                if(mesh->hasTangents())
+                {
+                    vert->tangent[0] = -vert->tangent[0];
+                    vert->tangent[1] = -vert->tangent[1];
+                    vert->tangent[2] = -vert->tangent[2];
+
+                    vert->bitangent[0] = -vert->bitangent[0];
+                    vert->bitangent[1] = -vert->bitangent[1];
+                    vert->bitangent[2] = -vert->bitangent[2];
+                }
+
             }
             modelChanged = true;
         }
@@ -179,11 +202,23 @@ bool FrontFaceTool::makeConsistent(Mesh *mesh, std::string& resultMsg)
                 vert->normal[0] = -vert->normal[0];
                 vert->normal[1] = -vert->normal[1];
                 vert->normal[2] = -vert->normal[2];
+//                if(mesh->hasTangents())
+//                {
+//                    vert->tangent[0] = -vert->tangent[0];
+//                    vert->tangent[1] = -vert->tangent[1];
+//                    vert->tangent[2] = -vert->tangent[2];
+
+//                    vert->bitangent[0] = -vert->bitangent[0];
+//                    vert->bitangent[1] = -vert->bitangent[1];
+//                    vert->bitangent[2] = -vert->bitangent[2];
+//                }
+
             }
             modelChanged = true;
         }
-        if(mesh->hasTangents())
+        if(mesh->hasTangents() && modelChanged)
             mesh->generateTangents();
+        mesh->updateVecs();
     }
     else
     {
@@ -204,7 +239,7 @@ bool FrontFaceTool::isConsistent(Mesh *mesh, std::vector<int>& verticesOutwards,
     Mesh* mesh2 = new Mesh(*mesh);
     mesh2->generateNormals();
 
-    for(size_t i = 0; i < mesh->getNumberOfVertices(); ++i)
+    for(unsigned int i = 0; i < mesh->getNumberOfVertices(); ++i)
     {
         Vertex* v1 = &mesh->getVertex(i);
         Vertex* v2 = &mesh2->getVertex(i);

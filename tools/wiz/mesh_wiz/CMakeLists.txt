@@ -12,6 +12,7 @@ set(MeshWiz_HEADERS
     ToolManager.h
     TransformTool.h
     FrontFaceTool.h
+    TextureTool.h
     )
 
 set(MeshWiz_SOURCE
@@ -22,6 +23,7 @@ set(MeshWiz_SOURCE
     ToolManager.cpp
     TransformTool.cpp
     FrontFaceTool.cpp
+    TextureTool.cpp
     )
 
 include_directories(${A3DTools_INCLUDE} ${TCLAP_INCLUDE})
