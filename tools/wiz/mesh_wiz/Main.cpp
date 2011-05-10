@@ -316,9 +316,27 @@ int main (int argc, char* argv[])
         if(normalsConsitency)
             std::cout << "yes";
         else
+        {
+            std::cout << "no";
+            std::cout << " (number outwards/inwards: " << numOutwards << "/" << numInwards << ")";
+        }
+        std::cout << std::endl;
+
+        int numUnbakeable = toolMgr.checkBakeable();
+        std::cout << "Bakeable: ";
+        if(numUnbakeable > 0)
+            std::cout << "no (" << numUnbakeable << ")";
+        else
+            std::cout << "yes";
+        std::cout << std::endl;
+
+        int numUVoverlaps = toolMgr.checkUVOverlapping();
+        std::cout << "UV overlapping: ";
+        if(numUVoverlaps > 0)
+            std::cout << "yes (" << numUVoverlaps << " overlaps)";
+        else
             std::cout << "no";
 
-        std::cout << " (number outwards/inwards: " << numOutwards << "/" << numInwards << ")" << std::endl;
         std::cout << std::endl;
         return 0;
     }
@@ -460,7 +478,7 @@ int main (int argc, char* argv[])
         else if(numSlashes == 1)
         {
             std::string cmdStr = args;
-            int pos = cmdStr.find(sep);
+            int pos = static_cast<int>(cmdStr.find(sep));
             std::string axis = cmdStr.substr(0, pos);
             cmdStr = cmdStr.erase(0, pos+1);
 
@@ -491,7 +509,7 @@ int main (int argc, char* argv[])
         if(numSlashes == 1)
         {
             std::string cmdStr = args;
-            int pos = cmdStr.find(sep);
+            int pos = static_cast<int>(cmdStr.find(sep));
             std::string attributeName = cmdStr.substr(0, pos);
             cmdStr = cmdStr.erase(0, pos+1);
 

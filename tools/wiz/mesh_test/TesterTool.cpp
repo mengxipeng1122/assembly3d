@@ -119,15 +119,15 @@ void TesterTool::loadMesh(const string& xmlFile,
 
                 if(string(group.type).compare("UNSIGNED_BYTE") == 0)
                 {
-                    numBytes = group.count * 3 * sizeof(unsigned char);
+                    numBytes = group.count * 3 * static_cast<int>(sizeof(unsigned char));
                 }
                 else if(string(group.type).compare("UNSIGNED_SHORT") == 0)
                 {
-                    numBytes = group.count * 3 * sizeof(unsigned short);
+                    numBytes = group.count * 3 * static_cast<int>(sizeof(unsigned short));
                 }
                 else if(string(group.type).compare("UNSIGNED_INT") == 0)
                 {
-                    numBytes = group.count * 3 * sizeof(unsigned int);
+                    numBytes = group.count * 3 * static_cast<int>(sizeof(unsigned int));
                 }
 
                 group.numBytes = numBytes;

@@ -39,6 +39,7 @@
 #include "AttributeTool.h"
 #include "OptimizeTool.h"
 #include "FrontFaceTool.h"
+#include "TextureTool.h"
 
 
 namespace assembly3d
@@ -170,6 +171,9 @@ namespace assembly3d
             bool makeNormalsConsistent();
             bool checkFrontFaceConsistenty(int& numOutwards, int& numInwards);
 
+            int checkBakeable();
+            int checkUVOverlapping();
+
         protected:
         private:
             Mesh* m_mesh;
@@ -180,6 +184,7 @@ namespace assembly3d
             AttributeTool* m_attributeTool;
             OptimizeTool* m_optimizeTool;
             FrontFaceTool* m_frontFaceTool;
+            TextureTool* m_textureTool;
         };
     }
 }

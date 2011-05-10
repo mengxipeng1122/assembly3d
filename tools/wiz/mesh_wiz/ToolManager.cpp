@@ -46,7 +46,8 @@ m_convertTool(new ConvertTool()),
 m_transformTool(new TransformTool()),
 m_attributeTool(new AttributeTool()),
 m_optimizeTool(new OptimizeTool()),
-m_frontFaceTool(new FrontFaceTool())
+m_frontFaceTool(new FrontFaceTool()),
+m_textureTool(new TextureTool())
 {
     
 }
@@ -58,6 +59,7 @@ ToolManager::~ToolManager()
     SAFE_DELETE(m_attributeTool)
     SAFE_DELETE(m_optimizeTool)
     SAFE_DELETE(m_frontFaceTool)
+    SAFE_DELETE(m_textureTool)
 }
 bool ToolManager::convertIndexType(const char* type)
 {
@@ -281,4 +283,14 @@ bool ToolManager::checkFrontFaceConsistenty(int& numOutwards, int& numInwards)
     else
         return false;
 
+}
+
+int assembly3d::wiz::ToolManager::checkBakeable()
+{
+    return m_textureTool->checkIfBakable(m_mesh);
+}
+
+int assembly3d::wiz::ToolManager::checkUVOverlapping()
+{
+    return m_textureTool->checkUVOverlapping(m_mesh);
 }

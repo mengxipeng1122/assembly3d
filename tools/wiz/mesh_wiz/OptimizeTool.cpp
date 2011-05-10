@@ -270,7 +270,7 @@ void OptimizeTool::stitch(Mesh *m)
             int index = findFirstIndexEquals(newVertices, v);
             if(index < 0)
             {
-                index = newVertices.size();
+                index = static_cast<int>(newVertices.size());
                 newVertices.push_back(v);
             }
             newIndices[i*3+j] = index;
@@ -317,7 +317,7 @@ void OptimizeTool::stitch(Mesh *m, Attribute a, float epsilon)
             int index = findFirstIndexEqualsEps(newVertices, v, a, epsilon);
             if(index < 0)
             {
-                index = newVertices.size();
+                index = static_cast<int>(newVertices.size());
                 newVertices.push_back(v);
             }
             newIndices[i*3+j] = index;
