@@ -259,7 +259,7 @@ bool FrontFaceTool::isConsistent(Mesh *mesh, std::vector<int>& verticesOutwards,
 
         float angle = (float)acos(std::min(dotVec1Vec2, 1.0f));
 
-        if(angle < (PIf / 2))
+        if(angle <= (PIf / 2))
         {
             verticesOutwards.push_back(i);
         }

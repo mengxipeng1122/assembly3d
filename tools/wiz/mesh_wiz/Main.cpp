@@ -321,9 +321,10 @@ int main (int argc, char* argv[])
             std::cout << " (number outwards/inwards: " << numOutwards << "/" << numInwards << ")";
         }
         std::cout << std::endl;
-
+        std::cout << "---------------------------" << std::endl;
+        std::cout << "Bakeability" << std::endl;
         int numUnbakeable = toolMgr.checkBakeable();
-        std::cout << "Bakeable: ";
+        std::cout << "TexCoords in bounds: ";
         if(numUnbakeable > 0)
             std::cout << "no (" << numUnbakeable << ")";
         else

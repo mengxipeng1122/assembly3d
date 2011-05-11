@@ -39,7 +39,7 @@
 #include "AttributeTool.h"
 #include "OptimizeTool.h"
 #include "FrontFaceTool.h"
-#include "TextureTool.h"
+#include "BakeTool.h"
 
 
 namespace assembly3d
@@ -184,7 +184,7 @@ namespace assembly3d
             AttributeTool* m_attributeTool;
             OptimizeTool* m_optimizeTool;
             FrontFaceTool* m_frontFaceTool;
-            TextureTool* m_textureTool;
+            BakeTool* m_textureTool;
         };
     }
 }

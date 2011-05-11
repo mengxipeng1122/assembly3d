@@ -31,8 +31,8 @@
  *
  */
 
-#ifndef TEXTURETOOL_H
-#define TEXTURETOOL_H
+#ifndef BAKETOOL_H
+#define BAKETOOL_H
 
 #include "Mesh.h"
 
@@ -41,12 +41,12 @@ namespace assembly3d
     namespace wiz
     {
 
-        class TextureTool
+        class BakeTool
         {
         public:
-            TextureTool();
+            BakeTool();
 
-            int checkIfBakable(Mesh* mesh);
+            int isInBounds(Mesh* mesh);
 
             int checkUVOverlapping(Mesh* mesh);
         private:
@@ -54,4 +54,4 @@ namespace assembly3d
         };
     }
 }
-#endif // TEXTURETOOL_H
+#endif // BAKETOOL_H

@@ -32,7 +32,7 @@
  */
 
 #include "MeshWizIncludes.h"
-#include "TextureTool.h"
+#include "BakeTool.h"
 
 #define DOT2(v1,v2) (v1[0]*v2[0]+v1[1]*v2[1])
 #define DOT3(v1,v2) (v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2])
@@ -40,11 +40,11 @@
 using namespace assembly3d;
 using namespace assembly3d::wiz;
 
-TextureTool::TextureTool()
+BakeTool::BakeTool()
 {
 }
 
-int TextureTool::checkIfBakable(Mesh *mesh)
+int BakeTool::isInBounds(Mesh *mesh)
 {
     int numUnbakable = 0;
     for(unsigned int i = 0; i < mesh->getNumberOfVertices(); ++i)
@@ -62,7 +62,7 @@ int TextureTool::checkIfBakable(Mesh *mesh)
     return numUnbakable;
 }
 
-int TextureTool::checkUVOverlapping(Mesh *mesh)
+int BakeTool::checkUVOverlapping(Mesh *mesh)
 {
     int numOverlaps = 0;
     for(int i = 0; i < mesh->getNumberOfTriangles(); ++i)
@@ -71,10 +71,10 @@ int TextureTool::checkUVOverlapping(Mesh *mesh)
         Vertex* vert00 = &mesh->getVertex(triangle1[0]);
         Vertex* vert01 = &mesh->getVertex(triangle1[1]);
         Vertex* vert02 = &mesh->getVertex(triangle1[2]);
-        for(int j = 0; j < mesh->getNumberOfTriangles(); ++j)
+        for(int j = i+1; j < mesh->getNumberOfTriangles(); ++j)
         {
-            if(j == i)
-                continue;
+//            if(j == i)
+//                continue;
             const unsigned int* triangle2 = mesh->getTriangle(j);
             for(unsigned int k = 0; k < 3; ++k)
             {
@@ -82,6 +82,7 @@ int TextureTool::checkUVOverlapping(Mesh *mesh)
                 if(checkPointInTri(point->texCoord, vert00->texCoord, vert01->texCoord, vert02->texCoord))
                 {
                     numOverlaps++;
+                    break;
                 }
             }
         }
@@ -106,7 +107,7 @@ int TextureTool::checkUVOverlapping(Mesh *mesh)
     return numOverlaps;
 }
 
-bool TextureTool::checkPointInTri(float* p, float* a, float* b, float* c)
+bool BakeTool::checkPointInTri(float* p, float* a, float* b, float* c)
 {
     // http://www.blackpawn.com/texts/pointinpoly/default.html
 
