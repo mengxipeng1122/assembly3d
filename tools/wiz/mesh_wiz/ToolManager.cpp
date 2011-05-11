@@ -47,7 +47,7 @@ m_transformTool(new TransformTool()),
 m_attributeTool(new AttributeTool()),
 m_optimizeTool(new OptimizeTool()),
 m_frontFaceTool(new FrontFaceTool()),
-m_textureTool(new TextureTool())
+m_textureTool(new BakeTool())
 {
     
 }
@@ -287,7 +287,7 @@ bool ToolManager::checkFrontFaceConsistenty(int& numOutwards, int& numInwards)
 
 int assembly3d::wiz::ToolManager::checkBakeable()
 {
-    return m_textureTool->checkIfBakable(m_mesh);
+    return m_textureTool->isInBounds(m_mesh);
 }
 
 int assembly3d::wiz::ToolManager::checkUVOverlapping()
