@@ -38,14 +38,14 @@ package org.interaction3d.assembly.tools.shift.obj;
  */
 final class Vertex 
 {
-    public static final int POSITION = 0, TEXTURE = 1, NORMAL = 2;
+    public static final int POSITION = 0, TEXCOORD = 1, NORMAL = 2;
 
     final int position, texture, normal;
 
     Vertex(int[] vertex)
     {
         position = vertex[POSITION];
-        texture = vertex[TEXTURE];
+        texture = vertex[TEXCOORD];
         normal = vertex[NORMAL];
     }
     
