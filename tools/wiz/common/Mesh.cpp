@@ -435,7 +435,7 @@ void Mesh::initializeMeshFormat()
     if(m_hasTexCoords)
     {
         ++m_format.attributeCount;
-        m_format.attributeName.push_back("TEXTURE");
+        m_format.attributeName.push_back("TEXCOORD");
         m_format.attributeSize.push_back(2);
         m_format.attributeType.push_back("FLOAT");
     }

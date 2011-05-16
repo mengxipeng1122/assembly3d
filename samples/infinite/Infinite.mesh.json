@@ -6,7 +6,7 @@
 		[
 			{ "name": "POSITION", "size": 3, "type": "FLOAT" },
 			{ "name": "NORMAL", "size": 3, "type": "FLOAT"  },
-			{ "name": "TEXTURE", "size": 2, "type": "FLOAT"  }
+			{ "name": "TEXCOORD", "size": 2, "type": "FLOAT"  }
 		]
 	},
 	"triangles": 
