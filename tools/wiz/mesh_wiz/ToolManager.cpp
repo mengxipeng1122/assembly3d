@@ -285,12 +285,12 @@ bool ToolManager::checkFrontFaceConsistenty(int& numOutwards, int& numInwards)
 
 }
 
-int assembly3d::wiz::ToolManager::checkBakeable()
+int ToolManager::checkBakeable()
 {
     return m_textureTool->isInBounds(m_mesh);
 }
 
-int assembly3d::wiz::ToolManager::checkUVOverlapping()
+int ToolManager::checkUVOverlapping()
 {
     return m_textureTool->checkUVOverlapping(m_mesh);
 }

@@ -63,13 +63,14 @@ m_radius(0.0f)
 
 Mesh::Mesh(const Mesh &m)
 {
-    m_vertices = m.m_vertices;
-    m_indices = m.m_indices;
-    m_groups = m.m_groups;
-
     m_positions = m.m_positions;
     m_normals = m.m_normals;
     m_texCoords = m.m_texCoords;
+    m_tangents = m.m_tangents;
+    m_bitangents = m.m_bitangents;
+
+    m_indices = m.m_indices;
+    m_groups = m.m_groups;
 
     m_meshPath = m.m_meshPath;
     m_format = m.m_format;
@@ -106,17 +107,19 @@ Mesh& Mesh::operator=(const Mesh& m)
     {
         destroy();
 
-        m_vertices = m.m_vertices;
-        m_indices = m.m_indices;
-        m_groups = m.m_groups;
-
         m_positions = m.m_positions;
         m_normals = m.m_normals;
         m_texCoords = m.m_texCoords;
+        m_tangents = m.m_tangents;
+        m_bitangents = m.m_bitangents;
+
+        m_indices = m.m_indices;
+        m_groups = m.m_groups;
 
         m_meshPath = m.m_meshPath;
         m_format = m.m_format;
 
+        m_numVertices = m.m_numVertices;
         m_numTriangles = m.m_numTriangles;
         m_hasPositions = m.m_hasPositions;
         m_hasNormals = m.m_hasNormals;
@@ -135,8 +138,6 @@ Mesh& Mesh::operator=(const Mesh& m)
         m_extent[0] = m.m_extent[0];
         m_extent[1] = m.m_extent[1];
         m_extent[2] = m.m_extent[2];
-
-
     }
     return *this;
 }
@@ -156,13 +157,13 @@ void Mesh::bounds(float center[3], float &width, float &height,
     float y = 0.0f;
     float z = 0.0f;
 
-    int numVerts = static_cast<int>(m_vertices.size());
+    int numVerts = static_cast<int>(m_positions.size());
 
     for (int i = 0; i < numVerts; ++i)
     {
-        x = m_vertices[i].position[0];
-        y = m_vertices[i].position[1];
-        z = m_vertices[i].position[2];
+        x = m_positions[i + 0];
+        y = m_positions[i + 1];
+        z = m_positions[i + 2];
 
         if (x < xMin)
             xMin = x;
@@ -270,21 +271,34 @@ int Mesh::getGroupIndexWithName(const char *groupName)
 
 void Mesh::printData()
 {
-    std::cout << "Number of Vertices: " << m_vertices.size() << std::endl;
+    std::cout << "Number of Vertices: " << m_positions.size() << std::endl;
     std::cout << "Positions:" << std::endl;
-    for(std::vector<Vertex>::iterator it = m_vertices.begin(); it < m_vertices.end(); ++it)
+    int counter = 0;
+    for(std::vector<float>::iterator it = m_positions.begin(); it < m_positions.end(); ++it)
     {
-        std::cout << it->position[0] << " " << it->position[1] << " " << it->position[2] << std::endl;
+        std::cout << *it << " ";
+        ++counter;
+        if(counter == 3)
+            std::cout << std::endl; counter = 0;
     }
     std::cout << "Normals:" << std::endl;
-    for(std::vector<Vertex>::iterator it = m_vertices.begin(); it < m_vertices.end(); ++it)
+    counter = 0;
+    for(std::vector<float>::iterator it = m_normals.begin(); it < m_normals.end(); ++it)
     {
-        std::cout << it->normal[0] << " " << it->normal[1] << " " << it->normal[2] << std::endl;
+        std::cout << *it << " ";
+        ++counter;
+        if(counter == 3)
+            std::cout << std::endl; counter = 0;
+//        std::cout << (*it)[0] << " " << (*it)[1] << " " << (*it)[2] << std::endl;
     }
     std::cout << "TexCoords:" << std::endl;
-    for(std::vector<Vertex>::iterator it = m_vertices.begin(); it < m_vertices.end(); ++it)
+    counter = 0;
+    for(std::vector<float>::iterator it = m_texCoords.begin(); it < m_texCoords.end(); ++it)
     {
-        std::cout << it->texCoord[0] << " " << it->texCoord[1] << std::endl;
+        std::cout << *it << " ";
+        ++counter;
+        if(counter == 2)
+            std::cout << std::endl; counter = 0;
     }
     
     std::cout << "Indices:" << std::endl;
@@ -296,6 +310,7 @@ void Mesh::printData()
 }
 void Mesh::destroy()
 {
+    m_numVertices = 0;
     m_numTriangles = 0;
 
     m_hasPositions = false;
@@ -316,13 +331,14 @@ void Mesh::destroy()
     m_extent[2] = 0.0f;
 
     m_groups.clear();
-    m_vertices.clear();
     m_indices.clear();
 
     m_positions.clear();
     m_normals.clear();
     m_texCoords.clear();
-    
+    m_tangents.clear();
+    m_bitangents.clear();
+
     m_format.name = "Assembly3D.mesh";
     m_format.attributeName.clear();
     m_format.attributeSize.clear();
@@ -372,21 +388,71 @@ void Mesh::hasBitangents(bool val)
 {
     m_hasBitangents = val;
 }
-void Mesh::addVertex(Vertex vertex)
+
+void Mesh::setPositions(const std::vector<float>& positions)
 {
-    m_vertices.push_back(vertex);
-    m_positions.push_back(vertex.position[0]);
-    m_positions.push_back(vertex.position[1]);
-    m_positions.push_back(vertex.position[2]);
-    m_normals.push_back(vertex.normal[0]);
-    m_normals.push_back(vertex.normal[1]);
-    m_normals.push_back(vertex.normal[2]);
-    m_texCoords.push_back(vertex.texCoord[0]);
-    m_texCoords.push_back(vertex.texCoord[1]);
+    m_positions = positions;
 }
+void Mesh::setNormals(const std::vector<float>& normals)
+{
+    m_normals = normals;
+}
+void Mesh::setTexCoords(const std::vector<float>& texCoords)
+{
+    m_texCoords = texCoords;
+}
+void Mesh::setTangents(const std::vector<float>& tangents)
+{
+    m_tangents = tangents;
+}
+void Mesh::setBitangents(const std::vector<float>& bitangents)
+{
+    m_bitangents = bitangents;
+}
+void Mesh::addPosition(float* position, int size)
+{
+    for(int i = 0; i < size; ++i)
+    {
+        m_positions.push_back(position[i]);
+    }
+}
+void Mesh::addNormal(float* normal, int size)
+{
+    for(int i = 0; i < size; ++i)
+    {
+        m_normals.push_back(normal[i]);
+    }
+}
+void Mesh::addTexCoord(float* texCoord, int size)
+{
+    for(int i = 0; i < size; ++i)
+    {
+        m_texCoords.push_back(texCoord[i]);
+    }
+}
+void Mesh::addTangent(float* tangent, int size)
+{
+    for(int i = 0; i < size; ++i)
+    {
+        m_tangents.push_back(tangent[i]);
+    }
+}
+void Mesh::addBitangent(float* bitangent, int size)
+{
+    for(int i = 0; i < size; ++i)
+    {
+        m_bitangents.push_back(bitangent[i]);
+    }
+}
+
 void Mesh::clearVertices()
 {
-    m_vertices.clear();
+//    m_vertices.clear();
+    m_positions.clear();
+    m_normals.clear();
+    m_texCoords.clear();
+    m_tangents.clear();
+    m_bitangents.clear();
 }
 void Mesh::addIndex(unsigned int index)
 {
@@ -400,6 +466,12 @@ void Mesh::addGroup(Group group)
 {
     m_groups.push_back(group);
 }
+
+void Mesh::setNumVertices(int numVertices)
+{
+    m_numVertices = numVertices;
+}
+
 void Mesh::setNumTriangles(int numTriangles)
 {
     m_numTriangles = numTriangles;
@@ -459,9 +531,6 @@ void Mesh::initializeMeshFormat()
 void Mesh::generateNormals()
 {
     const unsigned int *pTriangle = 0;
-    Vertex *pVertex0 = 0;
-    Vertex *pVertex1 = 0;
-    Vertex *pVertex2 = 0;
     float edge1[3] = {0.0f, 0.0f, 0.0f};
     float edge2[3] = {0.0f, 0.0f, 0.0f};
     float normal[3] = {0.0f, 0.0f, 0.0f};
@@ -470,31 +539,26 @@ void Mesh::generateNormals()
     int totalTriangles = this->getNumberOfTriangles();
 
     // Initialize all the vertex normals.
-    for (int i = 0; i < totalVertices; ++i)
-    {
-        pVertex0 = &this->getVertex(i);
-        pVertex0->normal[0] = 0.0f;
-        pVertex0->normal[1] = 0.0f;
-        pVertex0->normal[2] = 0.0f;
-    }
+    m_normals.clear();
+    m_normals.assign(totalVertices*3, 0.0f);
 
     // Calculate the vertex normals.
     for (int i = 0; i < totalTriangles; ++i)
     {
         pTriangle = this->getTriangle(i);
-        pVertex0 = &this->getVertex(pTriangle[0]);
-        pVertex1 = &this->getVertex(pTriangle[1]);
-        pVertex2 = &this->getVertex(pTriangle[2]);
+        float* pPosition0 = getPosition(pTriangle[0]);
+        float* pPosition1 = getPosition(pTriangle[1]);
+        float* pPosition2 = getPosition(pTriangle[2]);
 
         // Calculate triangle face normal.
 
-        edge1[0] = pVertex1->position[0] - pVertex0->position[0];
-        edge1[1] = pVertex1->position[1] - pVertex0->position[1];
-        edge1[2] = pVertex1->position[2] - pVertex0->position[2];
+        edge1[0] = pPosition1[0] - pPosition0[0];
+        edge1[1] = pPosition1[1] - pPosition0[1];
+        edge1[2] = pPosition1[2] - pPosition0[2];
 
-        edge2[0] = pVertex2->position[0] - pVertex0->position[0];
-        edge2[1] = pVertex2->position[1] - pVertex0->position[1];
-        edge2[2] = pVertex2->position[2] - pVertex0->position[2];
+        edge2[0] = pPosition2[0] - pPosition0[0];
+        edge2[1] = pPosition2[1] - pPosition0[1];
+        edge2[2] = pPosition2[2] - pPosition0[2];
 
         normal[0] = (edge1[1] * edge2[2]) - (edge1[2] * edge2[1]);
         normal[1] = (edge1[2] * edge2[0]) - (edge1[0] * edge2[2]);
@@ -518,50 +582,54 @@ void Mesh::generateNormals()
 
 
         // Accumulate the normals.
+        float* pNormal0 = getNormal(pTriangle[0]);
+        float* pNormal1 = getNormal(pTriangle[1]);;
+        float* pNormal2 = getNormal(pTriangle[2]);;
 
-        pVertex0->normal[0] += normal[0];
-        pVertex0->normal[1] += normal[1];
-        pVertex0->normal[2] += normal[2];
+        pNormal0[0] += normal[0];
+        pNormal0[1] += normal[1];
+        pNormal0[2] += normal[2];
 
-        pVertex1->normal[0] += normal[0];
-        pVertex1->normal[1] += normal[1];
-        pVertex1->normal[2] += normal[2];
+        pNormal1[0] += normal[0];
+        pNormal1[1] += normal[1];
+        pNormal1[2] += normal[2];
 
-        pVertex2->normal[0] += normal[0];
-        pVertex2->normal[1] += normal[1];
-        pVertex2->normal[2] += normal[2];
+        pNormal2[0] += normal[0];
+        pNormal2[1] += normal[1];
+        pNormal2[2] += normal[2];
+
     }
 
     // Normalize the vertex normals.
     for (int i = 0; i < totalVertices; ++i)
     {
-        pVertex0 = &this->getVertex(i);
+//        pVertex0 = &this->getVertex(i);
+        float* pNormal = getNormal(i);
 
-        float tmpLength = sqrtf(pVertex0->normal[0] * pVertex0->normal[0] +
-            pVertex0->normal[1] * pVertex0->normal[1] +
-            pVertex0->normal[2] * pVertex0->normal[2]);
+        float tmpLength = sqrtf(pNormal[0] * pNormal[0] +
+            pNormal[1] * pNormal[1] + pNormal[2] * pNormal[2]);
 
         if(tmpLength == 0.0f)
             length = 0.0f;
         else
             length = 1.0f / tmpLength;
 
-        pVertex0->normal[0] *= length;
-        pVertex0->normal[1] *= length;
-        pVertex0->normal[2] *= length;
+        pNormal[0] *= length;
+        pNormal[1] *= length;
+        pNormal[2] *= length;
     }
 
     //this->printData();
     this->hasNormals(true);
-    updateVecs();
+//    updateVecs();
 }
 
 void Mesh::generateTangents()
 {
     const unsigned int *pTriangle = 0;
-    Vertex *pVertex0 = 0;
-    Vertex *pVertex1 = 0;
-    Vertex *pVertex2 = 0;
+//    Vertex *pVertex0 = 0;
+//    Vertex *pVertex1 = 0;
+//    Vertex *pVertex2 = 0;
     float edge1[3] = {0.0f, 0.0f, 0.0f};
     float edge2[3] = {0.0f, 0.0f, 0.0f};
     float texEdge1[2] = {0.0f, 0.0f};
@@ -576,42 +644,41 @@ void Mesh::generateTangents()
     int totalTriangles = this->getNumberOfTriangles();
 
     // Initialize all the vertex tangents and bitangents.
-    for (int i = 0; i < totalVertices; ++i)
-    {
-        pVertex0 = &this->getVertex(i);
-
-        pVertex0->tangent[0] = 0.0f;
-        pVertex0->tangent[1] = 0.0f;
-        pVertex0->tangent[2] = 0.0f;
-
-        pVertex0->bitangent[0] = 0.0f;
-        pVertex0->bitangent[1] = 0.0f;
-        pVertex0->bitangent[2] = 0.0f;
-    }
+    m_tangents.clear();
+    m_bitangents.clear();
+    m_tangents.assign(totalVertices*3, 0.0f);
+    m_bitangents.assign(totalVertices*3, 0.0f);
 
     // Calculate the vertex tangents and bitangents.
     for (int i = 0; i < totalTriangles; ++i)
     {
         pTriangle = this->getTriangle(i);
-        pVertex0 = &this->getVertex(pTriangle[0]);
-        pVertex1 = &this->getVertex(pTriangle[1]);
-        pVertex2 = &this->getVertex(pTriangle[2]);
+//        pVertex0 = &this->getVertex(pTriangle[0]);
+//        pVertex1 = &this->getVertex(pTriangle[1]);
+//        pVertex2 = &this->getVertex(pTriangle[2]);
 
         // Calculate the triangle face tangent and bitangent.
+        float* pPosition0 = getPosition(pTriangle[0]);
+        float* pPosition1 = getPosition(pTriangle[1]);
+        float* pPosition2 = getPosition(pTriangle[2]);
 
-        edge1[0] = pVertex1->position[0] - pVertex0->position[0];
-        edge1[1] = pVertex1->position[1] - pVertex0->position[1];
-        edge1[2] = pVertex1->position[2] - pVertex0->position[2];
+        edge1[0] = pPosition1[0] - pPosition0[0];
+        edge1[1] = pPosition1[1] - pPosition0[1];
+        edge1[2] = pPosition1[2] - pPosition0[2];
 
-        edge2[0] = pVertex2->position[0] - pVertex0->position[0];
-        edge2[1] = pVertex2->position[1] - pVertex0->position[1];
-        edge2[2] = pVertex2->position[2] - pVertex0->position[2];
+        edge2[0] = pPosition2[0] - pPosition0[0];
+        edge2[1] = pPosition2[1] - pPosition0[1];
+        edge2[2] = pPosition2[2] - pPosition0[2];
 
-        texEdge1[0] = pVertex1->texCoord[0] - pVertex0->texCoord[0];
-        texEdge1[1] = pVertex1->texCoord[1] - pVertex0->texCoord[1];
+        float* pTexCoord0 = getTexCoord(pTriangle[0]);
+        float* pTexCoord1 = getTexCoord(pTriangle[1]);
+        float* pTexCoord2 = getTexCoord(pTriangle[2]);
 
-        texEdge2[0] = pVertex2->texCoord[0] - pVertex0->texCoord[0];
-        texEdge2[1] = pVertex2->texCoord[1] - pVertex0->texCoord[1];
+        texEdge1[0] = pTexCoord1[0] - pTexCoord0[0];
+        texEdge1[1] = pTexCoord1[1] - pTexCoord0[1];
+
+        texEdge2[0] = pTexCoord2[0] - pTexCoord0[0];
+        texEdge2[1] = pTexCoord2[1] - pTexCoord0[1];
 
         det = texEdge1[0] * texEdge2[1] - texEdge2[0] * texEdge1[1];
 
@@ -640,52 +707,60 @@ void Mesh::generateTangents()
 
         // Accumulate the tangents and bitangents.
 
-        pVertex0->tangent[0] += tangent[0];
-        pVertex0->tangent[1] += tangent[1];
-        pVertex0->tangent[2] += tangent[2];
-        pVertex0->bitangent[0] += bitangent[0];
-        pVertex0->bitangent[1] += bitangent[1];
-        pVertex0->bitangent[2] += bitangent[2];
+        float* pTangent0 = getTangent(pTriangle[0]);
+        float* pTangent1= getTangent(pTriangle[1]);;
+        float* pTangent2 = getTangent(pTriangle[2]);;
+        float* pBitangent0 = getBitangent(pTriangle[0]);
+        float* pBitangent1= getBitangent(pTriangle[1]);;
+        float* pBitangent2 = getBitangent(pTriangle[2]);;
 
-        pVertex1->tangent[0] += tangent[0];
-        pVertex1->tangent[1] += tangent[1];
-        pVertex1->tangent[2] += tangent[2];
-        pVertex1->bitangent[0] += bitangent[0];
-        pVertex1->bitangent[1] += bitangent[1];
-        pVertex1->bitangent[2] += bitangent[2];
+        pTangent0[0] += tangent[0];
+        pTangent0[1] += tangent[1];
+        pTangent0[2] += tangent[2];
+        pBitangent0[0] += bitangent[0];
+        pBitangent0[1] += bitangent[1];
+        pBitangent0[2] += bitangent[2];
 
-        pVertex2->tangent[0] += tangent[0];
-        pVertex2->tangent[1] += tangent[1];
-        pVertex2->tangent[2] += tangent[2];
-        pVertex2->bitangent[0] += bitangent[0];
-        pVertex2->bitangent[1] += bitangent[1];
-        pVertex2->bitangent[2] += bitangent[2];
+        pTangent1[0] += tangent[0];
+        pTangent1[1] += tangent[1];
+        pTangent1[2] += tangent[2];
+        pBitangent1[0] += bitangent[0];
+        pBitangent1[1] += bitangent[1];
+        pBitangent1[2] += bitangent[2];
+
+        pTangent2[0] += tangent[0];
+        pTangent2[1] += tangent[1];
+        pTangent2[2] += tangent[2];
+        pBitangent2[0] += bitangent[0];
+        pBitangent2[1] += bitangent[1];
+        pBitangent2[2] += bitangent[2];
     }
 
     // Orthogonalize and normalize the vertex tangents.
     for (int i = 0; i < totalVertices; ++i)
     {
-        pVertex0 = &this->getVertex(i);
+        float* pNormal = getNormal(i);
+        float* pTangent = getTangent(i);
 
         // Gram-Schmidt orthogonalize tangent with normal.
 
-        nDotT = pVertex0->normal[0] * pVertex0->tangent[0] +
-                pVertex0->normal[1] * pVertex0->tangent[1] +
-                pVertex0->normal[2] * pVertex0->tangent[2];
+        nDotT = pNormal[0] * pTangent[0] +
+                pNormal[1] * pTangent[1] +
+                pNormal[2] * pTangent[2];
 
-        pVertex0->tangent[0] -= pVertex0->normal[0] * nDotT;
-        pVertex0->tangent[1] -= pVertex0->normal[1] * nDotT;
-        pVertex0->tangent[2] -= pVertex0->normal[2] * nDotT;
+        pTangent[0] -= pNormal[0] * nDotT;
+        pTangent[1] -= pNormal[1] * nDotT;
+        pTangent[2] -= pNormal[2] * nDotT;
 
         // Normalize the tangent.
 
-        length = 1.0f / sqrtf(pVertex0->tangent[0] * pVertex0->tangent[0] +
-                              pVertex0->tangent[1] * pVertex0->tangent[1] +
-                              pVertex0->tangent[2] * pVertex0->tangent[2]);
+        length = 1.0f / sqrtf(pTangent[0] * pTangent[0] +
+                              pTangent[1] * pTangent[1] +
+                              pTangent[2] * pTangent[2]);
 
-        pVertex0->tangent[0] *= length;
-        pVertex0->tangent[1] *= length;
-        pVertex0->tangent[2] *= length;
+        pTangent[0] *= length;
+        pTangent[1] *= length;
+        pTangent[2] *= length;
 
         // Calculate the handedness of the local tangent space.
         // The bitangent vector is the cross product between the triangle face
@@ -708,45 +783,46 @@ void Mesh::generateTangents()
         // (http://www.crazybump.com/) includes options to allow you to control
         // the orientation of the normal map normal's y-axis.
 
-        bitangent[0] = (pVertex0->normal[1] * pVertex0->tangent[2]) -
-                       (pVertex0->normal[2] * pVertex0->tangent[1]);
-        bitangent[1] = (pVertex0->normal[2] * pVertex0->tangent[0]) -
-                       (pVertex0->normal[0] * pVertex0->tangent[2]);
-        bitangent[2] = (pVertex0->normal[0] * pVertex0->tangent[1]) -
-                       (pVertex0->normal[1] * pVertex0->tangent[0]);
+        bitangent[0] = (pNormal[1] * pTangent[2]) -
+                       (pNormal[2] * pTangent[1]);
+        bitangent[1] = (pNormal[2] * pTangent[0]) -
+                       (pNormal[0] * pTangent[2]);
+        bitangent[2] = (pNormal[0] * pTangent[1]) -
+                       (pNormal[1] * pTangent[0]);
 
-        bDotB = bitangent[0] * pVertex0->bitangent[0] +
-                bitangent[1] * pVertex0->bitangent[1] +
-                bitangent[2] * pVertex0->bitangent[2];
+        float* pBitangent = getBitangent(i);
+        bDotB = bitangent[0] * pBitangent[0] +
+                bitangent[1] * pBitangent[1] +
+                bitangent[2] * pBitangent[2];
 
 //        pVertex0->tangent[3] = (bDotB < 0.0f) ? 1.0f : -1.0f;
 
-        pVertex0->bitangent[0] = bitangent[0];
-        pVertex0->bitangent[1] = bitangent[1];
-        pVertex0->bitangent[2] = bitangent[2];
+        pBitangent[0] = bitangent[0];
+        pBitangent[1] = bitangent[1];
+        pBitangent[2] = bitangent[2];
     }
 
     this->hasTangents(true);
     this->hasBitangents(true);
 }
 
-void Mesh::updateVecs()
-{
-    m_positions.clear();
-    m_normals.clear();
-    m_texCoords.clear();
+//void Mesh::updateVecs()
+//{
+//    m_positions.clear();
+//    m_normals.clear();
+//    m_texCoords.clear();
 
-    using namespace std;
-    for(size_t idx = 0; idx < m_vertices.size(); ++idx)
-    {
-        Vertex* vert = &m_vertices[idx];
-        m_positions.push_back(vert->position[0]);
-        m_positions.push_back(vert->position[1]);
-        m_positions.push_back(vert->position[2]);
-        m_normals.push_back(vert->normal[0]);
-        m_normals.push_back(vert->normal[1]);
-        m_normals.push_back(vert->normal[2]);
-        m_texCoords.push_back(vert->texCoord[0]);
-        m_texCoords.push_back(vert->texCoord[1]);
-    }
-}
+//    using namespace std;
+//    for(size_t idx = 0; idx < m_vertices.size(); ++idx)
+//    {
+//        Vertex* vert = &m_vertices[idx];
+//        m_positions.push_back(vert->position[0]);
+//        m_positions.push_back(vert->position[1]);
+//        m_positions.push_back(vert->position[2]);
+//        m_normals.push_back(vert->normal[0]);
+//        m_normals.push_back(vert->normal[1]);
+//        m_normals.push_back(vert->normal[2]);
+//        m_texCoords.push_back(vert->texCoord[0]);
+//        m_texCoords.push_back(vert->texCoord[1]);
+//    }
+//}

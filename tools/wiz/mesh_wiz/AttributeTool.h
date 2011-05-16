@@ -89,18 +89,18 @@ namespace assembly3d
 
         protected:
         private:
-            /**
-             * @brief Generates normals.
-             *
-             * @param m The mesh to work on.
-             */
-            void generateNormals(Mesh* m);
-            /**
-             * @brief Generates tangents and bitangents.
-             *
-             * @param m The mesh to work on.
-             */
-            void generateTangents(Mesh* m);
+//            /**
+//             * @brief Generates normals.
+//             *
+//             * @param m The mesh to work on.
+//             */
+//            void generateNormals(Mesh* m);
+//            /**
+//             * @brief Generates tangents and bitangents.
+//             *
+//             * @param m The mesh to work on.
+//             */
+//            void generateTangents(Mesh* m);
         };
     }
 }

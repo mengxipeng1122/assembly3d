@@ -34,7 +34,6 @@
 #ifndef _FILEUTILS_H_
 #define _FILEUTILS_H_
 
-#include "A3DTypes.h"
 #include <string>
 #include <vector>
 
@@ -104,7 +103,6 @@ namespace assembly3d
              * @param s File name string.
              */
             static std::string getFileExtension(const std::string& s);
-        private:
         };
     }
 }

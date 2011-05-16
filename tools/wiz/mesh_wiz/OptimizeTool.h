@@ -75,24 +75,38 @@ namespace assembly3d
 
         protected:
         private:
+            struct Vertex
+            {
+                float position[3];
+                float normal[3];
+                float texCoord[2];
+                float tangent[3];
+                float bitangent[3];
+            };
+
+            void getVertices(assembly3d::Mesh *m,
+                                           std::vector<OptimizeTool::Vertex> vertices);
+
             bool isInRange(float lhs, float rhs, float eps);
-            bool vertexPosEquals(const assembly3d::Vertex& lhs,
-                                 const assembly3d::Vertex& rhs, float eps);
-            bool vertexNormalEquals(const assembly3d::Vertex& lhs,
-                                    const assembly3d::Vertex& rhs, float eps);
-            bool vertexTexCoordEquals(const assembly3d::Vertex& lhs,
-                                      const assembly3d::Vertex& rhs, float eps);
-            bool vertexTangentEquals(const assembly3d::Vertex& lhs,
-                                     const assembly3d::Vertex& rhs, float eps);
-            bool vertexBitangentEquals(const assembly3d::Vertex& lhs,
-                                       const assembly3d::Vertex& rhs, float eps);
-            int findFirstIndexEqualsEps(std::vector<assembly3d::Vertex> verts,
-                                        assembly3d::Vertex v,
+//            bool vertexAttributeEquals(const float* lhs, const float* rhs, float eps, int size);
+
+            bool vertexPosEquals(const OptimizeTool::Vertex& lhs,
+                                 const OptimizeTool::Vertex& rhs, float eps);
+            bool vertexNormalEquals(const OptimizeTool::Vertex& lhs,
+                                    const OptimizeTool::Vertex& rhs, float eps);
+            bool vertexTexCoordEquals(const OptimizeTool::Vertex& lhs,
+                                      const OptimizeTool::Vertex& rhs, float eps);
+            bool vertexTangentEquals(const OptimizeTool::Vertex& lhs,
+                                     const OptimizeTool::Vertex& rhs, float eps);
+            bool vertexBitangentEquals(const OptimizeTool::Vertex& lhs,
+                                       const OptimizeTool::Vertex& rhs, float eps);
+            int findFirstIndexEqualsEps(std::vector<OptimizeTool::Vertex> verts,
+                                        OptimizeTool::Vertex v,
                                         OptimizeTool::Attribute a, float e);
-            bool vertexEquals(const assembly3d::Vertex& lhs,
-                              const assembly3d::Vertex& rhs);
-            int findFirstIndexEquals(std::vector<assembly3d::Vertex> verts,
-                                     assembly3d::Vertex v);
+            bool vertexEquals(const OptimizeTool::Vertex& lhs,
+                              const OptimizeTool::Vertex& rhs);
+            int findFirstIndexEquals(std::vector<OptimizeTool::Vertex> verts,
+                                     OptimizeTool::Vertex v);
 
         };
     }

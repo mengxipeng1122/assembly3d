@@ -57,6 +57,13 @@ void Sphere::create(Mesh* mesh, bool positions, bool normals,
 {
     cout << "Create sphere" << endl;
 
+    std::vector<float> positionsVec;
+    std::vector<float> normalsVec;
+    std::vector<float> texCoordsVec;
+    std::vector<float> tangentsVec;
+    std::vector<float> bitangentsVec;
+
+
     for (int stack = 0; stack <= m_stacks; ++stack)
     {
         float t = (float)stack/ (float)m_stacks;
@@ -73,41 +80,66 @@ void Sphere::create(Mesh* mesh, bool positions, bool normals,
                 y = r*sin(angle);
             }
 
-            Vertex vert = {{0.0f,0.0f,0.0f},
-                           {0.0f,0.0f,0.0f},
-                           {0.0f,0.0f},
-                           {0.0f,0.0f,0.0f},
-                           {0.0f,0.0f,0.0f}};
+//            Vertex vert = {{0.0f,0.0f,0.0f},
+//                           {0.0f,0.0f,0.0f},
+//                           {0.0f,0.0f},
+//                           {0.0f,0.0f,0.0f},
+//                           {0.0f,0.0f,0.0f}};
 
-            vert.position[0] = x * m_radius;
-            vert.position[1] = y * m_radius;
-            vert.position[2] = z * m_radius;
+//            vert.position[0] = x * m_radius;
+//            vert.position[1] = y * m_radius;
+//            vert.position[2] = z * m_radius;
 
-            vert.normal[0] = x;
-            vert.normal[1] = y;
-            vert.normal[2] = z;
+//            vert.normal[0] = x;
+//            vert.normal[1] = y;
+//            vert.normal[2] = z;
 
-            vert.tangent[0] = 1.0f;
-            vert.tangent[1] = 0.0f;
-            vert.tangent[2] = 0.0f;
+//            vert.tangent[0] = 1.0f;
+//            vert.tangent[1] = 0.0f;
+//            vert.tangent[2] = 0.0f;
 
-            vert.texCoord[0] = s;
-            vert.texCoord[1] = t;
+//            vert.texCoord[0] = s;
+//            vert.texCoord[1] = t;
 
-            mesh->addVertex(vert);
+//            mesh->addVertex(vert);
+            positionsVec.push_back(x * m_radius);
+            positionsVec.push_back(y * m_radius);
+            positionsVec.push_back(z * m_radius);
+
+            normalsVec.push_back(x);
+            normalsVec.push_back(y);
+            normalsVec.push_back(z);
+
+            texCoordsVec.push_back(s);
+            texCoordsVec.push_back(t);
+
+            tangentsVec.push_back(1.0f);
+            tangentsVec.push_back(0.0f);
+            tangentsVec.push_back(0.0f);
+
         }
     }
 
+    mesh->setPositions(positionsVec);
     mesh->hasPositions(positions);
+
+    mesh->setNormals(normalsVec);
     mesh->hasNormals(normals);
+
+    mesh->setTexCoords(texCoordsVec);
     mesh->hasTexCoords(texCoords);
+
+    mesh->setTangents(tangentsVec);
     mesh->hasTangents(tangents);
+
+    mesh->setBitangents(bitangentsVec);
     mesh->hasBitangents(bitangents);
+
     mesh->initializeMeshFormat();
 
     generateIndices(mesh);
 
-    Group g = {(char*)"Sphere", 0, numberOfTriangles()};
+    Mesh::Group g = {(char*)"Sphere", 0, numberOfTriangles()};
     mesh->addGroup(g);
 
 }

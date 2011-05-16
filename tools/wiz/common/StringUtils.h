@@ -94,7 +94,6 @@ namespace assembly3d
              * @param values Strings to transform.
             */
             static void transformStringValuesToUpperCase(std::vector<std::string>& values);
-        private:
         };
 
     }

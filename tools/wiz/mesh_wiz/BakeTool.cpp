@@ -47,14 +47,14 @@ BakeTool::BakeTool()
 int BakeTool::isInBounds(Mesh *mesh)
 {
     int numUnbakable = 0;
-    for(unsigned int i = 0; i < mesh->getNumberOfVertices(); ++i)
+    for(int i = 0; i < mesh->getNumberOfVertices(); ++i)
     {
-        Vertex* vert = &mesh->getVertex(i);
-
-        if(vert->texCoord[0] > 1.0f ||
-           vert->texCoord[0] < 0.0f ||
-           vert->texCoord[1] > 1.0f ||
-           vert->texCoord[1] < 0.0f)
+//        Vertex* vert = &mesh->getVertex(i);
+        float* pTexCoord = mesh->getTexCoord(i);
+        if(pTexCoord[0] > 1.0f ||
+           pTexCoord[0] < 0.0f ||
+           pTexCoord[1] > 1.0f ||
+           pTexCoord[1] < 0.0f)
         {
             numUnbakable++;
         }
@@ -68,9 +68,12 @@ int BakeTool::checkUVOverlapping(Mesh *mesh)
     for(int i = 0; i < mesh->getNumberOfTriangles(); ++i)
     {
         const unsigned int* triangle1 = mesh->getTriangle(i);
-        Vertex* vert00 = &mesh->getVertex(triangle1[0]);
-        Vertex* vert01 = &mesh->getVertex(triangle1[1]);
-        Vertex* vert02 = &mesh->getVertex(triangle1[2]);
+//        Vertex* vert00 = &mesh->getVertex(triangle1[0]);
+//        Vertex* vert01 = &mesh->getVertex(triangle1[1]);
+//        Vertex* vert02 = &mesh->getVertex(triangle1[2]);
+        float* pTexCoord00 = mesh->getTexCoord(triangle1[0]);
+        float* pTexCoord01 = mesh->getTexCoord(triangle1[1]);
+        float* pTexCoord02 = mesh->getTexCoord(triangle1[2]);
         for(int j = i+1; j < mesh->getNumberOfTriangles(); ++j)
         {
 //            if(j == i)
@@ -78,8 +81,10 @@ int BakeTool::checkUVOverlapping(Mesh *mesh)
             const unsigned int* triangle2 = mesh->getTriangle(j);
             for(unsigned int k = 0; k < 3; ++k)
             {
-                Vertex* point = &mesh->getVertex(triangle2[k]);
-                if(checkPointInTri(point->texCoord, vert00->texCoord, vert01->texCoord, vert02->texCoord))
+//                Vertex* point = &mesh->getVertex(triangle2[k]);
+                float* pTexCoord2 = mesh->getTexCoord(triangle2[k]);
+
+                if(checkPointInTri(pTexCoord2, pTexCoord00, pTexCoord01, pTexCoord02))
                 {
                     numOverlaps++;
                     break;

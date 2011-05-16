@@ -34,7 +34,6 @@
 #ifndef _MESH_H_
 #define _MESH_H_
 
-#include "A3DTypes.h"
 #include <vector>
 #include <iostream>
 #include <string>
@@ -61,6 +60,13 @@ namespace assembly3d
             std::vector<std::string> attributeType;
             std::string indexType;
             bool isBinary;
+        };
+
+        struct Group
+        {
+            char* name;
+            int startIndex;
+            int triangleCount;
         };
 
         Mesh();
@@ -97,20 +103,18 @@ namespace assembly3d
         */
         void generateTangents();
 
-        /**
-         * @brief Gets a vertex for an index.
-         *
-         * @param index A vertex index.
-         * @return Vertex at index.
-        */
-        assembly3d::Vertex& getVertex(unsigned int index);
+        float* getPosition(unsigned int index);
+        float* getNormal(unsigned int index);
+        float* getTexCoord(unsigned int index);
+        float* getTangent(unsigned int index);
+        float* getBitangent(unsigned int index);
         /**
          * @brief Gets a group for an index.
          *
          * @param index A group index.
          * @return Group at index.
         */
-        assembly3d::Group& getGroup(unsigned int index);
+        Group& getGroup(unsigned int index);
         /**
          * @brief Gets a triangle for an index.
          *
@@ -128,7 +132,7 @@ namespace assembly3d
          * @brief Gets total number of vertices.
          *
         */
-        unsigned int getNumberOfVertices() const;
+        int getNumberOfVertices() const;
         /**
          * @brief Gets total number of groups.
          *
@@ -194,7 +198,16 @@ namespace assembly3d
          *
          * @param vertex A vertex.
         */
-        void addVertex(assembly3d::Vertex vertex);
+        void setPositions(const std::vector<float>& positions);
+        void setNormals(const std::vector<float>& normals);
+        void setTexCoords(const std::vector<float>& texCoords);
+        void setTangents(const std::vector<float>& tangents);
+        void setBitangents(const std::vector<float>& bitangents);
+        void addPosition(float* position, int size=3);
+        void addNormal(float* normal, int size=3);
+        void addTexCoord(float* texCoord, int size=2);
+        void addTangent(float* tangent, int size=3);
+        void addBitangent(float* bitangent, int size=3);
         /**
          * @brief Clears vertices.
          *
@@ -218,7 +231,13 @@ namespace assembly3d
          *
          * @param group A group.
         */
-        void addGroup(assembly3d::Group group);
+        void addGroup(Group group);
+        /**
+         * @brief Sets the number of vertices.
+         *
+         * @param numTriangles The new number of vertices.
+        */
+        void setNumVertices(int numVertices);
         /**
          * @brief Sets the number of triangles.
          *
@@ -372,19 +391,20 @@ namespace assembly3d
         void bounds(float center[3], float &width, float &height,
         float &length, float &radius, float extent[3]) const;
 
-
-        std::vector<assembly3d::Vertex> m_vertices;
-        std::vector<unsigned int> m_indices;
-        std::vector<assembly3d::Group> m_groups;
-
         std::vector<float> m_positions;
         std::vector<float> m_normals;
         std::vector<float> m_texCoords;
+        std::vector<float> m_tangents;
+        std::vector<float> m_bitangents;
+
+        std::vector<unsigned int> m_indices;
+        std::vector<Group> m_groups;
 
         MeshFormat m_format;
 
         std::string m_meshPath;
 
+        int m_numVertices;
         int m_numTriangles;
 
         bool m_hasPositions;
@@ -451,10 +471,22 @@ namespace assembly3d
     inline void Mesh::getExtent(float &x, float &y, float &z) const
     { x = m_extent[0]; y = m_extent[1]; z = m_extent[2]; }
 
-    inline assembly3d::Vertex& Mesh::getVertex(unsigned int index)
-    { return m_vertices[index]; }
+    inline float* Mesh::getPosition(unsigned int index)
+    { return &m_positions[index * 3]; }
 
-    inline assembly3d::Group& Mesh::getGroup(unsigned int index)
+    inline float* Mesh::getNormal(unsigned int index)
+    { return &m_normals[index * 3]; }
+
+    inline float* Mesh::getTexCoord(unsigned int index)
+    { return &m_texCoords[index * 2]; }
+
+    inline float* Mesh::getTangent(unsigned int index)
+    { return &m_tangents[index * 3]; }
+
+    inline float* Mesh::getBitangent(unsigned int index)
+    { return &m_bitangents[index * 3]; }
+
+    inline Mesh::Group& Mesh::getGroup(unsigned int index)
     { return m_groups[index]; }
 
     inline unsigned int* Mesh::getTriangle(unsigned int index)
@@ -463,8 +495,8 @@ namespace assembly3d
     inline int Mesh::getNumberOfTriangles() const
     { return m_numTriangles; }
 
-    inline unsigned int Mesh::getNumberOfVertices() const
-    { return static_cast<unsigned int>(m_vertices.size()); }
+    inline int Mesh::getNumberOfVertices() const
+    { return m_numVertices; }
 
     inline unsigned int Mesh::getNumberOfGroups() const
     { return static_cast<unsigned int>(m_groups.size()); }
