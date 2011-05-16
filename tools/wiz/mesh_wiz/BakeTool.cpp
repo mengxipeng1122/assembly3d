@@ -33,6 +33,7 @@
 
 #include "MeshWizIncludes.h"
 #include "BakeTool.h"
+#include "KDTree.h"
 
 #define DOT2(v1,v2) (v1[0]*v2[0]+v1[1]*v2[1])
 #define DOT3(v1,v2) (v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2])
@@ -65,33 +66,61 @@ int BakeTool::isInBounds(Mesh *mesh)
 int BakeTool::checkUVOverlapping(Mesh *mesh)
 {
     int numOverlaps = 0;
+//    for(int i = 0; i < mesh->getNumberOfTriangles(); ++i)
+//    {
+//        const unsigned int* triangle1 = mesh->getTriangle(i);
+//        float* pTexCoord00 = mesh->getTexCoord(triangle1[0]);
+//        float* pTexCoord01 = mesh->getTexCoord(triangle1[1]);
+//        float* pTexCoord02 = mesh->getTexCoord(triangle1[2]);
+//        for(int j = i+1; j < mesh->getNumberOfTriangles(); ++j)
+//        {
+////            if(j == i)
+////                continue;
+//            const unsigned int* triangle2 = mesh->getTriangle(j);
+//            for(unsigned int k = 0; k < 3; ++k)
+//            {
+////                Vertex* point = &mesh->getVertex(triangle2[k]);
+//                float* pTexCoord2 = mesh->getTexCoord(triangle2[k]);
+
+//                if(checkPointInTri(pTexCoord2, pTexCoord00, pTexCoord01, pTexCoord02))
+//                {
+//                    numOverlaps++;
+//                    break;
+//                }
+//            }
+//        }
+//    }
+
+
+    std::vector<Point> points;
+    generatePoints(mesh, points);
+    KDTree<> kdtree;
+    kdtree.generate(points);
+
     for(int i = 0; i < mesh->getNumberOfTriangles(); ++i)
     {
-        const unsigned int* triangle1 = mesh->getTriangle(i);
-//        Vertex* vert00 = &mesh->getVertex(triangle1[0]);
-//        Vertex* vert01 = &mesh->getVertex(triangle1[1]);
-//        Vertex* vert02 = &mesh->getVertex(triangle1[2]);
-        float* pTexCoord00 = mesh->getTexCoord(triangle1[0]);
-        float* pTexCoord01 = mesh->getTexCoord(triangle1[1]);
-        float* pTexCoord02 = mesh->getTexCoord(triangle1[2]);
-        for(int j = i+1; j < mesh->getNumberOfTriangles(); ++j)
+//        const unsigned int* triangle = mesh->getTriangle(i);
+        float* pTexCoord00 = mesh->getTexCoord(points[i].triangle[0]);
+        float* pTexCoord01 = mesh->getTexCoord(points[i].triangle[1]);
+        float* pTexCoord02 = mesh->getTexCoord(points[i].triangle[2]);
+
+        std::vector<int> indices;
+        int numFound = kdtree.nearestQuery(points[i], 10, indices);
+        for(int j = 0; j < numFound; ++j)
         {
-//            if(j == i)
-//                continue;
-            const unsigned int* triangle2 = mesh->getTriangle(j);
+
             for(unsigned int k = 0; k < 3; ++k)
             {
-//                Vertex* point = &mesh->getVertex(triangle2[k]);
-                float* pTexCoord2 = mesh->getTexCoord(triangle2[k]);
-
+                float* pTexCoord2 = mesh->getTexCoord(points[indices[j]].triangle[k]);
                 if(checkPointInTri(pTexCoord2, pTexCoord00, pTexCoord01, pTexCoord02))
                 {
                     numOverlaps++;
                     break;
                 }
             }
+
         }
-    }
+
 
 //    for(int i = 0; i < mesh->getNumberOfTriangles()-1; ++i)
 //    {
@@ -109,6 +138,7 @@ int BakeTool::checkUVOverlapping(Mesh *mesh)
 //            }
 //        }
 //    }
+    }
     return numOverlaps;
 }
 
@@ -145,4 +175,26 @@ bool BakeTool::checkPointInTri(float* p, float* a, float* b, float* c)
         return true;
     else
         return false;
+}
+
+void BakeTool::generatePoints(assembly3d::Mesh *mesh, std::vector<Point>& points)
+{
+    points.clear();
+    for(int i = 0; i < mesh->getNumberOfTriangles(); ++i)
+    {
+        const unsigned int* triangle = mesh->getTriangle(i);
+        float* pTexCoord0 = mesh->getTexCoord(triangle[0]);
+        float* pTexCoord1 = mesh->getTexCoord(triangle[1]);
+        float* pTexCoord2 = mesh->getTexCoord(triangle[2]);
+
+        float centerX = (pTexCoord0[0] + pTexCoord1[0] + pTexCoord2[0]) / 3;
+        float centerY = (pTexCoord0[1] + pTexCoord1[1] + pTexCoord2[1]) / 3;
+        Point center(centerX, centerY, 0.0f);
+        center.triangle[0] = triangle[0];
+        center.triangle[1] = triangle[1];
+        center.triangle[2] = triangle[2];
+
+        points.push_back(center);
+    }
+
 }

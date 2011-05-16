@@ -15,6 +15,7 @@ set(A3DTools_HEADER
     StringUtils.h
     FileUtils.h
     XmlParser.h
+    KDTree.h
   )
 
 set(Tinyxml_SOURCE
