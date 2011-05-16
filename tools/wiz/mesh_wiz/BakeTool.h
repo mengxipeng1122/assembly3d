@@ -38,6 +38,7 @@
 
 namespace assembly3d
 {
+    class Point;
     namespace wiz
     {
 
@@ -51,6 +52,7 @@ namespace assembly3d
             int checkUVOverlapping(Mesh* mesh);
         private:
             bool checkPointInTri(float* p, float* a, float* b, float* c);
+            void generatePoints(Mesh* mesh, std::vector<Point>& points);
         };
     }
 }
