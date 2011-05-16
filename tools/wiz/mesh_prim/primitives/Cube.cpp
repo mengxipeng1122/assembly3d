@@ -158,38 +158,72 @@ void Cube::create(Mesh* mesh, bool positions, bool normals,
         20, 22, 21
     };
 
+    std::vector<float> positionsVec;
+    std::vector<float> normalsVec;
+    std::vector<float> texCoordsVec;
+    std::vector<float> tangentsVec;
+    std::vector<float> bitangentsVec;
 
     for (int i = 0; i < numVertices; i++)
     {
-        Vertex vert = {{0.0f,0.0f,0.0f},
-                       {0.0f,0.0f,0.0f},
-                       {0.0f,0.0f},
-                       {0.0f,0.0f,0.0f},
-                       {0.0f,0.0f,0.0f}};
+//        Vertex vert = {{0.0f,0.0f,0.0f},
+//                       {0.0f,0.0f,0.0f},
+//                       {0.0f,0.0f},
+//                       {0.0f,0.0f,0.0f},
+//                       {0.0f,0.0f,0.0f}};
 
-        vert.position[0] = cube_positions[i*3 + 0];
-        vert.position[1] = cube_positions[i*3 + 1];
-        vert.position[2] = cube_positions[i*3 + 2];
+//        vert.position[0] = cube_positions[i*3 + 0];
+//        vert.position[1] = cube_positions[i*3 + 1];
+//        vert.position[2] = cube_positions[i*3 + 2];
 
-        vert.normal[0] = cube_normals[i*3 + 0];
-        vert.normal[1] = cube_normals[i*3 + 1];
-        vert.normal[2] = cube_normals[i*3 + 2];
+//        vert.normal[0] = cube_normals[i*3 + 0];
+//        vert.normal[1] = cube_normals[i*3 + 1];
+//        vert.normal[2] = cube_normals[i*3 + 2];
 
-        vert.texCoord[0] = cube_texCoords[i*2 + 0];
-        vert.texCoord[1] = cube_texCoords[i*2 + 1];
+//        vert.texCoord[0] = cube_texCoords[i*2 + 0];
+//        vert.texCoord[1] = cube_texCoords[i*2 + 1];
 
-        vert.position[0] *= m_halfExtend;
-        vert.position[1] *= m_halfExtend;
-        vert.position[2] *= m_halfExtend;
+//        vert.position[0] *= m_halfExtend;
+//        vert.position[1] *= m_halfExtend;
+//        vert.position[2] *= m_halfExtend;
 
-        mesh->addVertex(vert);
+//        mesh->addVertex(vert);
+
+        float pos0 = cube_positions[i*3 + 0];
+        float pos1 = cube_positions[i*3 + 1];
+        float pos2 = cube_positions[i*3 + 2];
+        pos0 *= m_halfExtend;
+        pos1 *= m_halfExtend;
+        pos2 *= m_halfExtend;
+
+        positionsVec.push_back(pos0);
+        positionsVec.push_back(pos1);
+        positionsVec.push_back(pos2);
+
+        normalsVec.push_back(cube_normals[i*3 + 0]);
+        normalsVec.push_back(cube_normals[i*3 + 1]);
+        normalsVec.push_back(cube_normals[i*3 + 2]);
+
+        texCoordsVec.push_back(cube_texCoords[i*2 + 0]);
+        texCoordsVec.push_back(cube_texCoords[i*2 + 1]);
+
     }
 
+    mesh->setPositions(positionsVec);
     mesh->hasPositions(positions);
+
+    mesh->setNormals(normalsVec);
     mesh->hasNormals(normals);
+
+    mesh->setTexCoords(texCoordsVec);
     mesh->hasTexCoords(texCoords);
+
+    mesh->setTangents(tangentsVec);
     mesh->hasTangents(tangents);
+
+    mesh->setBitangents(bitangentsVec);
     mesh->hasBitangents(bitangents);
+
     mesh->initializeMeshFormat();
 
     for(int i = 0; i < numTriangles*3; ++i)
@@ -197,7 +231,7 @@ void Cube::create(Mesh* mesh, bool positions, bool normals,
         mesh->addIndex(cube_indices[i]);
     }
     mesh->setNumTriangles(numTriangles);
-    Group g = {(char*)"Cube", 0, numTriangles};
+    Mesh::Group g = {(char*)"Cube", 0, numTriangles};
     mesh->addGroup(g);
 
 }

@@ -55,8 +55,6 @@ FileUtils::~FileUtils()
 {
 }
 
-
-
 bool FileUtils::createDirectory(const char* path)
 {
 #ifdef TARGET_WIN32
@@ -137,7 +135,6 @@ std::string FileUtils::getFileName(const std::string& s)
     {
         return s;
     }
-    
 }
 
 std::string FileUtils::getBinaryFileName(const char* fileName, const char* oldExt, const char* newExt)
@@ -157,6 +154,5 @@ std::string FileUtils::getFileExtension(const std::string &s)
     if (i != std::string::npos) {
         return(s.substr(i+1, s.length( ) - i));
     }
-
     return("");
 }

@@ -65,11 +65,15 @@ void TransformTool::translate(Mesh* m, float tx, float ty, float tz)
 //        std::cout << tMatrix[i][0] << tMatrix[i][1] << tMatrix[i][2] << tMatrix[i][3] << std::endl;
 //    }
                        
-	for(unsigned int i = 0; i < m->getNumberOfVertices(); ++i)
-	{
-		Vertex* pVertex = &m->getVertex(i);
+    for(int i = 0; i < m->getNumberOfVertices(); ++i)
+    {
+//            Vertex* pVertex = &m->getVertex(i);
 
-        multiplyVertexWithTransformMatrix(pVertex, tMatrix, tiMatrix);
+//        multiplyVertexWithTransformMatrix(pVertex, tMatrix, tiMatrix);
+        multiplyVertexWithTransformMatrix(m->getPosition(i), m->getNormal(i),
+                                          m->getTangent(i), m->getBitangent(i),
+                                          tMatrix, tiMatrix);
+
     }
 }
 
@@ -95,11 +99,13 @@ void TransformTool::rotate(Mesh* m, float rangle, float rx, float ry, float rz)
                             {rMatrix[2][0], rMatrix[2][1], rMatrix[2][2]}};
     
                            
-	for(unsigned int i = 0; i < m->getNumberOfVertices(); ++i)
-	{
-		Vertex* pVertex = &m->getVertex(i);
-
-        multiplyVertexWithTransformMatrix(pVertex, rMatrix, riMatrix);
+    for(int i = 0; i < m->getNumberOfVertices(); ++i)
+    {
+//        Vertex* pVertex = &m->getVertex(i);
+//        multiplyVertexWithTransformMatrix(pVertex, rMatrix, riMatrix);
+        multiplyVertexWithTransformMatrix(m->getPosition(i), m->getNormal(i),
+                                          m->getTangent(i), m->getBitangent(i),
+                                          rMatrix, riMatrix);
     }
     
 }
@@ -114,11 +120,13 @@ void TransformTool::scale(Mesh* m, float sx, float sy, float sz)
                            {0.0f, 1.0f/sy, 0.0f},
                            {0.0f, 0.0f, 1.0f/sz}};
                            
-	for(unsigned int i = 0; i < m->getNumberOfVertices(); ++i)
-	{
-		Vertex* pVertex = &m->getVertex(i);
+    for(int i = 0; i < m->getNumberOfVertices(); ++i)
+    {
+//        Vertex* pVertex = &m->getVertex(i);
         
-        multiplyVertexWithTransformMatrix(pVertex, sMatrix, siMatrix);
+        multiplyVertexWithTransformMatrix(m->getPosition(i), m->getNormal(i),
+                                          m->getTangent(i), m->getBitangent(i),
+                                          sMatrix, siMatrix);
         
     }
 }
@@ -181,32 +189,34 @@ void TransformTool::center(Mesh* m, int ax, int ay, int az)
     translate(m, tX, tY, tZ);
 }
 
-void TransformTool::multiplyVertexWithTransformMatrix(Vertex* vec, float matrix[3][4], float inverseTransposedMatrix[3][3])
+void TransformTool::multiplyVertexWithTransformMatrix(float* pos, float* normal, float* tangent,
+                                                      float* bitangent, float matrix[3][4],
+                                                      float inverseTransposedMatrix[3][3])
 {
     float x,y,z;
-    x = vec->position[0]; y = vec->position[1]; z = vec->position[2];
-    vec->position[0] = x*matrix[0][0] + y*matrix[0][1] + z*matrix[0][2] + matrix[0][3];
-    vec->position[1] = x*matrix[1][0] + y*matrix[1][1] + z*matrix[1][2] + matrix[1][3];
-    vec->position[2] = x*matrix[2][0] + y*matrix[2][1] + z*matrix[2][2] + matrix[2][3];
+    x = pos[0]; y = pos[1]; z = pos[2];
+    pos[0] = x*matrix[0][0] + y*matrix[0][1] + z*matrix[0][2] + matrix[0][3];
+    pos[1] = x*matrix[1][0] + y*matrix[1][1] + z*matrix[1][2] + matrix[1][3];
+    pos[2] = x*matrix[2][0] + y*matrix[2][1] + z*matrix[2][2] + matrix[2][3];
 
     //normale, tangenten, bitangen inverse transpose
-    x = vec->normal[0]; y = vec->normal[1]; z = vec->normal[2];
-    vec->normal[0] = x*inverseTransposedMatrix[0][0] + y*inverseTransposedMatrix[0][1] + z*inverseTransposedMatrix[0][2];
-    vec->normal[1] = x*inverseTransposedMatrix[1][0] + y*inverseTransposedMatrix[1][1] + z*inverseTransposedMatrix[1][2];
-    vec->normal[2] = x*inverseTransposedMatrix[2][0] + y*inverseTransposedMatrix[2][1] + z*inverseTransposedMatrix[2][2];
-    normalize(vec->normal);
+    x = normal[0]; y = normal[1]; z = normal[2];
+    normal[0] = x*inverseTransposedMatrix[0][0] + y*inverseTransposedMatrix[0][1] + z*inverseTransposedMatrix[0][2];
+    normal[1] = x*inverseTransposedMatrix[1][0] + y*inverseTransposedMatrix[1][1] + z*inverseTransposedMatrix[1][2];
+    normal[2] = x*inverseTransposedMatrix[2][0] + y*inverseTransposedMatrix[2][1] + z*inverseTransposedMatrix[2][2];
+    normalize(normal);
 
-    x = vec->bitangent[0]; y = vec->bitangent[1]; z = vec->bitangent[2];
-    vec->bitangent[0] = x*inverseTransposedMatrix[0][0] + y*inverseTransposedMatrix[0][1] + z*inverseTransposedMatrix[0][2];
-    vec->bitangent[1] = x*inverseTransposedMatrix[1][0] + y*inverseTransposedMatrix[1][1] + z*inverseTransposedMatrix[1][2];
-    vec->bitangent[2] = x*inverseTransposedMatrix[2][0] + y*inverseTransposedMatrix[2][1] + z*inverseTransposedMatrix[2][2];
-    normalize(vec->bitangent);
+    x = bitangent[0]; y = bitangent[1]; z = bitangent[2];
+    bitangent[0] = x*inverseTransposedMatrix[0][0] + y*inverseTransposedMatrix[0][1] + z*inverseTransposedMatrix[0][2];
+    bitangent[1] = x*inverseTransposedMatrix[1][0] + y*inverseTransposedMatrix[1][1] + z*inverseTransposedMatrix[1][2];
+    bitangent[2] = x*inverseTransposedMatrix[2][0] + y*inverseTransposedMatrix[2][1] + z*inverseTransposedMatrix[2][2];
+    normalize(bitangent);
 
-    x = vec->tangent[0]; y = vec->tangent[1]; z = vec->tangent[2];
-    vec->tangent[0] = x*inverseTransposedMatrix[0][0] + y*inverseTransposedMatrix[0][1] + z*inverseTransposedMatrix[0][2];
-    vec->tangent[1] = x*inverseTransposedMatrix[1][0] + y*inverseTransposedMatrix[1][1] + z*inverseTransposedMatrix[1][2];
-    vec->tangent[2] = x*inverseTransposedMatrix[2][0] + y*inverseTransposedMatrix[2][1] + z*inverseTransposedMatrix[2][2];
-    normalize(vec->tangent);
+    x = tangent[0]; y = tangent[1]; z = tangent[2];
+    tangent[0] = x*inverseTransposedMatrix[0][0] + y*inverseTransposedMatrix[0][1] + z*inverseTransposedMatrix[0][2];
+    tangent[1] = x*inverseTransposedMatrix[1][0] + y*inverseTransposedMatrix[1][1] + z*inverseTransposedMatrix[1][2];
+    tangent[2] = x*inverseTransposedMatrix[2][0] + y*inverseTransposedMatrix[2][1] + z*inverseTransposedMatrix[2][2];
+    normalize(tangent);
 
 }
 

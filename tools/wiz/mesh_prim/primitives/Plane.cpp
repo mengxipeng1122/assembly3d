@@ -87,36 +87,66 @@ void Plane::create(Mesh* mesh, bool positions, bool normals,
         1, 3, 2
     };
 
+    std::vector<float> positionsVec;
+    std::vector<float> normalsVec;
+    std::vector<float> texCoordsVec;
+    std::vector<float> tangentsVec;
+    std::vector<float> bitangentsVec;
     for (int i = 0; i < numberVertices; i++)
     {
-        Vertex vert = {{0.0f,0.0f,0.0f},
-                       {0.0f,0.0f,0.0f},
-                       {0.0f,0.0f},
-                       {0.0f,0.0f,0.0f},
-                       {0.0f,0.0f,0.0f}};
+//        Vertex vert = {{0.0f,0.0f,0.0f},
+//                       {0.0f,0.0f,0.0f},
+//                       {0.0f,0.0f},
+//                       {0.0f,0.0f,0.0f},
+//                       {0.0f,0.0f,0.0f}};
 
-        vert.position[0] = xy_positions[i*3 + 0];
-        vert.position[1] = xy_positions[i*3 + 1];
-        vert.position[2] = xy_positions[i*3 + 2];
+//        vert.position[0] = xy_positions[i*3 + 0];
+//        vert.position[1] = xy_positions[i*3 + 1];
+//        vert.position[2] = xy_positions[i*3 + 2];
 
-        vert.normal[0] = xy_normals[i*3 + 0];
-        vert.normal[1] = xy_normals[i*3 + 1];
-        vert.normal[2] = xy_normals[i*3 + 2];
+//        vert.normal[0] = xy_normals[i*3 + 0];
+//        vert.normal[1] = xy_normals[i*3 + 1];
+//        vert.normal[2] = xy_normals[i*3 + 2];
 
-        vert.texCoord[0] = xy_texCoords[i*2 + 0];
-        vert.texCoord[1] = xy_texCoords[i*2 + 1];
+//        vert.texCoord[0] = xy_texCoords[i*2 + 0];
+//        vert.texCoord[1] = xy_texCoords[i*2 + 1];
 
-        vert.position[0] *= m_halfExtend;
-        vert.position[1] *= m_halfExtend;
+//        vert.position[0] *= m_halfExtend;
+//        vert.position[1] *= m_halfExtend;
 
-        mesh->addVertex(vert);
+//        mesh->addVertex(vert);
+        float pos0 = xy_positions[i*3 + 0];
+        float pos1 = xy_positions[i*3 + 1];
+        float pos2 = xy_positions[i*3 + 2];
+        pos0 *= m_halfExtend;
+        pos1 *= m_halfExtend;
+
+        positionsVec.push_back(pos0);
+        positionsVec.push_back(pos1);
+        positionsVec.push_back(pos2);
+
+        normalsVec.push_back(xy_normals[i*3 + 0]);
+        normalsVec.push_back(xy_normals[i*3 + 1]);
+        normalsVec.push_back(xy_normals[i*3 + 2]);
+
+        texCoordsVec.push_back(xy_texCoords[i*2 + 0]);
+        texCoordsVec.push_back(xy_texCoords[i*2 + 1]);
     }
-
+    mesh->setPositions(positionsVec);
     mesh->hasPositions(positions);
+
+    mesh->setNormals(normalsVec);
     mesh->hasNormals(normals);
+
+    mesh->setTexCoords(texCoordsVec);
     mesh->hasTexCoords(texCoords);
+
+    mesh->setTangents(tangentsVec);
     mesh->hasTangents(tangents);
+
+    mesh->setBitangents(bitangentsVec);
     mesh->hasBitangents(bitangents);
+
     mesh->initializeMeshFormat();
 
     for(int i = 0; i < numTriangles*3; ++i)
@@ -124,6 +154,6 @@ void Plane::create(Mesh* mesh, bool positions, bool normals,
         mesh->addIndex(xy_indices[i]);
     }
     mesh->setNumTriangles(numTriangles);
-    Group g = {(char*)"xy_plane", 0, 2};
+    Mesh::Group g = {(char*)"xy_plane", 0, 2};
     mesh->addGroup(g);
 }

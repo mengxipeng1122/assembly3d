@@ -72,6 +72,12 @@ void Torus::create(Mesh* mesh, bool positions, bool normals,
     tIncr = 1.0f/(float)m_slices;
     sIncr = 1.0f/(float)m_stacks;
 
+    std::vector<float> positionsVec;
+    std::vector<float> normalsVec;
+    std::vector<float> texCoordsVec;
+    std::vector<float> tangentsVec;
+    std::vector<float> bitangentsVec;
+
     // generate vertices and its attributes
     for (int stack = 0; stack <= m_stacks; ++stack, s+=sIncr)
     {
@@ -86,40 +92,69 @@ void Torus::create(Mesh* mesh, bool positions, bool normals,
             cos2PIt = cos(2.0f*PIf*t);
             sin2PIt = sin(2.0f*PIf*t);
 
-            Vertex vert = {{0.0f,0.0f,0.0f},
-                           {0.0f,0.0f,0.0f},
-                           {0.0f,0.0f},
-                           {0.0f,0.0f,0.0f},
-                           {0.0f,0.0f,0.0f}};
+//            Vertex vert = {{0.0f,0.0f,0.0f},
+//                           {0.0f,0.0f,0.0f},
+//                           {0.0f,0.0f},
+//                           {0.0f,0.0f,0.0f},
+//                           {0.0f,0.0f,0.0f}};
 
-            vert.position[0] = (m_outer + m_inner * cos2PIt) * cos2PIs;
-            vert.position[1] = (m_outer + m_inner * cos2PIt) * sin2PIs;
-            vert.position[2] = m_inner * sin2PIt;
+//            vert.position[0] = (m_outer + m_inner * cos2PIt) * cos2PIs;
+//            vert.position[1] = (m_outer + m_inner * cos2PIt) * sin2PIs;
+//            vert.position[2] = m_inner * sin2PIt;
+
+//            // generate normal and stores it in the right position
+//            // NOTE: cos (2PIx) = cos (x) and sin (2PIx) = sin (x) so, we can use this formula
+//            //       normal = {cos(2PIs)cos(2PIt) , sin(2PIs)cos(2PIt) ,sin(2PIt)}
+//            vert.normal[0] = cos2PIs * cos2PIt;
+//            vert.normal[1] = sin2PIs * cos2PIt;
+//            vert.normal[2] = sin2PIt;
+
+//            vert.texCoord[0] = t;
+//            vert.texCoord[1] = s;
+
+//            mesh->addVertex(vert);
+
+            float x = (m_outer + m_inner * cos2PIt) * cos2PIs;
+            float y = (m_outer + m_inner * cos2PIt) * sin2PIs;
+            float z = m_inner * sin2PIt;
+
+            positionsVec.push_back(x);
+            positionsVec.push_back(y);
+            positionsVec.push_back(z);
 
             // generate normal and stores it in the right position
             // NOTE: cos (2PIx) = cos (x) and sin (2PIx) = sin (x) so, we can use this formula
             //       normal = {cos(2PIs)cos(2PIt) , sin(2PIs)cos(2PIt) ,sin(2PIt)}
-            vert.normal[0] = cos2PIs * cos2PIt;
-            vert.normal[1] = sin2PIs * cos2PIt;
-            vert.normal[2] = sin2PIt;
+            normalsVec.push_back(cos2PIs * cos2PIt);
+            normalsVec.push_back(sin2PIs * cos2PIt);
+            normalsVec.push_back(sin2PIt);
 
-            vert.texCoord[0] = t;
-            vert.texCoord[1] = s;
+            texCoordsVec.push_back(t);
+            texCoordsVec.push_back(s);
 
-            mesh->addVertex(vert);
         }
     }
 
+    mesh->setPositions(positionsVec);
     mesh->hasPositions(positions);
+
+    mesh->setNormals(normalsVec);
     mesh->hasNormals(normals);
+
+    mesh->setTexCoords(texCoordsVec);
     mesh->hasTexCoords(texCoords);
+
+    mesh->setTangents(tangentsVec);
     mesh->hasTangents(tangents);
+
+    mesh->setBitangents(bitangentsVec);
     mesh->hasBitangents(bitangents);
+
     mesh->initializeMeshFormat();
 
     generateIndices(mesh);
 
-    Group g = {(char*)"Torus", 0, numberOfTriangles()};
+    Mesh::Group g = {(char*)"Torus", 0, numberOfTriangles()};
     mesh->addGroup(g);
 
 }

@@ -63,6 +63,12 @@ void PartialDisk::create(Mesh* mesh, bool positions, bool normals,
 {
     cout << "Create cylinder" << endl;
 
+    std::vector<float> positionsVec;
+    std::vector<float> normalsVec;
+    std::vector<float> texCoordsVec;
+    std::vector<float> tangentsVec;
+    std::vector<float> bitangentsVec;
+
     for(int stack = 0; stack <= m_stacks; ++stack)
     {
         float t = (float)stack / (float)m_stacks;
@@ -79,37 +85,59 @@ void PartialDisk::create(Mesh* mesh, bool positions, bool normals,
 
             float q = r / m_outer;
 
-            Vertex vert = {{0.0f,0.0f,0.0f},
-                           {0.0f,0.0f,0.0f},
-                           {0.0f,0.0f},
-                           {0.0f,0.0f,0.0f},
-                           {0.0f,0.0f,0.0f}};
+//            Vertex vert = {{0.0f,0.0f,0.0f},
+//                           {0.0f,0.0f,0.0f},
+//                           {0.0f,0.0f},
+//                           {0.0f,0.0f,0.0f},
+//                           {0.0f,0.0f,0.0f}};
 
-            vert.position[0] = r * cosinus;
-            vert.position[1] = r * sinus;
-            vert.position[2] = 0.0f;
+//            vert.position[0] = r * cosinus;
+//            vert.position[1] = r * sinus;
+//            vert.position[2] = 0.0f;
 
-            vert.normal[0] = 0.0f;
-            vert.normal[1] = 0.0f;
-            vert.normal[2] = 1.0f;
+//            vert.normal[0] = 0.0f;
+//            vert.normal[1] = 0.0f;
+//            vert.normal[2] = 1.0f;
 
-            vert.texCoord[0] = 0.5f * (q*cosinus+1);
-            vert.texCoord[1] = 0.5f * (q*sinus+1);
+//            vert.texCoord[0] = 0.5f * (q*cosinus+1);
+//            vert.texCoord[1] = 0.5f * (q*sinus+1);
 
-            mesh->addVertex(vert);
+//            mesh->addVertex(vert);
+
+            positionsVec.push_back(r * cosinus);
+            positionsVec.push_back(r * sinus);
+            positionsVec.push_back(0.0f);
+
+            normalsVec.push_back(0.0f);
+            normalsVec.push_back(0.0f);
+            normalsVec.push_back(1.0f);
+
+            texCoordsVec.push_back(0.5f * (q*cosinus+1));
+            texCoordsVec.push_back(0.5f * (q*sinus+1));
+
         }
     }
 
+    mesh->setPositions(positionsVec);
     mesh->hasPositions(positions);
+
+    mesh->setNormals(normalsVec);
     mesh->hasNormals(normals);
+
+    mesh->setTexCoords(texCoordsVec);
     mesh->hasTexCoords(texCoords);
+
+    mesh->setTangents(tangentsVec);
     mesh->hasTangents(tangents);
+
+    mesh->setBitangents(bitangentsVec);
     mesh->hasBitangents(bitangents);
+
     mesh->initializeMeshFormat();
 
     generateIndices(mesh);
 
-    Group g = {(char*)"PartialDisk", 0, numberOfTriangles()};
+    Mesh::Group g = {(char*)"PartialDisk", 0, numberOfTriangles()};
     mesh->addGroup(g);
 
 

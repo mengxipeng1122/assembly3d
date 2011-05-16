@@ -9,7 +9,6 @@ set(A3DTools_SOURCE
 set(A3DTools_HEADER
     Assembly3D.h
     A3DIncludes.h
-    A3DTypes.h
     A3DUtils.h
     Mesh.h
     MeshIO.h
@@ -36,7 +35,6 @@ install(TARGETS A3DTools
 
 install(FILES
 Assembly3D.h
-A3DTypes.h
 A3DUtils.h
 Mesh.h
 MeshIO.h

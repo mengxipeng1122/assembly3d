@@ -121,7 +121,9 @@ namespace assembly3d
              * @param matrix[][] Transformation matrix.
              * @param inverseTransposedMatrix[][] Inverse transposed matrix.
              */
-            void multiplyVertexWithTransformMatrix(assembly3d::Vertex* vec, float matrix[3][4], float inverseTransposedMatrix[3][3]);
+            void multiplyVertexWithTransformMatrix(float* pos, float* normal, float* tangent,
+                                                   float* bitangent, float matrix[3][4],
+                                                   float inverseTransposedMatrix[3][3]);
         };
     }
 }

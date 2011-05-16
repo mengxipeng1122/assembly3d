@@ -54,6 +54,17 @@ bool OptimizeTool::isInRange(float lhs, float rhs, float eps)
         return true;
 }
 
+//bool OptimizeTool::vertexAttributeEquals(const float* lhs, const float *rhs,
+//                                         float eps, int size)
+//{
+//    for(int i = 0; i < size; ++i)
+//    {
+//        if(isInRange(lhs[i], rhs[i], eps) == false)
+//            return false;
+//    }
+//    return true;
+//}
+
 bool OptimizeTool::vertexPosEquals(const Vertex& lhs, const Vertex& rhs, float eps)
 {
     if(isInRange(lhs.position[0], rhs.position[0], eps) &&
@@ -247,6 +258,8 @@ void OptimizeTool::stitch(Mesh *m)
 {
 //    int numIndices = m->getNumberOfTriangles()*3;
 
+    std::vector<Vertex> origVertices;
+    getVertices(m, origVertices);
     std::vector<Vertex> newVertices;
     std::vector<unsigned int> newIndices;
 
@@ -264,8 +277,8 @@ void OptimizeTool::stitch(Mesh *m)
         const unsigned int* pTriangle = m->getTriangle(i);
         for(int j = 0; j < 3; ++j)
         {
-//            unsigned int ind = pTriangle[j];
-            Vertex v = m->getVertex(pTriangle[j]);
+//            Vertex v = m->getVertex(pTriangle[j]);
+            Vertex v = origVertices[pTriangle[j]];
 
             int index = findFirstIndexEquals(newVertices, v);
             if(index < 0)
@@ -280,7 +293,13 @@ void OptimizeTool::stitch(Mesh *m)
     m->clearVertices();
     for(std::vector<Vertex>::iterator it = newVertices.begin(); it != newVertices.end(); ++it)
     {
-        m->addVertex(*it);
+//        m->addVertex(*it);
+        m->addPosition(it->position, 3);
+        m->addNormal(it->normal, 3);
+        m->addTexCoord(it->texCoord, 2);
+        m->addTangent(it->tangent, 3);
+        m->addBitangent(it->bitangent, 3);
+
     }
     m->clearIndices();
     for(std::vector<unsigned int>::iterator it = newIndices.begin(); it != newIndices.end(); ++it)
@@ -292,7 +311,8 @@ void OptimizeTool::stitch(Mesh *m)
 
 void OptimizeTool::stitch(Mesh *m, Attribute a, float epsilon)
 {
-//    int numIndices = m->getNumberOfTriangles()*3;
+    std::vector<Vertex> origVertices;
+    getVertices(m, origVertices);
 
     std::vector<Vertex> newVertices;
     std::vector<unsigned int> newIndices;
@@ -311,8 +331,7 @@ void OptimizeTool::stitch(Mesh *m, Attribute a, float epsilon)
         const unsigned int* pTriangle = m->getTriangle(i);
         for(int j = 0; j < 3; ++j)
         {
-//            unsigned int ind = pTriangle[j];
-            Vertex v = m->getVertex(pTriangle[j]);
+            Vertex v = origVertices[pTriangle[j]];
 
             int index = findFirstIndexEqualsEps(newVertices, v, a, epsilon);
             if(index < 0)
@@ -327,7 +346,11 @@ void OptimizeTool::stitch(Mesh *m, Attribute a, float epsilon)
     m->clearVertices();
     for(std::vector<Vertex>::iterator it = newVertices.begin(); it != newVertices.end(); ++it)
     {
-        m->addVertex(*it);
+        m->addPosition(it->position, 3);
+        m->addNormal(it->normal, 3);
+        m->addTexCoord(it->texCoord, 2);
+        m->addTangent(it->tangent, 3);
+        m->addBitangent(it->bitangent, 3);
     }
     m->clearIndices();
     for(std::vector<unsigned int>::iterator it = newIndices.begin(); it != newIndices.end(); ++it)
@@ -335,5 +358,40 @@ void OptimizeTool::stitch(Mesh *m, Attribute a, float epsilon)
         m->addIndex(*it);
     }
 
+}
+
+void OptimizeTool::getVertices(assembly3d::Mesh *m,
+                               std::vector<OptimizeTool::Vertex> vertices)
+{
+    vertices.clear();
+    for(int i = 0; i < m->getNumberOfVertices(); ++i)
+    {
+        Vertex vert = {{0.0f,0.0f,0.0f},
+                       {0.0f,0.0f,0.0f},
+                       {0.0f,0.0f},
+                       {0.0f,0.0f,0.0f},
+                       {0.0f,0.0f,0.0f}};
+
+        vert.position[0] = m->getPosition(i)[0];
+        vert.position[1] = m->getPosition(i)[1];
+        vert.position[2] = m->getPosition(i)[2];
+
+        vert.normal[0] = m->getNormal(i)[0];
+        vert.normal[1] = m->getNormal(i)[1];
+        vert.normal[2] = m->getNormal(i)[2];
+
+        vert.texCoord[0] = m->getTexCoord(i)[0];
+        vert.texCoord[1] = m->getTexCoord(i)[1];
+
+        vert.tangent[0] = m->getTangent(i)[0];
+        vert.tangent[1] = m->getTangent(i)[1];
+        vert.tangent[2] = m->getTangent(i)[2];
+
+        vert.bitangent[0] = m->getBitangent(i)[0];
+        vert.bitangent[1] = m->getBitangent(i)[1];
+        vert.bitangent[2] = m->getBitangent(i)[2];
+
+        vertices.push_back(vert);
+    }
 }
 

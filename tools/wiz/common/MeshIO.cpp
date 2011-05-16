@@ -51,7 +51,6 @@ MeshIO::~MeshIO()
 bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
 {
     int numVertices = 0;
-//    int numAttributes = 0;
     int numGroups = 0;
     int numIndices = 0;
     int groupIndex = 0;
@@ -60,7 +59,6 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
 
     mesh->destroy();
     
-//    m_MeshPath = file;
     mesh->setMeshPath(file);
     Mesh::MeshFormat& format = mesh->getMeshFormat();
     
@@ -68,11 +66,11 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
     if(xml.loadFile(file) == false)
         return false;
     
-    
     xml.pushTag("Mesh");
     {
         numVertices = xml.getAttribute("Vertices", "count", 0);
-        
+        mesh->setNumVertices(numVertices);
+
         numGroups = xml.getAttribute("Triangles", "groups", 0);
         format.indexType = xml.getAttribute("Triangles", "type", "UNSIGNED_INT");
         
@@ -86,7 +84,6 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
                 format.attributeSize.push_back(xml.getAttribute("Attribute", "size", 0, i));
                 format.attributeType.push_back(xml.getAttribute("Attribute", "type", "FLOAT", i));
             }
-            
         }
         xml.popTag();
         
@@ -94,9 +91,7 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
         {
             for(int i = 0; i < numGroups; ++i)
             {
-                Group g;
-
-//                g.name = xml.getAttribute("Group", "name", "", i).c_str();
+                Mesh::Group g;
 
                 std::string tmpGroupName = xml.getAttribute("Group", "name", "", i).c_str();
                 g.name = new char[tmpGroupName.length()+1];
@@ -112,7 +107,6 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
                 numTriangles += g.triangleCount;
                 
                 mesh->addGroup(g);
-                
             }
             mesh->setNumTriangles(numTriangles);
         }
@@ -166,7 +160,6 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
                 verts.push_back(py);
                 verts.push_back(pz);
             }
-
         }
         idx = mesh->getAttributeIndexWithName("NORMAL");
         if(idx > -1 && idx < aSize)
@@ -281,50 +274,23 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
             }
         }
 
-        for(int i = 0; i < numVertices; ++i)
+        mesh->setPositions(verts);
+        if(loadNormal)
         {
-            Vertex vert = {
-                {0.0f, 0.0f, 0.0f},
-                {0.0f, 0.0f, 0.0f},
-                {0.0f, 0.0f},
-                {0.0f, 0.0f, 0.0f},
-                {0.0f, 0.0f, 0.0f}
-            };
-            vert.position[0] = verts[i * 3 + 0];
-            vert.position[1] = verts[i * 3 + 1];
-            vert.position[2] = verts[i * 3 + 2];
-
-            if(loadNormal)
-            {
-
-                vert.normal[0] = normals[i * 3 + 0];
-                vert.normal[1] = normals[i * 3 + 1];
-                vert.normal[2] = normals[i * 3 + 2];
-            }
-            if(loadTexture)
-            {
-
-                vert.texCoord[0] = texCoords[i * 2 + 0];
-                vert.texCoord[1] = texCoords[i * 2 + 1];
-            }
-            if(loadTangent)
-            {
-
-                vert.tangent[0] = tangents[i * 3 + 0];
-                vert.tangent[1] = tangents[i * 3 + 1];
-                vert.tangent[2] = tangents[i * 3 + 2];
-            }
-            if(loadBitangent)
-            {
-
-                vert.bitangent[0] = bitangents[i * 3 + 0];
-                vert.bitangent[1] = bitangents[i * 3 + 1];
-                vert.bitangent[2] = bitangents[i * 3 + 2];
-            }
-            mesh->addVertex(vert);
+            mesh->setNormals(normals);
         }
-
-            
+        if(loadTexture)
+        {
+            mesh->setTexCoords(texCoords);
+        }
+        if(loadTangent)
+        {
+            mesh->setTangents(tangents);
+        }
+        if(loadBitangent)
+        {
+            mesh->setBitangents(bitangents);
+        }
     }
     xml.popTag();
     
@@ -336,7 +302,6 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
     mesh->hasBitangents(mesh->getAttributeIndexWithName("BITANGENT") != -1 ? true : false);
     
     return true;
-    
 }
 
 void MeshIO::dumpTxt(Mesh* mesh, const char* outFilePath)
@@ -384,7 +349,7 @@ void MeshIO::dumpTxt(Mesh* mesh, const char* outFilePath)
         // -------------------------------------------------------------------------------------------
         // Group
         // -------------------------------------------------------------------------------------------
-        const Group& g = mesh->getGroup(groupIndex);
+        const Mesh::Group& g = mesh->getGroup(groupIndex);
 
         ss << "Group: name=" << g.name << " count=" << g.triangleCount << "\n";
     }
@@ -402,13 +367,13 @@ void MeshIO::dumpTxt(Mesh* mesh, const char* outFilePath)
     {
         data << "Positions:" << "\n";
 
-        for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
+        for(int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
         {
-            const Vertex& vert = mesh->getVertex(vertexIndex);
+            const float* position = mesh->getPosition(vertexIndex);
 
             for(int vertSizePosIndex = 0; vertSizePosIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizePosIndex)
             {
-                data << vert.position[vertSizePosIndex] << " ";
+                data << position[vertSizePosIndex] << " ";
             }
             data << std::endl;
         }
@@ -418,13 +383,13 @@ void MeshIO::dumpTxt(Mesh* mesh, const char* outFilePath)
     {
         data << "Normals:" << std::endl;
 
-        for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
+        for(int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
         {
-            const Vertex& vert = mesh->getVertex(vertexIndex);
+            const float* normal = mesh->getNormal(vertexIndex);
 
             for(int vertSizeNormalIndex = 0; vertSizeNormalIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizeNormalIndex)
             {
-                data << vert.normal[vertSizeNormalIndex] << " ";
+                data << normal[vertSizeNormalIndex] << " ";
             }
             data << std::endl;
         }
@@ -434,13 +399,13 @@ void MeshIO::dumpTxt(Mesh* mesh, const char* outFilePath)
     {
         data << "TexCoords:" << std::endl;
 
-        for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
+        for(int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
         {
-            const Vertex& vert = mesh->getVertex(vertexIndex);
+            const float* texCoord = mesh->getTexCoord(vertexIndex);
 
             for(int vertSizeTexIndex = 0; vertSizeTexIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizeTexIndex)
             {
-                data << vert.texCoord[vertSizeTexIndex] << " ";
+                data << texCoord[vertSizeTexIndex] << " ";
             }
             data << std::endl;
         }
@@ -450,13 +415,13 @@ void MeshIO::dumpTxt(Mesh* mesh, const char* outFilePath)
     {
         data << "Tangents:" << std::endl;
 
-        for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
+        for(int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
         {
-            const Vertex& vert = mesh->getVertex(vertexIndex);
+            const float* tangent = mesh->getTangent(vertexIndex);
 
             for(int vertSizeTexIndex = 0; vertSizeTexIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizeTexIndex)
             {
-                data << vert.tangent[vertSizeTexIndex] << " ";
+                data << tangent[vertSizeTexIndex] << " ";
             }
             data << std::endl;
         }
@@ -466,13 +431,13 @@ void MeshIO::dumpTxt(Mesh* mesh, const char* outFilePath)
     {
         data << "Bitangents:" << std::endl;
 
-        for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
+        for(int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
         {
-            const Vertex& vert = mesh->getVertex(vertexIndex);
+            const float* bitangent = mesh->getBitangent(vertexIndex);
 
             for(int vertSizeTexIndex = 0; vertSizeTexIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizeTexIndex)
             {
-                data << vert.bitangent[vertSizeTexIndex] << " ";
+                data << bitangent[vertSizeTexIndex] << " ";
             }
             data << std::endl;
         }
@@ -559,7 +524,7 @@ void MeshIO::saveFile(Mesh* mesh, const char* outFilePath, const char* binaryFil
                 // -------------------------------------------------------------------------------------------
                 xml.addTag("Group", false);
 
-                const Group& g = mesh->getGroup(groupIndex);
+                const Mesh::Group& g = mesh->getGroup(groupIndex);
 
                 xml.addAttribute("Group", "name", g.name, groupIndex);
                 xml.addAttribute("Group", "count", g.triangleCount, groupIndex);
@@ -580,26 +545,26 @@ void MeshIO::saveFile(Mesh* mesh, const char* outFilePath, const char* binaryFil
     idx = mesh->getAttributeIndexWithName("POSITION");
     if(idx > -1 && idx < aSize)
     {
-        for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
+        for(int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
         {
-            const Vertex& vert = mesh->getVertex(vertexIndex);
+            const float* position = mesh->getPosition(vertexIndex);
             
             for(int vertSizePosIndex = 0; vertSizePosIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizePosIndex)
             {
-                fout.write((char *)(&vert.position[vertSizePosIndex]), sizeof(vert.position[vertSizePosIndex]));
+                fout.write((char *)(&position[vertSizePosIndex]), sizeof(position[vertSizePosIndex]));
             }   
         }
     }
     idx = mesh->getAttributeIndexWithName("NORMAL");
     if(idx > -1 && idx < aSize)
     {
-        for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
+        for(int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
         {
-            const Vertex& vert = mesh->getVertex(vertexIndex);
+            const float* normal = mesh->getNormal(vertexIndex);
             
             for(int vertSizeNormalIndex = 0; vertSizeNormalIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizeNormalIndex)
             {
-                fout.write((char *)(&vert.normal[vertSizeNormalIndex]), sizeof(vert.normal[vertSizeNormalIndex]));
+                fout.write((char *)(&normal[vertSizeNormalIndex]), sizeof(normal[vertSizeNormalIndex]));
             }
         }
     }
@@ -607,13 +572,13 @@ void MeshIO::saveFile(Mesh* mesh, const char* outFilePath, const char* binaryFil
     if(idx > -1 && idx < aSize)
     {
    
-        for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
+        for(int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
         {
-            const Vertex& vert = mesh->getVertex(vertexIndex);
+            const float* texCoord = mesh->getTexCoord(vertexIndex);
             
             for(int vertSizeTexIndex = 0; vertSizeTexIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizeTexIndex)
             {
-                fout.write((char *)(&vert.texCoord[vertSizeTexIndex]), sizeof(vert.texCoord[vertSizeTexIndex]));
+                fout.write((char *)(&texCoord[vertSizeTexIndex]), sizeof(texCoord[vertSizeTexIndex]));
             }
         }
     }
@@ -621,13 +586,13 @@ void MeshIO::saveFile(Mesh* mesh, const char* outFilePath, const char* binaryFil
     if(idx > -1 && idx < aSize)
     {
    
-        for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
+        for(int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
         {
-            const Vertex& vert = mesh->getVertex(vertexIndex);
+            const float* tangent = mesh->getTangent(vertexIndex);
             
             for(int vertSizeTexIndex = 0; vertSizeTexIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizeTexIndex)
             {
-                fout.write((char *)(&vert.tangent[vertSizeTexIndex]), sizeof(vert.tangent[vertSizeTexIndex]));
+                fout.write((char *)(&tangent[vertSizeTexIndex]), sizeof(tangent[vertSizeTexIndex]));
             }
         }
     }
@@ -635,17 +600,17 @@ void MeshIO::saveFile(Mesh* mesh, const char* outFilePath, const char* binaryFil
     if(idx > -1 && idx < aSize)
     {
    
-        for(unsigned int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
+        for(int vertexIndex = 0; vertexIndex < mesh->getNumberOfVertices(); ++vertexIndex)
         {
-            const Vertex& vert = mesh->getVertex(vertexIndex);
+            const float* bitangent = mesh->getBitangent(vertexIndex);
             
             for(int vertSizeTexIndex = 0; vertSizeTexIndex < mesh->getMeshFormat().attributeSize[idx]; ++vertSizeTexIndex)
             {
-                fout.write((char *)(&vert.bitangent[vertSizeTexIndex]), sizeof(vert.bitangent[vertSizeTexIndex]));
+                fout.write((char *)(&bitangent[vertSizeTexIndex]), sizeof(bitangent[vertSizeTexIndex]));
             }
         }
     }
-	fout.flush();
+    fout.flush();
     
     if(mesh->getMeshFormat().indexType.compare("UNSIGNED_INT") == 0)
     {
@@ -691,7 +656,6 @@ void MeshIO::saveFile(Mesh* mesh, const char* outFilePath, const char* binaryFil
     
     fout.flush();
     fout.close();
-
 }
 
 void MeshIO::getAttributeIndices(Mesh* mesh, std::vector<int>& aIndices)
@@ -707,7 +671,6 @@ void MeshIO::getAttributeIndices(Mesh* mesh, std::vector<int>& aIndices)
         aIndices.push_back(mesh->getAttributeIndexWithName("TANGENT"));
     if(mesh->getAttributeIndexWithName("BITANGENT")!= -1)
         aIndices.push_back(mesh->getAttributeIndexWithName("BITANGENT"));
-
 }
 
 void MeshIO::getGroupIndices(Mesh* mesh, std::vector<std::string>& names, std::vector<int>& gIndices)

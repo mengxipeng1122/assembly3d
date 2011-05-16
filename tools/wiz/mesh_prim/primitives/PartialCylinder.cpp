@@ -64,6 +64,11 @@ void PartialCylinder::create(Mesh* mesh, bool positions, bool normals,
 {
     cout << "Create PartialCylinder" << endl;
 
+    std::vector<float> positionsVec;
+    std::vector<float> normalsVec;
+    std::vector<float> texCoordsVec;
+    std::vector<float> tangentsVec;
+    std::vector<float> bitangentsVec;
 
     for(int stack = 0; stack <= m_stacks; ++stack)
     {
@@ -101,41 +106,67 @@ void PartialCylinder::create(Mesh* mesh, bool positions, bool normals,
                 sinus = sin(angle);
             }
 
-            Vertex vert = {{0.0f,0.0f,0.0f},
-                           {0.0f,0.0f,0.0f},
-                           {0.0f,0.0f},
-                           {0.0f,0.0f,0.0f},
-                           {0.0f,0.0f,0.0f}};
+//            Vertex vert = {{0.0f,0.0f,0.0f},
+//                           {0.0f,0.0f,0.0f},
+//                           {0.0f,0.0f},
+//                           {0.0f,0.0f,0.0f},
+//                           {0.0f,0.0f,0.0f}};
 
-            vert.position[0] = r * sinus;
-            vert.position[1] = r * cosinus;
-            vert.position[2] = z;
+//            vert.position[0] = r * sinus;
+//            vert.position[1] = r * cosinus;
+//            vert.position[2] = z;
 
-            vert.normal[0] = sinus * nx;
-            vert.normal[1] = cosinus * nx;
-            vert.normal[2] = nz;
+//            vert.normal[0] = sinus * nx;
+//            vert.normal[1] = cosinus * nx;
+//            vert.normal[2] = nz;
 
-            vert.tangent[0] = 1.0f;
-            vert.tangent[1] = 0.0f;
-            vert.tangent[2] = 0.0f;
+//            vert.tangent[0] = 1.0f;
+//            vert.tangent[1] = 0.0f;
+//            vert.tangent[2] = 0.0f;
 
-            vert.texCoord[0] = s;
-            vert.texCoord[1] = t;
+//            vert.texCoord[0] = s;
+//            vert.texCoord[1] = t;
 
-            mesh->addVertex(vert);
+//            mesh->addVertex(vert);
+
+            positionsVec.push_back(r * sinus);
+            positionsVec.push_back(r * cosinus);
+            positionsVec.push_back(z);
+
+            normalsVec.push_back(sinus * nx);
+            normalsVec.push_back(cosinus * nx);
+            normalsVec.push_back(nz);
+
+            texCoordsVec.push_back(s);
+            texCoordsVec.push_back(t);
+
+            tangentsVec.push_back(1.0f);
+            tangentsVec.push_back(0.0f);
+            tangentsVec.push_back(0.0f);
+
         }
     }
 
+    mesh->setPositions(positionsVec);
     mesh->hasPositions(positions);
+
+    mesh->setNormals(normalsVec);
     mesh->hasNormals(normals);
+
+    mesh->setTexCoords(texCoordsVec);
     mesh->hasTexCoords(texCoords);
+
+    mesh->setTangents(tangentsVec);
     mesh->hasTangents(tangents);
+
+    mesh->setBitangents(bitangentsVec);
     mesh->hasBitangents(bitangents);
+
     mesh->initializeMeshFormat();
 
     generateIndices(mesh);
 
-    Group g = {(char*)"PartialCylinder", 0, numberOfTriangles()};
+    Mesh::Group g = {(char*)"PartialCylinder", 0, numberOfTriangles()};
     mesh->addGroup(g);
 
 }
