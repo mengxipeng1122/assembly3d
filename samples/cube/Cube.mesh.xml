@@ -4,7 +4,7 @@
   <Vertices count="24" attributes="3">
     <Attribute name="POSITION" size="3" type="FLOAT"/>
     <Attribute name="NORMAL" size="3" type="FLOAT"/>
-    <Attribute name="TEXTURE" size="2" type="FLOAT"/>
+    <Attribute name="TEXCOORD" size="2" type="FLOAT"/>
   </Vertices>
   <Triangles type="UNSIGNED_BYTE" groups="6">
     <Group name="NEGATIVE_X" count="2"/>

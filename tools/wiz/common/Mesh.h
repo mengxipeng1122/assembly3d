@@ -230,7 +230,7 @@ namespace assembly3d
         /**
          * @brief Adds an attribute.
          *
-         * @param name Attribute name. (POSITION, NORMAL, TEXTURE, TANGENT and BITANGENT)
+         * @param name Attribute name. (POSITION, NORMAL, TEXCOORD, TANGENT and BITANGENT)
          * @param attrSize Attribute size.
          * @param attrType Attribute type. (i.e. "FLOAT")
         */

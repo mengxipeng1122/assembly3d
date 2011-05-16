@@ -190,7 +190,7 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
                 normals.push_back(nz);
             }
         }
-        idx = mesh->getAttributeIndexWithName("TEXTURE");
+        idx = mesh->getAttributeIndexWithName("TEXCOORD");
         if(idx > -1 && idx < aSize)
         {
             loadTexture = true;
@@ -331,7 +331,7 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
     mesh->calculateBounds();
     mesh->hasPositions(mesh->getAttributeIndexWithName("POSITION") != -1 ? true : false);
     mesh->hasNormals(mesh->getAttributeIndexWithName("NORMAL") != -1 ? true : false);
-    mesh->hasTexCoords(mesh->getAttributeIndexWithName("TEXTURE") != -1 ? true : false);
+    mesh->hasTexCoords(mesh->getAttributeIndexWithName("TEXCOORD") != -1 ? true : false);
     mesh->hasTangents(mesh->getAttributeIndexWithName("TANGENT") != -1 ? true : false);
     mesh->hasBitangents(mesh->getAttributeIndexWithName("BITANGENT") != -1 ? true : false);
     
@@ -429,7 +429,7 @@ void MeshIO::dumpTxt(Mesh* mesh, const char* outFilePath)
             data << std::endl;
         }
     }
-    idx = mesh->getAttributeIndexWithName("TEXTURE");
+    idx = mesh->getAttributeIndexWithName("TEXCOORD");
     if(idx > -1 && idx < aSize)
     {
         data << "TexCoords:" << std::endl;
@@ -603,7 +603,7 @@ void MeshIO::saveFile(Mesh* mesh, const char* outFilePath, const char* binaryFil
             }
         }
     }
-    idx = mesh->getAttributeIndexWithName("TEXTURE");
+    idx = mesh->getAttributeIndexWithName("TEXCOORD");
     if(idx > -1 && idx < aSize)
     {
    
@@ -701,8 +701,8 @@ void MeshIO::getAttributeIndices(Mesh* mesh, std::vector<int>& aIndices)
         aIndices.push_back(mesh->getAttributeIndexWithName("POSITION"));
     if(mesh->getAttributeIndexWithName("NORMAL")!= -1)
         aIndices.push_back(mesh->getAttributeIndexWithName("NORMAL"));
-    if(mesh->getAttributeIndexWithName("TEXTURE")!= -1)
-        aIndices.push_back(mesh->getAttributeIndexWithName("TEXTURE"));
+    if(mesh->getAttributeIndexWithName("TEXCOORD")!= -1)
+        aIndices.push_back(mesh->getAttributeIndexWithName("TEXCOORD"));
     if(mesh->getAttributeIndexWithName("TANGENT")!= -1)
         aIndices.push_back(mesh->getAttributeIndexWithName("TANGENT"));
     if(mesh->getAttributeIndexWithName("BITANGENT")!= -1)

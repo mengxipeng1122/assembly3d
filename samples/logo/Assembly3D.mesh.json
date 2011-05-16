@@ -5,7 +5,7 @@
 		"attributes": 
 		[ 
 			{ "name": "POSITION", "size": 3, "type": "FLOAT" }, 
-			{ "name": "NORMAL", "size": 3, "type": "FLOAT" }
+			{ "name": "TEXCOORD", "size": 3, "type": "FLOAT" }
 		]
 	}, 
 	"triangles": 
