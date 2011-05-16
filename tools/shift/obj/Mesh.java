@@ -46,7 +46,7 @@ import org.interaction3d.assembly.tools.shift.util.IndexType;
 import static java.lang.String.format;
 import static org.interaction3d.assembly.tools.shift.obj.Vertex.POSITION;
 import static org.interaction3d.assembly.tools.shift.obj.Vertex.NORMAL;
-import static org.interaction3d.assembly.tools.shift.obj.Vertex.TEXTURE;
+import static org.interaction3d.assembly.tools.shift.obj.Vertex.TEXCOORD;
 import static org.interaction3d.assembly.tools.shift.obj.Triangulization.triangulize;
 
 
@@ -262,7 +262,7 @@ final class Mesh
     }
     if(hasTexCoords)
     {
-      xml.append( format("\t\t<Attribute name=\"%s\" size=\"%d\" type=\"%s\" />\n", "TEXTURE", 2, "FLOAT") );
+      xml.append( format("\t\t<Attribute name=\"%s\" size=\"%d\" type=\"%s\" />\n", "TEXCOORD", 2, "FLOAT") );
     }
     xml.append( "\t</Vertices>\n" );
     xml.append( format("\t<Triangles type=\"%s\" groups=\"%d\" >\n", indexType, groups) );
