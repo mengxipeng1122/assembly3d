@@ -41,6 +41,7 @@ using namespace assembly3d;
 
 Mesh::Mesh()
 :
+m_numVertices(0),
 m_numTriangles(0),
 m_hasPositions(false),
 m_hasNormals(false),
@@ -75,6 +76,7 @@ Mesh::Mesh(const Mesh &m)
     m_meshPath = m.m_meshPath;
     m_format = m.m_format;
 
+    m_numVertices = m.m_numVertices;
     m_numTriangles = m.m_numTriangles;
     m_hasPositions = m.m_hasPositions;
     m_hasNormals = m.m_hasNormals;
