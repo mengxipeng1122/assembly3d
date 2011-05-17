@@ -53,7 +53,7 @@ import static org.interaction3d.assembly.tools.shift.collada.XmlCommons.parseAcc
 import static org.interaction3d.assembly.tools.shift.collada.XmlCommons.parseInput;
 import static org.interaction3d.assembly.tools.shift.collada.XmlCommons.parseParamType;
 
-final class MeshProcessor
+final class ProcessorMesh
 {
   private final Document document;
   private final XPath xpath;
@@ -63,7 +63,7 @@ final class MeshProcessor
 
 	private Map<String, Mesh> meshes;
 
-  MeshProcessor(Document document, XPath xpath, Map<String, Mesh> meshes) 
+  ProcessorMesh(Document document, XPath xpath, Map<String, Mesh> meshes)
   throws XPathExpressionException
   {
     this.document = document;

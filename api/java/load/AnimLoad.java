@@ -36,28 +36,48 @@ import org.interaction3d.assembly.CoordinateType;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.interaction3d.assembly.Animation;
+import org.interaction3d.assembly.structs.Assembler;
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.Float.parseFloat;
 
-public class AnimLoad
+public class AnimLoad implements Assembler<Animation>
 {
-  private final AnimationHandler handler;
-
-  public AnimLoad(Animation animation)
+  public static void loadAnim(String uri, Animation animation)
   {
-    handler = new AnimationHandler(animation);
+    new AnimLoad(uri).assemble(animation);
   }
 
-  public void load(String uri) throws Exception
+  public AnimLoad(String uri)
+  {
+    inputSource = new InputSource(uri);
+  }
+
+  @Override
+  public void assemble(Animation animation)
+  {
+    try
+    {
+      load(animation);
+    }
+    catch (Exception ex)
+    {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  private  void load(Animation animation) throws Exception
   {
     SAXParserFactory factory = SAXParserFactory.newInstance();
     SAXParser parser = factory.newSAXParser();
-    parser.parse(uri, handler);
+    parser.parse(inputSource, new AnimationHandler(animation));
   }
+
+  private final InputSource inputSource;
 }
 
 final class AnimationHandler extends DefaultHandler

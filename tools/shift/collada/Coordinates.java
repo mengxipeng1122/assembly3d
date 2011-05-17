@@ -32,33 +32,17 @@
  */
 package org.interaction3d.assembly.tools.shift.collada;
 
-import org.w3c.dom.Node;
-
-final class XmlCommons
+final class Coordinates
 {
-  static Accessor parseAccessor(Node accessorNode)
-  {
-    XmlAttributes attributes = new XmlAttributes(accessorNode);
-    String source = attributes.getString("source");
-    int count = attributes.getInt("count");
-    int stride = attributes.getInt("stride", 1);
-    int offset = attributes.getInt("offset", 0);
-    return new Accessor(source, count, stride, offset);
-  }
+  final String name;
+  final int count, dimension;
+  final float[] elements;
 
-  static Input parseInput(Node inputNode)
+  Coordinates(String name, int count, int dimension)
   {
-    XmlAttributes attributes = new XmlAttributes(inputNode);
-    String semantic = attributes.getString("semantic");
-    String source = attributes.getString("source");
-    int offset = attributes.getInt("offset", 0);
-    int set = attributes.getInt("set", 0);
-
-    return new Input(offset, semantic, source, set);
-  }
-
-  static String parseParamType(Node paramNode)
-  {
-    return new XmlAttributes(paramNode).getString("type");
+    this.name = name;
+    this.count = count;
+    this.dimension = dimension;
+    this.elements = new float[count*dimension];
   }
 }

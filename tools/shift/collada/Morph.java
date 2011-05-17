@@ -32,38 +32,32 @@
  */
 package org.interaction3d.assembly.tools.shift.collada;
 
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
-import java.nio.FloatBuffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
 import org.interaction3d.assembly.tools.shift.util.Assembly;
-
-import static java.lang.String.format;
 
 final class Morph
 {
-	private final Mesh base;
-	private final boolean normalized;
+  private static class Target
+  {
+     Coordinates[] coordinates;
+    int[] vertices;
+  }
+  private final Mesh base;
+  private final boolean normalized;
 
-	private static class Target
-	{
-		//Attribute[] attributes;
-		//int[][] vertexMaps;
-	}
+  Morph(Mesh base, boolean normalized)
+  {
+    this.base = base;
+    this.normalized = normalized;
+  }
 
-	Morph(Mesh base, boolean normalized)
-	{
-		this.base = base;
-		this.normalized = normalized;
-	}
-	
-	void target(String name, Mesh target)
-	{
-		//compare attributes for name & size & length
-	}
-	
+  void target(String name, float weight, Mesh target)
+  {
+    Coordinates[] coordinateArray = base.morph(target, weight, normalized);
+    
+    //compare attributes for name & size & length
+  }
 
   void convert(String name, Assembly assembly)
   {
@@ -73,5 +67,4 @@ final class Morph
 
     //assembly.assemble(name, xml, buffer);
   }
-
 }
