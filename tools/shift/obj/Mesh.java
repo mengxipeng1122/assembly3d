@@ -1,22 +1,22 @@
 /*
  * Copyright (c) 2011 Michael Nischt
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the project's author nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -35,8 +35,6 @@ package org.interaction3d.assembly.tools.shift.obj;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,61 +47,55 @@ import static org.interaction3d.assembly.tools.shift.obj.Vertex.NORMAL;
 import static org.interaction3d.assembly.tools.shift.obj.Vertex.TEXCOORD;
 import static org.interaction3d.assembly.tools.shift.obj.Triangulization.triangulize;
 
-
-
-/**
- *
- * @author Michael Nischt
- */
 final class Mesh
-{		
+{
   private static final String DEFAULT_MATERIAL = "off";
 
   private final String name;
-  
-  private final ArrayList<float[]> positionList, textureList, normalList;    
-  private final ArrayList<Vertex> vertexList;    
+
+  private final ArrayList<float[]> positionList, textureList, normalList;
+  private final ArrayList<Vertex> vertexList;
   private final ArrayList<TriangleGroup> triangleGroups;
-  
-  
+
+
   private final HashMap<Vertex, Integer> vertexMap;
 
   Mesh(String name)
   {
-    this.name = name; 
-    
-    positionList = new ArrayList<float[]>();        
+    this.name = name;
+
+    positionList = new ArrayList<float[]>();
     textureList  = new ArrayList<float[]>();
     normalList   = new ArrayList<float[]>();
 
     vertexList   = new ArrayList<Vertex>();
     vertexMap = new HashMap<Vertex, Integer>();
 
-    triangleGroups = new ArrayList<TriangleGroup>(); 
-    triangleGroups.add( new TriangleGroup(DEFAULT_MATERIAL) );    
+    triangleGroups = new ArrayList<TriangleGroup>();
+    triangleGroups.add( new TriangleGroup(DEFAULT_MATERIAL) );
   }
-  
+
   private Mesh(String name, Mesh previous)
   {
-    this.name = name; 
-    
-    positionList = previous.positionList;        
+    this.name = name;
+
+    positionList = previous.positionList;
     textureList  = previous.textureList;
     normalList   = previous.normalList;
 
     vertexList   = new ArrayList<Vertex>();
     vertexMap = new HashMap<Vertex, Integer>();
 
-    triangleGroups = new ArrayList<TriangleGroup>(); 
+    triangleGroups = new ArrayList<TriangleGroup>();
 
     String m = DEFAULT_MATERIAL;
     if(!previous.triangleGroups.isEmpty())
     {
       m = previous.triangleGroups.get( previous.triangleGroups.size() - 1).material;
     }
-    triangleGroups.add( new TriangleGroup(m) );        
+    triangleGroups.add( new TriangleGroup(m) );
   }
-  
+
   Mesh next(String name)
   {
       return new Mesh(name, this);
@@ -116,11 +108,11 @@ final class Mesh
   void vn(float[] vn)
   {
     normalList.add(vn);
-  }        
+  }
   void vt(float[] vt)
   {
     textureList.add(vt);
-  }        
+  }
 
   void p(List<int[]> points)
   {
@@ -149,13 +141,13 @@ final class Mesh
     }
 
     // add fake normal index for smoothing group
-    for(int[] v : face) 
-    {            
+    for(int[] v : face)
+    {
       if(v[NORMAL] < 0 && smoothingGroup > 0)
       {
           v[NORMAL] = -smoothingGroup;
       }
-    }              
+    }
 
     int[][] triangles;
     {
@@ -164,24 +156,24 @@ final class Mesh
       {
           int v = face.get(i)[POSITION];
           polygon[i] = positionList.get(v);
-      }                
+      }
       triangles = triangulize(polygon);
     }
 
     int[] vertices = new int[face.size()];
     for(int i=0; i<vertices.length; i++)
-    {            
+    {
       vertices[i] = addVertex(face.get(i));
-    }            
+    }
 
-    TriangleGroup group = triangleGroups.get(triangleGroups.size() - 1);            
+    TriangleGroup group = triangleGroups.get(triangleGroups.size() - 1);
     for(int[] triangle : triangles)
-    {            
+    {
       triangle[0] = vertices[ triangle[0] ];
       triangle[1] = vertices[ triangle[1] ];
       triangle[2] = vertices[ triangle[2] ];
       group.primitives.add(triangle);
-    }                
+    }
   }
 
   int addVertex(int[] v)
@@ -189,10 +181,10 @@ final class Mesh
     Vertex vertex = new Vertex(v);
     Integer index = vertexMap.get(vertex);
     if(index != null)
-    {            
+    {
     	return index;
     }
-    
+
     int size = vertexList.size();
     vertexList.add(vertex);
     vertexMap.put(vertex, size);
@@ -212,12 +204,12 @@ final class Mesh
     if(group.primitives.isEmpty())
     {
       triangleGroups.remove( triangleGroups.size() - 1 );
-    }            
+    }
   }
 
   boolean convert(Assembly assembly)
   {
-    if(triangleGroups.isEmpty() || positionList.isEmpty()) 
+    if(triangleGroups.isEmpty() || positionList.isEmpty())
     {
     	return false;
     }
@@ -246,9 +238,9 @@ final class Mesh
       attributes++;
       attributeBytes += 4*2;
     }
-    
+
     IndexType indexType = IndexType.fromCount(vertices);
-    
+
     int groups = triangleGroups.size();
     int geomBytes = vertices * attributeBytes;
     int topoBytes = 0;
@@ -289,7 +281,7 @@ final class Mesh
     }
     if(hasTexCoords) for(Vertex vertex : vertexList)
     {
-  		int index = vertex.texture;        
+  		int index = vertex.texture;
       fBuffer.put( index < 0 ? new float[2] : textureList.get( index ));
     }
 
@@ -300,11 +292,11 @@ final class Mesh
     	putIndices(indexType, buffer, triangle.primitives);
     }
     buffer.rewind();
-    
+
     assembly.assemble(name, xml, buffer);
     return true;
   }
-        
+
   private static void putIndices(IndexType type, ByteBuffer buffer, List<int[]> elements)
   {
     for(int[] indices : elements)

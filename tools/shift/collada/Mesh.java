@@ -32,8 +32,7 @@
  */
 package org.interaction3d.assembly.tools.shift.collada;
 
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
+import java.util.List;
 import java.nio.FloatBuffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -43,8 +42,6 @@ import org.interaction3d.assembly.tools.shift.util.IndexType;
 
 import static java.lang.String.format;
 import static org.interaction3d.assembly.tools.shift.collada.PolyListTriangulization.triangulizePolylist;
-
-
 
 final class Mesh
 {
@@ -56,7 +53,7 @@ final class Mesh
 
     Attribute(String name, float[] elements, int count, int dimension, int index)
     {
-      assert(count*dimension == elements.length);
+      assert (count * dimension == elements.length);
       this.name = name;
       this.elements = elements;
       this.count = count;
@@ -73,13 +70,12 @@ final class Mesh
 
     Group(String name, int[] elements)
     {
-      assert(elements.length % 3 == 0);
+      assert (elements.length % 3 == 0);
       this.name = name;
       this.elements = elements;
       this.triangles = elements.length / 3;
     }
   }
-
   private final ArrayList<Attribute> attributes = new ArrayList<Attribute>();
   private final ArrayList<int[]> vertices = new ArrayList<int[]>();
   private final ArrayList<Group> triangles = new ArrayList<Group>();
@@ -99,7 +95,7 @@ final class Mesh
 
   void polylist(String material, int[] elements, int[] vcounts, int inputs)
   {
-  	int[] poly = triangleVertices.polylist(elements, vcounts, inputs);
+    int[] poly = triangleVertices.polylist(elements, vcounts, inputs);
     this.triangles.add(new Group(material, triangulizePolylist(poly, vcounts)));
   }
 
@@ -107,34 +103,86 @@ final class Mesh
   {
     attributes.add(new Attribute(name, coordinates, count, dimension, index));
   }
-  
-  int[] map(String attribute) 
+
+  int[] map(String attribute)
   {
-  	int index = -1;
-  	for(int i=0; i<attributes.size(); i++)
-  	{
-  		if(attribute.equals(attributes.get(i).name))
-  		{
-  			index = i;
-  			break;
-  		}
-  	}
-  	
-  	if(index < 0) 
-  	{
-  		return null;
-  	}
-  
-  	int[] map = new int[vertices.size()];
-  	for(int i=0; i<map.length; i++)
-  	{
-  		map[i] = vertices.get(i)[index];
-  	}
-  	
-  	return map;
+    int index = -1;
+    for (int i = 0; i < attributes.size(); i++)
+    {
+      if (attribute.equals(attributes.get(i).name))
+      {
+        index = i;
+        break;
+      }
+    }
+
+    if (index < 0)
+    {
+      return null;
+    }
+
+    int[] map = new int[vertices.size()];
+    for (int i = 0; i < map.length; i++)
+    {
+      map[i] = vertices.get(i)[index];
+    }
+
+    return map;
   }
-  
-  
+
+  private Attribute getAttribute(String name)
+  {
+    for (Attribute attribute : attributes)
+    {
+      if (attribute.name.equals(name))
+      {
+        return attribute;
+      }
+    }
+    return null;
+  }
+
+  Coordinates[] morph(Mesh target, float weight, boolean delta)
+  {
+    ArrayList<Coordinates> coordinateArrays = new ArrayList<Coordinates>();
+
+    for (Attribute baseAttribute : attributes)
+    {
+      Attribute targetAttribute = target.getAttribute(baseAttribute.name);
+      if (targetAttribute == null
+        || targetAttribute.count != baseAttribute.count
+        || targetAttribute.dimension != baseAttribute.dimension)
+      {
+        continue;
+      }
+
+        Coordinates coordinates = new Coordinates(baseAttribute.name,
+                                                                                       vertices.size(),
+                                                                                       baseAttribute.dimension);
+
+      float[] m = coordinates.elements;
+      int index = 0;
+      for (int[] vertex : vertices)
+      {
+        int bIndex = baseAttribute.dimension * vertex[baseAttribute.index];
+        int tIndex = targetAttribute.dimension * vertex[targetAttribute.index];
+        for (int i = 0; i < baseAttribute.dimension; i++)
+        {
+          m[index] = weight * targetAttribute.elements[tIndex + i];
+          if (delta)
+          {
+            m[index] -= baseAttribute.elements[bIndex + i];
+          }
+          index++;
+        }
+      }
+
+      coordinateArrays.add(coordinates);
+    }
+
+    return  coordinateArrays.toArray(new Coordinates[0]);
+  }
+
   void convert(String name, Assembly assembly)
   {
     StringBuilder xml = new StringBuilder();
@@ -158,7 +206,7 @@ final class Mesh
     for (Group group : triangles)
     {
       topoBytes += indexType.bytes() * group.elements.length;
-      xml.append(format("\t\t<Group name=\"%s\" count=\"%d\" />\n", group.name, group.elements.length/3));
+      xml.append(format("\t\t<Group name=\"%s\" count=\"%d\" />\n", group.name, group.elements.length / 3));
     }
     xml.append("\t</Triangles>\n");
     xml.append("</Mesh>\n");
@@ -170,7 +218,7 @@ final class Mesh
     {
       for (int[] vertex : vertices)
       {
-        int vIndex = vertex[attribute.index]*attribute.dimension;
+        int vIndex = vertex[attribute.index] * attribute.dimension;
         fBuffer.put(attribute.elements, vIndex, attribute.dimension);
       }
     }
@@ -179,7 +227,7 @@ final class Mesh
 
     for (Group group : triangles)
     {
-    	indexType.put(buffer, group.elements);
+      indexType.put(buffer, group.elements);
     }
 
     buffer.rewind();

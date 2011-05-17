@@ -138,13 +138,13 @@ public final class DaeShift
     XPath xpath = XPathFactory.newInstance().newXPath();
 
     String version = (String) xpath.evaluate("COLLADA/@version", document, XPathConstants.STRING);
-    System.out.println("Collada version: " + version);		
+    System.out.println("Collada version: " + version);
 
 		HashMap<String, Mesh> meshes = new HashMap<String, Mesh>();
 
-    if(true) processMeshes(new MeshProcessor(document, xpath, meshes), outputDir);
-    if(true) processMorphers(new MorphProcessor(document, xpath, meshes), outputDir);
-    if(true) processSkin(new SkinProcessor(document, xpath, meshes), outputDir);
+    if(true) processMeshes(new ProcessorMesh(document, xpath, meshes), outputDir);
+    if(true) processMorphers(new ProcessorMorph(document, xpath, meshes), outputDir);
+    if(true) processSkin(new ProcessorSkin(document, xpath, meshes), outputDir);
     if(true) processScenes(new SceneProcessor(document, xpath), outputDir);
 	}
 
@@ -154,7 +154,7 @@ public final class DaeShift
     processor.find();
   }
 
-  private static void processSkin(SkinProcessor processor, final String path)
+  private static void processSkin(ProcessorSkin processor, final String path)
   throws Exception
   {
     processor.find(new Assembly()
@@ -172,7 +172,7 @@ public final class DaeShift
     });
   }
 
-  private static void processMorphers(MorphProcessor processor, final String path)
+  private static void processMorphers(ProcessorMorph processor, final String path)
   throws Exception
   {
     processor.find(new Assembly()
@@ -191,7 +191,7 @@ public final class DaeShift
   }
 
 
-  private static void processMeshes(MeshProcessor processor, final String path)
+  private static void processMeshes(ProcessorMesh processor, final String path)
   throws Exception
   {
     processor.find(new Assembly()

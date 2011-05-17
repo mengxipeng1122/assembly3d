@@ -1,22 +1,22 @@
 /*
  * Copyright (c) 2011 Michael Nischt
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the project's author nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -30,64 +30,33 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-
 package org.interaction3d.assembly.tools.shift.collada;
 
-/**
- *
- * @author Michael Nischt
- */
 final class PolyListTriangulization
 {
   public static int[] triangulizePolylist(int[] elements, int[] vcounts)
   {
-      int triangles = 0;
-      for(int c : vcounts)
-      {
-          assert(c >= 3);
-          triangles += (c - 2);
-      }
-
-      int[] indices = new int[triangles*3];
-
-      int index=0, index2=0;
-      for(int i=0; i<vcounts.length; i++)
-      {
-          for(int j=0, N=vcounts[i]-2; j<N; j++)
-          {
-            int ndx = index2++;
-            indices[index++] = elements[ndx+0];
-            indices[index++] = elements[ndx+1];
-            indices[index++] = elements[ndx+2];
-          }
-      }
-
-      return indices;
-  }  
-
-  public static int[][] triangulizePolylist(int[][] polylist)
-  {
-    int numTriangless = 0;
-    for(int[] poly : polylist)
+    int triangles = 0;
+    for (int c : vcounts)
     {
-      assert(poly.length > 2);
-      numTriangless += poly.length - 2;
+      assert (c >= 3);
+      triangles += (c - 2);
     }
 
-    int[][] triangles = new int[numTriangless][3];
+    int[] indices = new int[triangles * 3];
 
-    int index = 0;
-    for(int[] poly : polylist)
+    int index = 0, index2 = 0;
+    for (int i = 0; i < vcounts.length; i++)
     {
-      numTriangless = poly.length - 2;
-      for(int i=0; i<numTriangless; i++)
+      for (int j = 0, N = vcounts[i] - 2; j < N; j++)
       {
-        int[] triangle = triangles[index++];
-        triangle[0] = poly[i+0];
-        triangle[1] = poly[i+1];
-        triangle[2] = poly[i+2];
+        int ndx = index2++;
+        indices[index++] = elements[ndx + 0];
+        indices[index++] = elements[ndx + 1];
+        indices[index++] = elements[ndx + 2];
       }
     }
-    return triangles;
+
+    return indices;
   }
 }

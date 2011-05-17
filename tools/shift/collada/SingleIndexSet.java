@@ -1,22 +1,22 @@
 /*
  * Copyright (c) 2011 Michael Nischt
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the project's author nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -35,30 +35,26 @@ package org.interaction3d.assembly.tools.shift.collada;
 
 import java.util.HashMap;
 
-/**
- *
- * @author Michael Nischt
- */
 final class SingleIndexSet
 {
   interface Vertices
   {
     void vertex(int... elements);
   }
-  
+
   final HashMap<int[], Integer> vertexMap = new HashMap<int[], Integer>();
   final Vertices vertices;
 
   public SingleIndexSet(Vertices vertices)
   {
     this.vertices = vertices;
-  }  
-  
+  }
+
   //[input][triangle][vertex]
   int[] triangles(int[] elements, int triangles, int inputs)
   {
     assert (triangles*3*inputs == elements.length);
-            
+
     int[] indices = new int[triangles*3];
 
     int index=0, index2=0;
@@ -77,10 +73,10 @@ final class SingleIndexSet
 
     return indices;
   }
-  
+
   //[input][poly][vertex]
   int[] polylist(int[] elements, int[] vcounts, int inputs)
-  {    
+  {
     int[] indices;
     {
       int count = 0;
@@ -90,7 +86,7 @@ final class SingleIndexSet
       }
       indices = new int[count];
     }
-    
+
     int index=0, index2=0;
     for (int p = 0; p<vcounts.length; p++)
     {
@@ -101,13 +97,13 @@ final class SingleIndexSet
         {
           vertex[i] = elements[index2++];
         }
-        indices[index++] = vertex(vertex);        
+        indices[index++] = vertex(vertex);
       }
     }
 
     return indices;
-  }    
-  
+  }
+
   private int vertex(int[] vertex)
   {
     Integer index = vertexMap.get(vertex);
@@ -118,7 +114,7 @@ final class SingleIndexSet
 
     index = vertexMap.size();
     vertexMap.put(vertex, index);
-    vertices.vertex(vertex);    
+    vertices.vertex(vertex);
     return index;
   }
 }

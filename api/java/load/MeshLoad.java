@@ -34,30 +34,50 @@ package org.interaction3d.assembly.load;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import org.interaction3d.assembly.structs.Assembler;
 import org.interaction3d.assembly.CoordinateType;
 import org.interaction3d.assembly.IndexType;
 import org.interaction3d.assembly.Mesh;
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import static java.lang.Integer.parseInt;
 
-public class MeshLoad
+public class MeshLoad implements Assembler<Mesh>
 {
-  private final MeshHandler handler;
-
-  public MeshLoad(Mesh mesh)
+  public static void loadMesh(String uri, Mesh mesh)
   {
-    handler = new MeshHandler(mesh);
+    new MeshLoad(uri).assemble(mesh);
   }
 
-  public void load(String uri) throws Exception
+  public MeshLoad(String uri)
+  {
+    this.inputSource = new InputSource(uri);
+  }
+
+  @Override
+  public void assemble(Mesh mesh)
+  {
+    try
+    {
+      load(mesh);
+    }
+    catch(Exception ex)
+    {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  private void load(Mesh mesh) throws Exception
   {
     SAXParserFactory factory = SAXParserFactory.newInstance();
     SAXParser parser = factory.newSAXParser();
-    parser.parse(uri, handler);
+    parser.parse(inputSource, new MeshHandler(mesh));
   }
+
+    private final InputSource inputSource;
 }
 
 final class MeshHandler extends DefaultHandler

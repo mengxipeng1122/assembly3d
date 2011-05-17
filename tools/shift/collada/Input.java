@@ -1,22 +1,22 @@
 /*
  * Copyright (c) 2011 Michael Nischt
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the project's author nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -72,36 +72,24 @@ final class Input
     return groups;
   }
 
-  static Input select(String semantic, int set, Input... inputs)
+  public static boolean compare(Input[] a, Input[] b)
   {
-    for(Input input : inputs)
-    {
-        if(input.set == set && input.semantic.equals(semantic))
-        {
-            return input;
-        }
-    }
-    return null;
-  }
-
-  public static boolean compare(Input[] a, Input[] b) 
-  {
-    if(a.length != b.length) 
+    if(a.length != b.length)
     {
         return false;
     }
-    for(int i=0; i<a.length; i++) if (!compare(a[i], b[i])) 
+    for(int i=0; i<a.length; i++) if (!compare(a[i], b[i]))
     {
         return false;
     }
     return true;
-  }	
+  }
 
-  public static boolean compare(Input a, Input b) 
+  public static boolean compare(Input a, Input b)
   {
     return a.semantic.equals(b.semantic)
         && b.set == b.set
         && a.offset == b.offset
         && a.source.equals(b.source);
-  }    
+  }
 }

@@ -48,20 +48,19 @@ import static org.interaction3d.assembly.tools.shift.collada.XmlCommons.parseAcc
 import static org.interaction3d.assembly.tools.shift.collada.Elements.parseFloatArray;
 import static org.interaction3d.assembly.tools.shift.collada.Elements.parseStringArray;
 
-final class MorphProcessor
+final class ProcessorMorph
 {
   private final Document document;
   private final XPath xpath;
   private final XPathExpression exprMorph;
   private final XPathExpression exprTargets, exprWeights;
+  private final Map<String, Mesh> meshes;
 
-	private final Map<String, Mesh> meshes;
-
-  MorphProcessor(Document document, XPath xpath, Map<String, Mesh> meshes) throws XPathExpressionException
+  ProcessorMorph(Document document, XPath xpath, Map<String, Mesh> meshes) throws XPathExpressionException
   {
     this.document = document;
     this.xpath = xpath;
-    
+
     this.meshes = meshes;
 
     exprMorph = xpath.compile("/COLLADA/library_controllers/controller[@id]/morph");
@@ -70,7 +69,7 @@ final class MorphProcessor
   }
 
   void find(Assembly assembly)
-  throws XPathExpressionException
+    throws XPathExpressionException
   {
     NodeList morphNodes = (NodeList) exprMorph.evaluate(document, NODESET);
 
@@ -80,7 +79,7 @@ final class MorphProcessor
       String id = new XmlAttributes(morphNode.getParentNode()).getString("id");
       System.out.println("Morph: " + id);
       Morph morph = processMorph(id, morphNode);
-      if(morph != null)
+      if (morph != null)
       {
         morph.convert(id, assembly);
       }
@@ -96,52 +95,50 @@ final class MorphProcessor
       method = attributes.getString("method", "NORMALIZED");
     }
 
-		if(source.isEmpty() || source.charAt(0) != '#')
-		{
-			System.err.println("illegal morph source: " + source);
-			return null;
-		}
+    if (source.isEmpty() || source.charAt(0) != '#')
+    {
+      System.err.println("illegal morph source: " + source);
+      return null;
+    }
 
-		Mesh baseMesh = meshes.get(source.substring(1));
-		if(baseMesh == null)
-		{
-			System.err.println("illegal morph source: " + source);		
-			return null;
-		}			
-		meshes.put(id, baseMesh);
+    Mesh baseMesh = meshes.get(source.substring(1));
+    if (baseMesh == null)
+    {
+      System.err.println("illegal morph source: " + source);
+      return null;
+    }
+    meshes.put(id, baseMesh);
 
 
     // source is geometry
     //System.out.println("source: " + source);
 
-		Morph morph = new Morph(baseMesh, method.equals("NORMALIZED"));
+    Morph morph = new Morph(baseMesh, method.equals("NORMALIZED"));
 
     String[] targets = parseTargetArray(exprTargets.evaluate(morphNode), morphNode);
     float[] weights = parseWeightArray(exprWeights.evaluate(morphNode), morphNode);
-    
-    assert(targets.length == weights.length);
-    
-    for(int i=0; i<targets.length; i++)
+
+    assert (targets.length == weights.length);
+
+    for (int i = 0; i < targets.length; i++)
     {
-    	String target = targets[i];
-    	Mesh targetMesh = meshes.get(target) ;
-    	if(targetMesh == null)
-    	{
-				System.err.println("illegal morph target: " + target);    	
-    		continue;
-    	}        	
-    	morph.target(target, targetMesh);
+      String target = targets[i];
+      Mesh targetMesh = meshes.get(target);
+      if (targetMesh == null)
+      {
+        System.err.println("illegal morph target: " + target);
+        continue;
+      }
+      morph.target(target, weights[i], targetMesh);
     }
-    
+
     return morph;
   }
-
-
 
   private String[] parseTargetArray(String source, Node baseNode)
     throws XPathExpressionException
   {
-    if(source.isEmpty() || source.charAt(0) != '#')
+    if (source.isEmpty() || source.charAt(0) != '#')
     {
       return null;
     }
@@ -150,7 +147,7 @@ final class MorphProcessor
       + "']/technique_common/accessor", baseNode, NODE);
 
     Accessor accessor = parseAccessor(accessorNode);
-    if(accessor.hasExternalSource() || accessor.stride != 1 || accessor.offset != 0)
+    if (accessor.hasExternalSource() || accessor.stride != 1 || accessor.offset != 0)
     {
       return null;
     }
@@ -165,7 +162,7 @@ final class MorphProcessor
   private float[] parseWeightArray(String source, Node baseNode)
     throws XPathExpressionException
   {
-    if(source.isEmpty() || source.charAt(0) != '#')
+    if (source.isEmpty() || source.charAt(0) != '#')
     {
       return null;
     }
@@ -174,7 +171,7 @@ final class MorphProcessor
       + "']/technique_common/accessor", baseNode, NODE);
 
     Accessor accessor = parseAccessor(accessorNode);
-    if(accessor.hasExternalSource() || accessor.stride != 1 || accessor.offset != 0)
+    if (accessor.hasExternalSource() || accessor.stride != 1 || accessor.offset != 0)
     {
       return null;
     }
