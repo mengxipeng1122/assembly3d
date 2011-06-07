@@ -13,6 +13,7 @@ set(MeshWiz_HEADERS
     TransformTool.h
     FrontFaceTool.h
     BakeTool.h
+    MeshTool.h
     )
 
 set(MeshWiz_SOURCE
@@ -24,6 +25,7 @@ set(MeshWiz_SOURCE
     TransformTool.cpp
     FrontFaceTool.cpp
     BakeTool.cpp
+    MeshTool.cpp
     )
 
 include_directories(${A3DTools_INCLUDE} ${TCLAP_INCLUDE})
@@ -59,4 +61,5 @@ ToolManager.h
 TransformTool.h
 FrontFaceTool.h
 BakeTool.h
+MeshTool.h
 DESTINATION ${CMAKE_INSTALL_PREFIX}/include/a3dtools/include)

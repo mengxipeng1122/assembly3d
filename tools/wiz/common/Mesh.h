@@ -47,6 +47,14 @@ namespace assembly3d
     class Mesh
     {
     public:
+        enum AttributeType{
+            POSITION=0,
+            NORMAL,
+            TEXCOORD,
+            TANGENT,
+            BITANGENT
+        };
+
         /**
          * @brief Mesh format information.
          *
@@ -62,6 +70,14 @@ namespace assembly3d
             bool isBinary;
         };
 
+        struct Attribute
+        {
+            float* data;
+            int count;
+            int size;
+            AttributeType type;
+        };
+
         struct Group
         {
             char* name;
@@ -73,6 +89,7 @@ namespace assembly3d
         Mesh(const Mesh& m);
         ~Mesh();
 
+        void printAttribute(Attribute a);
         /**
          * @brief Clears the mesh values.
          *
@@ -137,7 +154,7 @@ namespace assembly3d
          * @brief Gets total number of groups.
          *
         */
-        unsigned int getNumberOfGroups() const;
+        int getNumberOfGroups() const;
 
         /**
          * @param val True if mesh has positions.
@@ -208,6 +225,8 @@ namespace assembly3d
         void addTexCoord(float* texCoord, int size=2);
         void addTangent(float* tangent, int size=3);
         void addBitangent(float* bitangent, int size=3);
+
+//        void addTriangle(unsigned int* triangle);
         /**
          * @brief Clears vertices.
          *
@@ -373,8 +392,14 @@ namespace assembly3d
          *
          * @return unsigned int *
         */
+        float* getTangentsPointer();
+        float* getBitangentsPointer();
+
         unsigned int* getIndicesPointer();
         void updateVecs();
+
+//        void setAttributes();
+        Attribute getAttribute(AttributeType type);
 
     private:
 
@@ -396,6 +421,8 @@ namespace assembly3d
         std::vector<float> m_texCoords;
         std::vector<float> m_tangents;
         std::vector<float> m_bitangents;
+
+//        std::vector<Attribute> m_attributes;
 
         std::vector<unsigned int> m_indices;
         std::vector<Group> m_groups;
@@ -498,8 +525,8 @@ namespace assembly3d
     inline int Mesh::getNumberOfVertices() const
     { return m_numVertices; }
 
-    inline unsigned int Mesh::getNumberOfGroups() const
-    { return static_cast<unsigned int>(m_groups.size()); }
+    inline int Mesh::getNumberOfGroups() const
+    { return static_cast<int>(m_groups.size()); }
 
     inline bool Mesh::hasPositions() const
     { return m_hasPositions; }
@@ -530,6 +557,12 @@ namespace assembly3d
 
     inline float* Mesh::getTexCoordsPointer()
     { return &m_texCoords[0]; }
+
+    inline float* Mesh::getTangentsPointer()
+    { return &m_tangents[0]; }
+
+    inline float* Mesh::getBitangentsPointer()
+    { return &m_bitangents[0]; }
 
     inline unsigned int* Mesh::getIndicesPointer()
     { return &m_indices[0]; }

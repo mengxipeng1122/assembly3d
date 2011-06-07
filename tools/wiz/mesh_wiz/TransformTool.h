@@ -59,6 +59,8 @@ namespace assembly3d
              * @param tz
              */
             void translate(Mesh* m, float tx, float ty, float tz);
+            void translate(Mesh::Attribute *attribute, float tx, float ty,
+                           float tz, bool inverseTranspose=false);
             /**
              * @brief
              *
@@ -69,6 +71,8 @@ namespace assembly3d
              * @param rz
              */
             void rotate(Mesh* m, float rangle, float rx, float ry, float rz);
+            void rotate(Mesh::Attribute *attribute, float rangle, float rx,
+                        float ry, float rz, bool inverseTranspose=false);
             /**
              * @brief
              *
@@ -78,6 +82,8 @@ namespace assembly3d
              * @param sz
              */
             void scale(Mesh* m, float sx, float sy, float sz);
+            void scale(Mesh::Attribute* attribute, float sx, float sy,
+                       float sz, bool inverseTranspose=false);
             /**
              * @brief
              *
@@ -86,7 +92,10 @@ namespace assembly3d
              * @param rsy
              * @param rsz
              */
-            void resize(Mesh* m, float rsx, float rsy, float rsz);
+            void resize(Mesh* m, float width, float height, float length);
+            void resize(Mesh::Attribute* attribute, float width, float height,
+                        float length, float mWidth, float mHeight,float mLength,
+                        bool inverseTranspose=false);
             /**
              * @brief
              *
@@ -95,6 +104,9 @@ namespace assembly3d
              * @param val
              */
             void resize(Mesh* m, const char axis, float val);
+            void resize(Mesh::Attribute* attribute, const char axis, float val,
+                        float mWidth, float mHeight,float mLength,
+                        bool inverseTranspose=false);
             /**
              * @brief
              *
@@ -104,13 +116,16 @@ namespace assembly3d
              * @param az
              */
             void center(Mesh* m, int ax, int ay, int az);
-
+            void center(Mesh::Attribute* attribute, int ax, int ay, int az,
+                        float centerX, float centerY, float centerZ,
+                        bool inverseTranspose=false);
             /**
              * @brief Normalizes a vector.
              *
              * @param vector[] A vector to normalize.
              */
             static void normalize(float vector[3]);
+            static void normalize(float* vector, int size);
 
         protected:
         private:
@@ -124,6 +139,7 @@ namespace assembly3d
             void multiplyVertexWithTransformMatrix(float* pos, float* normal, float* tangent,
                                                    float* bitangent, float matrix[3][4],
                                                    float inverseTransposedMatrix[3][3]);
+            void transform(Mesh::Attribute* attribute, float matrix[3][4], bool shouldNormalize);
         };
     }
 }

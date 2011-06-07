@@ -50,14 +50,6 @@ namespace assembly3d
             OptimizeTool();
             ~OptimizeTool();
 
-            enum Attribute{
-                POSITION=0,
-                NORMAL,
-                TEXCOORD,
-                TANGENT,
-                BITANGENT
-            };
-
             /**
              * @brief Removes duplicate vertices from mesh.
              *
@@ -71,7 +63,7 @@ namespace assembly3d
              * @param a Attribute to check with epsilon.
              * @param epsilon
              */
-            void stitch(Mesh* m, Attribute a, float epsilon);
+            void stitch(Mesh* m, Mesh::AttributeType a, float epsilon);
 
         protected:
         private:
@@ -102,7 +94,7 @@ namespace assembly3d
                                        const OptimizeTool::Vertex& rhs, float eps);
             int findFirstIndexEqualsEps(std::vector<OptimizeTool::Vertex> verts,
                                         OptimizeTool::Vertex v,
-                                        OptimizeTool::Attribute a, float e);
+                                        Mesh::AttributeType a, float e);
             bool vertexEquals(const OptimizeTool::Vertex& lhs,
                               const OptimizeTool::Vertex& rhs);
             int findFirstIndexEquals(std::vector<OptimizeTool::Vertex> verts,

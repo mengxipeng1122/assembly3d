@@ -344,7 +344,7 @@ void MeshIO::dumpTxt(Mesh* mesh, const char* outFilePath)
     // -------------------------------------------------------------------------------------------
     // Groups
     // -------------------------------------------------------------------------------------------
-    for(unsigned int groupIndex = 0; groupIndex < mesh->getNumberOfGroups(); ++groupIndex)
+    for(int groupIndex = 0; groupIndex < mesh->getNumberOfGroups(); ++groupIndex)
     {
         // -------------------------------------------------------------------------------------------
         // Group
@@ -517,7 +517,7 @@ void MeshIO::saveFile(Mesh* mesh, const char* outFilePath, const char* binaryFil
             // -------------------------------------------------------------------------------------------
             // Groups
             // -------------------------------------------------------------------------------------------
-            for(unsigned int groupIndex = 0; groupIndex < mesh->getNumberOfGroups(); ++groupIndex)
+            for(int groupIndex = 0; groupIndex < mesh->getNumberOfGroups(); ++groupIndex)
             {
                 // -------------------------------------------------------------------------------------------
                 // Group

@@ -40,6 +40,7 @@
 #include "OptimizeTool.h"
 #include "FrontFaceTool.h"
 #include "BakeTool.h"
+#include "MeshTool.h"
 
 
 namespace assembly3d
@@ -76,7 +77,7 @@ namespace assembly3d
              * @param ty
              * @param tz
              */
-            void translate(float tx, float ty, float tz);
+            void translate(float tx, float ty, float tz, bool transformTexCoords=false);
             /**
              * @brief Rotates mesh.
              *
@@ -85,7 +86,7 @@ namespace assembly3d
              * @param ry
              * @param rz
              */
-            void rotate(float rangle, float rx, float ry, float rz);
+            void rotate(float rangle, float rx, float ry, float rz, bool transformTexCoords=false);
             /**
              * @brief Scales mesh.
              *
@@ -93,7 +94,7 @@ namespace assembly3d
              * @param sy
              * @param sz
              */
-            void scale(float sx, float sy, float sz);
+            void scale(float sx, float sy, float sz, bool transformTexCoords=false);
             /**
              * @brief Resizes mesh.
              *
@@ -101,14 +102,14 @@ namespace assembly3d
              * @param rsy
              * @param rsz
              */
-            void resize(float rsx, float rsy, float rsz);
+            void resize(float rsx, float rsy, float rsz, bool transformTexCoords=false);
             /**
              * @brief Resizes mesh.
              *
              * @param axis
              * @param val
              */
-            void resize(const char* axis, float val);
+            void resize(const char* axis, float val, bool transformTexCoords=false);
             /**
              * @brief Centers mesh.
              *
@@ -116,7 +117,7 @@ namespace assembly3d
              * @param axisY
              * @param axisZ
              */
-            void center(int axisX, int axisY, int axisZ);
+            void center(int axisX, int axisY, int axisZ, bool transformTexCoords=false);
             /**
              * @brief Generates normals.
              *
@@ -174,6 +175,8 @@ namespace assembly3d
             int checkBakeable();
             int checkUVOverlapping();
 
+            void mergeMeshes(Mesh* second);
+
         protected:
         private:
             Mesh* m_mesh;
@@ -185,6 +188,7 @@ namespace assembly3d
             OptimizeTool* m_optimizeTool;
             FrontFaceTool* m_frontFaceTool;
             BakeTool* m_textureTool;
+            MeshTool* m_meshTool;
         };
     }
 }
