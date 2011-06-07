@@ -39,15 +39,16 @@ using namespace assembly3d;
 using namespace assembly3d::wiz;
 
 ToolManager::ToolManager(Mesh* mesh, bool verbose) 
-:
-m_mesh(mesh),
-m_verboseOutput(verbose),
-m_convertTool(new ConvertTool()),
-m_transformTool(new TransformTool()),
-m_attributeTool(new AttributeTool()),
-m_optimizeTool(new OptimizeTool()),
-m_frontFaceTool(new FrontFaceTool()),
-m_textureTool(new BakeTool())
+    :
+      m_mesh(mesh),
+      m_verboseOutput(verbose),
+      m_convertTool(new ConvertTool()),
+      m_transformTool(new TransformTool()),
+      m_attributeTool(new AttributeTool()),
+      m_optimizeTool(new OptimizeTool()),
+      m_frontFaceTool(new FrontFaceTool()),
+      m_textureTool(new BakeTool()),
+      m_meshTool(new MeshTool())
 {
     
 }
@@ -60,6 +61,7 @@ ToolManager::~ToolManager()
     SAFE_DELETE(m_optimizeTool)
     SAFE_DELETE(m_frontFaceTool)
     SAFE_DELETE(m_textureTool)
+    SAFE_DELETE(m_meshTool)
 }
 bool ToolManager::convertIndexType(const char* type)
 {
@@ -76,8 +78,8 @@ bool ToolManager::convertIndexType(const char* type)
     }    
     else if(stype.compare("short") == 0)
     {
-		int sizeInt = sizeof(unsigned short)*8;
-		if(m_mesh->getNumberOfVertices() > (pow(2.0,sizeInt)))
+        int sizeInt = sizeof(unsigned short)*8;
+        if(m_mesh->getNumberOfVertices() > (pow(2.0,sizeInt)))
         {
             result = false;
         }
@@ -91,7 +93,7 @@ bool ToolManager::convertIndexType(const char* type)
     else if(stype.compare("byte") == 0)
     {
         int sizeInt = sizeof(unsigned char)*8;
-		if(m_mesh->getNumberOfVertices() > (pow(2.0,sizeInt)))
+        if(m_mesh->getNumberOfVertices() > (pow(2.0,sizeInt)))
         {
             result = false;
         }
@@ -104,57 +106,222 @@ bool ToolManager::convertIndexType(const char* type)
     return result;
 }
 
-void ToolManager::translate(float tx, float ty, float tz)
+void ToolManager::translate(float tx, float ty, float tz, bool transformTexCoords)
 {
     if(m_verboseOutput) 
         std::cout << "Translating mesh (x=" << tx << ", y=" << ty << ", z=" << tz << ")" << std::endl;
     
-    m_transformTool->translate(m_mesh, tx, ty, tz);
+    //    m_transformTool->translate(m_mesh, tx, ty, tz);
+
+    Mesh::Attribute attrib;
+
+    if(transformTexCoords)
+    {
+        attrib = m_mesh->getAttribute(Mesh::TEXCOORD);
+        m_transformTool->translate(&attrib, tx, ty, tz, false);
+        if(m_mesh->hasTangents() || m_mesh->hasBitangents())
+        {
+            m_mesh->generateTangents();
+        }
+    }
+    else
+    {
+        attrib = m_mesh->getAttribute(Mesh::POSITION);
+        //    m_mesh->printAttribute(attrib);
+        m_transformTool->translate(&attrib, tx, ty, tz, false);
+        if(m_mesh->hasNormals())
+        {
+            attrib = m_mesh->getAttribute(Mesh::NORMAL);
+            m_transformTool->translate(&attrib, tx, ty, tz, true);
+        }
+        if(m_mesh->hasTangents())
+        {
+            attrib = m_mesh->getAttribute(Mesh::TANGENT);
+            m_transformTool->translate(&attrib, tx, ty, tz, true);
+        }
+        if(m_mesh->hasBitangents())
+        {
+            attrib = m_mesh->getAttribute(Mesh::BITANGENT);
+            m_transformTool->translate(&attrib, tx, ty, tz, true);
+        }
+    }
+
 }
 
-void ToolManager::rotate(float rangle, float rx, float ry, float rz)
+void ToolManager::rotate(float rangle, float rx, float ry, float rz, bool transformTexCoords)
 {
     if(m_verboseOutput) 
         std::cout << "Rotating mesh (angle=" << rangle << ", x=" << rx << ", y=" << ry << ", z=" << rz << ")" << std::endl;
     
-    m_transformTool->rotate(m_mesh, rangle, rx, ry, rz);
+    //    m_transformTool->rotate(m_mesh, rangle, rx, ry, rz);
+
+    Mesh::Attribute attrib;
+
+    if(transformTexCoords)
+    {
+        attrib = m_mesh->getAttribute(Mesh::TEXCOORD);
+        m_transformTool->rotate(&attrib, rangle, rx, ry, rz);
+        if(m_mesh->hasTangents() || m_mesh->hasBitangents())
+        {
+            m_mesh->generateTangents();
+        }
+    }
+    else
+    {
+
+        attrib = m_mesh->getAttribute(Mesh::POSITION);
+        //    m_mesh->printAttribute(attrib);
+        m_transformTool->rotate(&attrib, rangle, rx, ry, rz);
+        if(m_mesh->hasNormals())
+        {
+            attrib = m_mesh->getAttribute(Mesh::NORMAL);
+            m_transformTool->rotate(&attrib, rangle, rx, ry, rz, true);
+        }
+        if(m_mesh->hasTangents())
+        {
+            attrib = m_mesh->getAttribute(Mesh::TANGENT);
+            m_transformTool->rotate(&attrib, rangle, rx, ry, rz, true);
+        }
+        if(m_mesh->hasBitangents())
+        {
+            attrib = m_mesh->getAttribute(Mesh::BITANGENT);
+            m_transformTool->rotate(&attrib, rangle, rx, ry, rz, true);
+        }
+    }
 }
 
-void ToolManager::scale(float sx, float sy, float sz)
+void ToolManager::scale(float sx, float sy, float sz, bool transformTexCoords)
 {
     if(m_verboseOutput) 
         std::cout << "Scaling mesh (x=" << sx << ", y=" << sy << ", z=" << sz << ")" << std::endl;
-        
-    m_transformTool->scale(m_mesh, sx, sy, sz);
+
+    //    m_transformTool->scale(m_mesh, sx, sy, sz);
+
+    Mesh::Attribute attrib;
+    if(transformTexCoords)
+    {
+        attrib = m_mesh->getAttribute(Mesh::TEXCOORD);
+        m_transformTool->scale(&attrib, sx, sy, sz);
+        if(m_mesh->hasTangents() || m_mesh->hasBitangents())
+        {
+            m_mesh->generateTangents();
+        }
+    }
+    else
+    {
+
+        attrib = m_mesh->getAttribute(Mesh::POSITION);
+        m_transformTool->scale(&attrib, sx, sy, sz);
+        if(m_mesh->hasNormals())
+        {
+            attrib = m_mesh->getAttribute(Mesh::NORMAL);
+            m_transformTool->scale(&attrib, sx, sy, sz, true);
+        }
+        if(m_mesh->hasTangents())
+        {
+            attrib = m_mesh->getAttribute(Mesh::TANGENT);
+            m_transformTool->scale(&attrib, sx, sy, sz, true);
+        }
+        if(m_mesh->hasBitangents())
+        {
+            attrib = m_mesh->getAttribute(Mesh::BITANGENT);
+            m_transformTool->scale(&attrib, sx, sy, sz, true);
+        }
+    }
 }
 
-void ToolManager::resize(float rsx, float rsy, float rsz)
+void ToolManager::resize(float rsx, float rsy, float rsz, bool transformTexCoords)
 {
     if(m_verboseOutput) 
         std::cout << "Resizing mesh (x=" << rsx << ", y=" << rsy << ", z=" << rsz << ")" << std::endl;
 
-    m_transformTool->resize(m_mesh, rsx, rsy, rsz);   
+    //    m_transformTool->resize(m_mesh, rsx, rsy, rsz);
+
+    Mesh::Attribute attrib;
+    if(transformTexCoords)
+    {
+        attrib = m_mesh->getAttribute(Mesh::TEXCOORD);
+        m_transformTool->resize(&attrib, rsx, rsy, rsz, m_mesh->getWidth(), m_mesh->getHeight(), m_mesh->getLength());
+        if(m_mesh->hasTangents() || m_mesh->hasBitangents())
+        {
+            m_mesh->generateTangents();
+        }
+    }
+    else
+    {
+
+        attrib = m_mesh->getAttribute(Mesh::POSITION);
+        m_transformTool->resize(&attrib, rsx, rsy, rsz, m_mesh->getWidth(), m_mesh->getHeight(), m_mesh->getLength());
+        if(m_mesh->hasNormals())
+        {
+            attrib = m_mesh->getAttribute(Mesh::NORMAL);
+            m_transformTool->resize(&attrib, rsx, rsy, rsz, m_mesh->getWidth(), m_mesh->getHeight(), m_mesh->getLength(), true);
+        }
+        if(m_mesh->hasTangents())
+        {
+            attrib = m_mesh->getAttribute(Mesh::TANGENT);
+            m_transformTool->resize(&attrib, rsx, rsy, rsz, m_mesh->getWidth(), m_mesh->getHeight(), m_mesh->getLength(), true);
+        }
+        if(m_mesh->hasBitangents())
+        {
+            attrib = m_mesh->getAttribute(Mesh::BITANGENT);
+            m_transformTool->resize(&attrib, rsx, rsy, rsz, m_mesh->getWidth(), m_mesh->getHeight(), m_mesh->getLength(), true);
+        }
+    }
 }
 
-void ToolManager::resize(const char* axis, float val)
+void ToolManager::resize(const char* axis, float val, bool transformTexCoords)
 {
     if(m_verboseOutput) 
         std::cout << "Resizing mesh on axis=" << axis << " to value=" << val << std::endl;
 
-    m_transformTool->resize(m_mesh, axis[0], val);   
+    //    m_transformTool->resize(m_mesh, axis[0], val);
+
+    Mesh::Attribute attrib;
+
+    if(transformTexCoords)
+    {
+        attrib = m_mesh->getAttribute(Mesh::TEXCOORD);
+        m_transformTool->resize(&attrib, axis[0], val, m_mesh->getWidth(), m_mesh->getHeight(), m_mesh->getLength());
+        if(m_mesh->hasTangents() || m_mesh->hasBitangents())
+        {
+            m_mesh->generateTangents();
+        }
+    }
+    else
+    {
+
+        attrib = m_mesh->getAttribute(Mesh::POSITION);
+        m_transformTool->resize(&attrib, axis[0], val, m_mesh->getWidth(), m_mesh->getHeight(), m_mesh->getLength());
+        if(m_mesh->hasNormals())
+        {
+            attrib = m_mesh->getAttribute(Mesh::NORMAL);
+            m_transformTool->resize(&attrib, axis[0], val, m_mesh->getWidth(), m_mesh->getHeight(), m_mesh->getLength(), true);
+        }
+        if(m_mesh->hasTangents())
+        {
+            attrib = m_mesh->getAttribute(Mesh::TANGENT);
+            m_transformTool->resize(&attrib, axis[0], val, m_mesh->getWidth(), m_mesh->getHeight(), m_mesh->getLength(), true);
+        }
+        if(m_mesh->hasBitangents())
+        {
+            attrib = m_mesh->getAttribute(Mesh::BITANGENT);
+            m_transformTool->resize(&attrib, axis[0], val, m_mesh->getWidth(), m_mesh->getHeight(), m_mesh->getLength(), true);
+        }
+    }
 }
 
 void ToolManager::generateNormals()
 {
-    if(m_verboseOutput) 
+    if(m_verboseOutput)
         std::cout << "Generating normals" << std::endl;
-        
+
     m_attributeTool->addNormals(m_mesh);
 }
 
 void ToolManager::generateTangents()
 {
-    if(m_verboseOutput) 
+    if(m_verboseOutput)
         std::cout << "Generating tangents" << std::endl;
 
     m_attributeTool->addTangents(m_mesh);
@@ -162,7 +329,7 @@ void ToolManager::generateTangents()
 
 void ToolManager::generateBitangents()
 {
-    if(m_verboseOutput) 
+    if(m_verboseOutput)
         std::cout << "Generating bitangents" << std::endl;
 
     m_attributeTool->addBitangents(m_mesh);
@@ -170,7 +337,7 @@ void ToolManager::generateBitangents()
 
 void ToolManager::removeNormals()
 {
-    if(m_verboseOutput) 
+    if(m_verboseOutput)
         std::cout << "Removing normals" << std::endl;
 
     m_attributeTool->removeNormals(m_mesh);
@@ -178,7 +345,7 @@ void ToolManager::removeNormals()
 
 void ToolManager::removeTangents()
 {
-    if(m_verboseOutput) 
+    if(m_verboseOutput)
         std::cout << "Removing tangents" << std::endl;
 
     m_attributeTool->removeTangents(m_mesh);
@@ -186,19 +353,55 @@ void ToolManager::removeTangents()
 
 void ToolManager::removeBitangents()
 {
-    if(m_verboseOutput) 
+    if(m_verboseOutput)
         std::cout << "Removing bitangents" << std::endl;
 
     m_attributeTool->removeBitangents(m_mesh);
 }
 
 
-void ToolManager::center(int axisX, int axisY, int axisZ)
+void ToolManager::center(int axisX, int axisY, int axisZ, bool transformTexCoords)
 {
-    if(m_verboseOutput) 
+    if(m_verboseOutput)
         std::cout << "Centering mesh" << std::endl;
 
-    m_transformTool->center(m_mesh, axisX, axisY, axisZ);
+    //    m_transformTool->center(m_mesh, axisX, axisY, axisZ);
+
+    float centerX, centerY, centerZ;
+    centerX = centerY = centerZ = 0.0f;
+    m_mesh->getCenter(centerX, centerY, centerZ);
+
+    Mesh::Attribute attrib;
+    if(transformTexCoords)
+    {
+        attrib = m_mesh->getAttribute(Mesh::TEXCOORD);
+        m_transformTool->center(&attrib, axisX, axisY, axisZ, centerX, centerY, centerZ);
+        if(m_mesh->hasTangents() || m_mesh->hasBitangents())
+        {
+            m_mesh->generateTangents();
+        }
+    }
+    else
+    {
+
+        attrib = m_mesh->getAttribute(Mesh::POSITION);
+        m_transformTool->center(&attrib, axisX, axisY, axisZ, centerX, centerY, centerZ);
+        if(m_mesh->hasNormals())
+        {
+            attrib = m_mesh->getAttribute(Mesh::NORMAL);
+            m_transformTool->center(&attrib, axisX, axisY, axisZ, centerX, centerY, centerZ, true);
+        }
+        if(m_mesh->hasTangents())
+        {
+            attrib = m_mesh->getAttribute(Mesh::TANGENT);
+            m_transformTool->center(&attrib, axisX, axisY, axisZ, centerX, centerY, centerZ, true);
+        }
+        if(m_mesh->hasBitangents())
+        {
+            attrib = m_mesh->getAttribute(Mesh::BITANGENT);
+            m_transformTool->center(&attrib, axisX, axisY, axisZ, centerX, centerY, centerZ, true);
+        }
+    }
 }
 
 void ToolManager::stitch()
@@ -214,27 +417,27 @@ void ToolManager::stitchEps(const char* attributeName, float epsilon)
     if(m_verboseOutput)
         std::cout << "Stitching vertices. Comparing " << attributeName << " with an epsilon of " << epsilon << std::endl;
 
-    OptimizeTool::Attribute attrib;
+    Mesh::AttributeType attrib;
 
     if(std::string(attributeName).compare("postion") == 0)
     {
-        attrib = OptimizeTool::POSITION;
+        attrib = Mesh::POSITION;
     }
     else if(std::string(attributeName).compare("normal") == 0)
     {
-        attrib = OptimizeTool::NORMAL;
+        attrib = Mesh::NORMAL;
     }
     else if(std::string(attributeName).compare("texture") == 0)
     {
-        attrib = OptimizeTool::TEXCOORD;
+        attrib = Mesh::TEXCOORD;
     }
     else if(std::string(attributeName).compare("tangent") == 0)
     {
-        attrib = OptimizeTool::TANGENT;
+        attrib = Mesh::TANGENT;
     }
     else if(std::string(attributeName).compare("bitangent") == 0)
     {
-        attrib = OptimizeTool::BITANGENT;
+        attrib = Mesh::BITANGENT;
     }
     else
     {
@@ -293,4 +496,9 @@ int ToolManager::checkBakeable()
 int ToolManager::checkUVOverlapping()
 {
     return m_textureTool->checkUVOverlapping(m_mesh);
+}
+
+void ToolManager::mergeMeshes(Mesh *second)
+{
+    m_meshTool->merge(m_mesh, second);
 }

@@ -132,24 +132,24 @@ bool OptimizeTool::vertexBitangentEquals(const Vertex& lhs, const Vertex& rhs, f
     }
 }
 
-int OptimizeTool::findFirstIndexEqualsEps(std::vector<Vertex> verts, Vertex v, OptimizeTool::Attribute a, float e)
+int OptimizeTool::findFirstIndexEqualsEps(std::vector<Vertex> verts, Vertex v, Mesh::AttributeType a, float e)
 {
     float epsilon[5] = {0.0f};
     switch(a)
     {
-    case OptimizeTool::POSITION:
+    case Mesh::POSITION:
         epsilon[0] = e;
         break;
-    case OptimizeTool::NORMAL:
+    case Mesh::NORMAL:
         epsilon[1] = e;
         break;
-    case OptimizeTool::TEXCOORD:
+    case Mesh::TEXCOORD:
         epsilon[2] = e;
         break;
-    case OptimizeTool::TANGENT:
+    case Mesh::TANGENT:
         epsilon[3] = e;
         break;
-    case OptimizeTool::BITANGENT:
+    case Mesh::BITANGENT:
         epsilon[4] = e;
         break;
     }
@@ -309,7 +309,7 @@ void OptimizeTool::stitch(Mesh *m)
 
 }
 
-void OptimizeTool::stitch(Mesh *m, Attribute a, float epsilon)
+void OptimizeTool::stitch(Mesh *m, Mesh::AttributeType a, float epsilon)
 {
     std::vector<Vertex> origVertices;
     getVertices(m, origVertices);

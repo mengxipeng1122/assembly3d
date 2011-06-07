@@ -808,6 +808,92 @@ void Mesh::generateTangents()
     this->hasBitangents(true);
 }
 
+//void Mesh::setAttributes()
+//{
+//    m_attributes.clear();
+//    Mesh::Attribute position;
+//    position.data = getPositionsPointer();
+//    position.count = static_cast<int>(m_positions.size());
+//    position.size = 3;
+//    m_attributes.push_back(position);
+//    Mesh::Attribute normal;
+//    normal.data = getNormalsPointer();
+//    normal.count = static_cast<int>(m_normals.size());
+//    normal.size = 3;
+//    m_attributes.push_back(normal);
+//    Mesh::Attribute texCoord;
+//    texCoord.data = getTexCoordsPointer();
+//    texCoord.count = static_cast<int>(m_texCoords.size());
+//    texCoord.size = 2;
+//    m_attributes.push_back(texCoord);
+//    Mesh::Attribute tangents;
+//    tangents.data = getTangentsPointer();
+//    tangents.count = static_cast<int>(m_tangents.size());
+//    tangents.size = 3;
+//    m_attributes.push_back(tangents);
+//    Mesh::Attribute bitangents;
+//    bitangents.data = getBitangentsPointer();
+//    bitangents.count = static_cast<int>(m_bitangents.size());
+//    bitangents.size = 3;
+//    m_attributes.push_back(bitangents);
+
+//}
+
+Mesh::Attribute Mesh::getAttribute(Mesh::AttributeType type)
+{
+    Mesh::Attribute attribute;
+    switch(type)
+    {
+    case Mesh::POSITION:
+        attribute.data = getPositionsPointer();
+        attribute.count = static_cast<int>(m_positions.size());
+        attribute.size = 3;
+        break;
+    case Mesh::NORMAL:
+        attribute.data = getNormalsPointer();
+        attribute.count = static_cast<int>(m_normals.size());
+        attribute.size = 3;
+        break;
+    case Mesh::TEXCOORD:
+        attribute.data = getTexCoordsPointer();
+        attribute.count = static_cast<int>(m_texCoords.size());
+        attribute.size = 2;
+        break;
+    case Mesh::TANGENT:
+        attribute.data = getTangentsPointer();
+        attribute.count = static_cast<int>(m_tangents.size());
+        attribute.size = 3;
+        break;
+    case Mesh::BITANGENT:
+        attribute.data = getBitangentsPointer();
+        attribute.count = static_cast<int>(m_bitangents.size());
+        attribute.size = 3;
+        break;
+    default:
+        attribute.data = 0;
+        attribute.count = 0;
+        attribute.size = 0;
+        break;
+    }
+
+    return attribute;
+}
+
+void assembly3d::Mesh::printAttribute(assembly3d::Mesh::Attribute a)
+{
+    for(int i = 0; i < a.count/a.size; ++i){
+        for(int j = 0; j < a.size; ++j)
+        {
+            std::cout << a.data[i*a.size + j];
+        }
+        std::cout << std::endl;
+    }
+}
+
+//void Mesh::addTriangle(unsigned int *triangle)
+//{
+//}
+
 //void Mesh::updateVecs()
 //{
 //    m_positions.clear();

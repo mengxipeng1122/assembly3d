@@ -92,6 +92,9 @@ int main (int argc, char* argv[])
                                            "Centers mesh to given axis (i.e. 1/1/1 to put center to 0/0/0).",
                                            false, "", "1/1/1");
 
+    TCLAP::SwitchArg textureTransformArg("", "texture-transform",
+                                         "Applies transformation only to texture coordinates.");
+
     TCLAP::SwitchArg centerAllArg("", "center-all", "Centers mesh to all axis.", false);
     
     //---------------------------------------------------------------------------------------------------------
@@ -177,6 +180,9 @@ int main (int argc, char* argv[])
     TCLAP::SwitchArg validateAndChangeArg("", "validate-and-change",
                                           "Validates and changes mesh.", false);
 
+    TCLAP::ValueArg<std::string> mergeArg("", "merge-mesh", "Merges two meshes",
+                                          false, "", "mesh-to-merge");
+
     //---------------------------------------------------------------------------------------------------------
     // Other
     //---------------------------------------------------------------------------------------------------------
@@ -194,6 +200,7 @@ int main (int argc, char* argv[])
     cmd.add(binaryOutputArg);
     cmd.add(inputArg);
     cmd.add(outputArg);
+    cmd.add(textureTransformArg);
     cmd.add(flipArg);
     cmd.add(makeNormalsConsistent);
 //    cmd.add(validateAndChangeArg);
@@ -343,6 +350,7 @@ int main (int argc, char* argv[])
     }
     
     //---------------------------------------------------------------------------------------------------------
+
     if(convertIndexTypeToArg.isSet())
     {
         if(toolMgr.convertIndexType(convertIndexTypeToArg.getValue().c_str()) == false)
@@ -394,7 +402,8 @@ int main (int argc, char* argv[])
     }
     
     //---------------------------------------------------------------------------------------------------------
-    
+    bool transformTexCoords = textureTransformArg.getValue();
+
     if(translateArg.isSet())
     {
         std::string args = translateArg.getValue();
@@ -408,7 +417,7 @@ int main (int argc, char* argv[])
             x = values[0];
             y = values[1];
             z = values[2];
-            toolMgr.translate(x, y, z);
+            toolMgr.translate(x, y, z, transformTexCoords);
             modelChanged = true;
         }
     }
@@ -426,7 +435,7 @@ int main (int argc, char* argv[])
             x = values[1];
             y = values[2];
             z = values[3];
-            toolMgr.rotate(angle, x, y, z);
+            toolMgr.rotate(angle, x, y, z, transformTexCoords);
             modelChanged = true;
         }
     }
@@ -445,13 +454,13 @@ int main (int argc, char* argv[])
             x = values[0];
             y = values[1];
             z = values[2];
-            toolMgr.scale(x, y, z);
+            toolMgr.scale(x, y, z, transformTexCoords);
             modelChanged = true;            
         }
         else if(values.size() == 1)
         {
             x = values[0];
-            toolMgr.scale(x, x, x);
+            toolMgr.scale(x, x, x, transformTexCoords);
             modelChanged = true;
         }
     }
@@ -472,7 +481,7 @@ int main (int argc, char* argv[])
                 y = values[1];
                 z = values[2];
 //                toolMgr.scale(x, y, z);
-                toolMgr.resize(x, y, z);
+                toolMgr.resize(x, y, z, transformTexCoords);
                 modelChanged = true;
             }
         }
@@ -487,7 +496,7 @@ int main (int argc, char* argv[])
             if(values.size() == 1)
             {
                 x = values[0];
-                toolMgr.resize(axis.c_str(), x);
+                toolMgr.resize(axis.c_str(), x, transformTexCoords);
                 modelChanged = true;
             }
         }
@@ -567,6 +576,24 @@ int main (int argc, char* argv[])
     }
 
     //---------------------------------------------------------------------------------------------------------
+    if(mergeArg.isSet())
+    {
+        std::string mergeMeshPath = mergeArg.getValue();
+        if(FileUtils::checkIfFileExists(mergeMeshPath.c_str()) == false)
+        {
+            std::cerr << "Error: Mesh to merge '" << mergeMeshPath << "', does not exist!" << std::endl;
+            return 1;
+        }
+        std::string mergeMeshBinaryPath = FileUtils::getBinaryFileName(mergeMeshPath.c_str(), ".xml", ".dat");
+        Mesh* second = new Mesh();
+
+        MeshIO::load(second, mergeMeshPath.c_str(), mergeMeshBinaryPath.c_str());
+        toolMgr.mergeMeshes(second);
+        delete second; second = 0;
+        modelChanged = true;
+    }
+    //---------------------------------------------------------------------------------------------------------
+
     if(dumpArg.isSet())
     {
         std::string debugOutputFile;
