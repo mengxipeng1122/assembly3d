@@ -34,7 +34,7 @@
 #include "MeshWizIncludes.h"
 #include "BakeTool.h"
 #include "KDTree.h"
-#include <math.h>
+#include <cmath>
 
 #define DOT2(v1,v2) (v1[0]*v2[0]+v1[1]*v2[1])
 #define DOT3(v1,v2) (v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2])
@@ -114,13 +114,12 @@ int BakeTool::checkUVOverlapping(Mesh *mesh)
             float tmpTexCoord00[2] = {0.0f, 0.0f};
             float tmpTexCoord01[2] = {0.0f, 0.0f};
             float tmpTexCoord02[2] = {0.0f, 0.0f};
-            double intpart = 1.0;
-            tmpTexCoord00[0] = (float)modf(pTexCoord00[0], &intpart);
-            tmpTexCoord00[1] = (float)modf(pTexCoord00[1], &intpart);
-            tmpTexCoord01[0] = (float)modf(pTexCoord01[0], &intpart);
-            tmpTexCoord01[1] = (float)modf(pTexCoord01[1], &intpart);
-            tmpTexCoord02[0] = (float)modf(pTexCoord02[0], &intpart);
-            tmpTexCoord02[1] = (float)modf(pTexCoord02[1], &intpart);
+            tmpTexCoord00[0] = fmodf(pTexCoord00[0], 1.0f);
+            tmpTexCoord00[1] = fmodf(pTexCoord00[1], 1.0f);
+            tmpTexCoord01[0] = fmodf(pTexCoord01[0], 1.0f);
+            tmpTexCoord01[1] = fmodf(pTexCoord01[1], 1.0f);
+            tmpTexCoord02[0] = fmodf(pTexCoord02[0], 1.0f);
+            tmpTexCoord02[1] = fmodf(pTexCoord02[1], 1.0f);
             int numberFoTexCoords = meshCopy->getNumberOfVertices();
             meshCopy->addTexCoord(tmpTexCoord00);
             meshCopy->addTexCoord(tmpTexCoord01);
