@@ -53,6 +53,9 @@ namespace assembly3d
         private:
             bool checkPointInTri(float* p, float* a, float* b, float* c);
             void generatePoints(Mesh* mesh, std::vector<Point>& points);
+//            void generatePoints(std::vector<unsigned int> triangles,
+//                                std::vector<float> texCoords,
+//                                std::vector<Point>& points);
         };
     }
 }
