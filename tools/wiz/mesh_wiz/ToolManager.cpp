@@ -55,13 +55,13 @@ ToolManager::ToolManager(Mesh* mesh, bool verbose)
 
 ToolManager::~ToolManager()
 {
-    SAFE_DELETE(m_convertTool)
-    SAFE_DELETE(m_transformTool)
-    SAFE_DELETE(m_attributeTool)
-    SAFE_DELETE(m_optimizeTool)
-    SAFE_DELETE(m_frontFaceTool)
-    SAFE_DELETE(m_textureTool)
-    SAFE_DELETE(m_meshTool)
+    SAFE_DELETE(m_convertTool);
+    SAFE_DELETE(m_transformTool);
+    SAFE_DELETE(m_attributeTool);
+    SAFE_DELETE(m_optimizeTool);
+    SAFE_DELETE(m_frontFaceTool);
+    SAFE_DELETE(m_textureTool);
+    SAFE_DELETE(m_meshTool);
 }
 bool ToolManager::convertIndexType(const char* type)
 {

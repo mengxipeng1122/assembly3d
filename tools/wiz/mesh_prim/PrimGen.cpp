@@ -62,7 +62,7 @@ PrimGen::PrimGen(bool generatePositions, bool generateNormals, bool generateTexC
 
 PrimGen::~PrimGen()
 {
-    SAFE_DELETE(m_prim)
+    SAFE_DELETE(m_prim);
 }
 
 void PrimGen::createMesh(Mesh* mesh, int primType, std::vector<float> values)

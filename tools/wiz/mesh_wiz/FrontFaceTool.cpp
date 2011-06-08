@@ -125,7 +125,7 @@ void FrontFaceTool::flip(Mesh* mesh)
 //            verticesInwards.push_back(i);
 //        }
 //    }
-//    SAFE_DELETE(mesh2)
+//    SAFE_DELETE(mesh2);
 
 //    strStr << verticesOutwards.size() << " outward vertices.\n";
 //    strStr << verticesInwards.size() << " inward vertices.\n";
@@ -292,7 +292,7 @@ bool FrontFaceTool::isConsistent(Mesh *mesh, std::vector<int>& verticesOutwards,
             verticesInwards.push_back(i);
         }
     }
-    SAFE_DELETE(mesh2)
+    SAFE_DELETE(mesh2);
 
     if(verticesOutwards.empty() || verticesInwards.empty())
     {

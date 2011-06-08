@@ -34,6 +34,7 @@
 #include "MeshWizIncludes.h"
 #include "BakeTool.h"
 #include "KDTree.h"
+#include <math.h>
 
 #define DOT2(v1,v2) (v1[0]*v2[0]+v1[1]*v2[1])
 #define DOT3(v1,v2) (v1[0]*v2[0]+v1[1]*v2[1]+v1[2]*v2[2])
@@ -92,26 +93,65 @@ int BakeTool::checkUVOverlapping(Mesh *mesh)
 //    }
 
 
+    Mesh* meshCopy = new Mesh(*mesh);
+
+    for(int i = 0; i < meshCopy->getNumberOfTriangles(); ++i)
+    {
+        const unsigned int* triangle = meshCopy->getTriangle(i);
+
+        float* pTexCoord00 = meshCopy->getTexCoord(triangle[0]);
+        float* pTexCoord01 = meshCopy->getTexCoord(triangle[1]);
+        float* pTexCoord02 = meshCopy->getTexCoord(triangle[2]);
+
+//        Vertex* vert = &mesh->getVertex(i);
+        if(pTexCoord00[0] > 1.0f || pTexCoord00[0] < 0.0f ||
+           pTexCoord00[1] > 1.0f || pTexCoord00[1] < 0.0f ||
+           pTexCoord01[0] > 1.0f || pTexCoord01[0] < 0.0f ||
+           pTexCoord01[1] > 1.0f || pTexCoord01[1] < 0.0f ||
+           pTexCoord02[0] > 1.0f || pTexCoord02[0] < 0.0f ||
+           pTexCoord02[1] > 1.0f || pTexCoord02[1] < 0.0f)
+        {
+            float tmpTexCoord00[2] = {0.0f, 0.0f};
+            float tmpTexCoord01[2] = {0.0f, 0.0f};
+            float tmpTexCoord02[2] = {0.0f, 0.0f};
+            double intpart = 1.0;
+            tmpTexCoord00[0] = (float)modf(pTexCoord00[0], &intpart);
+            tmpTexCoord00[1] = (float)modf(pTexCoord00[1], &intpart);
+            tmpTexCoord01[0] = (float)modf(pTexCoord01[0], &intpart);
+            tmpTexCoord01[1] = (float)modf(pTexCoord01[1], &intpart);
+            tmpTexCoord02[0] = (float)modf(pTexCoord02[0], &intpart);
+            tmpTexCoord02[1] = (float)modf(pTexCoord02[1], &intpart);
+            int numberFoTexCoords = meshCopy->getNumberOfVertices();
+            meshCopy->addTexCoord(tmpTexCoord00);
+            meshCopy->addTexCoord(tmpTexCoord01);
+            meshCopy->addTexCoord(tmpTexCoord02);
+            meshCopy->addIndex(numberFoTexCoords);
+            meshCopy->addIndex(numberFoTexCoords+1);
+            meshCopy->addIndex(numberFoTexCoords+2);
+        }
+    }
+
     std::vector<Point> points;
-    generatePoints(mesh, points);
+    generatePoints(meshCopy, points);
+
     KDTree<> kdtree;
     kdtree.generate(points);
 
-    for(int i = 0; i < mesh->getNumberOfTriangles(); ++i)
+    for(int i = 0; i < meshCopy->getNumberOfTriangles(); ++i)
     {
 //        const unsigned int* triangle = mesh->getTriangle(i);
-        float* pTexCoord00 = mesh->getTexCoord(points[i].triangle[0]);
-        float* pTexCoord01 = mesh->getTexCoord(points[i].triangle[1]);
-        float* pTexCoord02 = mesh->getTexCoord(points[i].triangle[2]);
+        float* pTexCoord00 = meshCopy->getTexCoord(points[i].triangle[0]);
+        float* pTexCoord01 = meshCopy->getTexCoord(points[i].triangle[1]);
+        float* pTexCoord02 = meshCopy->getTexCoord(points[i].triangle[2]);
 
         std::vector<int> indices;
-        int numFound = kdtree.nearestQuery(points[i], 10, indices);
+        int numFound = kdtree.nearestQuery(points[i], 100, indices);
         for(int j = 0; j < numFound; ++j)
         {
 
             for(unsigned int k = 0; k < 3; ++k)
             {
-                float* pTexCoord2 = mesh->getTexCoord(points[indices[j]].triangle[k]);
+                float* pTexCoord2 = meshCopy->getTexCoord(points[indices[j]].triangle[k]);
                 if(checkPointInTri(pTexCoord2, pTexCoord00, pTexCoord01, pTexCoord02))
                 {
                     numOverlaps++;
@@ -139,6 +179,8 @@ int BakeTool::checkUVOverlapping(Mesh *mesh)
 //        }
 //    }
     }
+    SAFE_DELETE(meshCopy);
+
     return numOverlaps;
 }
 
@@ -176,6 +218,29 @@ bool BakeTool::checkPointInTri(float* p, float* a, float* b, float* c)
     else
         return false;
 }
+//void BakeTool::generatePoints(std::vector<unsigned int> triangles,
+//                              std::vector<float> texCoords,
+//                              std::vector<Point>& points)
+//{
+//    points.clear();
+//    for(int i = 0; i < triangles.size()/3; ++i)
+//    {
+//        const unsigned int* triangle = &triangles(i*3);
+//        float* pTexCoord0 = mesh->getTexCoord(triangle[0]);
+//        float* pTexCoord1 = mesh->getTexCoord(triangle[1]);
+//        float* pTexCoord2 = mesh->getTexCoord(triangle[2]);
+
+//        float centerX = (pTexCoord0[0] + pTexCoord1[0] + pTexCoord2[0]) / 3;
+//        float centerY = (pTexCoord0[1] + pTexCoord1[1] + pTexCoord2[1]) / 3;
+//        Point center(centerX, centerY, 0.0f);
+//        center.triangle[0] = triangle[0];
+//        center.triangle[1] = triangle[1];
+//        center.triangle[2] = triangle[2];
+
+//        points.push_back(center);
+//    }
+
+//}
 
 void BakeTool::generatePoints(assembly3d::Mesh *mesh, std::vector<Point>& points)
 {

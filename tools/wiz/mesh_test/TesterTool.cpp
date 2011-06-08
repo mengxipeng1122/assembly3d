@@ -345,14 +345,14 @@ void TesterTool::clear(vector<AttributeT>& attribs,
 {
     for(unsigned int i = 0; i < attribs.size(); ++i)
     {
-        SAFE_DELETE_ARRAY(attribs[i].name)
-        SAFE_DELETE_ARRAY(attribs[i].values)
+        SAFE_DELETE_ARRAY(attribs[i].name);
+        SAFE_DELETE_ARRAY(attribs[i].values);
     }
     for(unsigned int i = 0; i < groups.size(); ++i)
     {
-        SAFE_DELETE_ARRAY(groups[i].type)
-        SAFE_DELETE_ARRAY(groups[i].name)
-        SAFE_DELETE_ARRAY(groups[i].bytes)
+        SAFE_DELETE_ARRAY(groups[i].type);
+        SAFE_DELETE_ARRAY(groups[i].name);
+        SAFE_DELETE_ARRAY(groups[i].bytes);
     }
 }
 
