@@ -53,9 +53,9 @@ TransformTool::~TransformTool()
 void TransformTool::translate(Mesh::Attribute *attribute, float tx, float ty,
                               float tz, bool inverseTranspose)
 {
-    float matrix[3][4] = {{0.0f,0.0f,0.0f,tx},
-                         {0.0f,0.0f,0.0f,ty},
-                         {0.0f,0.0f,0.0f,tz}};
+    float matrix[3][4] = {{1.0f,0.0f,0.0f,tx},
+                         {0.0f,1.0f,0.0f,ty},
+                         {0.0f,0.0f,1.0f,tz}};
 
     if(inverseTranspose)
     {
