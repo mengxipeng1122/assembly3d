@@ -842,38 +842,49 @@ void Mesh::generateTangents()
 Mesh::Attribute Mesh::getAttribute(Mesh::AttributeType type)
 {
     Mesh::Attribute attribute;
+	int idx = -1;
     switch(type)
     {
-    case Mesh::POSITION:
-        attribute.data = getPositionsPointer();
-        attribute.count = static_cast<int>(m_positions.size());
-        attribute.size = 3;
-        break;
-    case Mesh::NORMAL:
-        attribute.data = getNormalsPointer();
-        attribute.count = static_cast<int>(m_normals.size());
-        attribute.size = 3;
-        break;
-    case Mesh::TEXCOORD:
-        attribute.data = getTexCoordsPointer();
-        attribute.count = static_cast<int>(m_texCoords.size());
-        attribute.size = 2;
-        break;
-    case Mesh::TANGENT:
-        attribute.data = getTangentsPointer();
-        attribute.count = static_cast<int>(m_tangents.size());
-        attribute.size = 3;
-        break;
-    case Mesh::BITANGENT:
-        attribute.data = getBitangentsPointer();
-        attribute.count = static_cast<int>(m_bitangents.size());
-        attribute.size = 3;
-        break;
-    default:
-        attribute.data = 0;
-        attribute.count = 0;
-        attribute.size = 0;
-        break;
+		case Mesh::POSITION:
+			attribute.data = getPositionsPointer();
+			attribute.count = static_cast<int>(m_positions.size());
+			idx = getAttributeIndexWithName("POSITION");
+			attribute.size = m_format.attributeSize[idx];
+			attribute.type = Mesh::POSITION;
+			break;
+		case Mesh::NORMAL:
+			attribute.data = getNormalsPointer();
+			attribute.count = static_cast<int>(m_normals.size());
+			idx = getAttributeIndexWithName("NORMAL");
+			attribute.size = m_format.attributeSize[idx];
+			attribute.type = Mesh::NORMAL;
+			break;
+		case Mesh::TEXCOORD:
+			attribute.data = getTexCoordsPointer();
+			attribute.count = static_cast<int>(m_texCoords.size());
+			idx = getAttributeIndexWithName("TEXCOORD");
+			attribute.size = m_format.attributeSize[idx];
+			attribute.type = Mesh::TEXCOORD;
+			break;
+		case Mesh::TANGENT:
+			attribute.data = getTangentsPointer();
+			attribute.count = static_cast<int>(m_tangents.size());
+			idx = getAttributeIndexWithName("TANGENT");
+			attribute.size = m_format.attributeSize[idx];
+			attribute.type = Mesh::TANGENT;
+			break;
+		case Mesh::BITANGENT:
+			attribute.data = getBitangentsPointer();
+			attribute.count = static_cast<int>(m_bitangents.size());
+			idx = getAttributeIndexWithName("BITANGENT");
+			attribute.size = m_format.attributeSize[idx];
+			attribute.type = Mesh::BITANGENT;
+			break;
+		default:
+			attribute.data = 0;
+			attribute.count = 0;
+			attribute.size = 0;
+			break;
     }
 
     return attribute;

@@ -124,7 +124,6 @@ namespace assembly3d
              *
              * @param vector[] A vector to normalize.
              */
-            static void normalize(float vector[3]);
             static void normalize(float* vector, int size);
 
         protected:
@@ -136,10 +135,10 @@ namespace assembly3d
              * @param matrix[][] Transformation matrix.
              * @param inverseTransposedMatrix[][] Inverse transposed matrix.
              */
-            void multiplyVertexWithTransformMatrix(float* pos, float* normal, float* tangent,
-                                                   float* bitangent, float matrix[3][4],
-                                                   float inverseTransposedMatrix[3][3]);
-            void transform(Mesh::Attribute* attribute, float matrix[3][4], bool shouldNormalize);
+//            void multiplyVertexWithTransformMatrix(float* pos, float* normal, float* tangent,
+//                                                   float* bitangent, float matrix[3][4],
+//                                                   float inverseTransposedMatrix[3][3]);
+            void transform(Mesh::Attribute* attribute, float matrix[3][4]);
         };
     }
 }

@@ -272,7 +272,7 @@ bool FrontFaceTool::isConsistent(Mesh *mesh, std::vector<int>& verticesOutwards,
                            pNormal1[1],
                            pNormal1[2]};
 
-        TransformTool::normalize(normal);
+        TransformTool::normalize(normal, 3);
 
 //        float dotVec1Vec2 =  normal[0]*v2->normal[0] +
 //                             normal[1]*v2->normal[1] +
