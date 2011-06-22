@@ -70,12 +70,40 @@ namespace assembly3d
             bool isBinary;
         };
 
-        struct Attribute
+        class Attribute
         {
+		public:
             float* data;
             int count;
             int size;
             AttributeType type;
+			
+			void get(unsigned int index, float* outElem)
+			{
+				float* d = &data[index*size];
+				for(int i=0; i<size; i++)
+				{
+					outElem[i] = d[i];
+				}
+				for(int i=size; i<3; i++)
+				{
+					outElem[i] = 0;            	
+				}
+				if(size < 4)
+				{
+					outElem[3] = 1;
+				}            	
+			}
+								
+			void set(unsigned int index, float* outElem)            
+			{
+				float* d = &data[index*size];
+				for(int i=0; i<size; i++)
+				{
+					d[i] = outElem[i];
+				}            
+			}
+
         };
 
         struct Group
@@ -499,19 +527,19 @@ namespace assembly3d
     { x = m_extent[0]; y = m_extent[1]; z = m_extent[2]; }
 
     inline float* Mesh::getPosition(unsigned int index)
-    { return &m_positions[index * 3]; }
+    { return &m_positions[index * 4]; }
 
     inline float* Mesh::getNormal(unsigned int index)
-    { return &m_normals[index * 3]; }
+    { return &m_normals[index * 4]; }
 
     inline float* Mesh::getTexCoord(unsigned int index)
-    { return &m_texCoords[index * 2]; }
+    { return &m_texCoords[index * 4]; }
 
     inline float* Mesh::getTangent(unsigned int index)
-    { return &m_tangents[index * 3]; }
+    { return &m_tangents[index * 4]; }
 
     inline float* Mesh::getBitangent(unsigned int index)
-    { return &m_bitangents[index * 3]; }
+    { return &m_bitangents[index * 4]; }
 
     inline Mesh::Group& Mesh::getGroup(unsigned int index)
     { return m_groups[index]; }
