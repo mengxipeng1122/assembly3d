@@ -490,7 +490,8 @@ bool ToolManager::checkFrontFaceConsistenty(int& numOutwards, int& numInwards)
 
 int ToolManager::checkBakeable()
 {
-    return m_textureTool->isInBounds(m_mesh);
+	Mesh::Attribute attrib = m_mesh->getAttribute(Mesh::TEXCOORD);
+    return m_textureTool->isInBounds(&attrib, m_mesh->getNumberOfVertices());
 }
 
 int ToolManager::checkUVOverlapping()

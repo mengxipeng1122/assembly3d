@@ -47,7 +47,7 @@ namespace assembly3d
         public:
             BakeTool();
 
-            int isInBounds(Mesh* mesh);
+            int isInBounds(Mesh::Attribute* texCoords, int numVertices);
 
             int checkUVOverlapping(Mesh* mesh);
         private:
