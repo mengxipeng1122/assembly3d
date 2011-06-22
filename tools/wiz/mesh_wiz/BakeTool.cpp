@@ -46,13 +46,14 @@ BakeTool::BakeTool()
 {
 }
 
-int BakeTool::isInBounds(Mesh *mesh)
+int BakeTool::isInBounds(Mesh::Attribute* texCoords, int numVertices)
 {
     int numUnbakable = 0;
-    for(int i = 0; i < mesh->getNumberOfVertices(); ++i)
+    for(int i = 0; i < numVertices; ++i)
     {
-//        Vertex* vert = &mesh->getVertex(i);
-        float* pTexCoord = mesh->getTexCoord(i);
+        float pTexCoord[4] = {0.0f};
+		texCoords->get(i, pTexCoord);
+
         if(pTexCoord[0] > 1.0f ||
            pTexCoord[0] < 0.0f ||
            pTexCoord[1] > 1.0f ||

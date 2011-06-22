@@ -148,17 +148,33 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
 
             for(int i = startLoop; i < endLoop; ++i)
             {
-                float px = 0.0f;
-                float py = 0.0f;
-                float pz = 0.0f;
-
-                fin.read((char *)(&px), sizeof(px));
-                fin.read((char *)(&py), sizeof(py));
-                fin.read((char *)(&pz), sizeof(pz));
-
-                verts.push_back(px);
-                verts.push_back(py);
-                verts.push_back(pz);
+//                float px = 0.0f;
+//                float py = 0.0f;
+//                float pz = 0.0f;
+//
+//                fin.read((char *)(&px), sizeof(px));
+//                fin.read((char *)(&py), sizeof(py));
+//                fin.read((char *)(&pz), sizeof(pz));
+//
+//                verts.push_back(px);
+//                verts.push_back(py);
+//                verts.push_back(pz);
+				
+				for(int j=0; j<format.attributeSize[idx]; ++j)
+				{
+					float x = 0.0f;
+					fin.read((char *)(&x), sizeof(x));
+					verts.push_back(x);
+					
+				}
+				for(int j=format.attributeSize[idx]; j<3; ++j)
+				{
+					verts.push_back(0.0f);           	
+				}
+				if(format.attributeSize[idx] < 4)
+				{
+					verts.push_back(1.0f);
+				}       
             }
         }
         idx = mesh->getAttributeIndexWithName("NORMAL");
@@ -170,17 +186,34 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
             endLoop = numVertices*(idx+1);
             for(int i = startLoop; i < endLoop; ++i)
             {
-                float nx = 0.0f;
-                float ny = 0.0f;
-                float nz = 0.0f;
-
-                fin.read((char *)(&nx), sizeof(nx));
-                fin.read((char *)(&ny), sizeof(ny));
-                fin.read((char *)(&nz), sizeof(nz));
-
-                normals.push_back(nx);
-                normals.push_back(ny);
-                normals.push_back(nz);
+//                float nx = 0.0f;
+//                float ny = 0.0f;
+//                float nz = 0.0f;
+//
+//                fin.read((char *)(&nx), sizeof(nx));
+//                fin.read((char *)(&ny), sizeof(ny));
+//                fin.read((char *)(&nz), sizeof(nz));
+//
+//                normals.push_back(nx);
+//                normals.push_back(ny);
+//                normals.push_back(nz);
+				
+				for(int j=0; j<format.attributeSize[idx]; ++j)
+				{
+					float n = 0.0f;
+					fin.read((char *)(&n), sizeof(n));
+					normals.push_back(n);
+					
+				}
+				for(int j=format.attributeSize[idx]; j<3; ++j)
+				{
+					normals.push_back(0.0f);           	
+				}
+				if(format.attributeSize[idx] < 4)
+				{
+					normals.push_back(1.0f);
+				}       
+				
             }
         }
         idx = mesh->getAttributeIndexWithName("TEXCOORD");
@@ -192,14 +225,31 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
             endLoop = numVertices*(idx+1);
             for(int i = startLoop; i < endLoop; ++i)
             {
-                float tx = 0.0f;
-                float ty = 0.0f;
-
-                fin.read((char *)(&tx), sizeof(tx));
-                fin.read((char *)(&ty), sizeof(ty));
-
-                texCoords.push_back(tx);
-                texCoords.push_back(ty);
+//                float tx = 0.0f;
+//                float ty = 0.0f;
+//
+//                fin.read((char *)(&tx), sizeof(tx));
+//                fin.read((char *)(&ty), sizeof(ty));
+//
+//                texCoords.push_back(tx);
+//                texCoords.push_back(ty);
+				
+				for(int j=0; j<format.attributeSize[idx]; ++j)
+				{
+					float t = 0.0f;
+					fin.read((char *)(&t), sizeof(t));
+					texCoords.push_back(t);
+					
+				}
+				for(int j=format.attributeSize[idx]; j<3; ++j)
+				{
+					texCoords.push_back(0.0f);           	
+				}
+				if(format.attributeSize[idx] < 4)
+				{
+					texCoords.push_back(1.0f);
+				}       
+				
             }
         }
         idx = mesh->getAttributeIndexWithName("TANGENT");
@@ -211,17 +261,33 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
             endLoop = numVertices*(idx+1);
             for(int i = startLoop; i < endLoop; ++i)
             {
-                float tanx = 0.0f;
-                float tany = 0.0f;
-                float tanz = 0.0f;
-
-                fin.read((char *)(&tanx), sizeof(tanx));
-                fin.read((char *)(&tany), sizeof(tany));
-                fin.read((char *)(&tanz), sizeof(tanz));
-
-                tangents.push_back(tanx);
-                tangents.push_back(tany);
-                tangents.push_back(tanz);
+//                float tanx = 0.0f;
+//                float tany = 0.0f;
+//                float tanz = 0.0f;
+//
+//                fin.read((char *)(&tanx), sizeof(tanx));
+//                fin.read((char *)(&tany), sizeof(tany));
+//                fin.read((char *)(&tanz), sizeof(tanz));
+//
+//                tangents.push_back(tanx);
+//                tangents.push_back(tany);
+//                tangents.push_back(tanz);
+				for(int j=0; j<format.attributeSize[idx]; ++j)
+				{
+					float tan = 0.0f;
+					fin.read((char *)(&tan), sizeof(tan));
+					tangents.push_back(tan);
+					
+				}
+				for(int j=format.attributeSize[idx]; j<3; ++j)
+				{
+					tangents.push_back(0.0f);           	
+				}
+				if(format.attributeSize[idx] < 4)
+				{
+					tangents.push_back(1.0f);
+				}       
+				
             }
         }
         idx = mesh->getAttributeIndexWithName("BITANGENT");
@@ -233,17 +299,33 @@ bool MeshIO::load(Mesh* mesh, const char* file, const char* binaryFile)
             endLoop = numVertices*(idx+1);
             for(int i = startLoop; i < endLoop; ++i)
             {
-                float btanx = 0.0f;
-                float btany = 0.0f;
-                float btanz = 0.0f;
-
-                fin.read((char *)(&btanx), sizeof(btanx));
-                fin.read((char *)(&btany), sizeof(btany));
-                fin.read((char *)(&btanz), sizeof(btanz));
-
-                bitangents.push_back(btanx);
-                bitangents.push_back(btany);
-                bitangents.push_back(btanz);
+//                float btanx = 0.0f;
+//                float btany = 0.0f;
+//                float btanz = 0.0f;
+//
+//                fin.read((char *)(&btanx), sizeof(btanx));
+//                fin.read((char *)(&btany), sizeof(btany));
+//                fin.read((char *)(&btanz), sizeof(btanz));
+//
+//                bitangents.push_back(btanx);
+//                bitangents.push_back(btany);
+//                bitangents.push_back(btanz);
+				for(int j=0; j<format.attributeSize[idx]; ++j)
+				{
+					float btan = 0.0f;
+					fin.read((char *)(&btan), sizeof(btan));
+					bitangents.push_back(btan);
+					
+				}
+				for(int j=format.attributeSize[idx]; j<3; ++j)
+				{
+					bitangents.push_back(0.0f);           	
+				}
+				if(format.attributeSize[idx] < 4)
+				{
+					bitangents.push_back(1.0f);
+				}       
+				
             }
         }
         if(format.indexType.compare("UNSIGNED_INT") == 0)
