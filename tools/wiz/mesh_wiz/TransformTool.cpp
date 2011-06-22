@@ -53,22 +53,9 @@ TransformTool::~TransformTool()
 void TransformTool::translate(Mesh::Attribute *attribute, float tx, float ty,
                               float tz, bool inverseTranspose)
 {
-    float matrix[3][4] = {{0.0f,0.0f,0.0f,0.0f},
-                         {0.0f,0.0f,0.0f,0.0f},
-                         {0.0f,0.0f,0.0f,0.0f}};
-
-    matrix[0][0] = 1.0f;
-    matrix[0][1] = 0.0f;
-    matrix[0][2] = 0.0f;
-    matrix[0][3] = tx;
-    matrix[1][0] = 0.0f;
-    matrix[1][1] = 1.0f;
-    matrix[1][2] = 0.0f;
-    matrix[1][3] = ty;
-    matrix[2][0] = 0.0f;
-    matrix[2][1] = 0.0f;
-    matrix[2][2] = 1.0f;
-    matrix[2][3] = tz;
+    float matrix[3][4] = {{0.0f,0.0f,0.0f,tx},
+                         {0.0f,0.0f,0.0f,ty},
+                         {0.0f,0.0f,0.0f,tz}};
 
     if(inverseTranspose)
     {
@@ -93,26 +80,9 @@ void TransformTool::rotate(Mesh::Attribute *attribute, float rangle, float rx,
     float c = cosf(2.0f*PIf*rangle/360.0f);
     float t = 1.0f - c;
 
-//    float rMatrix[3][4] = {{rx*rx*t + c,      rx*ry*t - rz*s,   rx*rz*t + ry*s,   0.0f},
-//                           {rx*rz*t + ry*s,   ry*ry*t + c,      ry*rz*t - rx*s,   0.0f},
-//                           {rz*rx*t - ry*s,   rz*ry*t + rx*s,   rz*rz*t + c,      0.0f}};
-
-    float matrix[3][4] = {{0.0f,0.0f,0.0f,0.0f},
-                         {0.0f,0.0f,0.0f,0.0f},
-                         {0.0f,0.0f,0.0f,0.0f}};
-
-    matrix[0][0] = rx*rx*t + c;
-    matrix[0][1] = rx*ry*t - rz*s;
-    matrix[0][2] = rx*rz*t + ry*s;
-    matrix[0][3] = 0.0f;
-    matrix[1][0] = rx*rz*t + ry*s;
-    matrix[1][1] = ry*ry*t + c;
-    matrix[1][2] = ry*rz*t - rx*s;
-    matrix[1][3] = 0.0f;
-    matrix[2][0] = rz*rx*t - ry*s;
-    matrix[2][1] = rz*ry*t + rx*s;
-    matrix[2][2] = rz*rz*t + c;
-    matrix[2][3] = 0.0f;
+    float matrix[3][4] = {{rx*rx*t + c, rx*ry*t - rz*s, rx*rz*t + ry*s, 0.0f},
+                           {rx*rz*t + ry*s, ry*ry*t + c, ry*rz*t - rx*s, 0.0f},
+                           {rz*rx*t - ry*s, rz*ry*t + rx*s, rz*rz*t + c, 0.0f}};
 
     transform(attribute, matrix);
 }
@@ -120,22 +90,9 @@ void TransformTool::rotate(Mesh::Attribute *attribute, float rangle, float rx,
 void TransformTool::scale(Mesh::Attribute* attribute, float sx, float sy,
                           float sz, bool inverseTranspose)
 {
-    float matrix[3][4] = {{0.0f,0.0f,0.0f,0.0f},
-                         {0.0f,0.0f,0.0f,0.0f},
-                         {0.0f,0.0f,0.0f,0.0f}};
-
-    matrix[0][0] = sx;
-    matrix[0][1] = 0.0f;
-    matrix[0][2] = 0.0f;
-    matrix[0][3] = 0.0f;
-    matrix[1][0] = 0.0f;
-    matrix[1][1] = sy;
-    matrix[1][2] = 0.0f;
-    matrix[1][3] = 0.0f;
-    matrix[2][0] = 0.0f;
-    matrix[2][1] = 0.0f;
-    matrix[2][2] = sz;
-    matrix[2][3] = 0.0f;
+    float matrix[3][4] = {{sx,0.0f,0.0f,0.0f},
+                         {0.0f,sy,0.0f,0.0f},
+                         {0.0f,0.0f,sz,0.0f}};
 
     if(inverseTranspose)
     {
@@ -207,37 +164,6 @@ void TransformTool::center(Mesh::Attribute* attribute, int ax, int ay, int az,
     translate(attribute, tX, tY, tZ, inverseTranspose);
 }
 
-//void TransformTool::multiplyVertexWithTransformMatrix(float* pos, float* normal, float* tangent,
-//                                                      float* bitangent, float matrix[3][4],
-//                                                      float inverseTransposedMatrix[3][3])
-//{
-//    float x,y,z;
-//    x = pos[0]; y = pos[1]; z = pos[2];
-//    pos[0] = x*matrix[0][0] + y*matrix[0][1] + z*matrix[0][2] + matrix[0][3];
-//    pos[1] = x*matrix[1][0] + y*matrix[1][1] + z*matrix[1][2] + matrix[1][3];
-//    pos[2] = x*matrix[2][0] + y*matrix[2][1] + z*matrix[2][2] + matrix[2][3];
-//
-//    //normale, tangenten, bitangen inverse transpose
-//    x = normal[0]; y = normal[1]; z = normal[2];
-//    normal[0] = x*inverseTransposedMatrix[0][0] + y*inverseTransposedMatrix[0][1] + z*inverseTransposedMatrix[0][2];
-//    normal[1] = x*inverseTransposedMatrix[1][0] + y*inverseTransposedMatrix[1][1] + z*inverseTransposedMatrix[1][2];
-//    normal[2] = x*inverseTransposedMatrix[2][0] + y*inverseTransposedMatrix[2][1] + z*inverseTransposedMatrix[2][2];
-//    normalize(normal);
-//
-//    x = bitangent[0]; y = bitangent[1]; z = bitangent[2];
-//    bitangent[0] = x*inverseTransposedMatrix[0][0] + y*inverseTransposedMatrix[0][1] + z*inverseTransposedMatrix[0][2];
-//    bitangent[1] = x*inverseTransposedMatrix[1][0] + y*inverseTransposedMatrix[1][1] + z*inverseTransposedMatrix[1][2];
-//    bitangent[2] = x*inverseTransposedMatrix[2][0] + y*inverseTransposedMatrix[2][1] + z*inverseTransposedMatrix[2][2];
-//    normalize(bitangent);
-//
-//    x = tangent[0]; y = tangent[1]; z = tangent[2];
-//    tangent[0] = x*inverseTransposedMatrix[0][0] + y*inverseTransposedMatrix[0][1] + z*inverseTransposedMatrix[0][2];
-//    tangent[1] = x*inverseTransposedMatrix[1][0] + y*inverseTransposedMatrix[1][1] + z*inverseTransposedMatrix[1][2];
-//    tangent[2] = x*inverseTransposedMatrix[2][0] + y*inverseTransposedMatrix[2][1] + z*inverseTransposedMatrix[2][2];
-//    normalize(tangent);
-//
-//}
-
 void TransformTool::normalize(float* vector, int size)
 {
     float length = 0.0f;
@@ -259,63 +185,19 @@ void TransformTool::normalize(float* vector, int size)
     }
 }
 
-//void TransformTool::transform(Mesh::Attribute *attribute, float matrix[3][4], bool shouldNormalize)
-//{
-//    float* data = attribute->data;
-//    int aSize = attribute->size;
-//
-//    // iterating over vertices
-//    for(int i = 0; i < attribute->count/aSize; ++i)
-//    {
-//        // iterating over one vertex with aSize
-//        for(int j = 0; j < aSize; ++j)
-//        {
-//            //calculating one vertex value
-//            float valueTmp = 0.0f;
-//            for(int k = 0; k < aSize; ++k)
-//            {
-//                if(k < aSize)
-//                    valueTmp += data[i*aSize + k]*matrix[j][k];
-//            }
-//            // assigning translation
-//            valueTmp += matrix[j][3];
-//            data[i*aSize + j] = valueTmp;
-//
-//            if(attribute->type != Mesh::POSITION || attribute->type != Mesh::TEXCOORD)
-//                normalize(&data[i*aSize], j);
-//        }
-//
-//    }
-//}
-
-void printMatrix(float mat[3][4])
-{
-	for (int i = 0; i < 3; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			std::cout << mat[i][j] << " ";
-		}
-		std::cout << std::endl;
-	}
-}
 
 void TransformTool::transform(Mesh::Attribute *attribute, float matrix[3][4])
 {
     float* data = attribute->data;
-//    int aSize = attribute->size;
 	
-	//printMatrix(matrix);
-	std::cout << attribute->count << std::endl;
     // iterating over vertices
     for(int i = 0; i < attribute->count/4; ++i)
     {
-		
 		float x,y,z,w;
 		x = data[i*4+0]; y = data[i*4+1]; z = data[i*4+2], w = data[i*4+3];
-		data[i*4+0] = x*matrix[0][0] + y*matrix[0][1] + z*matrix[0][2] + matrix[0][3];
-		data[i*4+1] = x*matrix[1][0] + y*matrix[1][1] + z*matrix[1][2] + matrix[1][3];
-		data[i*4+2] = x*matrix[2][0] + y*matrix[2][1] + z*matrix[2][2] + matrix[2][3];
-		
-		
+		data[i*4+0] = x*matrix[0][0] + y*matrix[0][1] + z*matrix[0][2] + w*matrix[0][3];
+		data[i*4+1] = x*matrix[1][0] + y*matrix[1][1] + z*matrix[1][2] + w*matrix[1][3];
+		data[i*4+2] = x*matrix[2][0] + y*matrix[2][1] + z*matrix[2][2] + w*matrix[2][3];
     }
 	
 	if(attribute->type == Mesh::NORMAL ||
@@ -324,7 +206,7 @@ void TransformTool::transform(Mesh::Attribute *attribute, float matrix[3][4])
 	{
 		for(int i = 0; i < attribute->count/4; ++i)
 		{
-			normalize(&data[i*4], 3);
+			normalize(&data[i*4], attribute->size);
 		}
 	}
 	
