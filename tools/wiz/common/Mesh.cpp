@@ -808,37 +808,6 @@ void Mesh::generateTangents()
     this->hasBitangents(true);
 }
 
-//void Mesh::setAttributes()
-//{
-//    m_attributes.clear();
-//    Mesh::Attribute position;
-//    position.data = getPositionsPointer();
-//    position.count = static_cast<int>(m_positions.size());
-//    position.size = 3;
-//    m_attributes.push_back(position);
-//    Mesh::Attribute normal;
-//    normal.data = getNormalsPointer();
-//    normal.count = static_cast<int>(m_normals.size());
-//    normal.size = 3;
-//    m_attributes.push_back(normal);
-//    Mesh::Attribute texCoord;
-//    texCoord.data = getTexCoordsPointer();
-//    texCoord.count = static_cast<int>(m_texCoords.size());
-//    texCoord.size = 2;
-//    m_attributes.push_back(texCoord);
-//    Mesh::Attribute tangents;
-//    tangents.data = getTangentsPointer();
-//    tangents.count = static_cast<int>(m_tangents.size());
-//    tangents.size = 3;
-//    m_attributes.push_back(tangents);
-//    Mesh::Attribute bitangents;
-//    bitangents.data = getBitangentsPointer();
-//    bitangents.count = static_cast<int>(m_bitangents.size());
-//    bitangents.size = 3;
-//    m_attributes.push_back(bitangents);
-
-//}
-
 Mesh::Attribute Mesh::getAttribute(Mesh::AttributeType type)
 {
     Mesh::Attribute attribute;
@@ -900,28 +869,3 @@ void assembly3d::Mesh::printAttribute(assembly3d::Mesh::Attribute a)
         std::cout << std::endl;
     }
 }
-
-//void Mesh::addTriangle(unsigned int *triangle)
-//{
-//}
-
-//void Mesh::updateVecs()
-//{
-//    m_positions.clear();
-//    m_normals.clear();
-//    m_texCoords.clear();
-
-//    using namespace std;
-//    for(size_t idx = 0; idx < m_vertices.size(); ++idx)
-//    {
-//        Vertex* vert = &m_vertices[idx];
-//        m_positions.push_back(vert->position[0]);
-//        m_positions.push_back(vert->position[1]);
-//        m_positions.push_back(vert->position[2]);
-//        m_normals.push_back(vert->normal[0]);
-//        m_normals.push_back(vert->normal[1]);
-//        m_normals.push_back(vert->normal[2]);
-//        m_texCoords.push_back(vert->texCoord[0]);
-//        m_texCoords.push_back(vert->texCoord[1]);
-//    }
-//}
