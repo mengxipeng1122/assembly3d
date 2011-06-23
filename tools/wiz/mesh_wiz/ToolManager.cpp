@@ -230,6 +230,116 @@ void ToolManager::scale(float sx, float sy, float sz, bool transformTexCoords)
     }
 }
 
+void ToolManager::remapAxes(const char* newX, const char* newY, const char* newZ)
+{
+	if(m_verboseOutput)
+	{
+		std::cout << "Remapping main axes: ";
+		std::cout << "x -> " << newX << ", ";
+		std::cout << "y -> " << newY << ", ";
+		std::cout << "z -> " << newZ << std::endl;
+	}
+	std::vector<std::string> components;
+	components.push_back(newX);
+	components.push_back(newY);
+	components.push_back(newZ);
+	
+	std::vector<float*> axes;
+	float tmp[3] = {0.0f};
+	axes.push_back(tmp);
+	axes.push_back(tmp);
+	axes.push_back(tmp);
+	
+	float col1[3] = {1.0f, 0.0f, 0.0f};
+	float col2[3] = {0.0f, 1.0f, 0.0f};
+	float col3[3] = {0.0f, 0.0f, 1.0f};
+	
+	bool malformed = false;
+	for (size_t i = 0; i < components.size(); ++i) {
+		std::string component = components[i];
+		char axis;
+		float factor = 1.0f;
+		
+		if (component.size() > 2 || component.empty())
+		{
+			malformed = true;
+			break;
+		}
+		else if (component.size() == 2)
+		{
+			if (component.at(0) == '-')
+			{
+				factor = -1.0f;
+			}
+			else if (component.at(0) != '+')
+			{
+				malformed = true;
+				break;
+			}
+			
+			axis = component.at(1);
+		}
+		else
+		{
+			axis = component.at(0);
+		}
+		
+		if (axis == 'x' || axis == 'X')
+		{
+			axes[i][0] = col1[0] * factor;
+			axes[i][1] = col1[1] * factor;
+			axes[i][2] = col1[2] * factor;
+		}
+		else if (axis == 'y' || axis == 'Y')
+		{
+			axes[i][0] = col2[0] * factor;
+			axes[i][1] = col2[1] * factor;
+			axes[i][2] = col2[2] * factor;
+		}
+		else if (axis == 'z' || axis == 'Z')
+		{
+			axes[i][0] = col3[0] * factor;
+			axes[i][1] = col3[1] * factor;
+			axes[i][2] = col3[2] * factor;
+		}
+		else
+		{
+			malformed = true;
+			break;
+		}
+	}
+	if(malformed == false)
+	{
+		Mesh::Attribute pos = m_mesh->getAttribute(Mesh::POSITION);
+		m_transformTool->remapAxes(&pos, axes[0], axes[1], axes[2]);
+		
+		if(m_mesh->hasNormals())
+		{
+			Mesh::Attribute normal = m_mesh->getAttribute(Mesh::NORMAL);
+			m_transformTool->remapAxes(&normal, axes[0], axes[1], axes[2], true);
+		}
+		if(m_mesh->hasTexCoords())
+		{
+			Mesh::Attribute texCoord = m_mesh->getAttribute(Mesh::TEXCOORD);
+			m_transformTool->remapAxes(&texCoord, axes[0], axes[1], axes[2], true);
+		}
+		if(m_mesh->hasTangents())
+		{
+			Mesh::Attribute tangent = m_mesh->getAttribute(Mesh::TEXCOORD);
+			m_transformTool->remapAxes(&tangent, axes[0], axes[1], axes[2], true);
+		}
+		if(m_mesh->hasBitangents())
+		{
+			Mesh::Attribute bitangent = m_mesh->getAttribute(Mesh::TEXCOORD);
+			m_transformTool->remapAxes(&bitangent, axes[0], axes[1], axes[2], true);
+		}	
+	}
+	else 
+	{
+		std::cout << "unrecognized --axes optio value. skipping..." << std::endl;
+	}
+
+}
 void ToolManager::resize(float rsx, float rsy, float rsz, bool transformTexCoords)
 {
     if(m_verboseOutput) 

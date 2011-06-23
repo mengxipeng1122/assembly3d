@@ -87,7 +87,10 @@ namespace assembly3d
              * @param rz
              */
             void rotate(float rangle, float rx, float ry, float rz, bool transformTexCoords=false);
-            /**
+			
+			void remapAxes(const char* newX, const char* newY, const char* newZ);
+            
+			/**
              * @brief Scales mesh.
              *
              * @param sx

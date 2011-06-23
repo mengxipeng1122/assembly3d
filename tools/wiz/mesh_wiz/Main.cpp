@@ -95,7 +95,9 @@ int main (int argc, char* argv[])
 		TCLAP::SwitchArg textureTransformArg("", "texture-transform",
 											 "Applies transformation only to texture coordinates.");
 		
-		TCLAP::SwitchArg centerAllArg("", "center-all", "Centers mesh to all axis.", false);
+		TCLAP::SwitchArg centerAllArg("", "center-all", "Centers mesh to all axes.", false);
+		
+		TCLAP::ValueArg<std::string> axesArg("", "axes", "Remaps main axes.", false, "", "x/y/z");
 		
 		//---------------------------------------------------------------------------------------------------------
 		// Conversion
@@ -217,6 +219,7 @@ int main (int argc, char* argv[])
 		cmd.add(centerAllArg);
 		cmd.add(centerArg);
 		cmd.add(resizeArg);
+		cmd.add(axesArg);
 		cmd.add(scaleArg);
 		cmd.add(rotateArg);
 		cmd.add(translateArg);
@@ -501,6 +504,17 @@ int main (int argc, char* argv[])
 					toolMgr.resize(axis.c_str(), x, transformTexCoords);
 					modelChanged = true;
 				}
+			}
+		}
+		if(axesArg.isSet())
+		{
+			std::string args = axesArg.getValue();
+			std::vector<std::string> values;
+			values = StringUtils::tokenize(args, "/");
+			if(values.size() == 3)
+			{
+				toolMgr.remapAxes(values[0].c_str(), values[1].c_str(), values[2].c_str());
+				modelChanged = true;
 			}
 		}
 		
