@@ -541,8 +541,8 @@ float* Mesh::getFaceNormals()
     int totalTriangles = this->getNumberOfTriangles();
 
     // Initialize all the vertex normals.
-    m_normalsForComparison.clear();
-    m_normalsForComparison.assign(totalVertices*4, 0.0f);
+    m_faceNormals.clear();
+    m_faceNormals.assign(totalVertices*4, 0.0f);
 	
 	
 
@@ -586,9 +586,9 @@ float* Mesh::getFaceNormals()
 
 
         // Accumulate the normals.
-        float* pNormal0 = &m_normalsForComparison[pTriangle[0]*4];
-        float* pNormal1 = &m_normalsForComparison[pTriangle[1]*4];
-        float* pNormal2 = &m_normalsForComparison[pTriangle[2]*4];
+        float* pNormal0 = &m_faceNormals[pTriangle[0]*4];
+        float* pNormal1 = &m_faceNormals[pTriangle[1]*4];
+        float* pNormal2 = &m_faceNormals[pTriangle[2]*4];
 
         pNormal0[0] += normal[0];
         pNormal0[1] += normal[1];
@@ -608,7 +608,7 @@ float* Mesh::getFaceNormals()
     for (int i = 0; i < totalVertices; ++i)
     {
 //        pVertex0 = &this->getVertex(i);
-        float* pNormal = &m_normalsForComparison[i*4];
+        float* pNormal = &m_faceNormals[i*4];
 
         float tmpLength = sqrtf(pNormal[0] * pNormal[0] +
             pNormal[1] * pNormal[1] + pNormal[2] * pNormal[2]);
@@ -623,7 +623,7 @@ float* Mesh::getFaceNormals()
         pNormal[2] *= length;
     }
 	
-	return &m_normalsForComparison[0];
+	return &m_faceNormals[0];
 }
 
 Mesh::Attribute Mesh::getAttribute(Mesh::AttributeType type)
