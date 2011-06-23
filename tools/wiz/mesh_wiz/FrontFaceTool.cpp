@@ -71,8 +71,6 @@ void FrontFaceTool::flip(Mesh* mesh)
         pNormal[1] = -pNormal[1];
         pNormal[2] = -pNormal[2];
     }
-    if(mesh->hasTangents())
-        mesh->generateTangents();
 }
 
 
@@ -115,8 +113,6 @@ bool FrontFaceTool::makeConsistent(Mesh *mesh, std::string& resultMsg)
             }
             modelChanged = true;
         }
-        if(mesh->hasTangents() && modelChanged)
-            mesh->generateTangents();
     }
     else
     {
@@ -134,14 +130,17 @@ bool FrontFaceTool::isConsistent(Mesh *mesh, std::vector<int>& verticesOutwards,
 {
     bool consistent = false;
 
-    Mesh* mesh2 = new Mesh(*mesh);
-    mesh2->generateNormals();
-
+//    Mesh* mesh2 = new Mesh(*mesh);
+//    mesh2->generateNormals();
+	
+//	float* faceNormals = mesh->getFaceNormals();
+	
     for(int i = 0; i < mesh->getNumberOfVertices(); ++i)
     {
 
         float* pNormal1 = mesh->getNormal(i);
-        float* pNormal2 = mesh2->getNormal(i);
+        float* pNormal2 = &mesh->getFaceNormals()[i*4];
+		
         float normal[3] = {pNormal1[0],
                            pNormal1[1],
                            pNormal1[2]};
@@ -163,7 +162,7 @@ bool FrontFaceTool::isConsistent(Mesh *mesh, std::vector<int>& verticesOutwards,
             verticesInwards.push_back(i);
         }
     }
-    SAFE_DELETE(mesh2);
+//    SAFE_DELETE(mesh2);
 
     if(verticesOutwards.empty() || verticesInwards.empty())
     {

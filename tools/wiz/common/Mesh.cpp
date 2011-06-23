@@ -530,7 +530,7 @@ void Mesh::initializeMeshFormat()
 
 }
 
-void Mesh::generateNormals()
+float* Mesh::getFaceNormals()
 {
     const unsigned int *pTriangle = 0;
     float edge1[3] = {0.0f, 0.0f, 0.0f};
@@ -541,8 +541,10 @@ void Mesh::generateNormals()
     int totalTriangles = this->getNumberOfTriangles();
 
     // Initialize all the vertex normals.
-    m_normals.clear();
-    m_normals.assign(totalVertices*3, 0.0f);
+    m_normalsForComparison.clear();
+    m_normalsForComparison.assign(totalVertices*4, 0.0f);
+	
+	
 
     // Calculate the vertex normals.
     for (int i = 0; i < totalTriangles; ++i)
@@ -584,9 +586,9 @@ void Mesh::generateNormals()
 
 
         // Accumulate the normals.
-        float* pNormal0 = getNormal(pTriangle[0]);
-        float* pNormal1 = getNormal(pTriangle[1]);;
-        float* pNormal2 = getNormal(pTriangle[2]);;
+        float* pNormal0 = &m_normalsForComparison[pTriangle[0]*4];
+        float* pNormal1 = &m_normalsForComparison[pTriangle[1]*4];
+        float* pNormal2 = &m_normalsForComparison[pTriangle[2]*4];
 
         pNormal0[0] += normal[0];
         pNormal0[1] += normal[1];
@@ -606,7 +608,7 @@ void Mesh::generateNormals()
     for (int i = 0; i < totalVertices; ++i)
     {
 //        pVertex0 = &this->getVertex(i);
-        float* pNormal = getNormal(i);
+        float* pNormal = &m_normalsForComparison[i*4];
 
         float tmpLength = sqrtf(pNormal[0] * pNormal[0] +
             pNormal[1] * pNormal[1] + pNormal[2] * pNormal[2]);
@@ -620,192 +622,8 @@ void Mesh::generateNormals()
         pNormal[1] *= length;
         pNormal[2] *= length;
     }
-
-    //this->printData();
-    this->hasNormals(true);
-//    updateVecs();
-}
-
-void Mesh::generateTangents()
-{
-    const unsigned int *pTriangle = 0;
-//    Vertex *pVertex0 = 0;
-//    Vertex *pVertex1 = 0;
-//    Vertex *pVertex2 = 0;
-    float edge1[3] = {0.0f, 0.0f, 0.0f};
-    float edge2[3] = {0.0f, 0.0f, 0.0f};
-    float texEdge1[2] = {0.0f, 0.0f};
-    float texEdge2[2] = {0.0f, 0.0f};
-    float tangent[3] = {0.0f, 0.0f, 0.0f};
-    float bitangent[3] = {0.0f, 0.0f, 0.0f};
-    float det = 0.0f;
-    float nDotT = 0.0f;
-    float bDotB = 0.0f;
-    float length = 0.0f;
-    int totalVertices = this->getNumberOfVertices();
-    int totalTriangles = this->getNumberOfTriangles();
-
-    // Initialize all the vertex tangents and bitangents.
-    m_tangents.clear();
-    m_bitangents.clear();
-    m_tangents.assign(totalVertices*3, 0.0f);
-    m_bitangents.assign(totalVertices*3, 0.0f);
-
-    // Calculate the vertex tangents and bitangents.
-    for (int i = 0; i < totalTriangles; ++i)
-    {
-        pTriangle = this->getTriangle(i);
-//        pVertex0 = &this->getVertex(pTriangle[0]);
-//        pVertex1 = &this->getVertex(pTriangle[1]);
-//        pVertex2 = &this->getVertex(pTriangle[2]);
-
-        // Calculate the triangle face tangent and bitangent.
-        float* pPosition0 = getPosition(pTriangle[0]);
-        float* pPosition1 = getPosition(pTriangle[1]);
-        float* pPosition2 = getPosition(pTriangle[2]);
-
-        edge1[0] = pPosition1[0] - pPosition0[0];
-        edge1[1] = pPosition1[1] - pPosition0[1];
-        edge1[2] = pPosition1[2] - pPosition0[2];
-
-        edge2[0] = pPosition2[0] - pPosition0[0];
-        edge2[1] = pPosition2[1] - pPosition0[1];
-        edge2[2] = pPosition2[2] - pPosition0[2];
-
-        float* pTexCoord0 = getTexCoord(pTriangle[0]);
-        float* pTexCoord1 = getTexCoord(pTriangle[1]);
-        float* pTexCoord2 = getTexCoord(pTriangle[2]);
-
-        texEdge1[0] = pTexCoord1[0] - pTexCoord0[0];
-        texEdge1[1] = pTexCoord1[1] - pTexCoord0[1];
-
-        texEdge2[0] = pTexCoord2[0] - pTexCoord0[0];
-        texEdge2[1] = pTexCoord2[1] - pTexCoord0[1];
-
-        det = texEdge1[0] * texEdge2[1] - texEdge2[0] * texEdge1[1];
-
-        if (fabs(det) < 1e-6f)
-        {
-            tangent[0] = 1.0f;
-            tangent[1] = 0.0f;
-            tangent[2] = 0.0f;
-
-            bitangent[0] = 0.0f;
-            bitangent[1] = 1.0f;
-            bitangent[2] = 0.0f;
-        }
-        else
-        {
-            det = 1.0f / det;
-
-            tangent[0] = (texEdge2[1] * edge1[0] - texEdge1[1] * edge2[0]) * det;
-            tangent[1] = (texEdge2[1] * edge1[1] - texEdge1[1] * edge2[1]) * det;
-            tangent[2] = (texEdge2[1] * edge1[2] - texEdge1[1] * edge2[2]) * det;
-
-            bitangent[0] = (-texEdge2[0] * edge1[0] + texEdge1[0] * edge2[0]) * det;
-            bitangent[1] = (-texEdge2[0] * edge1[1] + texEdge1[0] * edge2[1]) * det;
-            bitangent[2] = (-texEdge2[0] * edge1[2] + texEdge1[0] * edge2[2]) * det;
-        }
-
-        // Accumulate the tangents and bitangents.
-
-        float* pTangent0 = getTangent(pTriangle[0]);
-        float* pTangent1= getTangent(pTriangle[1]);;
-        float* pTangent2 = getTangent(pTriangle[2]);;
-        float* pBitangent0 = getBitangent(pTriangle[0]);
-        float* pBitangent1= getBitangent(pTriangle[1]);;
-        float* pBitangent2 = getBitangent(pTriangle[2]);;
-
-        pTangent0[0] += tangent[0];
-        pTangent0[1] += tangent[1];
-        pTangent0[2] += tangent[2];
-        pBitangent0[0] += bitangent[0];
-        pBitangent0[1] += bitangent[1];
-        pBitangent0[2] += bitangent[2];
-
-        pTangent1[0] += tangent[0];
-        pTangent1[1] += tangent[1];
-        pTangent1[2] += tangent[2];
-        pBitangent1[0] += bitangent[0];
-        pBitangent1[1] += bitangent[1];
-        pBitangent1[2] += bitangent[2];
-
-        pTangent2[0] += tangent[0];
-        pTangent2[1] += tangent[1];
-        pTangent2[2] += tangent[2];
-        pBitangent2[0] += bitangent[0];
-        pBitangent2[1] += bitangent[1];
-        pBitangent2[2] += bitangent[2];
-    }
-
-    // Orthogonalize and normalize the vertex tangents.
-    for (int i = 0; i < totalVertices; ++i)
-    {
-        float* pNormal = getNormal(i);
-        float* pTangent = getTangent(i);
-
-        // Gram-Schmidt orthogonalize tangent with normal.
-
-        nDotT = pNormal[0] * pTangent[0] +
-                pNormal[1] * pTangent[1] +
-                pNormal[2] * pTangent[2];
-
-        pTangent[0] -= pNormal[0] * nDotT;
-        pTangent[1] -= pNormal[1] * nDotT;
-        pTangent[2] -= pNormal[2] * nDotT;
-
-        // Normalize the tangent.
-
-        length = 1.0f / sqrtf(pTangent[0] * pTangent[0] +
-                              pTangent[1] * pTangent[1] +
-                              pTangent[2] * pTangent[2]);
-
-        pTangent[0] *= length;
-        pTangent[1] *= length;
-        pTangent[2] *= length;
-
-        // Calculate the handedness of the local tangent space.
-        // The bitangent vector is the cross product between the triangle face
-        // normal vector and the calculated tangent vector. The resulting
-        // bitangent vector should be the same as the bitangent vector
-        // calculated from the set of linear equations above. If they point in
-        // different directions then we need to invert the cross product
-        // calculated bitangent vector. We store this scalar multiplier in the
-        // tangent vector's 'w' component so that the correct bitangent vector
-        // can be generated in the normal mapping shader's vertex shader.
-        //
-        // Normal maps have a left handed coordinate system with the origin
-        // located at the top left of the normal map texture. The x coordinates
-        // run horizontally from left to right. The y coordinates run
-        // vertically from top to bottom. The z coordinates run out of the
-        // normal map texture towards the viewer. Our handedness calculations
-        // must take this fact into account as well so that the normal mapping
-        // shader's vertex shader will generate the correct bitangent vectors.
-        // Some normal map authoring tools such as Crazybump
-        // (http://www.crazybump.com/) includes options to allow you to control
-        // the orientation of the normal map normal's y-axis.
-
-        bitangent[0] = (pNormal[1] * pTangent[2]) -
-                       (pNormal[2] * pTangent[1]);
-        bitangent[1] = (pNormal[2] * pTangent[0]) -
-                       (pNormal[0] * pTangent[2]);
-        bitangent[2] = (pNormal[0] * pTangent[1]) -
-                       (pNormal[1] * pTangent[0]);
-
-        float* pBitangent = getBitangent(i);
-        bDotB = bitangent[0] * pBitangent[0] +
-                bitangent[1] * pBitangent[1] +
-                bitangent[2] * pBitangent[2];
-
-//        pVertex0->tangent[3] = (bDotB < 0.0f) ? 1.0f : -1.0f;
-
-        pBitangent[0] = bitangent[0];
-        pBitangent[1] = bitangent[1];
-        pBitangent[2] = bitangent[2];
-    }
-
-    this->hasTangents(true);
-    this->hasBitangents(true);
+	
+	return &m_normalsForComparison[0];
 }
 
 Mesh::Attribute Mesh::getAttribute(Mesh::AttributeType type)

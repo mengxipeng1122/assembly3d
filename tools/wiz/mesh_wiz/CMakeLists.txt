@@ -5,7 +5,6 @@ set(A3DTools_INCLUDE ${CMAKE_SOURCE_DIR}/common)
 set(MeshWiz_HEADERS
     MeshWiz.h
     MeshWizIncludes.h
-    AttributeTool.h
     ConvertTool.h
     OptimizeTool.h
     ToolManager.h
@@ -16,7 +15,6 @@ set(MeshWiz_HEADERS
     )
 
 set(MeshWiz_SOURCE
-    AttributeTool.cpp
     ConvertTool.cpp
     OptimizeTool.cpp
     ToolManager.cpp
@@ -51,7 +49,6 @@ endif()
 
 install(FILES
 MeshWiz.h
-AttributeTool.h
 ConvertTool.h
 OptimizeTool.h
 ToolManager.h
