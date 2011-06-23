@@ -120,7 +120,10 @@ namespace assembly3d
 			 * @param size The size of the vector.
              */
             static void normalize(float* vector, int size);
-
+			
+			void remapAxes(Mesh::Attribute* attribute, float matrixCol1[3],
+						   float matrixCol2[3], float matrixCol3[3], 
+						   bool inverseTranspose=false);
         protected:
         private:
             void transform(Mesh::Attribute* attribute, float matrix[3][4]);

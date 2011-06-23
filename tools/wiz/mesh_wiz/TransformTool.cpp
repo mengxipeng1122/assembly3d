@@ -164,6 +164,17 @@ void TransformTool::center(Mesh::Attribute* attribute, int ax, int ay, int az,
     translate(attribute, tX, tY, tZ, inverseTranspose);
 }
 
+void TransformTool::remapAxes(Mesh::Attribute* attribute, float matrixCol1[3],
+							  float matrixCol2[3], float matrixCol3[3], 
+							  bool inverseTranspose)
+{
+    float matrix[3][4] = {{matrixCol1[0],matrixCol2[0],matrixCol3[0],0.0f},
+						  {matrixCol1[1],matrixCol2[1],matrixCol3[1],0.0f},
+						  {matrixCol1[2],matrixCol2[2],matrixCol3[2],0.0f}};
+
+	transform(attribute, matrix);
+}
+
 void TransformTool::normalize(float* vector, int size)
 {
     float length = 0.0f;
