@@ -419,7 +419,7 @@ void ToolManager::stitchEps(const char* attributeName, float epsilon)
 
     Mesh::AttributeType attrib;
 
-    if(std::string(attributeName).compare("postion") == 0)
+    if(std::string(attributeName).compare("position") == 0)
     {
         attrib = Mesh::POSITION;
     }

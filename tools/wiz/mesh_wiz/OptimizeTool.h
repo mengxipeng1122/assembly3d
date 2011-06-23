@@ -69,18 +69,16 @@ namespace assembly3d
         private:
             struct Vertex
             {
-                float position[3];
-                float normal[3];
-                float texCoord[2];
-                float tangent[3];
-                float bitangent[3];
+                float position[4];
+                float normal[4];
+                float texCoord[4];
+                float tangent[4];
+                float bitangent[4];
             };
 
-            void getVertices(assembly3d::Mesh *m,
-                                           std::vector<OptimizeTool::Vertex> vertices);
+            void getVertices(Mesh *m, std::vector<OptimizeTool::Vertex>& vertices);
 
             bool isInRange(float lhs, float rhs, float eps);
-//            bool vertexAttributeEquals(const float* lhs, const float* rhs, float eps, int size);
 
             bool vertexPosEquals(const OptimizeTool::Vertex& lhs,
                                  const OptimizeTool::Vertex& rhs, float eps);

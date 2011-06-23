@@ -137,17 +137,17 @@ int main (int argc, char* argv[])
 
     TCLAP::SwitchArg stitchArg("", "stitch", "Removes duplicate vertices.", false);
 
-    std::vector<std::string> stitchAllowed;
-    stitchAllowed.push_back("position/epsilon");
-    stitchAllowed.push_back("normal/epsilon");
-    stitchAllowed.push_back("texture/epsilon");
-    stitchAllowed.push_back("tangent/epsilon");
-    stitchAllowed.push_back("bitangent/epsilon");
-    TCLAP::ValuesConstraint<std::string> stitchAllowedVals( stitchAllowed );
+//    std::vector<std::string> stitchAllowed;
+//    stitchAllowed.push_back("position/epsilon");
+//    stitchAllowed.push_back("normal/epsilon");
+//    stitchAllowed.push_back("texture/epsilon");
+//    stitchAllowed.push_back("tangent/epsilon");
+//    stitchAllowed.push_back("bitangent/epsilon");
+//    TCLAP::ValuesConstraint<std::string> stitchAllowedVals( stitchAllowed );
     TCLAP::ValueArg<std::string> stitchEpsArg("", "stitch-eps",
                                               "Removes duplicate vertices. Compares all attributes but one "\
                                               "given attribute with a possible deviation epsilon.",
-                                              false, "", &stitchAllowedVals);
+                                              false, "", "attribute/epsilon");
 
     //---------------------------------------------------------------------------------------------------------
     // Rename
