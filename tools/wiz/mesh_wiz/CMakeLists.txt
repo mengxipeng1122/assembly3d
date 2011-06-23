@@ -8,7 +8,6 @@ set(MeshWiz_HEADERS
     AttributeTool.h
     ConvertTool.h
     OptimizeTool.h
-    RenameTool.h
     ToolManager.h
     TransformTool.h
     FrontFaceTool.h
@@ -20,7 +19,6 @@ set(MeshWiz_SOURCE
     AttributeTool.cpp
     ConvertTool.cpp
     OptimizeTool.cpp
-    RenameTool.cpp
     ToolManager.cpp
     TransformTool.cpp
     FrontFaceTool.cpp
@@ -56,7 +54,6 @@ MeshWiz.h
 AttributeTool.h
 ConvertTool.h
 OptimizeTool.h
-RenameTool.h
 ToolManager.h
 TransformTool.h
 FrontFaceTool.h
