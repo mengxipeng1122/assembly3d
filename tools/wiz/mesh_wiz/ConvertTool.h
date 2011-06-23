@@ -69,9 +69,6 @@ namespace assembly3d
              */
             void convertIndicesToUnsignedByte(Mesh* m);
 
-        protected:
-        private:
-
         };
     }
 }

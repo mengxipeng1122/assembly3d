@@ -31,10 +31,6 @@
  *
  */
  
-//------------------------------------------------------------------------------
-// Code for generating normals and tangent taken from the obj loader class of
-// Penjin game engine. http://code.google.com/p/penjin/
-//------------------------------------------------------------------------------
 
 #include "MeshWizIncludes.h"
 #include "AttributeTool.h"

@@ -87,20 +87,6 @@ namespace assembly3d
              */
             void removeBitangents(Mesh* m);
 
-        protected:
-        private:
-//            /**
-//             * @brief Generates normals.
-//             *
-//             * @param m The mesh to work on.
-//             */
-//            void generateNormals(Mesh* m);
-//            /**
-//             * @brief Generates tangents and bitangents.
-//             *
-//             * @param m The mesh to work on.
-//             */
-//            void generateTangents(Mesh* m);
         };
     }
 }
