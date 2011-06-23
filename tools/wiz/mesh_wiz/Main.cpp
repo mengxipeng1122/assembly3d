@@ -113,18 +113,18 @@ int main (int argc, char* argv[])
 		//---------------------------------------------------------------------------------------------------------
 		// Normals / Tangents
 		//---------------------------------------------------------------------------------------------------------
-		std::vector<std::string> normalsTangentsAllowed;
-		normalsTangentsAllowed.push_back("generate");
-		normalsTangentsAllowed.push_back("remove");
-		TCLAP::ValuesConstraint<std::string> normalsTangentsAllowedVals( normalsTangentsAllowed );
-		TCLAP::ValueArg<std::string> normalsArg("", "normals", "Generates or removes mesh normals.",
-												false, "", &normalsTangentsAllowedVals);
-		
-		TCLAP::ValueArg<std::string> tangentsArg("", "tangents", "Generates or removes mesh tangents.",
-												 false, "", &normalsTangentsAllowedVals);
-		
-		TCLAP::ValueArg<std::string> bitangentsArg("", "bitangents", "Generates or removes mesh bitangents.",
-												   false, "", &normalsTangentsAllowedVals);
+//		std::vector<std::string> normalsTangentsAllowed;
+//		normalsTangentsAllowed.push_back("generate");
+//		normalsTangentsAllowed.push_back("remove");
+//		TCLAP::ValuesConstraint<std::string> normalsTangentsAllowedVals( normalsTangentsAllowed );
+//		TCLAP::ValueArg<std::string> normalsArg("", "normals", "Generates or removes mesh normals.",
+//												false, "", &normalsTangentsAllowedVals);
+//		
+//		TCLAP::ValueArg<std::string> tangentsArg("", "tangents", "Generates or removes mesh tangents.",
+//												 false, "", &normalsTangentsAllowedVals);
+//		
+//		TCLAP::ValueArg<std::string> bitangentsArg("", "bitangents", "Generates or removes mesh bitangents.",
+//												   false, "", &normalsTangentsAllowedVals);
 		
 		//---------------------------------------------------------------------------------------------------------
 		// Optimization
@@ -210,9 +210,9 @@ int main (int argc, char* argv[])
 		//    cmd.add(optimizeVerticesArg);
 		cmd.add(stitchEpsArg);
 		cmd.add(stitchArg);
-		cmd.add(bitangentsArg);
-		cmd.add(tangentsArg);
-		cmd.add(normalsArg);
+//		cmd.add(bitangentsArg);
+//		cmd.add(tangentsArg);
+//		cmd.add(normalsArg);
 		cmd.add(convertIndexTypeToArg);
 		cmd.add(centerAllArg);
 		cmd.add(centerArg);
@@ -365,43 +365,43 @@ int main (int argc, char* argv[])
 		}
 		
 		//---------------------------------------------------------------------------------------------------------
-		if(normalsArg.isSet())
-		{
-			if(normalsArg.getValue().compare("generate")==0)
-			{
-				toolMgr.generateNormals();
-				
-			}
-			else if(normalsArg.getValue().compare("remove")==0)
-			{
-				toolMgr.removeNormals();
-			}
-			modelChanged = true;
-		}
-		if(tangentsArg.isSet())
-		{
-			if(tangentsArg.getValue().compare("generate")==0)
-			{
-				toolMgr.generateTangents();
-			}
-			else if(tangentsArg.getValue().compare("remove")==0)
-			{
-				toolMgr.removeTangents();
-			}
-			modelChanged = true;
-		}
-		if(bitangentsArg.isSet())
-		{
-			if(bitangentsArg.getValue().compare("generate")==0)
-			{
-				toolMgr.generateBitangents();
-			}
-			else if(bitangentsArg.getValue().compare("remove")==0)
-			{
-				toolMgr.removeBitangents();
-			}
-			modelChanged = true;
-		}
+//		if(normalsArg.isSet())
+//		{
+//			if(normalsArg.getValue().compare("generate")==0)
+//			{
+//				toolMgr.generateNormals();
+//				
+//			}
+//			else if(normalsArg.getValue().compare("remove")==0)
+//			{
+//				toolMgr.removeNormals();
+//			}
+//			modelChanged = true;
+//		}
+//		if(tangentsArg.isSet())
+//		{
+//			if(tangentsArg.getValue().compare("generate")==0)
+//			{
+//				toolMgr.generateTangents();
+//			}
+//			else if(tangentsArg.getValue().compare("remove")==0)
+//			{
+//				toolMgr.removeTangents();
+//			}
+//			modelChanged = true;
+//		}
+//		if(bitangentsArg.isSet())
+//		{
+//			if(bitangentsArg.getValue().compare("generate")==0)
+//			{
+//				toolMgr.generateBitangents();
+//			}
+//			else if(bitangentsArg.getValue().compare("remove")==0)
+//			{
+//				toolMgr.removeBitangents();
+//			}
+//			modelChanged = true;
+//		}
 		
 		//---------------------------------------------------------------------------------------------------------
 		bool transformTexCoords = textureTransformArg.getValue();
