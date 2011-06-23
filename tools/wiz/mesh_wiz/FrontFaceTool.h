@@ -66,6 +66,8 @@ namespace assembly3d
 
             bool isConsistent(Mesh* mesh, std::vector<int>& verticesOutwards,
                               std::vector<int>& verticesInwards);
+			
+			void changeWinding(Mesh* mesh);
 
         };
     }

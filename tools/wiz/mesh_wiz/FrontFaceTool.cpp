@@ -173,3 +173,17 @@ bool FrontFaceTool::isConsistent(Mesh *mesh, std::vector<int>& verticesOutwards,
     return consistent;
 }
 
+void FrontFaceTool::changeWinding(Mesh* mesh)
+{
+	int numTriangles = mesh->getNumberOfTriangles();
+    for(int i = 0; i < numTriangles; ++i)
+    {
+        unsigned int* pTriangle = mesh->getTriangle(i);
+        unsigned int idx1 = pTriangle[1];
+        unsigned int idx2 = pTriangle[2];
+		
+        pTriangle[1] = idx2;
+        pTriangle[2] = idx1;
+    }
+	
+}
