@@ -53,69 +53,63 @@ namespace assembly3d
             /**
              * @brief
              *
-             * @param m The mesh to work on.
+             * @param attribute The attribute to work on.
              * @param tx
              * @param ty
              * @param tz
              */
-            void translate(Mesh* m, float tx, float ty, float tz);
             void translate(Mesh::Attribute *attribute, float tx, float ty,
                            float tz, bool inverseTranspose=false);
             /**
              * @brief
              *
-             * @param m The mesh to work on.
+             * @param attribute The attribute to work on.
              * @param rangle
              * @param rx
              * @param ry
              * @param rz
              */
-            void rotate(Mesh* m, float rangle, float rx, float ry, float rz);
             void rotate(Mesh::Attribute *attribute, float rangle, float rx,
                         float ry, float rz, bool inverseTranspose=false);
             /**
              * @brief
              *
-             * @param m The mesh to work on.
+             * @param attribute The attribute to work on.
              * @param sx
              * @param sy
              * @param sz
              */
-            void scale(Mesh* m, float sx, float sy, float sz);
             void scale(Mesh::Attribute* attribute, float sx, float sy,
                        float sz, bool inverseTranspose=false);
             /**
              * @brief
              *
-             * @param m The mesh to work on.
+             * @param attribute The attribute to work on.
              * @param rsx
              * @param rsy
              * @param rsz
              */
-            void resize(Mesh* m, float width, float height, float length);
             void resize(Mesh::Attribute* attribute, float width, float height,
                         float length, float mWidth, float mHeight,float mLength,
                         bool inverseTranspose=false);
             /**
              * @brief
              *
-             * @param m The mesh to work on.
+             * @param attribute The attribute to work on.
              * @param axis
              * @param val
              */
-            void resize(Mesh* m, const char axis, float val);
             void resize(Mesh::Attribute* attribute, const char axis, float val,
                         float mWidth, float mHeight,float mLength,
                         bool inverseTranspose=false);
             /**
              * @brief
              *
-             * @param m The mesh to work on.
+             * @param attribute The attribute to work on.
              * @param ax
              * @param ay
              * @param az
              */
-            void center(Mesh* m, int ax, int ay, int az);
             void center(Mesh::Attribute* attribute, int ax, int ay, int az,
                         float centerX, float centerY, float centerZ,
                         bool inverseTranspose=false);
@@ -123,21 +117,12 @@ namespace assembly3d
              * @brief Normalizes a vector.
              *
              * @param vector[] A vector to normalize.
+			 * @param size The size of the vector.
              */
             static void normalize(float* vector, int size);
 
         protected:
         private:
-            /**
-             * @brief Multiplies a vertex with a matrix and an inverse transposed matrix.
-             *
-             * @param vec A vector.
-             * @param matrix[][] Transformation matrix.
-             * @param inverseTransposedMatrix[][] Inverse transposed matrix.
-             */
-//            void multiplyVertexWithTransformMatrix(float* pos, float* normal, float* tangent,
-//                                                   float* bitangent, float matrix[3][4],
-//                                                   float inverseTransposedMatrix[3][3]);
             void transform(Mesh::Attribute* attribute, float matrix[3][4]);
         };
     }
