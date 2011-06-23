@@ -54,22 +54,12 @@ bool OptimizeTool::isInRange(float lhs, float rhs, float eps)
         return true;
 }
 
-//bool OptimizeTool::vertexAttributeEquals(const float* lhs, const float *rhs,
-//                                         float eps, int size)
-//{
-//    for(int i = 0; i < size; ++i)
-//    {
-//        if(isInRange(lhs[i], rhs[i], eps) == false)
-//            return false;
-//    }
-//    return true;
-//}
-
 bool OptimizeTool::vertexPosEquals(const Vertex& lhs, const Vertex& rhs, float eps)
 {
     if(isInRange(lhs.position[0], rhs.position[0], eps) &&
        isInRange(lhs.position[1], rhs.position[1], eps) &&
-       isInRange(lhs.position[2], rhs.position[2], eps))
+       isInRange(lhs.position[2], rhs.position[2], eps) &&
+	   isInRange(lhs.position[3], rhs.position[3], eps))
     {
         return true;
     }
@@ -83,7 +73,8 @@ bool OptimizeTool::vertexNormalEquals(const Vertex& lhs, const Vertex& rhs, floa
 {
     if(isInRange(lhs.normal[0], rhs.normal[0], eps) &&
        isInRange(lhs.normal[1], rhs.normal[1], eps) &&
-       isInRange(lhs.normal[2], rhs.normal[2], eps))
+       isInRange(lhs.normal[2], rhs.normal[2], eps) &&
+	   isInRange(lhs.normal[3], rhs.normal[3], eps))
     {
         return true;
     }
@@ -95,7 +86,9 @@ bool OptimizeTool::vertexNormalEquals(const Vertex& lhs, const Vertex& rhs, floa
 bool OptimizeTool::vertexTexCoordEquals(const Vertex& lhs, const Vertex& rhs, float eps)
 {
     if(isInRange(lhs.texCoord[0], rhs.texCoord[0], eps) &&
-       isInRange(lhs.texCoord[1], rhs.texCoord[1], eps))
+       isInRange(lhs.texCoord[1], rhs.texCoord[1], eps) &&
+	   isInRange(lhs.texCoord[2], rhs.texCoord[2], eps) &&
+       isInRange(lhs.texCoord[3], rhs.texCoord[3], eps))
     {
         return true;
     }
@@ -109,7 +102,8 @@ bool OptimizeTool::vertexTangentEquals(const Vertex& lhs, const Vertex& rhs, flo
 {
     if(isInRange(lhs.tangent[0], rhs.tangent[0], eps) &&
        isInRange(lhs.tangent[1], rhs.tangent[1], eps) &&
-       isInRange(lhs.tangent[2], rhs.tangent[2], eps))
+       isInRange(lhs.tangent[2], rhs.tangent[2], eps) &&
+	   isInRange(lhs.tangent[3], rhs.tangent[3], eps))
     {
         return true;
     }
@@ -122,7 +116,8 @@ bool OptimizeTool::vertexBitangentEquals(const Vertex& lhs, const Vertex& rhs, f
 {
     if(isInRange(lhs.bitangent[0], rhs.bitangent[0], eps) &&
        isInRange(lhs.bitangent[1], rhs.bitangent[1], eps) &&
-       isInRange(lhs.bitangent[2], rhs.bitangent[2], eps))
+       isInRange(lhs.bitangent[2], rhs.bitangent[2], eps) &&
+	   isInRange(lhs.bitangent[3], rhs.bitangent[3], eps))
     {
         return true;
     }
@@ -180,7 +175,8 @@ bool OptimizeTool::vertexEquals(const Vertex& lhs, const Vertex& rhs)
 
     if(lhs.position[0] == rhs.position[0] &&
        lhs.position[1] == rhs.position[1] &&
-       lhs.position[2] == rhs.position[2])
+       lhs.position[2] == rhs.position[2] &&
+	   lhs.position[3] == rhs.position[3])
     {
         positionEqual = true;
     }
@@ -190,7 +186,8 @@ bool OptimizeTool::vertexEquals(const Vertex& lhs, const Vertex& rhs)
     }
     if(lhs.normal[0] == rhs.normal[0] &&
        lhs.normal[1] == rhs.normal[1] &&
-       lhs.normal[2] == rhs.normal[2])
+       lhs.normal[2] == rhs.normal[2] &&
+	   lhs.normal[3] == rhs.normal[3])
     {
         normalEqual = true;
     }
@@ -199,7 +196,9 @@ bool OptimizeTool::vertexEquals(const Vertex& lhs, const Vertex& rhs)
         normalEqual = false;
     }
     if(lhs.texCoord[0] == rhs.texCoord[0] &&
-       lhs.texCoord[1] == rhs.texCoord[1])
+       lhs.texCoord[1] == rhs.texCoord[1] &&
+	   lhs.texCoord[2] == rhs.texCoord[2] &&
+       lhs.texCoord[3] == rhs.texCoord[3])
     {
         texureEqual = true;
     }
@@ -209,7 +208,8 @@ bool OptimizeTool::vertexEquals(const Vertex& lhs, const Vertex& rhs)
     }
     if(lhs.tangent[0] == rhs.tangent[0] &&
        lhs.tangent[1] == rhs.tangent[1] &&
-       lhs.tangent[2] == rhs.tangent[2])
+       lhs.tangent[2] == rhs.tangent[2] &&
+	   lhs.tangent[3] == rhs.tangent[3])
     {
         tangentEqual = true;
     }
@@ -219,7 +219,8 @@ bool OptimizeTool::vertexEquals(const Vertex& lhs, const Vertex& rhs)
     }
     if(lhs.bitangent[0] == rhs.bitangent[0] &&
        lhs.bitangent[1] == rhs.bitangent[1] &&
-       lhs.bitangent[2] == rhs.bitangent[2])
+       lhs.bitangent[2] == rhs.bitangent[2] &&
+	   lhs.bitangent[3] == rhs.bitangent[3])
     {
         bitangentEqual = true;
     }
@@ -256,8 +257,6 @@ int OptimizeTool::findFirstIndexEquals(std::vector<Vertex> verts, Vertex v)
 
 void OptimizeTool::stitch(Mesh *m)
 {
-//    int numIndices = m->getNumberOfTriangles()*3;
-
     std::vector<Vertex> origVertices;
     getVertices(m, origVertices);
     std::vector<Vertex> newVertices;
@@ -277,7 +276,6 @@ void OptimizeTool::stitch(Mesh *m)
         const unsigned int* pTriangle = m->getTriangle(i);
         for(int j = 0; j < 3; ++j)
         {
-//            Vertex v = m->getVertex(pTriangle[j]);
             Vertex v = origVertices[pTriangle[j]];
 
             int index = findFirstIndexEquals(newVertices, v);
@@ -293,12 +291,23 @@ void OptimizeTool::stitch(Mesh *m)
     m->clearVertices();
     for(std::vector<Vertex>::iterator it = newVertices.begin(); it != newVertices.end(); ++it)
     {
-//        m->addVertex(*it);
-        m->addPosition(it->position, 3);
-        m->addNormal(it->normal, 3);
-        m->addTexCoord(it->texCoord, 2);
-        m->addTangent(it->tangent, 3);
-        m->addBitangent(it->bitangent, 3);
+        m->addPosition(it->position);
+		if(m->hasNormals())
+		{
+			m->addNormal(it->normal);
+		}
+		if(m->hasTexCoords())
+		{
+			m->addTexCoord(it->texCoord);
+		}
+		if(m->hasTangents())
+		{
+			m->addTangent(it->tangent);
+		}
+		if(m->hasBitangents())
+		{
+			m->addBitangent(it->bitangent);
+		}
 
     }
     m->clearIndices();
@@ -346,11 +355,23 @@ void OptimizeTool::stitch(Mesh *m, Mesh::AttributeType a, float epsilon)
     m->clearVertices();
     for(std::vector<Vertex>::iterator it = newVertices.begin(); it != newVertices.end(); ++it)
     {
-        m->addPosition(it->position, 3);
-        m->addNormal(it->normal, 3);
-        m->addTexCoord(it->texCoord, 2);
-        m->addTangent(it->tangent, 3);
-        m->addBitangent(it->bitangent, 3);
+        m->addPosition(it->position);
+		if(m->hasNormals())
+		{
+			m->addNormal(it->normal);
+		}
+		if(m->hasTexCoords())
+		{
+			m->addTexCoord(it->texCoord);
+		}
+		if(m->hasTangents())
+		{
+			m->addTangent(it->tangent);
+		}
+		if(m->hasBitangents())
+		{
+			m->addBitangent(it->bitangent);
+		}
     }
     m->clearIndices();
     for(std::vector<unsigned int>::iterator it = newIndices.begin(); it != newIndices.end(); ++it)
@@ -361,36 +382,52 @@ void OptimizeTool::stitch(Mesh *m, Mesh::AttributeType a, float epsilon)
 }
 
 void OptimizeTool::getVertices(assembly3d::Mesh *m,
-                               std::vector<OptimizeTool::Vertex> vertices)
+                               std::vector<OptimizeTool::Vertex>& vertices)
 {
     vertices.clear();
     for(int i = 0; i < m->getNumberOfVertices(); ++i)
     {
-        Vertex vert = {{0.0f,0.0f,0.0f},
-                       {0.0f,0.0f,0.0f},
-                       {0.0f,0.0f},
-                       {0.0f,0.0f,0.0f},
-                       {0.0f,0.0f,0.0f}};
+        Vertex vert = {{0.0f,0.0f,0.0f,0.0f},
+                       {0.0f,0.0f,0.0f,0.0f},
+                       {0.0f,0.0f,0.0f,0.0f},
+                       {0.0f,0.0f,0.0f,0.0f},
+                       {0.0f,0.0f,0.0f,0.0f}};
 
         vert.position[0] = m->getPosition(i)[0];
         vert.position[1] = m->getPosition(i)[1];
         vert.position[2] = m->getPosition(i)[2];
+		vert.position[3] = m->getPosition(i)[3];
 
-        vert.normal[0] = m->getNormal(i)[0];
-        vert.normal[1] = m->getNormal(i)[1];
-        vert.normal[2] = m->getNormal(i)[2];
+		if(m->hasNormals())
+		{
+			vert.normal[0] = m->getNormal(i)[0];
+			vert.normal[1] = m->getNormal(i)[1];
+			vert.normal[2] = m->getNormal(i)[2];
+			vert.normal[3] = m->getNormal(i)[3];
+		}
 
-        vert.texCoord[0] = m->getTexCoord(i)[0];
-        vert.texCoord[1] = m->getTexCoord(i)[1];
+		if(m->hasTexCoords())
+		{
+			vert.texCoord[0] = m->getTexCoord(i)[0];
+			vert.texCoord[1] = m->getTexCoord(i)[1];
+			vert.texCoord[2] = m->getTexCoord(i)[2];
+			vert.texCoord[3] = m->getTexCoord(i)[3];
+		}
+		if(m->hasTangents())
+		{
+			vert.tangent[0] = m->getTangent(i)[0];
+			vert.tangent[1] = m->getTangent(i)[1];
+			vert.tangent[2] = m->getTangent(i)[2];
+			vert.tangent[3] = m->getTangent(i)[3];
+		}
 
-        vert.tangent[0] = m->getTangent(i)[0];
-        vert.tangent[1] = m->getTangent(i)[1];
-        vert.tangent[2] = m->getTangent(i)[2];
-
-        vert.bitangent[0] = m->getBitangent(i)[0];
-        vert.bitangent[1] = m->getBitangent(i)[1];
-        vert.bitangent[2] = m->getBitangent(i)[2];
-
+		if(m->hasBitangents())
+		{
+			vert.bitangent[0] = m->getBitangent(i)[0];
+			vert.bitangent[1] = m->getBitangent(i)[1];
+			vert.bitangent[2] = m->getBitangent(i)[2];
+			vert.bitangent[3] = m->getBitangent(i)[3];
+		}
         vertices.push_back(vert);
     }
 }

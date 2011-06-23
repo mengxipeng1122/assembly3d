@@ -248,11 +248,11 @@ namespace assembly3d
         void setTexCoords(const std::vector<float>& texCoords);
         void setTangents(const std::vector<float>& tangents);
         void setBitangents(const std::vector<float>& bitangents);
-        void addPosition(float* position, int size=3);
-        void addNormal(float* normal, int size=3);
-        void addTexCoord(float* texCoord, int size=2);
-        void addTangent(float* tangent, int size=3);
-        void addBitangent(float* bitangent, int size=3);
+        void addPosition(float* position, int size=4);
+        void addNormal(float* normal, int size=4);
+        void addTexCoord(float* texCoord, int size=4);
+        void addTangent(float* tangent, int size=4);
+        void addBitangent(float* bitangent, int size=4);
 
 //        void addTriangle(unsigned int* triangle);
         /**
