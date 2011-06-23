@@ -165,6 +165,8 @@ namespace assembly3d
              *
              */
             void flip();
+			
+			void flipWinding();
             /**
              * @brief Tests normal consitency.
              *

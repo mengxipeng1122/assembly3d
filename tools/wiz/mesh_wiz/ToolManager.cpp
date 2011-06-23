@@ -456,6 +456,14 @@ void ToolManager::flip()
     m_frontFaceTool->flip(m_mesh);
 }
 
+void ToolManager::flipWinding()
+{
+    if(m_verboseOutput)
+        std::cout << "Flipping winding" << std::endl;
+	
+    m_frontFaceTool->changeWinding(m_mesh);
+	
+}
 bool ToolManager::makeNormalsConsistent()
 {
     bool modelChanged = false;
