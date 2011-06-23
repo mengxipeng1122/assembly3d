@@ -36,7 +36,6 @@
 
 #include "ConvertTool.h"
 #include "TransformTool.h"
-#include "AttributeTool.h"
 #include "OptimizeTool.h"
 #include "FrontFaceTool.h"
 #include "BakeTool.h"
@@ -122,36 +121,6 @@ namespace assembly3d
              */
             void center(int axisX, int axisY, int axisZ, bool transformTexCoords=false);
             /**
-             * @brief Generates normals.
-             *
-             */
-            void generateNormals();
-            /**
-             * @brief Removes normals.
-             *
-             */
-            void removeNormals();
-            /**
-             * @brief Generates tangents.
-             *
-             */
-            void generateTangents();
-            /**
-             * @brief Removes tangents.
-             *
-             */
-            void removeTangents();
-            /**
-             * @brief Generates bitangents.
-             *
-             */
-            void generateBitangents();
-            /**
-             * @brief Removes bitangents.
-             *
-             */
-            void removeBitangents();
-            /**
              * @brief Stiches mesh.
              *
              */
@@ -189,7 +158,6 @@ namespace assembly3d
 
             ConvertTool* m_convertTool;
             TransformTool* m_transformTool;
-            AttributeTool* m_attributeTool;
             OptimizeTool* m_optimizeTool;
             FrontFaceTool* m_frontFaceTool;
             BakeTool* m_textureTool;

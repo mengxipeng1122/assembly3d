@@ -138,15 +138,10 @@ namespace assembly3d
         void setIndexFormat(const char* format);
 
         /**
-         * @brief Generates normals for mesh.
+         * @brief Generates face normals for mesh.
          *
         */
-        void generateNormals();
-        /**
-         * @brief Generates tangents and bitangents for mesh.
-         *
-        */
-        void generateTangents();
+        float* getFaceNormals();
 
         float* getPosition(unsigned int index);
         float* getNormal(unsigned int index);
@@ -449,6 +444,8 @@ namespace assembly3d
         std::vector<float> m_texCoords;
         std::vector<float> m_tangents;
         std::vector<float> m_bitangents;
+		
+		std::vector<float> m_faceNormals;
 
 //        std::vector<Attribute> m_attributes;
 
