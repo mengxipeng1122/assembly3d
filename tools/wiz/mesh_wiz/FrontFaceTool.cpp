@@ -130,16 +130,13 @@ bool FrontFaceTool::isConsistent(Mesh *mesh, std::vector<int>& verticesOutwards,
 {
     bool consistent = false;
 
-//    Mesh* mesh2 = new Mesh(*mesh);
-//    mesh2->generateNormals();
-	
-//	float* faceNormals = mesh->getFaceNormals();
-	
+    float* faceNormals = mesh->getFaceNormals();
+    
     for(int i = 0; i < mesh->getNumberOfVertices(); ++i)
     {
 
         float* pNormal1 = mesh->getNormal(i);
-        float* pNormal2 = &mesh->getFaceNormals()[i*4];
+        float* pNormal2 = &faceNormals[i*4];
 		
         float normal[3] = {pNormal1[0],
                            pNormal1[1],
