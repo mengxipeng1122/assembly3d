@@ -131,9 +131,7 @@ int BakeTool::checkUVOverlapping(Mesh *mesh)
                     break;
                 }
             }
-
         }
-
     }
     SAFE_DELETE(meshCopy);
 

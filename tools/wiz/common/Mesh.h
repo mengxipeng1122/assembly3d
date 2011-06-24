@@ -248,8 +248,6 @@ namespace assembly3d
         void addTexCoord(float* texCoord, int size=4);
         void addTangent(float* tangent, int size=4);
         void addBitangent(float* bitangent, int size=4);
-
-//        void addTriangle(unsigned int* triangle);
         /**
          * @brief Clears vertices.
          *
@@ -323,11 +321,6 @@ namespace assembly3d
          * @return Index of the group or -1 if group not exits.
         */
         int getGroupIndexWithName(const char* groupName);
-    //    void normalize(float scaleTo = 1.0f, bool center = true);
-    //    void reverseWinding();
-
-        // Getter methods.
-
         /**
          * @brief Gets center coordinates of mesh.
          *
@@ -421,7 +414,6 @@ namespace assembly3d
         unsigned int* getIndicesPointer();
         void updateVecs();
 
-//        void setAttributes();
         Attribute getAttribute(AttributeType type);
 
     private:
@@ -446,8 +438,6 @@ namespace assembly3d
         std::vector<float> m_bitangents;
 		
 		std::vector<float> m_faceNormals;
-
-//        std::vector<Attribute> m_attributes;
 
         std::vector<unsigned int> m_indices;
         std::vector<Group> m_groups;
@@ -501,7 +491,6 @@ namespace assembly3d
         os << "Extent:      " << x << " / " << y << " / " << z << "\n";
         os << "Radius:      " << obj.getRadius() << "\n";
         os << "---------------------------";
-    //    os << "Format: ";
         return os;
     }
 

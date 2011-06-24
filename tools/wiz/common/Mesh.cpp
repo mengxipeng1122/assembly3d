@@ -69,6 +69,7 @@ Mesh::Mesh(const Mesh &m)
     m_texCoords = m.m_texCoords;
     m_tangents = m.m_tangents;
     m_bitangents = m.m_bitangents;
+    m_faceNormals = m.m_faceNormals;
 
     m_indices = m.m_indices;
     m_groups = m.m_groups;
@@ -114,6 +115,7 @@ Mesh& Mesh::operator=(const Mesh& m)
         m_texCoords = m.m_texCoords;
         m_tangents = m.m_tangents;
         m_bitangents = m.m_bitangents;
+        m_faceNormals = m.m_faceNormals;
 
         m_indices = m.m_indices;
         m_groups = m.m_groups;
@@ -214,7 +216,6 @@ void Mesh::addAttribute(const char* attrName, int attrSize, const char* attrType
         m_format.attributeSize.push_back(attrSize);
         m_format.attributeType.push_back(attrType);
         ++m_format.attributeCount;
-        
     }
 }
 
@@ -236,7 +237,6 @@ void Mesh::removeAttribute(const char* attributeName)
         m_format.attributeType.erase(m_format.attributeType.begin()+(*it));
         --m_format.attributeCount;
     }
-    
 }
 
 
@@ -340,6 +340,7 @@ void Mesh::destroy()
     m_texCoords.clear();
     m_tangents.clear();
     m_bitangents.clear();
+    m_faceNormals.clear();
 
     m_format.name = "Assembly3D.mesh";
     m_format.attributeName.clear();
@@ -455,6 +456,7 @@ void Mesh::clearVertices()
     m_texCoords.clear();
     m_tangents.clear();
     m_bitangents.clear();
+    m_faceNormals.clear();
 }
 void Mesh::addIndex(unsigned int index)
 {
@@ -607,7 +609,6 @@ float* Mesh::getFaceNormals()
     // Normalize the vertex normals.
     for (int i = 0; i < totalVertices; ++i)
     {
-//        pVertex0 = &this->getVertex(i);
         float* pNormal = &m_faceNormals[i*4];
 
         float tmpLength = sqrtf(pNormal[0] * pNormal[0] +
