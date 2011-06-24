@@ -42,12 +42,10 @@ using namespace assembly3d::wiz;
 
 TransformTool::TransformTool()
 {
-    
 }
 
 TransformTool::~TransformTool()
 {
-    
 }
 
 void TransformTool::translate(Mesh::Attribute *attribute, float tx, float ty,

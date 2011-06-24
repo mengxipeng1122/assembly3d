@@ -111,23 +111,7 @@ int main (int argc, char* argv[])
 														   "Converts index type between UNSIGNED_INT , "\
 														   "UNSIGNED_SHORT and UNSIGNED_BYTE.",
 														   false, "", &conversionIndexTypeToAllowedVals);
-		
-		//---------------------------------------------------------------------------------------------------------
-		// Normals / Tangents
-		//---------------------------------------------------------------------------------------------------------
-//		std::vector<std::string> normalsTangentsAllowed;
-//		normalsTangentsAllowed.push_back("generate");
-//		normalsTangentsAllowed.push_back("remove");
-//		TCLAP::ValuesConstraint<std::string> normalsTangentsAllowedVals( normalsTangentsAllowed );
-//		TCLAP::ValueArg<std::string> normalsArg("", "normals", "Generates or removes mesh normals.",
-//												false, "", &normalsTangentsAllowedVals);
-//		
-//		TCLAP::ValueArg<std::string> tangentsArg("", "tangents", "Generates or removes mesh tangents.",
-//												 false, "", &normalsTangentsAllowedVals);
-//		
-//		TCLAP::ValueArg<std::string> bitangentsArg("", "bitangents", "Generates or removes mesh bitangents.",
-//												   false, "", &normalsTangentsAllowedVals);
-		
+				
 		//---------------------------------------------------------------------------------------------------------
 		// Optimization
 		//---------------------------------------------------------------------------------------------------------
@@ -139,13 +123,6 @@ int main (int argc, char* argv[])
 		
 		TCLAP::SwitchArg stitchArg("", "stitch", "Removes duplicate vertices.", false);
 		
-		//    std::vector<std::string> stitchAllowed;
-		//    stitchAllowed.push_back("position/epsilon");
-		//    stitchAllowed.push_back("normal/epsilon");
-		//    stitchAllowed.push_back("texture/epsilon");
-		//    stitchAllowed.push_back("tangent/epsilon");
-		//    stitchAllowed.push_back("bitangent/epsilon");
-		//    TCLAP::ValuesConstraint<std::string> stitchAllowedVals( stitchAllowed );
 		TCLAP::ValueArg<std::string> stitchEpsArg("", "stitch-eps",
 												  "Removes duplicate vertices. Compares all attributes but one "\
 												  "given attribute with a possible deviation epsilon.",
@@ -160,17 +137,6 @@ int main (int argc, char* argv[])
 		//---------------------------------------------------------------------------------------------------------
 		// Other mesh related stuff
 		//---------------------------------------------------------------------------------------------------------
-		////    std::vector<std::string> flipAllowed;
-		////    flipAllowed.push_back("cw");
-		////    flipAllowed.push_back("ccw");
-		////    TCLAP::ValuesConstraint<std::string> flipAllowedVals( flipAllowed );
-		//    TCLAP::ValueArg<std::string> flipArg("",
-		//                                         "flip",
-		//                                         "Flips front-face clockwise or counterclockwise.",
-		//                                         false,
-		//                                         "",
-		//                                         &flipAllowedVals);
-		
 		TCLAP::SwitchArg flipArg("", "flip-front-face", "Flips front-faces and normals.");
 		TCLAP::SwitchArg flipWindingArg("", "flip-winding", "Flips winding from cw to ccw or vice versa.");
 		
@@ -207,14 +173,8 @@ int main (int argc, char* argv[])
 		cmd.add(flipWindingArg);
 		cmd.add(flipArg);
 		cmd.add(makeNormalsConsistent);
-		//    cmd.add(validateAndChangeArg);
-		//    cmd.add(optimizeIndicesArg);
-		//    cmd.add(optimizeVerticesArg);
 		cmd.add(stitchEpsArg);
 		cmd.add(stitchArg);
-//		cmd.add(bitangentsArg);
-//		cmd.add(tangentsArg);
-//		cmd.add(normalsArg);
 		cmd.add(convertIndexTypeToArg);
 		cmd.add(centerAllArg);
 		cmd.add(centerArg);
@@ -229,7 +189,6 @@ int main (int argc, char* argv[])
 		
 		//---------------------------------------------------------------------------------------------------------
 		
-		//    std::cout << std::endl;
 		verbose = !quiteArg.getValue();
 		if(verbose)
 		{
@@ -366,45 +325,6 @@ int main (int argc, char* argv[])
 			}
 			modelChanged = true;
 		}
-		
-		//---------------------------------------------------------------------------------------------------------
-//		if(normalsArg.isSet())
-//		{
-//			if(normalsArg.getValue().compare("generate")==0)
-//			{
-//				toolMgr.generateNormals();
-//				
-//			}
-//			else if(normalsArg.getValue().compare("remove")==0)
-//			{
-//				toolMgr.removeNormals();
-//			}
-//			modelChanged = true;
-//		}
-//		if(tangentsArg.isSet())
-//		{
-//			if(tangentsArg.getValue().compare("generate")==0)
-//			{
-//				toolMgr.generateTangents();
-//			}
-//			else if(tangentsArg.getValue().compare("remove")==0)
-//			{
-//				toolMgr.removeTangents();
-//			}
-//			modelChanged = true;
-//		}
-//		if(bitangentsArg.isSet())
-//		{
-//			if(bitangentsArg.getValue().compare("generate")==0)
-//			{
-//				toolMgr.generateBitangents();
-//			}
-//			else if(bitangentsArg.getValue().compare("remove")==0)
-//			{
-//				toolMgr.removeBitangents();
-//			}
-//			modelChanged = true;
-//		}
 		
 		//---------------------------------------------------------------------------------------------------------
 		bool transformTexCoords = textureTransformArg.getValue();

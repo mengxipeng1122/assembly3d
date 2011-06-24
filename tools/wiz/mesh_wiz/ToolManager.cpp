@@ -49,7 +49,6 @@ ToolManager::ToolManager(Mesh* mesh, bool verbose)
       m_textureTool(new BakeTool()),
       m_meshTool(new MeshTool())
 {
-    
 }
 
 ToolManager::~ToolManager()
@@ -61,6 +60,7 @@ ToolManager::~ToolManager()
     SAFE_DELETE(m_textureTool);
     SAFE_DELETE(m_meshTool);
 }
+
 bool ToolManager::convertIndexType(const char* type)
 {
     if(m_verboseOutput) 
@@ -86,7 +86,6 @@ bool ToolManager::convertIndexType(const char* type)
             m_convertTool->convertIndicesToUnsignedShort(m_mesh);
             result = true;
         }
-        
     }
     else if(stype.compare("byte") == 0)
     {
@@ -119,8 +118,8 @@ void ToolManager::translate(float tx, float ty, float tz, bool transformTexCoord
     else
     {
         attrib = m_mesh->getAttribute(Mesh::POSITION);
-        //    m_mesh->printAttribute(attrib);
         m_transformTool->translate(&attrib, tx, ty, tz, false);
+
         if(m_mesh->hasNormals())
         {
             attrib = m_mesh->getAttribute(Mesh::NORMAL);
@@ -137,7 +136,6 @@ void ToolManager::translate(float tx, float ty, float tz, bool transformTexCoord
             m_transformTool->translate(&attrib, tx, ty, tz, true);
         }
     }
-
 }
 
 void ToolManager::rotate(float rangle, float rx, float ry, float rz, bool transformTexCoords)
@@ -154,10 +152,9 @@ void ToolManager::rotate(float rangle, float rx, float ry, float rz, bool transf
     }
     else
     {
-
         attrib = m_mesh->getAttribute(Mesh::POSITION);
-        //    m_mesh->printAttribute(attrib);
         m_transformTool->rotate(&attrib, rangle, rx, ry, rz);
+
         if(m_mesh->hasNormals())
         {
             attrib = m_mesh->getAttribute(Mesh::NORMAL);
@@ -189,9 +186,9 @@ void ToolManager::scale(float sx, float sy, float sz, bool transformTexCoords)
     }
     else
     {
-
         attrib = m_mesh->getAttribute(Mesh::POSITION);
         m_transformTool->scale(&attrib, sx, sy, sz);
+
         if(m_mesh->hasNormals())
         {
             attrib = m_mesh->getAttribute(Mesh::NORMAL);
@@ -336,6 +333,7 @@ void ToolManager::resize(float rsx, float rsy, float rsz, bool transformTexCoord
 
         attrib = m_mesh->getAttribute(Mesh::POSITION);
         m_transformTool->resize(&attrib, rsx, rsy, rsz, m_mesh->getWidth(), m_mesh->getHeight(), m_mesh->getLength());
+
         if(m_mesh->hasNormals())
         {
             attrib = m_mesh->getAttribute(Mesh::NORMAL);
@@ -368,9 +366,9 @@ void ToolManager::resize(const char* axis, float val, bool transformTexCoords)
     }
     else
     {
-
         attrib = m_mesh->getAttribute(Mesh::POSITION);
         m_transformTool->resize(&attrib, axis[0], val, m_mesh->getWidth(), m_mesh->getHeight(), m_mesh->getLength());
+
         if(m_mesh->hasNormals())
         {
             attrib = m_mesh->getAttribute(Mesh::NORMAL);
@@ -408,6 +406,7 @@ void ToolManager::center(int axisX, int axisY, int axisZ, bool transformTexCoord
     {
         attrib = m_mesh->getAttribute(Mesh::POSITION);
         m_transformTool->center(&attrib, axisX, axisY, axisZ, centerX, centerY, centerZ);
+        
         if(m_mesh->hasNormals())
         {
             attrib = m_mesh->getAttribute(Mesh::NORMAL);

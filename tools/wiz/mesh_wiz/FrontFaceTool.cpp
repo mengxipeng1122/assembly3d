@@ -73,7 +73,6 @@ void FrontFaceTool::flip(Mesh* mesh)
     }
 }
 
-
 bool FrontFaceTool::makeConsistent(Mesh *mesh, std::string& resultMsg)
 {
     bool modelChanged = false;
@@ -121,8 +120,6 @@ bool FrontFaceTool::makeConsistent(Mesh *mesh, std::string& resultMsg)
 
     resultMsg = strStr.str();
     return modelChanged;
-
-
 }
 
 bool FrontFaceTool::isConsistent(Mesh *mesh, std::vector<int>& verticesOutwards,
@@ -159,7 +156,6 @@ bool FrontFaceTool::isConsistent(Mesh *mesh, std::vector<int>& verticesOutwards,
             verticesInwards.push_back(i);
         }
     }
-//    SAFE_DELETE(mesh2);
 
     if(verticesOutwards.empty() || verticesInwards.empty())
     {
@@ -181,5 +177,4 @@ void FrontFaceTool::changeWinding(Mesh* mesh)
         pTriangle[1] = idx2;
         pTriangle[2] = idx1;
     }
-	
 }
