@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module>
+  <ModulePrefs title="ObjShift"
+  description="OBJ coverter tool"
+  author="Michael Nischt"
+  author_email="Michael.Nischt@gmail.com"
+  scrolling="true"/>
+  <Content type="url" href="index.xhtml"/>
+</Module>
