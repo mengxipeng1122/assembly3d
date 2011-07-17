@@ -37,6 +37,9 @@
 #include <GL/glew.h>
 #include <GL/glfw.h>
 
+#include "vector2.h"
+#include "vector3.h"
+
 // Functions
 void flipBuffers();
 void render();

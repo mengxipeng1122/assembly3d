@@ -19,6 +19,7 @@ if(MSVC)
 endif(MSVC)
 
 ####################
+
 find_package(GLEW REQUIRED)
 
 find_package(PkgConfig REQUIRED)
@@ -40,7 +41,7 @@ ELSE(APPLE)
     SET(EXTRA_LIBS ${GLFW_LDFLAGS_OTHER})
 ENDIF (APPLE)
 
-set(A3DViewer_HEADER src/framework.h)
+set(A3DViewer_HEADER src/framework.h src/vector2.h src/vector3.h)
 
 set(A3DViewer_SOURCE src/main.cpp src/framework.cpp)
 
