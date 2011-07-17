@@ -34,10 +34,16 @@ include_directories(${GLFW_INCLUDE_DIRS})
 
 link_directories(${GLFW_LIBRARY_DIRS})
 
+IF(APPLE)
+    SET(EXTRA_LIBS "-framework Cocoa -framework OpenGL")
+ELSE(APPLE)
+    SET(EXTRA_LIBS ${GLFW_LDFLAGS_OTHER})
+ENDIF (APPLE)
+
 #set(A3DViewer_HEADER )
 
 set(A3DViewer_SOURCE src/main.cpp)
 
 add_executable(A3DViewer ${A3DViewer_SOURCE})
 
-target_link_libraries(A3DViewer ${GLFW_LIBRARIES} ${GLFW_LDFLAGS_OTHER})
+target_link_libraries(A3DViewer ${GLFW_LIBRARIES} ${EXTRA_LIBS})
