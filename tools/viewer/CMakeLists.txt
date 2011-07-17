@@ -19,7 +19,7 @@ if(MSVC)
 endif(MSVC)
 
 ####################
-#find_package(GLEW REQUIRED)
+find_package(GLEW REQUIRED)
 
 find_package(PkgConfig REQUIRED)
 pkg_search_module(GLFW REQUIRED libglfw)
@@ -30,7 +30,7 @@ endif(GLFW_FOUND)
 
 add_definitions(${GLFW_CFLAGS_OTHER})
 
-include_directories(${GLFW_INCLUDE_DIRS})
+include_directories(${GLFW_INCLUDE_DIRS} ${GLEW_INCLUDE_PATH})
 
 link_directories(${GLFW_LIBRARY_DIRS})
 
@@ -40,10 +40,10 @@ ELSE(APPLE)
     SET(EXTRA_LIBS ${GLFW_LDFLAGS_OTHER})
 ENDIF (APPLE)
 
-#set(A3DViewer_HEADER )
+set(A3DViewer_HEADER src/framework.h)
 
-set(A3DViewer_SOURCE src/main.cpp)
+set(A3DViewer_SOURCE src/main.cpp src/framework.cpp)
 
-add_executable(A3DViewer ${A3DViewer_SOURCE})
+add_executable(A3DViewer ${A3DViewer_SOURCE} ${A3DViewer_HEADER})
 
-target_link_libraries(A3DViewer ${GLFW_LIBRARIES} ${EXTRA_LIBS})
+target_link_libraries(A3DViewer ${GLFW_LIBRARIES} ${EXTRA_LIBS} ${GLEW_LIBRARY})
