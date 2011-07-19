@@ -32,13 +32,22 @@
  */
 
 // This code will be executed by the OpenGL base app's render thread
-#include "framework.h"
+#include "Framework.h"
 #include <fstream>
 #include <iostream>
 #include <string>
 
+static GLuint loadShaders(const char* vertexShaderPath, const char* fragmentShaderPath);
+
 void render()
 {
+    GLFWimage img;
+
+
+    mesh = new Mesh(metaPath, dataPath);
+
+    g_shaderProgram = loadShaders(vertexShaderPathStr, fragmentShaderPathStr);
+
     // Set the background to black
     glClearColor(0,0,0,0);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -50,13 +59,18 @@ void render()
             runLevel=0;
 
         // Do OpenGL stuff here
+        glUseProgram(g_shaderProgram);
 
+        mesh->draw();
+
+        glUseProgram(0);
         // We're using double buffers, so we need to swap to see our stuff
         flipBuffers();
     }
+    delete mesh;
 }
 
-void loadShaders(const char* vertexShaderPath, const char* fragmentShaderPath)
+static GLuint loadShaders(const char* vertexShaderPath, const char* fragmentShaderPath)
 {
     GLuint shaderProgram = 0;
     GLuint vertexShader = 0;
@@ -144,6 +158,6 @@ void loadShaders(const char* vertexShaderPath, const char* fragmentShaderPath)
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    glUseProgram(shaderProgram);
-
+    //glUseProgram(shaderProgram);
+    return shaderProgram;
 }
