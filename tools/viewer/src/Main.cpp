@@ -32,12 +32,30 @@
  */
 
 #include <fstream>
-#include "framework.h"
+#include "Framework.h"
 
 // Globals
 int runLevel = 1;
 bool keys[GLFW_KEY_LAST] = {false};  // Key monitor
 MouseInfo mouse; // Mouse monitor
+
+const char* vertexShaderPathStr = "glsl/Simple.vert";
+const char* fragmentShaderPathStr = "glsl/Simple.frag";
+
+const char* metaPath = "";
+const char* dataPath = "";
+
+GLuint g_shaderProgram;
+
+Mesh* mesh;
+
+//Locations
+GLint projectionLocation;
+GLint modelViewLocation;
+GLint vertexLocation;
+GLint normalLocation;
+GLint texCoordLocation;
+GLint textureLocation;
 
 // Initializationa
 void initWindow(int scrX, int scrY, int BPP);
@@ -47,8 +65,39 @@ void keyCallback(int key, int action);
 void mouseButtonCallback(int button, int action);
 void mousePosCallback(int x, int y);
 
-int main()
+int main(int argc, char *argv[])
 {
+//    vertexShaderPath = "glsl/Simple.vert";
+//    fragmentShaderPath = "glsl/Simple.frag";
+    if(argc < 2)
+    {
+        std::cout << "No mesh file given!" << std::endl;
+        return 1;
+    }
+    std::string metaPathStr;
+    std::string dataPathStr;
+    if(argc == 2 || argc == 3)
+    {
+        metaPathStr = argv[1];
+
+        if(argc == 2)
+        {
+            size_t pos = metaPathStr.find(".xml");
+            dataPathStr = metaPathStr.substr(0, pos);
+            dataPathStr.append(".dat");
+        }
+        else if(argc == 3)
+        {
+            dataPathStr = argv[2];
+        }
+    }
+
+    std::cout << metaPathStr << std::endl;
+    std::cout << dataPathStr << std::endl;
+
+    metaPath = metaPathStr.c_str();
+    dataPath = dataPathStr.c_str();
+
     int retval = 0;
     try
     {

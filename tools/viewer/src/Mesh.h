@@ -31,46 +31,30 @@
  *
  */
 
-#ifndef FRAMEWORK_H
-#define FRAMEWORK_H
+#ifndef MESH_H
+#define MESH_H
 
 #include <GL/glew.h>
-#include <GL/glfw.h>
 
-#include "vector2.h"
-#include "vector3.h"
+class Loader;
 
-// Functions
-void flipBuffers();
-void render();
-void loadShaders(const char* vertexShaderPath, const char* fragmentShaderPath);
-
-// A struct to hold mouse data
-struct MouseInfo
+class Mesh
 {
-    int x,y;
-    bool left, right;
+friend class Loader;
+public:
+    Mesh(const char* meta, const char* data);
+    ~Mesh();
+
+    void draw();
+    void draw(unsigned int index);
+private:
+    GLuint vertexArray;
+    GLuint *buffers;
+    GLsizei nVertices, nAttributes, nGroups, nTotalTriangles;
+    GLsizei *nTriangles;
+    GLsizei indexSize;
+    GLenum indexType;
+
 };
 
-// Globals
-extern int runLevel;
-extern bool keys[GLFW_KEY_LAST];  // Key monitor
-extern MouseInfo mouse; // Mouse monitor
-
-// Definitions of some windows key codes in terms of GLFW keys (Use
-// uppercase characters for characer keys - 'X' is the x key for
-// example.
-const unsigned int
-VK_ESCAPE = GLFW_KEY_ESC,
-VK_RETURN = GLFW_KEY_ENTER,
-VK_SPACE = GLFW_KEY_SPACE,
-VK_UP = GLFW_KEY_UP,
-VK_DOWN = GLFW_KEY_DOWN,
-VK_RIGHT = GLFW_KEY_RIGHT,
-VK_LEFT = GLFW_KEY_LEFT,
-VK_HOME = GLFW_KEY_HOME,
-VK_END = GLFW_KEY_END,
-VK_INSERT = GLFW_KEY_INSERT,
-VK_DELETE = GLFW_KEY_DEL;
-
-#endif // FRAMEWORK_H
+#endif // MESH_H
