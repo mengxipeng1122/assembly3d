@@ -37,6 +37,7 @@
 #include <GL/glew.h>
 #include <GL/glfw.h>
 
+#include "Graphics.h"
 
 // Globals
 struct MouseInfo
@@ -47,6 +48,7 @@ struct MouseInfo
 int runLevel = 1;
 bool keys[GLFW_KEY_LAST] = {false};  // Key monitor
 
+Graphics graphics;
 
 const char* vertexShaderPathStr = "glsl/Simple.vert";
 const char* fragmentShaderPathStr = "glsl/Simple.frag";
@@ -110,7 +112,7 @@ int main(int argc, char *argv[])
     //----------------------------------------
     
     
-    // ...
+    graphics.init();
     
     
     //----------------------------------------
@@ -133,6 +135,8 @@ int main(int argc, char *argv[])
                 runLevel=0;
             
             // Do OpenGL stuff here
+            
+            graphics.render();
 
             // We're using double buffers, so we need to swap to see our stuff
             flipBuffers();
