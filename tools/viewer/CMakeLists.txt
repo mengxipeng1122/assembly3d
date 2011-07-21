@@ -20,10 +20,16 @@ endif(MSVC)
 
 ####################
 
-#set(A3DMeshParser_HEADER lib/A3DMeshParser.h)
-#set(A3DMeshParser_SOURCE lib/A3DMeshParser.cpp)
+#set(A3DMeshLoader_HEADER 
+#    lib/A3DMeshParser.h
+#    lib/A3DMeshLoader.h
+#    lib/A3DMesh.h)
+#set(A3DMeshLoader_SOURCE 
+#    lib/A3DMeshParser.cpp
+#    lib/A3DMeshLoader.cpp
+#    lib/A3DMesh.cpp)
 #
-#add_library(A3DMeshParser ${A3DMeshParser_HEADER} ${A3DMeshParser_SOURCE})
+#add_library(A3DMeshLoader ${A3DMeshLoader_HEADER} ${A3DMeshLoader_SOURCE})
 
 ####################
 
@@ -43,7 +49,7 @@ endif(GLFW_FOUND)
 
 add_definitions(${GLFW_CFLAGS_OTHER})
 
-include_directories(${GLFW_INCLUDE_DIRS} ${GLEW_INCLUDE_PATH} ${LIBXML2_INCLUDE_DIR})
+include_directories(${GLFW_INCLUDE_DIRS} ${GLEW_INCLUDE_PATH} ${LIBXML2_INCLUDE_DIR} lib)
 
 link_directories(${GLFW_LIBRARY_DIRS})
 
@@ -53,11 +59,11 @@ ELSE(APPLE)
     SET(EXTRA_LIBS ${GLFW_LDFLAGS_OTHER})
 ENDIF (APPLE)
 
-set(A3DViewer_HEADER src/Framework.h src/Vector2.h src/Vector3.h src/Mesh.h)
+#set(A3DViewer_HEADER ) 
 
-set(A3DViewer_SOURCE src/Main.cpp src/Framework.cpp src/Mesh.cpp)
+set(A3DViewer_SOURCE src/Main.cpp )
 
-add_executable(A3DViewer ${A3DViewer_SOURCE} ${A3DViewer_HEADER})
+add_executable(A3DViewer ${A3DViewer_SOURCE})# ${A3DViewer_HEADER})
 
 target_link_libraries(A3DViewer ${GLFW_LIBRARIES} ${EXTRA_LIBS} ${GLEW_LIBRARY} ${LIBXML2_LIBRARIES})
 
