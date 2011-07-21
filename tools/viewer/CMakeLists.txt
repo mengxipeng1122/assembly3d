@@ -20,19 +20,6 @@ endif(MSVC)
 
 ####################
 
-#set(A3DMeshLoader_HEADER 
-#    lib/A3DMeshParser.h
-#    lib/A3DMeshLoader.h
-#    lib/A3DMesh.h)
-#set(A3DMeshLoader_SOURCE 
-#    lib/A3DMeshParser.cpp
-#    lib/A3DMeshLoader.cpp
-#    lib/A3DMesh.cpp)
-#
-#add_library(A3DMeshLoader ${A3DMeshLoader_HEADER} ${A3DMeshLoader_SOURCE})
-
-####################
-
 find_package(GLEW REQUIRED)
 
 find_package(LibXml2 REQUIRED)
@@ -47,6 +34,12 @@ if(GLFW_FOUND)
     message(STATUS "Found GLFW")
 endif(GLFW_FOUND)
 
+set(GLM_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/external_libs/glm-0.9.2.3)
+find_package(GLM REQUIRED)
+
+set(GLI_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/external_libs/gli-0.3.0.3)
+find_package(GLI REQUIRED)
+
 add_definitions(${GLFW_CFLAGS_OTHER})
 
 include_directories(${GLFW_INCLUDE_DIRS} ${GLEW_INCLUDE_PATH} ${LIBXML2_INCLUDE_DIR} lib)
@@ -59,11 +52,11 @@ ELSE(APPLE)
     SET(EXTRA_LIBS ${GLFW_LDFLAGS_OTHER})
 ENDIF (APPLE)
 
-#set(A3DViewer_HEADER ) 
+set(A3DViewer_HEADER src/Graphics.h)
 
-set(A3DViewer_SOURCE src/Main.cpp )
+set(A3DViewer_SOURCE src/Main.cpp src/Graphics.cpp)
 
-add_executable(A3DViewer ${A3DViewer_SOURCE})# ${A3DViewer_HEADER})
+add_executable(A3DViewer ${A3DViewer_SOURCE} ${A3DViewer_HEADER})
 
 target_link_libraries(A3DViewer ${GLFW_LIBRARIES} ${EXTRA_LIBS} ${GLEW_LIBRARY} ${LIBXML2_LIBRARIES})
 
