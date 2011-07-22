@@ -42,7 +42,7 @@ find_package(GLI REQUIRED)
 
 add_definitions(${GLFW_CFLAGS_OTHER})
 
-include_directories(${GLFW_INCLUDE_DIRS} ${GLEW_INCLUDE_PATH} ${LIBXML2_INCLUDE_DIR} lib)
+include_directories(${GLFW_INCLUDE_DIRS} ${GLEW_INCLUDE_PATH} ${LIBXML2_INCLUDE_DIR})
 
 link_directories(${GLFW_LIBRARY_DIRS})
 
@@ -52,9 +52,16 @@ ELSE(APPLE)
     SET(EXTRA_LIBS ${GLFW_LDFLAGS_OTHER})
 ENDIF (APPLE)
 
-set(A3DViewer_HEADER src/Graphics.h)
+set(A3DViewer_HEADER src/Graphics.h
+                     src/Mesh.h
+                     src/ShaderUtils.h
+                     src/ProgramSimple.h)
 
-set(A3DViewer_SOURCE src/Main.cpp src/Graphics.cpp)
+set(A3DViewer_SOURCE src/Main.cpp
+                     src/Graphics.cpp
+                     src/Mesh.cpp
+                     src/ShaderUtils.cpp
+                     src/ProgramSimple.cpp)
 
 add_executable(A3DViewer ${A3DViewer_SOURCE} ${A3DViewer_HEADER})
 
