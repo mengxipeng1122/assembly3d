@@ -111,7 +111,12 @@ int main(int argc, char *argv[])
     // Initializing graphics
     //----------------------------------------
     
-    
+    Resources r;
+    r.meshPath = metaPath;
+    r.dataPath = dataPath;
+    r.texPath = "";
+    graphics.setResources(r);
+
     graphics.init();
     
     
@@ -153,6 +158,7 @@ int main(int argc, char *argv[])
 
     // Shut down GLFW
     glfwTerminate();
+
     // Return the appropriate value
     return retval;
 }
@@ -160,8 +166,8 @@ int main(int argc, char *argv[])
 // Initialize the window, can throw if something goes wrong.
 void initWindow(int scrX, int scrY, int BPP)
 {
-    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 2);
-    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 1);
+//    glfwOpenWindowHint(GLFW_VERSION_MAJOR, 2);
+//    glfwOpenWindowHint(GLFW_VERSION_MINOR, 1);
     // Initialize the GLFW library
     if (glfwInit() != GL_TRUE)
         throw "Failed to initialize GLFW.";

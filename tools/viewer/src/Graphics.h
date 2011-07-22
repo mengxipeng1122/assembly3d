@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Peter Vasil
+ * Copyright (c) 2011 Peter Vasil, Micheal Nischt
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -34,20 +34,62 @@
 #ifndef GRAPHICS_H
 #define GRAPHICS_H
 
+#include <GL/glew.h>
+
+#include "Mesh.h"
+#include "ProgramSimple.h"
+
+#include <string>
+#include <vector>
+
+typedef GLuint Texture;
+
+struct Location3D
+{
+    Location3D() : x(0), y(0), z(0), rotX(0), rotY(0), rotZ(1), rotAngle(0) {}
+    float x, y, z;
+    float rotX, rotY, rotZ, rotAngle;
+};
+
+struct Resources
+{
+    std::string meshPath;
+    std::string dataPath;
+    std::string texPath;
+};
+
 class Graphics
 {
 public:
     Graphics();
     ~Graphics();
     
+    void setResources(Resources r);
     void init();
     void render();
     
-    void loadMesh(const char* meta, const char* data);
-    void loadTexture(const char* texName);
+    Mesh* loadMesh(const char* meta, const char* data);
+    Texture loadTexture(const char* texName);
+    void addObject(Location3D* loc, Mesh* mesh, Texture texture, float scale);
+
     
 private:
-    
+
+    Resources resources;
+
+    struct Shape3D
+    {
+        Texture texture;
+        Mesh* mesh;
+        Location3D *location;
+        float scale;
+    };
+
+    std::vector<Mesh*> meshes;
+    std::vector<Texture> textures;
+    std::vector<Shape3D> shapes;
+
+    ProgramSimple* simple;
 };
 
 #endif // GRAPHICS_H
