@@ -36,7 +36,7 @@
 
 #include "ConvertTool.h"
 #include "TransformTool.h"
-#include "AttributeTool.h"
+//#include "AttributeTool.h"
 #include "OptimizeTool.h"
 #include "FrontFaceTool.h"
 #include "ToolManager.h"

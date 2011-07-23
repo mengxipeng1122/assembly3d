@@ -55,6 +55,7 @@ private:
     GLsizei *nTriangles;
     GLsizei indexSize;
     GLenum indexType;
+
 };
 
 #endif // MESH_H

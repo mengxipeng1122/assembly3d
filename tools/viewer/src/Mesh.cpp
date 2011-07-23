@@ -40,6 +40,7 @@
 #include <string.h>
 #include <stdio.h>
 
+#include "Resources.h"
 
 struct Loader
 {
@@ -60,8 +61,8 @@ struct Loader
 
         mesh->buffers = new GLuint[attributes+1];
 
-//        glGenVertexArrays(1, &mesh->vertexArray);
-//        glBindVertexArray(mesh->vertexArray);
+        //        glGenVertexArrays(1, &mesh->vertexArray);
+        //        glBindVertexArray(mesh->vertexArray);
     }
 
     void attribute(const GLchar *name, GLsizei size, GLenum type, GLsizei typeSize)
@@ -118,7 +119,7 @@ struct Loader
         fread(data, mesh->indexSize, mesh->nTotalTriangles*3, file);
         glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 
-//        glBindVertexArray(0);
+        //        glBindVertexArray(0);
 
         mesh->buffers[mesh->nAttributes-1] = buffer;
         fclose(file);
@@ -128,6 +129,7 @@ private:
     GLuint index;
     FILE * file;
     Mesh *mesh;
+    Resources* r;
 };
 
 static void processNode(xmlTextReaderPtr reader, Loader& loader) {
@@ -135,54 +137,54 @@ static void processNode(xmlTextReaderPtr reader, Loader& loader) {
     const char *name = (const char*)xmlTextReaderConstName(reader);
     assert (name != NULL);
 
-        int nodeType = xmlTextReaderNodeType(reader);
-        if(nodeType != 1)
-        {
-            return;
-        }
+    int nodeType = xmlTextReaderNodeType(reader);
+    if(nodeType != 1)
+    {
+        return;
+    }
 
-        if(strcmp("Vertices", name) == 0)
-        {
-            GLsizei count = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "count") );
-            GLsizei attributes = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "attributes") );
-            loader.vertices( count, attributes );
-        }
-        else if(strcmp("Attribute", name) == 0)
-        {
-            const GLchar* name = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "name");
-            GLsizei size = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "size") );
-            //const char* typeName = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "type");
-            //assert(strcmp("FLOAT", typeName) == 0);
-            GLenum type = GL_FLOAT;
-            GLsizei typeSize = 4;
-            loader.attribute( name, size, type, typeSize );
-        }
-        else if(strcmp("Triangles", name) == 0)
-        {
-            const char* typeName = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "type");
-            GLsizei groups = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "groups") );
+    if(strcmp("Vertices", name) == 0)
+    {
+        GLsizei count = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "count") );
+        GLsizei attributes = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "attributes") );
+        loader.vertices( count, attributes );
+    }
+    else if(strcmp("Attribute", name) == 0)
+    {
+        const GLchar* name = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "name");
+        GLsizei size = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "size") );
+        //const char* typeName = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "type");
+        //assert(strcmp("FLOAT", typeName) == 0);
+        GLenum type = GL_FLOAT;
+        GLsizei typeSize = 4;
+        loader.attribute( name, size, type, typeSize );
+    }
+    else if(strcmp("Triangles", name) == 0)
+    {
+        const char* typeName = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "type");
+        GLsizei groups = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "groups") );
 
-            GLenum type = GL_UNSIGNED_SHORT;
-            GLsizei typeSize = 2;
-            if(strcmp("UNSIGNED_BYTE", typeName) == 0)
-            {
-                type = GL_UNSIGNED_BYTE;
-                typeSize = 1;
-            }
-            else if(strcmp("UNSIGNED_INT", typeName) == 0)
-            {
-                type = GL_UNSIGNED_INT;
-                typeSize = 4;
-            }
-            loader.triangles(type, typeSize, groups);
-        }
-        else if(strcmp("Group", name) == 0)
+        GLenum type = GL_UNSIGNED_SHORT;
+        GLsizei typeSize = 2;
+        if(strcmp("UNSIGNED_BYTE", typeName) == 0)
         {
-            const GLchar* name = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "name");
-            GLsizei count = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "count") );
-
-            loader.group( name, count );
+            type = GL_UNSIGNED_BYTE;
+            typeSize = 1;
         }
+        else if(strcmp("UNSIGNED_INT", typeName) == 0)
+        {
+            type = GL_UNSIGNED_INT;
+            typeSize = 4;
+        }
+        loader.triangles(type, typeSize, groups);
+    }
+    else if(strcmp("Group", name) == 0)
+    {
+        const GLchar* name = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "name");
+        GLsizei count = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "count") );
+
+        loader.group( name, count );
+    }
 }
 
 Mesh::Mesh(const char* metafilename, const char* datafilename) {
@@ -192,34 +194,34 @@ Mesh::Mesh(const char* metafilename, const char* datafilename) {
     xmlTextReaderPtr reader = xmlReaderForFile(metafilename, NULL, 0);
     assert(reader != NULL);
     int ret = xmlTextReaderRead(reader);
-  while (ret == 1)
-  {
-      processNode(reader, loader);
-      ret = xmlTextReaderRead(reader);
-  }
-  xmlFreeTextReader(reader);
-  assert(ret == 0);
+    while (ret == 1)
+    {
+        processNode(reader, loader);
+        ret = xmlTextReaderRead(reader);
+    }
+    xmlFreeTextReader(reader);
+    assert(ret == 0);
 
-  loader.finish();
+    loader.finish();
 }
 
 Mesh::~Mesh() {
 
-//    glDeleteVertexArrays(1, &vertexArray);
+    //    glDeleteVertexArrays(1, &vertexArray);
     glDeleteBuffers(nAttributes, buffers);
     delete buffers;
     delete nTriangles;
 }
 
 GLvoid Mesh::draw() {
-//    glBindVertexArray(vertexArray);
+    //    glBindVertexArray(vertexArray);
     glDrawElements(GL_TRIANGLES, 3*nTotalTriangles, indexType, (GLvoid*) 0);
-//    glBindVertexArray(0);
+    //    glBindVertexArray(0);
 }
 
 GLvoid Mesh::draw(GLuint index) {
-//    glBindVertexArray(vertexArray);
+    //    glBindVertexArray(vertexArray);
     GLsizei count = nTriangles[index+1] - nTriangles[index];
     glDrawElements(GL_TRIANGLES, 3*nTriangles[index+1], indexType, (GLvoid*) (nTriangles[index]*3*indexSize));
-//    glBindVertexArray(0);
+    //    glBindVertexArray(0);
 }

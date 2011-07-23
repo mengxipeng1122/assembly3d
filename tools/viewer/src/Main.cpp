@@ -105,25 +105,6 @@ int main(int argc, char *argv[])
     dataPath = dataPathStr.c_str();
 
     //----------------------------------------
-    
-    
-    //----------------------------------------
-    // Initializing graphics
-    //----------------------------------------
-    
-    Resources r;
-    r.meshPath = metaPath;
-    r.dataPath = dataPath;
-    r.texPath = "";
-    graphics.setResources(r);
-
-    graphics.init();
-    
-    
-    //----------------------------------------
-
-
-    //----------------------------------------
     // Start loop
     //----------------------------------------
     
@@ -134,12 +115,24 @@ int main(int argc, char *argv[])
         initWindow(800, 600, 32);
         // Pass control to the render function
         
+        Resources r;
+        r.meshPath = metaPath;
+        r.dataPath = dataPath;
+        r.texPath = "";
+        graphics.setResources(r);
+
+        //----------------------------------------
+        // Initializing graphics
+        //----------------------------------------
+
+        graphics.init();
+
+        //----------------------------------------
+
         while(runLevel)
         {
             if(keys[GLFW_KEY_ESC]) // Esc Key
                 runLevel=0;
-            
-            // Do OpenGL stuff here
             
             graphics.render();
 
@@ -166,8 +159,9 @@ int main(int argc, char *argv[])
 // Initialize the window, can throw if something goes wrong.
 void initWindow(int scrX, int scrY, int BPP)
 {
-//    glfwOpenWindowHint(GLFW_VERSION_MAJOR, 2);
-//    glfwOpenWindowHint(GLFW_VERSION_MINOR, 1);
+    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 2);
+    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 1);
+
     // Initialize the GLFW library
     if (glfwInit() != GL_TRUE)
         throw "Failed to initialize GLFW.";
@@ -184,15 +178,10 @@ void initWindow(int scrX, int scrY, int BPP)
     glfwSetMouseButtonCallback(mouseButtonCallback);
     glfwSetMousePosCallback(mousePosCallback);
     
+//    glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK)
         throw "Could not init GLEW!";
-    
-    //    // Set the projection matrix to a normal frustum with a max depth of 500
-    //    glMatrixMode(GL_PROJECTION);
-    //    glLoadIdentity();
-    //    float aspect_ratio = ((float)scrX) / scrY;
-    //    glFrustum(.5, -.5, -.5 * aspect_ratio, .5 * aspect_ratio, 1, 500);
-    //    glMatrixMode(GL_MODELVIEW);
+
 }
 
 // Wrapper for buffer swapping
@@ -204,6 +193,7 @@ void flipBuffers()
     // If the window was closed we quit
     if (glfwGetWindowParam(GLFW_OPENED) != GL_TRUE)
         runLevel = 0;
+
 }
 
 // Handle keys - updates the Keys array
