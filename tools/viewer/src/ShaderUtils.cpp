@@ -41,13 +41,11 @@ ShaderUtils::ShaderUtils()
 
 GLuint ShaderUtils::createVertexShader(const char *vsSrc)
 {
-    GLuint vertexShader = 0;
-
     std::ifstream vsFile(vsSrc, std::ifstream::in);
     std::string vertexShaderSource = std::string(std::istreambuf_iterator<char>(vsFile),
                                                  std::istreambuf_iterator<char>());
 
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
     const GLchar *vsCstr = vertexShaderSource.c_str();
     glShaderSource(vertexShader, 1, &vsCstr, 0);
@@ -130,10 +128,10 @@ GLuint ShaderUtils::createProgram(GLuint vertexShader, GLuint fragmentShader)
         glGetProgramInfoLog(shaderProgram, logLength, 0, &info_log[0]);
         std::cout << "Shader-program link error:\n\n" << info_log.c_str() << std::endl;
     }
-    else
-    {
-        std::cout << "Shader-program linked successfully.\n" << std::endl;
-    }
+//    else
+//    {
+//        std::cout << "Shader-program linked successfully.\n" << std::endl;
+//    }
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);

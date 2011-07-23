@@ -36,6 +36,8 @@
 #include "gli/gli.hpp"
 #include "gli/gtx/gl_texture2d.hpp"
 
+#include <GL/glew.h>
+
 using namespace std;
 
 Graphics::Graphics()
@@ -54,7 +56,7 @@ Graphics::~Graphics()
 
 void Graphics::init()
 {
-    simple = new ProgramSimple();
+
 
     glClearColor(0.25f,0.25f,0.25f,1);
 
@@ -63,6 +65,12 @@ void Graphics::init()
     glShadeModel(GL_SMOOTH);
     //glEnable(GL_MULTISAMPLE);
 
+//    Location3D* loc = new Location3D();
+//    Mesh* m = loadMesh(resources.meshPath.c_str(), resources.dataPath.c_str());
+//    Texture t = loadTexture(resources.textureNames[0].c_str());
+//    addObject(loc, m, t, 1.0f);
+
+    simple = new ProgramSimple();
 }
 
 void Graphics::render()

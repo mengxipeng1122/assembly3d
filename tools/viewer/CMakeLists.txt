@@ -55,7 +55,8 @@ ENDIF (APPLE)
 set(A3DViewer_HEADER src/Graphics.h
                      src/Mesh.h
                      src/ShaderUtils.h
-                     src/ProgramSimple.h)
+                     src/ProgramSimple.h
+                     src/Resources.h)
 
 set(A3DViewer_SOURCE src/Main.cpp
                      src/Graphics.cpp
@@ -67,6 +68,12 @@ add_executable(A3DViewer ${A3DViewer_SOURCE} ${A3DViewer_HEADER})
 
 target_link_libraries(A3DViewer ${GLFW_LIBRARIES} ${EXTRA_LIBS} ${GLEW_LIBRARY} ${LIBXML2_LIBRARIES})
 
+
+
+GET_TARGET_PROPERTY(A3DViewer_PATH A3DViewer LOCATION)
+GET_FILENAME_COMPONENT(A3DViewer_DIR ${A3DViewer_PATH} PATH)
+
+message(STATUS ${A3DViewer_DIR})
 execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
                         ${CMAKE_SOURCE_DIR}/glsl
-                        ${CMAKE_BINARY_DIR}/glsl)
+                        ${A3DViewer_DIR}/glsl)

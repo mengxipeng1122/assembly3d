@@ -1,22 +1,22 @@
 /*
- * Copyright (c) 2011 Peter Vasil, Micheal Nischt
+ * Copyright (c) 2011 Peter Vasil
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
+ * 
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- *
+ * 
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
+ * 
  * Neither the name of the project's author nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -31,59 +31,19 @@
  *
  */
 
-#ifndef GRAPHICS_H
-#define GRAPHICS_H
+#ifndef RESOURCES_H
+#define RESOURCES_H
 
-#include <GL/glew.h>
-
-#include "Mesh.h"
-#include "ProgramSimple.h"
-#include "Resources.h"
-
-//#include <string>
+#include <string>
 #include <vector>
 
-typedef GLuint Texture;
-
-struct Location3D
+struct Resources
 {
-    Location3D() : x(0), y(0), z(0), rotX(0), rotY(0), rotZ(1), rotAngle(0) {}
-    float x, y, z;
-    float rotX, rotY, rotZ, rotAngle;
+    std::string meshPath;
+    std::string dataPath;
+    std::string texPath;
+    std::vector<std::string> textureNames;
 };
 
-class Graphics
-{
-public:
-    Graphics();
-    ~Graphics();
-    
-    void setResources(Resources r);
-    void init();
-    void render();
-    
-    Mesh* loadMesh(const char* meta, const char* data);
-    Texture loadTexture(const char* texName);
-    void addObject(Location3D* loc, Mesh* mesh, Texture texture, float scale);
 
-    
-private:
-
-    Resources resources;
-
-    struct Shape3D
-    {
-        Texture texture;
-        Mesh* mesh;
-        Location3D *location;
-        float scale;
-    };
-
-    std::vector<Mesh*> meshes;
-    std::vector<Texture> textures;
-    std::vector<Shape3D> shapes;
-
-    ProgramSimple* simple;
-};
-
-#endif // GRAPHICS_H
+#endif // RESOURCES_H
