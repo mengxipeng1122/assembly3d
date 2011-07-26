@@ -50,10 +50,12 @@ ProgramSimple::ProgramSimple()
     projectionLoc = glGetUniformLocation(program, "projection");
     modelViewLoc = glGetUniformLocation(program, "modelView");
     textureLoc = glGetUniformLocation(program, "firstTexture");
+//    lightingLoc = glGetUniformLocation(program, "lighting");
 
     vertex = glGetAttribLocation(program, "vertex");
     normal = glGetAttribLocation(program, "normal");
     texCoord = glGetAttribLocation(program, "texCoord");
+
 }
 
 ProgramSimple::~ProgramSimple()

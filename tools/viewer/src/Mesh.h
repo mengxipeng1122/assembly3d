@@ -50,10 +50,11 @@
 
     const char* getGroupName(int idx) { return groupNames[idx+1]; }
     int getNGroups() { return nGroups; }
-private:
+
+ private:
     void bindBuffers();
     void disableBuffers();
-//    GLuint vertexArray;
+
     GLuint* buffers;
     GLsizei* attrSizes;
     GLsizei* attrTypeSizes;

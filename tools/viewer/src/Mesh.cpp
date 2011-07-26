@@ -225,8 +225,6 @@ Mesh::Mesh(const char* metafilename, const char* datafilename) {
 }
 
 Mesh::~Mesh() {
-
-    //    glDeleteVertexArrays(1, &vertexArray);
     glDeleteBuffers(nAttributes, buffers);
     delete buffers;
     delete nTriangles;
@@ -270,3 +268,4 @@ void Mesh::disableBuffers()
         glDisableVertexAttribArray(i);
     }
 }
+
