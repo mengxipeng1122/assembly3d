@@ -48,13 +48,21 @@
     GLvoid draw();
     GLvoid draw(GLuint index);
 
+    const char* getGroupName(int idx) { return groupNames[idx+1]; }
+    int getNGroups() { return nGroups; }
 private:
+    void bindBuffers();
+    void disableBuffers();
 //    GLuint vertexArray;
-    GLuint *buffers;
+    GLuint* buffers;
+    GLsizei* attrSizes;
+    GLsizei* attrTypeSizes;
+    GLenum* attrTypes;
     GLsizei nVertices, nAttributes, nGroups, nTotalTriangles;
-    GLsizei *nTriangles;
+    GLsizei* nTriangles;
     GLsizei indexSize;
     GLenum indexType;
+    const char** groupNames;
 
 };
 

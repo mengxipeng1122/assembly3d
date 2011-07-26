@@ -69,6 +69,8 @@ void mousePosCallback(int x, int y);
 // Swap buffers
 void flipBuffers();
 
+int winWidth = 800;
+int winHeight = 600;
 int main(int argc, char *argv[])
 {
     //----------------------------------------
@@ -112,13 +114,21 @@ int main(int argc, char *argv[])
     try
     {
         // Initialize the window
-        initWindow(800, 600, 32);
+        initWindow(winWidth, winHeight, 32);
         // Pass control to the render function
         
         Resources r;
         r.meshPath = metaPath;
         r.dataPath = dataPath;
-        r.texPath = "";
+        size_t pos = metaPathStr.find_last_of("/");
+        if(pos == std::string::npos)
+        {
+            r.texPath = "./";
+        }
+        else
+        {
+            r.texPath = metaPathStr.substr(0, pos+1);
+        }
         graphics.setResources(r);
 
         //----------------------------------------
@@ -134,7 +144,7 @@ int main(int argc, char *argv[])
             if(keys[GLFW_KEY_ESC]) // Esc Key
                 runLevel=0;
             
-            graphics.render();
+            graphics.render(winWidth, winHeight);
 
             // We're using double buffers, so we need to swap to see our stuff
             flipBuffers();

@@ -60,11 +60,12 @@ public:
     
     void setResources(Resources r);
     void init();
-    void render();
+    void render(int width, int height);
     
     Mesh* loadMesh(const char* meta, const char* data);
     Texture loadTexture(const char* texName);
     void addObject(Location3D* loc, Mesh* mesh, Texture texture, float scale);
+    void addObject(Location3D* loc, Mesh* mesh, float scale);
 
     
 private:
@@ -73,6 +74,7 @@ private:
 
     struct Shape3D
     {
+        std::vector<Texture> textures;
         Texture texture;
         Mesh* mesh;
         Location3D *location;

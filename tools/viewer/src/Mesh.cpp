@@ -60,6 +60,10 @@ struct Loader
         index = 0;
 
         mesh->buffers = new GLuint[attributes+1];
+        mesh->attrSizes = new GLsizei[attributes];
+        mesh->attrTypes = new GLenum[attributes];
+        mesh->attrTypeSizes = new GLsizei[attributes];
+
 
         //        glGenVertexArrays(1, &mesh->vertexArray);
         //        glBindVertexArray(mesh->vertexArray);
@@ -71,18 +75,23 @@ struct Loader
 
         GLsizei stride = size*typeSize;
 
+        GLuint idx = index++;
+        mesh->attrSizes[idx] = size;
+        mesh->attrTypeSizes[idx] = typeSize;
+        mesh->attrTypes[idx] = type;
+
         GLuint buffer;
         glGenBuffers(1, &buffer);
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
         glBufferData(GL_ARRAY_BUFFER, mesh->nVertices*stride, (GLvoid*) 0, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(index);
-        glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, 0, (GLvoid*) 0);
+        glEnableVertexAttribArray(idx);
+        glVertexAttribPointer(idx, size, type, GL_FALSE, 0, (GLvoid*) 0);
 
         char* data = (char*) glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
         fread(data, stride, mesh->nVertices, file);
         glUnmapBuffer(GL_ARRAY_BUFFER);
 
-        mesh->buffers[index++] = buffer;
+        mesh->buffers[idx] = buffer;
     }
 
     void triangles(GLenum type, GLsizei typeSize, GLuint groups)
@@ -97,14 +106,23 @@ struct Loader
         mesh->nTotalTriangles = 0;
 
         mesh->nTriangles[index++] = 0;
+        mesh->groupNames = new const char*[groups];
     }
 
     void group(const GLchar *name, GLsizei count)
     {
-        //printf("<Group name=\"%s\" count=\"%d\">\n", name, count);
+//        printf("<Group name=\"%s\" count=\"%d\">\n", name, count);
+
+        GLuint idx = index++;
+        char* groupName = new char[strlen(name)+1];
+        strcpy(groupName, name);
+        mesh->groupNames[idx] = groupName;
+
+//        printf("group %d: %s\n",idx, name);
 
         mesh->nTotalTriangles += count;
-        mesh->nTriangles[index++] = mesh->nTotalTriangles;
+        mesh->nTriangles[idx] = mesh->nTotalTriangles;
+
     }
 
     void finish()
@@ -121,7 +139,8 @@ struct Loader
 
         //        glBindVertexArray(0);
 
-        mesh->buffers[mesh->nAttributes-1] = buffer;
+//        mesh->buffers[mesh->nAttributes-1] = buffer;
+        mesh->buffers[mesh->nAttributes] = buffer;
         fclose(file);
     }
 
@@ -211,17 +230,43 @@ Mesh::~Mesh() {
     glDeleteBuffers(nAttributes, buffers);
     delete buffers;
     delete nTriangles;
+    delete attrSizes;
+    delete attrTypeSizes;
+    delete attrTypes;
+    for (int i = 0; i < nGroups; ++i)
+        delete groupNames[i];
+    delete groupNames;
 }
 
 GLvoid Mesh::draw() {
-    //    glBindVertexArray(vertexArray);
+    bindBuffers();
     glDrawElements(GL_TRIANGLES, 3*nTotalTriangles, indexType, (GLvoid*) 0);
-    //    glBindVertexArray(0);
+    disableBuffers();
 }
 
 GLvoid Mesh::draw(GLuint index) {
-    //    glBindVertexArray(vertexArray);
+    bindBuffers();
     GLsizei count = nTriangles[index+1] - nTriangles[index];
     glDrawElements(GL_TRIANGLES, 3*nTriangles[index+1], indexType, (GLvoid*) (nTriangles[index]*3*indexSize));
-    //    glBindVertexArray(0);
+    disableBuffers();
+}
+
+void Mesh::bindBuffers()
+{
+    for(unsigned int i = 0; i < nAttributes; ++i)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, buffers[i]);
+        glVertexAttribPointer(i, attrSizes[i], attrTypes[i], GL_FALSE, 0, (GLvoid*) 0);
+        glEnableVertexAttribArray(i);
+    }
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[nAttributes]);
+}
+
+void Mesh::disableBuffers()
+{
+    for(unsigned int i = 0; i < nAttributes; ++i)
+    {
+        glDisableVertexAttribArray(i);
+    }
 }
