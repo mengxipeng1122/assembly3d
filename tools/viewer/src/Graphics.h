@@ -64,7 +64,7 @@ public:
     
     Mesh* loadMesh(const char* meta, const char* data);
     Texture loadTexture(const char* texName);
-    void addObject(Location3D* loc, Mesh* mesh, Texture texture, float scale);
+//    void addObject(Location3D* loc, Mesh* mesh, Texture texture, float scale);
     void addObject(Location3D* loc, Mesh* mesh, float scale);
 
     
@@ -75,7 +75,7 @@ private:
     struct Shape3D
     {
         std::vector<Texture> textures;
-        Texture texture;
+//        Texture texture;
         Mesh* mesh;
         Location3D *location;
         float scale;
