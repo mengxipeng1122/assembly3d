@@ -49,6 +49,7 @@ public:
 
 private:
     GLuint program;
-    GLint projectionLoc, modelViewLoc;
+    GLint projectionLoc, modelViewLoc, textureLoc;
+    GLint vertex, normal, texCoord;
 };
 #endif // PROGRAMSIMPLE_H

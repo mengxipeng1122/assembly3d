@@ -1,7 +1,7 @@
 //#version 110
 
-uniform mat4 projectionMatrix;
-uniform mat4 modelViewMatrix;
+uniform mat4 projection;
+uniform mat4 modelView;
 
 //in 
 attribute vec4 vertex;
@@ -16,8 +16,8 @@ void main(void)
 {
 	fragmentTexCoord = texCoord;
 
-    vec4 n = modelViewMatrix*vec4(normal, 0.0);
+    vec4 n = modelView*vec4(normal, 0.0);
 	fragmentNormal = n.xyz;
 
-	gl_Position = projectionMatrix*modelViewMatrix*vertex;
+	gl_Position = projection*modelView*vertex;
 }

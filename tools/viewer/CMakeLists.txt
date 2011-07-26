@@ -69,11 +69,18 @@ add_executable(A3DViewer ${A3DViewer_SOURCE} ${A3DViewer_HEADER})
 target_link_libraries(A3DViewer ${GLFW_LIBRARIES} ${EXTRA_LIBS} ${GLEW_LIBRARY} ${LIBXML2_LIBRARIES})
 
 
+if(${CMAKE_GENERATOR} EQUAL "Xcode" OR MSVC)
+    message(STATUS "1")
+    set(glsl_OUTPUT_DIR ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE})
+    set(data_OUTPUT_DIR ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE})
+else(${CMAKE_GENERATOR} EQUAL "Xcode"OR MSVC)
+    message(STATUS "2")
+    set(glsl_OUTPUT_DIR ${CMAKE_BINARY_DIR})
+    set(data_OUTPUT_DIR ${CMAKE_BINARY_DIR})
+endif(${CMAKE_GENERATOR} EQUAL "Xcode"OR MSVC)
 
-GET_TARGET_PROPERTY(A3DViewer_PATH A3DViewer LOCATION)
-GET_FILENAME_COMPONENT(A3DViewer_DIR ${A3DViewer_PATH} PATH)
 
-message(STATUS ${A3DViewer_DIR})
+
 execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
                         ${CMAKE_SOURCE_DIR}/glsl
-                        ${A3DViewer_DIR}/glsl)
+                        ${glsl_OUTPUT_DIR}/glsl)

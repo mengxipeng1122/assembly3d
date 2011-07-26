@@ -49,6 +49,11 @@ ProgramSimple::ProgramSimple()
 
     projectionLoc = glGetUniformLocation(program, "projection");
     modelViewLoc = glGetUniformLocation(program, "modelView");
+    textureLoc = glGetUniformLocation(program, "firstTexture");
+
+    vertex = glGetAttribLocation(program, "vertex");
+    normal = glGetAttribLocation(program, "normal");
+    texCoord = glGetAttribLocation(program, "texCoord");
 }
 
 ProgramSimple::~ProgramSimple()

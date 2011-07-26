@@ -33,6 +33,11 @@
 
 #include "Graphics.h"
 
+// glm
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "gli/gli.hpp"
 #include "gli/gtx/gl_texture2d.hpp"
 
@@ -50,8 +55,11 @@ Graphics::~Graphics()
     {
         delete *it;
     }
-//    if(mesh) delete mesh; mesh = NULL;
-//    if(simple) delete simple; simple = NULL;
+    meshes.clear();
+    textures.clear();
+    shapes.clear();
+
+    if(simple) delete simple; simple = NULL;
 }
 
 void Graphics::init()
@@ -63,23 +71,58 @@ void Graphics::init()
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glShadeModel(GL_SMOOTH);
-    //glEnable(GL_MULTISAMPLE);
+    glEnable(GL_MULTISAMPLE);
 
-//    Location3D* loc = new Location3D();
-//    Mesh* m = loadMesh(resources.meshPath.c_str(), resources.dataPath.c_str());
-//    Texture t = loadTexture(resources.textureNames[0].c_str());
-//    addObject(loc, m, t, 1.0f);
+    Location3D* loc = new Location3D();
+    loc->x = 2.0f;
+//    loc->rotY = 1.0f;
+    loc->rotAngle = 0.0f;
+    Mesh* m = loadMesh(resources.meshPath.c_str(), resources.dataPath.c_str());
+    for (int i = 0; i < resources.textureNames.size(); ++i) {
+        std::string tPath = resources.texPath + resources.textureNames[0];
+        Texture t = loadTexture(tPath.c_str());
+    }
+//    Texture t = loadTexture("data/crate.tga");
+//    addObject(loc, m, t, 4.0f);
+    addObject(loc, m, 1.0f);
 
     simple = new ProgramSimple();
 }
 
-void Graphics::render()
+void Graphics::render(int width, int height)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(simple->programName());
 
     // here implemetation
+    float camZ = 15.0f;
+    float near = 3.0f; float far = 100.0f;
+    float aspect = width/(GLfloat)height;
+
+    glm::mat4 V = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -camZ));
+    glm::mat4 P = glm::frustum(-1.0f,1.0f, -1.0f, 2.0f/aspect-1.0f, near, far);
+    simple->projection(glm::value_ptr(P));
+
+    for(unsigned int i = 0; i < shapes.size(); ++i)
+    {
+        Location3D *loc = shapes[i].location;
+
+        glm::mat4 M = glm::mat4(1.0f);
+
+        M = glm::translate(M, glm::vec3(loc->x, loc->y, loc->z));
+        M = glm::rotate(M, loc->rotAngle * 180.0f/3.14f, glm::vec3(loc->rotX, loc->rotY, loc->rotZ));
+        M = glm::scale(M, glm::vec3(shapes[i].scale, shapes[i].scale, shapes[i].scale));
+
+        glm::mat4 MV = V*M;
+        simple->modelView(glm::value_ptr(MV));
+        for (int j = 0; j < shapes[i].textures.size(); ++j) {
+            glBindTexture(GL_TEXTURE_2D, shapes[i].textures[j]);
+            shapes[i].mesh->draw(j);
+            glBindTexture(GL_TEXTURE_2D, 0);
+
+        }
+    }
 
     glUseProgram(0);
 
@@ -89,6 +132,11 @@ Mesh* Graphics::loadMesh(const char* meta, const char* data)
 {
     Mesh* mesh = new Mesh(meta, data);
     meshes.push_back(mesh);
+    for (int i = 0; i < mesh->getNGroups(); ++i) {
+//        printf("%s\n", mesh->getGroupName(i));
+        resources.textureNames.push_back(mesh->getGroupName(i));
+    }
+
     return mesh;
 }
 
@@ -114,3 +162,12 @@ void Graphics::addObject(Location3D *loc, Mesh *mesh, Texture texture, float sca
     shapes.push_back(shape);
 }
 
+void Graphics::addObject(Location3D *loc, Mesh *mesh, float scale)
+{
+    Shape3D shape;
+    shape.location = loc;
+    shape.textures = textures;
+    shape.mesh = mesh;
+    shape.scale = scale;
+    shapes.push_back(shape);
+}
