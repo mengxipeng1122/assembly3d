@@ -52,9 +52,9 @@ ProgramSimple::ProgramSimple()
     textureLoc = glGetUniformLocation(program, "firstTexture");
 //    lightingLoc = glGetUniformLocation(program, "lighting");
 
-    vertex = glGetAttribLocation(program, "vertex");
-    normal = glGetAttribLocation(program, "normal");
-    texCoord = glGetAttribLocation(program, "texCoord");
+    vertexLoc = glGetAttribLocation(program, "vertex");
+    normalLoc = glGetAttribLocation(program, "normal");
+    texCoordLoc = glGetAttribLocation(program, "texCoord");
 
 }
 
@@ -71,11 +71,18 @@ GLuint ProgramSimple::programName()
 {
     return program;
 }
-
-//GLuint ProgramSimple::position()
-//{
-//	return vertex;
-//}
+GLint ProgramSimple::position()
+{
+	return vertexLoc;
+}
+GLint ProgramSimple::normal()
+{
+	return normalLoc;
+}
+GLint ProgramSimple::texCoord()
+{
+	return texCoordLoc;
+}
 
 void ProgramSimple::projection(float *matrix)
 {

@@ -41,10 +41,11 @@
 #include <stdio.h>
 
 #include "Resources.h"
+#include "ProgramSimple.h"
 
 struct Loader
 {
-    Loader(Mesh *m, const char *datafilename) : mesh(m)
+    Loader(Mesh *m, const char *datafilename, ProgramSimple* p) : mesh(m), prog(p)
     {
         file = fopen(datafilename, "r");
         assert(file != NULL);
@@ -63,15 +64,13 @@ struct Loader
         mesh->attrSizes = new GLsizei[attributes];
         mesh->attrTypes = new GLenum[attributes];
         mesh->attrTypeSizes = new GLsizei[attributes];
+        mesh->attrNames = new const char*[attributes];
 
-
-        //        glGenVertexArrays(1, &mesh->vertexArray);
-        //        glBindVertexArray(mesh->vertexArray);
     }
 
     void attribute(const GLchar *name, GLsizei size, GLenum type, GLsizei typeSize)
     {
-        //printf("<Attribute name=\"%s\" size=\"%d\" type=\"%d\">\n", name, size, type);
+        printf("<Attribute name=\"%s\" size=\"%d\" type=\"%d\">\n", name, size, type);
 
         GLsizei stride = size*typeSize;
 
@@ -80,6 +79,11 @@ struct Loader
         mesh->attrTypeSizes[idx] = typeSize;
         mesh->attrTypes[idx] = type;
 
+        char* attrName = new char[strlen(name)+1];
+        strcpy(attrName, name);
+        mesh->attrNames[idx] = attrName;
+        printf("AttrName: %s\n", mesh->attrNames[idx]);
+        
         GLuint buffer;
         glGenBuffers(1, &buffer);
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
@@ -148,6 +152,7 @@ private:
     FILE * file;
     Mesh *mesh;
     Resources* r;
+    ProgramSimple* prog;
 };
 
 static void processNode(xmlTextReaderPtr reader, Loader& loader) {
@@ -205,9 +210,10 @@ static void processNode(xmlTextReaderPtr reader, Loader& loader) {
     }
 }
 
-Mesh::Mesh(const char* metafilename, const char* datafilename) {
+Mesh::Mesh(const char* metafilename, const char* datafilename, ProgramSimple* p) : prog(p) 
+{
 
-    Loader loader(this, datafilename);
+    Loader loader(this, datafilename, prog);
 
     xmlTextReaderPtr reader = xmlReaderForFile(metafilename, NULL, 0);
     assert(reader != NULL);
@@ -223,7 +229,8 @@ Mesh::Mesh(const char* metafilename, const char* datafilename) {
     loader.finish();
 }
 
-Mesh::~Mesh() {
+Mesh::~Mesh() 
+{
     glDeleteBuffers(nAttributes, buffers);
     delete buffers;
     delete nTriangles;
@@ -235,13 +242,15 @@ Mesh::~Mesh() {
     delete groupNames;
 }
 
-GLvoid Mesh::draw() {
+GLvoid Mesh::draw() 
+{
     bindBuffers();
     glDrawElements(GL_TRIANGLES, 3*nTotalTriangles, indexType, (GLvoid*) 0);
     disableBuffers();
 }
 
-GLvoid Mesh::draw(GLuint index) {
+GLvoid Mesh::draw(GLuint index) 
+{
     bindBuffers();
     GLsizei count = nTriangles[index+1] - nTriangles[index];
     glDrawElements(GL_TRIANGLES, 3*count, indexType, (GLvoid*) (nTriangles[index]*3*indexSize));
@@ -252,9 +261,22 @@ void Mesh::bindBuffers()//GLuint position,GLuint normal, GLuint texcoord)
 {
     for(unsigned int i = 0; i < nAttributes; ++i)
     {
+        GLint attrLoc = -1;
+        if(strcmp("POSITION", attrNames[i]) == 0)
+        {
+            attrLoc = prog->position();
+        }
+        else if(strcmp("NORMAL", attrNames[i]) == 0)
+        {
+            attrLoc = prog->normal();
+        }
+        else if(strcmp("TEXCOORD", attrNames[i]) == 0)
+        {
+            attrLoc = prog->texCoord();
+        }
         glBindBuffer(GL_ARRAY_BUFFER, buffers[i]);
-        glVertexAttribPointer(i, attrSizes[i], attrTypes[i], GL_FALSE, 0, (GLvoid*) 0);
-        glEnableVertexAttribArray(i);
+        glVertexAttribPointer(attrLoc, attrSizes[i], attrTypes[i], GL_FALSE, 0, (GLvoid*) 0);
+        glEnableVertexAttribArray(attrLoc);
     }
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[nAttributes]);
@@ -266,7 +288,21 @@ void Mesh::disableBuffers()
     
     for(unsigned int i = 0; i < nAttributes; ++i)
     {
-        glDisableVertexAttribArray(i);
+        GLint attrLoc = -1;
+        if(strcmp("POSITION", attrNames[i]) == 0)
+        {
+            attrLoc = prog->position();
+        }
+        else if(strcmp("NORMAL", attrNames[i]) == 0)
+        {
+            attrLoc = prog->normal();
+        }
+        else if(strcmp("TEXCOORD", attrNames[i]) == 0)
+        {
+            attrLoc = prog->texCoord();
+        }
+        
+        glDisableVertexAttribArray(attrLoc);
     }
 }
 

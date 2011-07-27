@@ -47,9 +47,13 @@ public:
 
     GLuint programName();
 
-//private:
+    GLint position();
+    GLint normal();
+    GLint texCoord();
+
+private:
     GLuint program;
     GLint projectionLoc, modelViewLoc/*, lightingLoc*/, textureLoc;
-    GLint vertex, normal, texCoord;
+    GLint vertexLoc, normalLoc, texCoordLoc;
 };
 #endif // PROGRAMSIMPLE_H
