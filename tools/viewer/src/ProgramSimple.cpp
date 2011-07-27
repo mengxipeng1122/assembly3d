@@ -72,6 +72,11 @@ GLuint ProgramSimple::programName()
     return program;
 }
 
+//GLuint ProgramSimple::position()
+//{
+//	return vertex;
+//}
+
 void ProgramSimple::projection(float *matrix)
 {
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, matrix);

@@ -84,12 +84,12 @@ struct Loader
         glGenBuffers(1, &buffer);
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
         glBufferData(GL_ARRAY_BUFFER, mesh->nVertices*stride, (GLvoid*) 0, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(idx);
-        glVertexAttribPointer(idx, size, type, GL_FALSE, 0, (GLvoid*) 0);
 
         char* data = (char*) glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
         fread(data, stride, mesh->nVertices, file);
         glUnmapBuffer(GL_ARRAY_BUFFER);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         mesh->buffers[idx] = buffer;
     }
@@ -136,10 +136,9 @@ struct Loader
         char* data = (char*) glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
         fread(data, mesh->indexSize, mesh->nTotalTriangles*3, file);
         glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+        
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-        //        glBindVertexArray(0);
-
-//        mesh->buffers[mesh->nAttributes-1] = buffer;
         mesh->buffers[mesh->nAttributes] = buffer;
         fclose(file);
     }
@@ -245,11 +244,11 @@ GLvoid Mesh::draw() {
 GLvoid Mesh::draw(GLuint index) {
     bindBuffers();
     GLsizei count = nTriangles[index+1] - nTriangles[index];
-    glDrawElements(GL_TRIANGLES, 3*nTriangles[index+1], indexType, (GLvoid*) (nTriangles[index]*3*indexSize));
+    glDrawElements(GL_TRIANGLES, 3*count, indexType, (GLvoid*) (nTriangles[index]*3*indexSize));
     disableBuffers();
 }
 
-void Mesh::bindBuffers()
+void Mesh::bindBuffers()//GLuint position,GLuint normal, GLuint texcoord)
 {
     for(unsigned int i = 0; i < nAttributes; ++i)
     {
@@ -263,6 +262,8 @@ void Mesh::bindBuffers()
 
 void Mesh::disableBuffers()
 {
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    
     for(unsigned int i = 0; i < nAttributes; ++i)
     {
         glDisableVertexAttribArray(i);
