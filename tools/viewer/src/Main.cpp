@@ -37,7 +37,8 @@
 #include <GL/glew.h>
 #include <GL/glfw.h>
 
-#include "Graphics.h"
+//#include "Graphics.h"
+#include "App.h"
 
 // Globals
 struct MouseInfo
@@ -48,8 +49,8 @@ struct MouseInfo
 int runLevel = 1;
 bool keys[GLFW_KEY_LAST] = {false};  // Key monitor
 
-Graphics graphics;
-
+//Graphics graphics;
+App app;
 const char* vertexShaderPathStr = "glsl/Simple.vert";
 const char* fragmentShaderPathStr = "glsl/Simple.frag";
 
@@ -129,13 +130,11 @@ int main(int argc, char *argv[])
         {
             r.texPath = metaPathStr.substr(0, pos+1);
         }
-        graphics.setResources(r);
-
         //----------------------------------------
-        // Initializing graphics
+        // Initializing app
         //----------------------------------------
 
-        graphics.init();
+        app.init(r);
 
         //----------------------------------------
 
@@ -144,7 +143,7 @@ int main(int argc, char *argv[])
             if(keys[GLFW_KEY_ESC]) // Esc Key
                 runLevel=0;
             
-            graphics.render(winWidth, winHeight);
+            app.render(winWidth, winHeight);
 
             // We're using double buffers, so we need to swap to see our stuff
             flipBuffers();

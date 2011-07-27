@@ -1,22 +1,22 @@
 /*
- * Copyright (c) 2011 Peter Vasil, Micheal Nischt
+ * Copyright (c) 2011 Peter Vasil
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
+ * 
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- *
+ * 
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
+ * 
  * Neither the name of the project's author nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -31,51 +31,23 @@
  *
  */
 
-#ifndef GRAPHICS_H
-#define GRAPHICS_H
+#ifndef APP_H
+#define APP_H
 
-#include <GL/glew.h>
+#include "Graphics.h"
+#include "Resources.h"
 
-#include "Mesh.h"
-#include "ProgramSimple.h"
-//#include "Resources.h"
-
-//#include <string>
-#include <vector>
-
-typedef GLuint Texture;
-
-class Location3D;
-
-class Graphics
+class App
 {
 public:
-    Graphics();
-    ~Graphics();
-    
-    void init();
+    App();
+    ~App();
+
+    void init(Resources r);
     void render(int width, int height);
-    
-    Mesh* loadMesh(const char* meta, const char* data);
-    Texture loadTexture(const char* texName);
-    void addObject(Location3D* loc, Mesh* mesh, float scale);
 
-    
 private:
-
-    struct Shape3D
-    {
-        std::vector<Texture> textures;
-        Mesh* mesh;
-        Location3D *location;
-        float scale;
-    };
-
-    std::vector<Mesh*> meshes;
-    std::vector<Texture> textures;
-    std::vector<Shape3D> shapes;
-
-    ProgramSimple* simple;
+    Graphics* graphics;
 };
 
-#endif // GRAPHICS_H
+#endif // APP_H

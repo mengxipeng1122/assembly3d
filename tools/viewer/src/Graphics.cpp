@@ -32,6 +32,7 @@
  */
 
 #include "Graphics.h"
+#include "Location3D.h"
 
 // glm
 #include <glm/glm.hpp>
@@ -80,20 +81,7 @@ void Graphics::init()
 //    glEnable(GL_MULTISAMPLE);
 
     simple = new ProgramSimple();
-    
-    Location3D* loc = new Location3D();
-//    loc->x = 2.0f;
-//    loc->y = -1.0f;
-//    loc->rotY = 1.0f;
-//    loc->rotAngle = 60.0f;
-    Mesh* m = loadMesh(resources.meshPath.c_str(), resources.dataPath.c_str());
-    for (int i = 0; i < resources.textureNames.size(); ++i) {
-        std::string tPath = resources.texPath + resources.textureNames[i];
-        loadTexture(tPath.c_str());
-    }
-    addObject(loc, m, 1.0f);
 
-    
 }
 
 void Graphics::render(int width, int height)
@@ -127,7 +115,6 @@ void Graphics::render(int width, int height)
             glBindTexture(GL_TEXTURE_2D, shapes[i].textures[j]);
             shapes[i].mesh->draw(j);
             glBindTexture(GL_TEXTURE_2D, 0);
-
         }
     }
 
@@ -135,14 +122,10 @@ void Graphics::render(int width, int height)
 
 }
 
-Mesh* Graphics::loadMesh(const char* meta, const char* data)
+Mesh* Graphics::loadMesh(const char* meta, const char* data)//, Resources& r)
 {
     Mesh* mesh = new Mesh(meta, data, simple);
     meshes.push_back(mesh);
-    for (int i = 0; i < mesh->getNGroups(); ++i) {
-        resources.textureNames.push_back(mesh->getGroupName(i));
-    }
-
     return mesh;
 }
 
@@ -176,21 +159,6 @@ Texture Graphics::loadTexture(const char* texName)
     textures.push_back(texture);
     return texture;
 }
-
-void Graphics::setResources(Resources r)
-{
-    resources = r;
-}
-
-//void Graphics::addObject(Location3D *loc, Mesh *mesh, Texture texture, float scale)
-//{
-//    Shape3D shape;
-//    shape.location = loc;
-//    shape.texture = texture;
-//    shape.mesh = mesh;
-//    shape.scale = scale;
-//    shapes.push_back(shape);
-//}
 
 void Graphics::addObject(Location3D *loc, Mesh *mesh, float scale)
 {
