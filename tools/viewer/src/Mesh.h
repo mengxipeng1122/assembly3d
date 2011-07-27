@@ -37,12 +37,13 @@
 #include <GL/glew.h>
 
  class Loader;
+class ProgramSimple;
 
  class Mesh
  {
  friend class Loader;
  public:
-    Mesh(const char* meta, const char* data);
+    Mesh(const char* meta, const char* data, ProgramSimple* p);
     ~Mesh();
 
     GLvoid draw();
@@ -55,6 +56,8 @@
     void bindBuffers();
     void disableBuffers();
 
+    ProgramSimple* prog;
+     
     GLuint* buffers;
     GLsizei* attrSizes;
     GLsizei* attrTypeSizes;
@@ -64,6 +67,7 @@
     GLsizei indexSize;
     GLenum indexType;
     const char** groupNames;
+     const char** attrNames;
 
 };
 

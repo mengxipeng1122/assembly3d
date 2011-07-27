@@ -79,6 +79,8 @@ void Graphics::init()
     glShadeModel(GL_SMOOTH);
 //    glEnable(GL_MULTISAMPLE);
 
+    simple = new ProgramSimple();
+    
     Location3D* loc = new Location3D();
 //    loc->x = 2.0f;
 //    loc->y = -1.0f;
@@ -91,7 +93,7 @@ void Graphics::init()
     }
     addObject(loc, m, 1.0f);
 
-    simple = new ProgramSimple();
+    
 }
 
 void Graphics::render(int width, int height)
@@ -99,7 +101,7 @@ void Graphics::render(int width, int height)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glUseProgram(simple->programName());
-    glUniform1i(simple->textureLoc, 0);
+    glUniform1i(simple->texCoord(), 0);
 
     float camZ = 25.0f;
     float near = 3.0f; float far = 100.0f;
@@ -135,7 +137,7 @@ void Graphics::render(int width, int height)
 
 Mesh* Graphics::loadMesh(const char* meta, const char* data)
 {
-    Mesh* mesh = new Mesh(meta, data);
+    Mesh* mesh = new Mesh(meta, data, simple);
     meshes.push_back(mesh);
     for (int i = 0; i < mesh->getNGroups(); ++i) {
         resources.textureNames.push_back(mesh->getGroupName(i));
