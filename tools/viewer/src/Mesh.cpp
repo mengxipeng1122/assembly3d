@@ -64,13 +64,13 @@ struct Loader
         mesh->attrSizes = new GLsizei[attributes];
         mesh->attrTypes = new GLenum[attributes];
         mesh->attrTypeSizes = new GLsizei[attributes];
-        mesh->attrNames = new const char*[attributes];
+        mesh->attrNames.clear();
 
     }
 
     void attribute(const GLchar *name, GLsizei size, GLenum type, GLsizei typeSize)
     {
-        printf("<Attribute name=\"%s\" size=\"%d\" type=\"%d\">\n", name, size, type);
+//        printf("<Attribute name=\"%s\" size=\"%d\" type=\"%d\">\n", name, size, type);
 
         GLsizei stride = size*typeSize;
 
@@ -79,11 +79,8 @@ struct Loader
         mesh->attrTypeSizes[idx] = typeSize;
         mesh->attrTypes[idx] = type;
 
-        char* attrName = new char[strlen(name)+1];
-        strcpy(attrName, name);
-        mesh->attrNames[idx] = attrName;
-        printf("AttrName: %s\n", mesh->attrNames[idx]);
-        
+        mesh->attrNames.push_back(name);
+
         GLuint buffer;
         glGenBuffers(1, &buffer);
         glBindBuffer(GL_ARRAY_BUFFER, buffer);
@@ -110,7 +107,7 @@ struct Loader
         mesh->nTotalTriangles = 0;
 
         mesh->nTriangles[index++] = 0;
-        mesh->groupNames = new const char*[groups];
+        mesh->groupNames.clear();
     }
 
     void group(const GLchar *name, GLsizei count)
@@ -118,11 +115,8 @@ struct Loader
 //        printf("<Group name=\"%s\" count=\"%d\">\n", name, count);
 
         GLuint idx = index++;
-        char* groupName = new char[strlen(name)+1];
-        strcpy(groupName, name);
-        mesh->groupNames[idx] = groupName;
 
-//        printf("group %d: %s\n",idx, name);
+        mesh->groupNames.push_back(name);
 
         mesh->nTotalTriangles += count;
         mesh->nTriangles[idx] = mesh->nTotalTriangles;
@@ -237,9 +231,8 @@ Mesh::~Mesh()
     delete attrSizes;
     delete attrTypeSizes;
     delete attrTypes;
-    for (int i = 0; i < nGroups; ++i)
-        delete groupNames[i];
-    delete groupNames;
+    attrNames.clear();
+    groupNames.clear();
 }
 
 GLvoid Mesh::draw() 
@@ -262,15 +255,15 @@ void Mesh::bindBuffers()//GLuint position,GLuint normal, GLuint texcoord)
     for(unsigned int i = 0; i < nAttributes; ++i)
     {
         GLint attrLoc = -1;
-        if(strcmp("POSITION", attrNames[i]) == 0)
+        if(attrNames[i].compare("POSITION") == 0)
         {
             attrLoc = prog->position();
         }
-        else if(strcmp("NORMAL", attrNames[i]) == 0)
+        else if(attrNames[i].compare("NORMAL") == 0)
         {
             attrLoc = prog->normal();
         }
-        else if(strcmp("TEXCOORD", attrNames[i]) == 0)
+        else if(attrNames[i].compare("TEXCOORD") == 0)
         {
             attrLoc = prog->texCoord();
         }
@@ -289,15 +282,15 @@ void Mesh::disableBuffers()
     for(unsigned int i = 0; i < nAttributes; ++i)
     {
         GLint attrLoc = -1;
-        if(strcmp("POSITION", attrNames[i]) == 0)
+        if(attrNames[i].compare("POSITION") == 0)
         {
             attrLoc = prog->position();
         }
-        else if(strcmp("NORMAL", attrNames[i]) == 0)
+        else if(attrNames[i].compare("NORMAL") == 0)
         {
             attrLoc = prog->normal();
         }
-        else if(strcmp("TEXCOORD", attrNames[i]) == 0)
+        else if(attrNames[i].compare("TEXCOORD") == 0)
         {
             attrLoc = prog->texCoord();
         }
