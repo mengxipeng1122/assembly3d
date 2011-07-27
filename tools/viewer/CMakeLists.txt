@@ -37,8 +37,8 @@ endif(GLFW_FOUND)
 set(GLM_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/external_libs/glm-0.9.2.3)
 find_package(GLM REQUIRED)
 
-set(GLI_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/external_libs/gli-0.3.0.3)
-find_package(GLI REQUIRED)
+#set(GLI_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/external_libs/gli-0.3.0.3)
+#find_package(GLI REQUIRED)
 
 add_definitions(${GLFW_CFLAGS_OTHER})
 
@@ -52,13 +52,16 @@ ELSE(APPLE)
     SET(EXTRA_LIBS ${GLFW_LDFLAGS_OTHER})
 ENDIF (APPLE)
 
-set(A3DViewer_HEADER src/Graphics.h
+set(A3DViewer_HEADER src/App.h
+                     src/Graphics.h
                      src/Mesh.h
                      src/ShaderUtils.h
                      src/ProgramSimple.h
-                     src/Resources.h)
+                     src/Resources.h
+                     src/Location3D.h)
 
 set(A3DViewer_SOURCE src/Main.cpp
+                     src/App.cpp
                      src/Graphics.cpp
                      src/Mesh.cpp
                      src/ShaderUtils.cpp
