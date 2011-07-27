@@ -35,29 +35,31 @@
 #define MESH_H
 
 #include <GL/glew.h>
+#include <string>
+#include <vector>
 
- class Loader;
+class Loader;
 class ProgramSimple;
 
- class Mesh
- {
- friend class Loader;
- public:
+class Mesh
+{
+    friend class Loader;
+public:
     Mesh(const char* meta, const char* data, ProgramSimple* p);
     ~Mesh();
 
     GLvoid draw();
     GLvoid draw(GLuint index);
 
-    const char* getGroupName(int idx) { return groupNames[idx+1]; }
+    const char* getGroupName(int idx) { return groupNames[idx].c_str(); }
     int getNGroups() { return nGroups; }
 
- private:
+private:
     void bindBuffers();
     void disableBuffers();
 
     ProgramSimple* prog;
-     
+
     GLuint* buffers;
     GLsizei* attrSizes;
     GLsizei* attrTypeSizes;
@@ -66,8 +68,8 @@ class ProgramSimple;
     GLsizei* nTriangles;
     GLsizei indexSize;
     GLenum indexType;
-    const char** groupNames;
-     const char** attrNames;
+    std::vector<std::string> groupNames;
+    std::vector<std::string> attrNames;
 
 };
 
