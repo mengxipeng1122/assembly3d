@@ -38,9 +38,6 @@
 
 #include "Mesh.h"
 #include "ProgramSimple.h"
-//#include "Resources.h"
-
-//#include <string>
 #include <vector>
 
 typedef GLuint Texture;

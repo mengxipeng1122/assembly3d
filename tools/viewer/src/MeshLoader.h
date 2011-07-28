@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Peter Vasil, Micheal Nischt
+ * Copyright (c) 2011 Peter Vasil
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -31,46 +31,43 @@
  *
  */
 
-#ifndef MESH_H
-#define MESH_H
+#ifndef MESHLOADER_H
+#define MESHLOADER_H
 
-#include <GL/glew.h>
-#include <string>
-#include <vector>
+#include <stdio.h>
 
-class ProgramSimple;
+#include "Mesh.h"
+#include "ProgramSimple.h"
+#include "Resources.h"
 
-class Mesh
+#include "GL/glfw.h"
+
+class MeshLoader
 {
-    friend class MeshLoader;
 public:
-//    Mesh(const char* meta, const char* data, ProgramSimple* p);
-    Mesh(ProgramSimple* p);
-    ~Mesh();
 
-    GLvoid draw();
-    GLvoid draw(GLuint index);
+    MeshLoader(Mesh *m,
+               const char *metafilename,
+               const char *datafilename,
+               ProgramSimple* p);
 
-    const char* getGroupName(int idx) { return groupNames[idx].c_str(); }
-    int getNGroups() { return nGroups; }
+    void vertices(GLsizei count, GLsizei attributes);
+
+    void attribute(const GLchar *name, GLsizei size, GLenum type, GLsizei typeSize);
+
+    void triangles(GLenum type, GLsizei typeSize, GLuint groups);
+
+    void group(const GLchar *name, GLsizei count);
+
+    void finish();
 
 private:
-    void bindBuffers();
-    void disableBuffers();
-
+    GLuint index;
+    FILE * file;
+    Mesh *mesh;
+    Resources* r;
     ProgramSimple* prog;
-
-    GLuint* buffers;
-    GLsizei* attrSizes;
-    GLsizei* attrTypeSizes;
-    GLenum* attrTypes;
-    GLsizei nVertices, nAttributes, nGroups, nTotalTriangles;
-    GLsizei* nTriangles;
-    GLsizei indexSize;
-    GLenum indexType;
-    std::vector<std::string> groupNames;
-    std::vector<std::string> attrNames;
 
 };
 
-#endif // MESH_H
+#endif // MESHLOADER_H
