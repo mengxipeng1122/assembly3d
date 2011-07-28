@@ -40,6 +40,9 @@ Mesh::Mesh(ProgramSimple* p) : prog(p)
 
 Mesh::~Mesh() 
 {
+#ifdef A3D_GL_USE_VAO
+    glDeleteVertexArrays(1, &vertexArray);
+#endif
     glDeleteBuffers(nAttributes, buffers);
     delete buffers;
     delete nTriangles;
@@ -52,17 +55,33 @@ Mesh::~Mesh()
 
 GLvoid Mesh::draw() 
 {
+#ifdef A3D_GL_USE_VAO
+    glBindVertexArray(vertexArray);
+#else
     bindBuffers();
+#endif
     glDrawElements(GL_TRIANGLES, 3*nTotalTriangles, indexType, (GLvoid*) 0);
+#ifdef A3D_GL_USE_VAO
+    glBindVertexArray(0);
+#else
     disableBuffers();
+#endif
 }
 
 GLvoid Mesh::draw(GLuint index) 
 {
+#ifdef A3D_GL_USE_VAO
+    glBindVertexArray(vertexArray);
+#else
     bindBuffers();
+#endif
     GLsizei count = nTriangles[index+1] - nTriangles[index];
     glDrawElements(GL_TRIANGLES, 3*count, indexType, (GLvoid*) (nTriangles[index]*3*indexSize));
+#ifdef A3D_GL_USE_VAO
+    glBindVertexArray(0);
+#else
     disableBuffers();
+#endif
 }
 
 void Mesh::bindBuffers()//GLuint position,GLuint normal, GLuint texcoord)
