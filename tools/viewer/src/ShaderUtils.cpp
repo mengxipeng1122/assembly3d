@@ -35,6 +35,30 @@
 #include <fstream>
 #include <iostream>
 
+static const GLchar* szSimpleShaderVert = "uniform mat4 projection;"
+                                        "uniform mat4 modelView;"
+                                        "attribute vec4 vertex;"
+                                        "attribute vec3 normal;"
+                                        "attribute vec2 texCoord;"
+                                        "varying vec3 fragmentNormal;"
+                                        "varying vec2 fragmentTexCoord;"
+                                        "void main(void)"
+                                        "{"
+                                        "fragmentTexCoord = texCoord;"
+                                        "vec4 n = modelView*vec4(normal, 0.0);"
+                                        "fragmentNormal = normalize(n.xyz);"
+                                        "gl_Position = projection*modelView*vertex;"
+                                        "}";
+
+static const GLchar* szSimpleShaderFrag = "uniform sampler2D firstTexture;"
+                                        "varying vec3 fragmentNormal;"
+                                        "varying vec2 fragmentTexCoord;"
+                                        "void main(void)"
+                                        "{"
+                                        "float intensity = max(dot(fragmentNormal, vec3(0.0, 0.0, 1.0)), 0.0);"
+                                        "gl_FragColor = texture2D(firstTexture, fragmentTexCoord)*intensity;"
+                                        "}";
+
 ShaderUtils::ShaderUtils()
 {
 }
@@ -137,4 +161,102 @@ GLuint ShaderUtils::createProgram(GLuint vertexShader, GLuint fragmentShader)
     glDeleteShader(fragmentShader);
 
     return shaderProgram;
+}
+
+GLuint ShaderUtils::createStockShader(A3D_STOCK_SHADER shaderId)
+{
+    switch(shaderId)
+    {
+    case A3D_SHADER_SIMPLE_TEXTURE:
+        return createProgramFromSrcPair(szSimpleShaderVert, szSimpleShaderFrag);
+        break;
+    default:
+        return 0;
+    }
+}
+
+GLuint ShaderUtils::createProgramFromSrcPair(const GLchar* vertexShaderSrc,
+                                             const GLchar* fragmentShaderSrc)
+{
+    GLuint shaderProgram = 0;
+    GLuint vertexShader = 0;
+    GLuint fragmentShader = 0;
+
+    // -- vertex shader --
+
+    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+
+    glShaderSource(vertexShader, 1, &vertexShaderSrc, 0);
+
+    // compile shader
+    glCompileShader(vertexShader);
+
+    GLint succeeded;
+    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &succeeded);
+
+    if (!succeeded || !glIsShader(vertexShader) )
+    {
+        int logLength = 0;
+        glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &logLength);
+        std::string infoLog(logLength, ' ');
+        glGetShaderInfoLog(vertexShader, logLength, 0, &infoLog[0]);
+        std::cout << "Vertex-shader compile error:\n\n" << infoLog.c_str() << std::endl;
+    }
+//    else
+//    {
+//        std::cout << "Vertex-shader loaded and compiled successfully." << std::endl;
+//    }
+
+    // -- fragment shader --
+
+    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+    glShaderSource(fragmentShader, 1, &fragmentShaderSrc, 0);
+
+    // compile shader
+    glCompileShader(fragmentShader);
+
+    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &succeeded);
+
+    if (!succeeded || !glIsShader(fragmentShader) )
+    {
+        int logLength = 0;
+        glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &logLength);
+        std::string info_log(logLength, ' ');
+        glGetShaderInfoLog(fragmentShader, logLength, 0, &info_log[0]);
+        std::cout << "Fragment-shader compile error:\n\n" << info_log.c_str() << std::endl;
+    }
+//    else
+//    {
+//        std::cout << "Fragment-shader loaded and compiled successfully." << std::endl;
+//    }
+
+    // -- link shader-program --
+    shaderProgram = glCreateProgram();
+
+    glAttachShader(shaderProgram , vertexShader);
+    glAttachShader(shaderProgram , fragmentShader);
+
+    glLinkProgram(shaderProgram );
+
+    glGetProgramiv(shaderProgram , GL_LINK_STATUS, &succeeded);
+
+    if (!succeeded || !glIsProgram(shaderProgram ))
+    {
+        int logLength = 0;
+        glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &logLength);
+        std::string info_log(logLength, ' ');
+        glGetProgramInfoLog(shaderProgram, logLength, 0, &info_log[0]);
+        std::cout << "Shader-program link error:\n\n" << info_log.c_str() << std::endl;
+    }
+//    else
+//    {
+//        std::cout << "Shader-program linked successfully.\n" << std::endl;
+//    }
+
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+
+    return shaderProgram;
+
 }
