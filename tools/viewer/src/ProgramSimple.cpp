@@ -42,10 +42,11 @@
 
 ProgramSimple::ProgramSimple()
 {
-    GLuint vs = ShaderUtils::createVertexShader("glsl/Simple.vert");
-    GLuint fs = ShaderUtils::createFragmentShader("glsl/Simple.frag");
+//    GLuint vs = ShaderUtils::createVertexShader("glsl/Simple.vert");
+//    GLuint fs = ShaderUtils::createFragmentShader("glsl/Simple.frag");
 
-    program = ShaderUtils::createProgram(vs, fs);
+//    program = ShaderUtils::createProgram(vs, fs);
+    program = ShaderUtils::createStockShader(A3D_SHADER_SIMPLE_TEXTURE);
 
     projectionLoc = glGetUniformLocation(program, "projection");
     modelViewLoc = glGetUniformLocation(program, "modelView");

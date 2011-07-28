@@ -63,30 +63,25 @@ set(A3DViewer_HEADER src/App.h
                      src/ShaderUtils.h
                      src/ProgramSimple.h
                      src/Resources.h
-                     src/Location3D.h)
+                     src/Location3D.h
+   )
 
 set(A3DViewer_SOURCE src/Main.cpp
                      src/App.cpp
                      src/Graphics.cpp
                      src/Mesh.cpp
                      src/ShaderUtils.cpp
-                     src/ProgramSimple.cpp)
+                     src/ProgramSimple.cpp
+   )
 
-add_executable(A3DViewer ${A3DViewer_SOURCE} ${A3DViewer_HEADER})
+add_executable(A3DViewer
+               ${A3DViewer_SOURCE}
+               ${A3DViewer_HEADER}
+              )
 
-target_link_libraries(A3DViewer ${GLFW_LIBRARIES} ${EXTRA_LIBS} ${GLEW_LIBRARY} ${LIBXML2_LIBRARIES})
-
-
-if(${CMAKE_GENERATOR} EQUAL "Xcode" OR MSVC)
-    set(glsl_OUTPUT_DIR ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE})
-    set(data_OUTPUT_DIR ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE})
-else(${CMAKE_GENERATOR} EQUAL "Xcode"OR MSVC)
-    set(glsl_OUTPUT_DIR ${CMAKE_BINARY_DIR})
-    set(data_OUTPUT_DIR ${CMAKE_BINARY_DIR})
-endif(${CMAKE_GENERATOR} EQUAL "Xcode"OR MSVC)
-
-
-
-execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
-                        ${CMAKE_SOURCE_DIR}/glsl
-                        ${glsl_OUTPUT_DIR}/glsl)
+target_link_libraries(A3DViewer
+                      ${GLFW_LIBRARIES}
+                      ${EXTRA_LIBS}
+                      ${GLEW_LIBRARY}
+                      ${LIBXML2_LIBRARIES}
+                      )
