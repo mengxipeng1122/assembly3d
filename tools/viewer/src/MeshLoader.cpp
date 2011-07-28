@@ -131,7 +131,11 @@ void MeshLoader::vertices(GLsizei count, GLsizei attributes)
     mesh->attrTypes = new GLenum[attributes];
     mesh->attrTypeSizes = new GLsizei[attributes];
     mesh->attrNames.clear();
-
+    
+#ifdef A3D_GL_USE_VAO
+    glGenVertexArrays(1, &mesh->vertexArray);
+    glBindVertexArray(mesh->vertexArray);
+#endif
 }
 
 void MeshLoader::attribute(const GLchar *name, GLsizei size, GLenum type, GLsizei typeSize)
@@ -152,6 +156,24 @@ void MeshLoader::attribute(const GLchar *name, GLsizei size, GLenum type, GLsize
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
     glBufferData(GL_ARRAY_BUFFER, mesh->nVertices*stride, (GLvoid*) 0, GL_STATIC_DRAW);
 
+#ifdef A3D_GL_USE_VAO
+    GLint attrLoc = -1;
+    if(strcmp("POSITION", name) == 0)
+    {
+        attrLoc = prog->position();
+    }
+    else if(strcmp("NORMAL", name) == 0)
+    {
+        attrLoc = prog->normal();
+    }
+    else if(strcmp("TEXCOORD", name) == 0)
+    {
+        attrLoc = prog->texCoord();
+    }
+    glEnableVertexAttribArray(attrLoc);
+    glVertexAttribPointer(attrLoc, size, type, GL_FALSE, 0, (GLvoid*) 0);
+#endif
+    
     char* data = (char*) glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
     fread(data, stride, mesh->nVertices, file);
     glUnmapBuffer(GL_ARRAY_BUFFER);
@@ -201,8 +223,12 @@ void MeshLoader::finish()
     fread(data, mesh->indexSize, mesh->nTotalTriangles*3, file);
     glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 
+#ifdef A3D_GL_USE_VAO
+    glBindVertexArray(0);
+#endif
+    
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
+    
     mesh->buffers[mesh->nAttributes] = buffer;
     fclose(file);
 }

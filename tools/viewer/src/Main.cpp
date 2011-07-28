@@ -41,6 +41,7 @@
 #include "App.h"
 #include <tclap/CmdLine.h>
 
+
 // Globals
 struct MouseInfo
 {
@@ -69,6 +70,7 @@ void initWindow(int scrX, int scrY, int BPP);
 void keyCallback(int key, int action);
 void mouseButtonCallback(int button, int action);
 void mousePosCallback(int x, int y);
+void resized(int width, int height);
 
 // Swap buffers
 void flipBuffers();
@@ -198,6 +200,7 @@ void initWindow(int scrX, int scrY, int BPP)
     glfwSetKeyCallback(keyCallback);
     glfwSetMouseButtonCallback(mouseButtonCallback);
     glfwSetMousePosCallback(mousePosCallback);
+    glfwSetWindowSizeCallback(resized);
     
 //    glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK)
@@ -240,6 +243,13 @@ void mousePosCallback(int x, int y)
 {
     mouse.x = x;
     mouse.y = y;
+}
+
+void resized(int width, int height)
+{
+    winWidth = width;
+    winHeight = height;
+    glViewport(0, 0, width, height);
 }
 
 void updateView()

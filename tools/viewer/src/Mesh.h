@@ -38,6 +38,14 @@
 #include <string>
 #include <vector>
 
+//#define A3D_GL_USE_VAO
+
+#ifdef __APPLE__
+#define glGenVertexArrays     glGenVertexArraysAPPLE
+#define glDeleteVertexArrays  glDeleteVertexArraysAPPLE
+#define glBindVertexArray     glBindVertexArrayAPPLE
+#endif
+
 class ProgramSimple;
 
 class Mesh
@@ -59,7 +67,9 @@ private:
     void disableBuffers();
 
     ProgramSimple* prog;
-
+#ifdef A3D_GL_USE_VAO
+    GLuint vertexArray;
+#endif
     GLuint* buffers;
     GLsizei* attrSizes;
     GLsizei* attrTypeSizes;

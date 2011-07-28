@@ -91,7 +91,8 @@ void Graphics::init()
 void Graphics::render(int width, int height)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    //glViewport(0, 0, width, height);
+    
     glUseProgram(simple->programName());
     glUniform1i(simple->texCoord(), 0);
 
