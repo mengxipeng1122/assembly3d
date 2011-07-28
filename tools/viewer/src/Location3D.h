@@ -34,9 +34,8 @@
 #ifndef LOCATION3D_H
 #define LOCATION3D_H
 
-class Location3D
+struct Location3D
 {
-public:
     Location3D() : x(0), y(0), z(0), rotX(0), rotY(0), rotZ(1), rotAngle(0) {}
     float x, y, z;
     float rotX, rotY, rotZ, rotAngle;

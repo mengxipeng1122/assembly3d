@@ -40,9 +40,14 @@ find_package(GLM REQUIRED)
 #set(GLI_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/external_libs/gli-0.3.0.3)
 #find_package(GLI REQUIRED)
 
+set(TCLAP_INCLUDE ${CMAKE_SOURCE_DIR}/external_libs/tclap-1.2.1/include)
+
 add_definitions(${GLFW_CFLAGS_OTHER})
 
-include_directories(${GLFW_INCLUDE_DIRS} ${GLEW_INCLUDE_PATH} ${LIBXML2_INCLUDE_DIR})
+include_directories(${GLFW_INCLUDE_DIRS}
+                    ${GLEW_INCLUDE_PATH}
+                    ${LIBXML2_INCLUDE_DIR}
+                    ${TCLAP_INCLUDE})
 
 link_directories(${GLFW_LIBRARY_DIRS})
 
@@ -50,7 +55,7 @@ IF(APPLE)
     SET(EXTRA_LIBS "-framework Cocoa -framework OpenGL")
 ELSE(APPLE)
     SET(EXTRA_LIBS ${GLFW_LDFLAGS_OTHER})
-ENDIF (APPLE)
+ENDIF(APPLE)
 
 set(A3DViewer_HEADER src/App.h
                      src/Graphics.h
@@ -73,11 +78,9 @@ target_link_libraries(A3DViewer ${GLFW_LIBRARIES} ${EXTRA_LIBS} ${GLEW_LIBRARY} 
 
 
 if(${CMAKE_GENERATOR} EQUAL "Xcode" OR MSVC)
-    message(STATUS "1")
     set(glsl_OUTPUT_DIR ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE})
     set(data_OUTPUT_DIR ${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE})
 else(${CMAKE_GENERATOR} EQUAL "Xcode"OR MSVC)
-    message(STATUS "2")
     set(glsl_OUTPUT_DIR ${CMAKE_BINARY_DIR})
     set(data_OUTPUT_DIR ${CMAKE_BINARY_DIR})
 endif(${CMAKE_GENERATOR} EQUAL "Xcode"OR MSVC)

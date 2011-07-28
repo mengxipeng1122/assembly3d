@@ -49,6 +49,9 @@
 using namespace std;
 
 Graphics::Graphics()
+    : eyeX(0.0f),
+      eyeY(0.0f),
+      eyeZ(25.0f)
 {
 }
 
@@ -91,12 +94,19 @@ void Graphics::render(int width, int height)
     glUseProgram(simple->programName());
     glUniform1i(simple->texCoord(), 0);
 
-    float camZ = 25.0f;
-    float near = 3.0f; float far = 100.0f;
+//    float viewOffset = 25.0f;
+//    float camZ = 25.0f;
+//    float near = 3.0f; float far = 100.0f;
     float aspect = width/(GLfloat)height;
 
-    glm::mat4 V = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -camZ));
-    glm::mat4 P = glm::frustum(-1.0f,1.0f, -1.0f, 2.0f/aspect-1.0f, near, far);
+//    glm::mat4 V = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -camZ));
+//    glm::mat4 P = glm::frustum(-1.0f,1.0f, -1.0f, 2.0f/aspect-1.0f, near, far);
+//    0.0f, 0.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f
+    glm::mat4 V = glm::lookAt(glm::vec3(eyeX, eyeY, eyeZ),
+                             glm::vec3(0.0f, 0.0f, 0.0f),
+                             glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 P = glm::perspective(45.0f, aspect, 0.1f, 128.0f);
+
     simple->projection(glm::value_ptr(P));
 
     for(unsigned int i = 0; i < shapes.size(); ++i)
@@ -168,4 +178,11 @@ void Graphics::addObject(Location3D *loc, Mesh *mesh, float scale)
     shape.mesh = mesh;
     shape.scale = scale;
     shapes.push_back(shape);
+}
+
+void Graphics::updateView(float eyex, float eyey, float eyez)
+{
+    eyeX = eyex;
+    eyeY = eyey;
+    eyeZ = eyez;
 }

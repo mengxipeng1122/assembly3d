@@ -39,6 +39,7 @@
 
 //#include "Graphics.h"
 #include "App.h"
+#include <tclap/CmdLine.h>
 
 // Globals
 struct MouseInfo
@@ -49,6 +50,9 @@ struct MouseInfo
 int runLevel = 1;
 bool keys[GLFW_KEY_LAST] = {false};  // Key monitor
 
+float angleY = 0.0f;
+float viewOffset = 25.0f;
+
 //Graphics graphics;
 App app;
 const char* vertexShaderPathStr = "glsl/Simple.vert";
@@ -57,7 +61,6 @@ const char* fragmentShaderPathStr = "glsl/Simple.frag";
 const char* metaPath = "";
 const char* dataPath = "";
 const char* texFolder = "";
-
 
 // Initializationa
 void initWindow(int scrX, int scrY, int BPP);
@@ -70,47 +73,62 @@ void mousePosCallback(int x, int y);
 // Swap buffers
 void flipBuffers();
 
+// process keys
+void processKeys(double deltaTime);
+
 int winWidth = 800;
 int winHeight = 600;
+
 int main(int argc, char *argv[])
 {
     //----------------------------------------
     // Cmd argument parsing
     //----------------------------------------
-    
-    if(argc < 2)
-    {
-        std::cout << "No mesh file given!" << std::endl;
-        return 1;
-    }
-    std::string metaPathStr;
-    std::string dataPathStr;
-    if(argc == 2 || argc == 3)
-    {
-        metaPathStr = argv[1];
+    Resources r;
 
-        if(argc == 2)
+    try {
+        using namespace TCLAP;
+        CmdLine cmd("Assembly3D Viewer", '=', "1.0.0");
+
+        UnlabeledValueArg<std::string> metaFileArg("input-file", "Input file.", true, "", "path/to/mesh");
+        ValueArg<std::string> dataFileArg("b", "binary-file", "Binary file.", false, "", "path/to/binary");
+        ValueArg<float> meshScaleArg("s", "scale", "Scale.", false, 1.0f, "scale");
+
+        cmd.add(meshScaleArg);
+        cmd.add(dataFileArg);
+        cmd.add(metaFileArg);
+
+        cmd.parse(argc, argv);
+
+        r.meshPath = metaFileArg.getValue();
+        if(dataFileArg.isSet())
         {
-            size_t pos = metaPathStr.find(".xml");
-            dataPathStr = metaPathStr.substr(0, pos);
-            dataPathStr.append(".dat");
+            r.dataPath = dataFileArg.getValue();
         }
-        else if(argc == 3)
+        else
         {
-            dataPathStr = argv[2];
+            size_t pos = r.meshPath.find(".xml");
+            r.dataPath = r.meshPath.substr(0, pos);
+            r.dataPath.append(".dat");
         }
-    }
+        r.scale = meshScaleArg.getValue();
 
-    std::cout << metaPathStr << std::endl;
-    std::cout << dataPathStr << std::endl;
+        size_t pos = r.meshPath.find_last_of("/");
+        if(pos == std::string::npos)
+        {
+            r.texPath = "./";
+        }
+        else
+        {
+            r.texPath = r.meshPath.substr(0, pos+1);
+        }
 
-    metaPath = metaPathStr.c_str();
-    dataPath = dataPathStr.c_str();
-
+    } catch (TCLAP::ArgException &e)  // catch any exceptions
+    { std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; return 1;}
     //----------------------------------------
     // Start loop
     //----------------------------------------
-    
+    double time = glfwGetTime();
     int retval = 0;
     try
     {
@@ -118,18 +136,6 @@ int main(int argc, char *argv[])
         initWindow(winWidth, winHeight, 32);
         // Pass control to the render function
         
-        Resources r;
-        r.meshPath = metaPath;
-        r.dataPath = dataPath;
-        size_t pos = metaPathStr.find_last_of("/");
-        if(pos == std::string::npos)
-        {
-            r.texPath = "./";
-        }
-        else
-        {
-            r.texPath = metaPathStr.substr(0, pos+1);
-        }
         //----------------------------------------
         // Initializing app
         //----------------------------------------
@@ -143,6 +149,12 @@ int main(int argc, char *argv[])
             if(keys[GLFW_KEY_ESC]) // Esc Key
                 runLevel=0;
             
+            double currentTime = glfwGetTime();
+            double dT = currentTime - time;
+            processKeys(dT);
+            app.update(dT);
+            time = currentTime;
+
             app.render(winWidth, winHeight);
 
             // We're using double buffers, so we need to swap to see our stuff
@@ -228,4 +240,33 @@ void mousePosCallback(int x, int y)
 {
     mouse.x = x;
     mouse.y = y;
+}
+
+void updateView()
+{
+    app.updateView(viewOffset,angleY);
+}
+
+void processKeys(double deltaTime)
+{
+    if(keys[GLFW_KEY_LEFT])
+    {
+        angleY -= 1.0f*(float)deltaTime;
+        updateView();
+    }
+    if(keys[GLFW_KEY_RIGHT])
+    {
+        angleY += 1.0f*(float)deltaTime;
+        updateView();
+    }
+    if(keys[GLFW_KEY_UP])
+    {
+        viewOffset -= 50.0f*(float)deltaTime;
+        updateView();
+    }
+    if(keys[GLFW_KEY_DOWN])
+    {
+        viewOffset += 50.0f*(float)deltaTime;
+        updateView();
+    }
 }
