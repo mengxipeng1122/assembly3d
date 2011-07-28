@@ -45,6 +45,9 @@ public:
 
     void init(Resources r);
     void render(int width, int height);
+    void update(float deltaTime);
+
+    void updateView(float offset, float angleY);
 
 private:
     Graphics* graphics;

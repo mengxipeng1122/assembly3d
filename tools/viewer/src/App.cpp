@@ -33,6 +33,7 @@
 
 #include "App.h"
 #include "Location3D.h"
+#include <cmath>
 
 App::App()
 {
@@ -47,7 +48,6 @@ void App::init(Resources r)
 {
     graphics = new Graphics();
 
-//    graphics->setResources(r);
     graphics->init();
 
     Location3D* loc = new Location3D();
@@ -60,12 +60,21 @@ void App::init(Resources r)
         std::string tPath = r.texPath + std::string(mesh->getGroupName(i));
         graphics->loadTexture(tPath.c_str());
     }
-    graphics->addObject(loc, mesh, 1.0f);
+    graphics->addObject(loc, mesh, r.scale);
 
- }
+}
 
 void App::render(int width, int height)
 {
     graphics->render(width, height);
+}
+
+void App::update(float deltaTime)
+{
+}
+
+void App::updateView(float offset, float angleY)
+{
+    graphics->updateView(offset * sin(angleY), 0.0f, offset * cos(angleY));
 }
 

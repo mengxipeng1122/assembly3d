@@ -10,6 +10,10 @@ GLI_VERSION=0.3.0.3
 GLI_URL="http://sourceforge.net/projects/ogl-image/files/GLI%20$GLI_VERSION/gli-$GLI_VERSION.zip"
 GLI_ARCHIVE="gli-$GLI_VERSION.zip"
 
+TCLAP_VERSION=1.2.1
+TCLAP_URL="http://sourceforge.net/projects/tclap/files/tclap-$TCLAP_VERSION.tar.gz"
+TCLAP_ARCHIVE="tclap.tar.gz"
+
 ####################################################
 system_name=`uname -a`
 
@@ -47,6 +51,23 @@ if [ ! -d "gli-$GLI_VERSION" ]; then
     rm $GLI_ARCHIVE
 else
     echo "gli-$GLI_VERSION already installed.\n"
+fi
+
+
+if [ ! -d "tclap-$TCLAP_VERSION" ]; then
+    echo "downloading TCLAP $TCLAP_VERSION library"
+    case $system_name in
+        Darwin*)
+            curl -L $TCLAP_URL -o $TCLAP_ARCHIVE
+            ;;
+        *)
+            wget $TCLAP_URL -O $TCLAP_ARCHIVE
+            ;;
+    esac
+    tar -zxvf $TCLAP_ARCHIVE
+    rm $TCLAP_ARCHIVE
+else
+    echo "tclap-$TCLAP_VERSION already installed.\n"
 fi
 
 echo "-----------------------------------------------\n"

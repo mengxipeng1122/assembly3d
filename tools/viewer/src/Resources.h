@@ -43,6 +43,7 @@ struct Resources
     std::string dataPath;
     std::string texPath;
     std::vector<std::string> textureNames;
+    float scale;
 };
 
 

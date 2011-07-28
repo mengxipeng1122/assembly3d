@@ -60,6 +60,7 @@ public:
     Texture loadTexture(const char* texName);
     void addObject(Location3D* loc, Mesh* mesh, float scale);
 
+    void updateView(float eyex, float eyey, float eyez);
     
 private:
 
@@ -76,6 +77,10 @@ private:
     std::vector<Shape3D> shapes;
 
     ProgramSimple* simple;
+
+    float eyeX;
+    float eyeY;
+    float eyeZ;
 };
 
 #endif // GRAPHICS_H
