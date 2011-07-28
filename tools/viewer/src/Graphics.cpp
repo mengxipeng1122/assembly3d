@@ -33,6 +33,7 @@
 
 #include "Graphics.h"
 #include "Location3D.h"
+#include "MeshLoader.h"
 
 // glm
 #include <glm/glm.hpp>
@@ -121,7 +122,7 @@ void Graphics::render(int width, int height)
 
         glm::mat4 MV = V*M;
         simple->modelView(glm::value_ptr(MV));
-        for (int j = 0; j < shapes[i].textures.size(); ++j) {
+        for (unsigned int j = 0; j < shapes[i].textures.size(); ++j) {
             glBindTexture(GL_TEXTURE_2D, shapes[i].textures[j]);
             shapes[i].mesh->draw(j);
             glBindTexture(GL_TEXTURE_2D, 0);
@@ -134,7 +135,8 @@ void Graphics::render(int width, int height)
 
 Mesh* Graphics::loadMesh(const char* meta, const char* data)//, Resources& r)
 {
-    Mesh* mesh = new Mesh(meta, data, simple);
+    Mesh* mesh = new Mesh(simple);
+    MeshLoader ml(mesh, meta, data, simple);
     meshes.push_back(mesh);
     return mesh;
 }

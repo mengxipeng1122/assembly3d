@@ -64,6 +64,7 @@ set(A3DViewer_HEADER src/App.h
                      src/ProgramSimple.h
                      src/Resources.h
                      src/Location3D.h
+                     src/MeshLoader.h
    )
 
 set(A3DViewer_SOURCE src/Main.cpp
@@ -72,6 +73,7 @@ set(A3DViewer_SOURCE src/Main.cpp
                      src/Mesh.cpp
                      src/ShaderUtils.cpp
                      src/ProgramSimple.cpp
+                     src/MeshLoader.cpp
    )
 
 add_executable(A3DViewer

@@ -32,195 +32,10 @@
  */
 
 #include "Mesh.h"
-
-#include "Mesh.h"
-#include <libxml/xmlreader.h>
-#include <assert.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-
-#include "Resources.h"
 #include "ProgramSimple.h"
 
-struct Loader
+Mesh::Mesh(ProgramSimple* p) : prog(p)
 {
-    Loader(Mesh *m, const char *datafilename, ProgramSimple* p) : mesh(m), prog(p)
-    {
-        file = fopen(datafilename, "r");
-        assert(file != NULL);
-    }
-
-    void vertices(GLsizei count, GLsizei attributes)
-    {
-        //printf("<Vertices count=\"%d\" attributes=\"%d\">\n", count, attributes);
-
-        mesh->nVertices = count;
-        mesh->nAttributes = attributes;
-
-        index = 0;
-
-        mesh->buffers = new GLuint[attributes+1];
-        mesh->attrSizes = new GLsizei[attributes];
-        mesh->attrTypes = new GLenum[attributes];
-        mesh->attrTypeSizes = new GLsizei[attributes];
-        mesh->attrNames.clear();
-
-    }
-
-    void attribute(const GLchar *name, GLsizei size, GLenum type, GLsizei typeSize)
-    {
-//        printf("<Attribute name=\"%s\" size=\"%d\" type=\"%d\">\n", name, size, type);
-
-        GLsizei stride = size*typeSize;
-
-        GLuint idx = index++;
-        mesh->attrSizes[idx] = size;
-        mesh->attrTypeSizes[idx] = typeSize;
-        mesh->attrTypes[idx] = type;
-
-        mesh->attrNames.push_back(name);
-
-        GLuint buffer;
-        glGenBuffers(1, &buffer);
-        glBindBuffer(GL_ARRAY_BUFFER, buffer);
-        glBufferData(GL_ARRAY_BUFFER, mesh->nVertices*stride, (GLvoid*) 0, GL_STATIC_DRAW);
-
-        char* data = (char*) glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-        fread(data, stride, mesh->nVertices, file);
-        glUnmapBuffer(GL_ARRAY_BUFFER);
-        
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-        mesh->buffers[idx] = buffer;
-    }
-
-    void triangles(GLenum type, GLsizei typeSize, GLuint groups)
-    {
-        //printf("<Triangles type=\"%d\" groups=\"%d\">\n", type, groups);
-        index = 0;
-
-        mesh->nGroups = groups;
-        mesh->nTriangles = new GLsizei[groups+1];
-        mesh->indexSize = typeSize;
-        mesh->indexType = type;
-        mesh->nTotalTriangles = 0;
-
-        mesh->nTriangles[index++] = 0;
-        mesh->groupNames.clear();
-    }
-
-    void group(const GLchar *name, GLsizei count)
-    {
-//        printf("<Group name=\"%s\" count=\"%d\">\n", name, count);
-
-        GLuint idx = index++;
-
-        mesh->groupNames.push_back(name);
-
-        mesh->nTotalTriangles += count;
-        mesh->nTriangles[idx] = mesh->nTotalTriangles;
-
-    }
-
-    void finish()
-    {
-        //printf("finish\n");
-        GLuint buffer;
-        glGenBuffers(1, &buffer);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->nTotalTriangles*3*mesh->indexSize, (GLvoid*) 0, GL_STATIC_DRAW);
-
-        char* data = (char*) glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
-        fread(data, mesh->indexSize, mesh->nTotalTriangles*3, file);
-        glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-        
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-        mesh->buffers[mesh->nAttributes] = buffer;
-        fclose(file);
-    }
-
-private:
-    GLuint index;
-    FILE * file;
-    Mesh *mesh;
-    Resources* r;
-    ProgramSimple* prog;
-};
-
-static void processNode(xmlTextReaderPtr reader, Loader& loader) {
-
-    const char *name = (const char*)xmlTextReaderConstName(reader);
-    assert (name != NULL);
-
-    int nodeType = xmlTextReaderNodeType(reader);
-    if(nodeType != 1)
-    {
-        return;
-    }
-
-    if(strcmp("Vertices", name) == 0)
-    {
-        GLsizei count = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "count") );
-        GLsizei attributes = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "attributes") );
-        loader.vertices( count, attributes );
-    }
-    else if(strcmp("Attribute", name) == 0)
-    {
-        const GLchar* name = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "name");
-        GLsizei size = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "size") );
-        //const char* typeName = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "type");
-        //assert(strcmp("FLOAT", typeName) == 0);
-        GLenum type = GL_FLOAT;
-        GLsizei typeSize = 4;
-        loader.attribute( name, size, type, typeSize );
-    }
-    else if(strcmp("Triangles", name) == 0)
-    {
-        const char* typeName = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "type");
-        GLsizei groups = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "groups") );
-
-        GLenum type = GL_UNSIGNED_SHORT;
-        GLsizei typeSize = 2;
-        if(strcmp("UNSIGNED_BYTE", typeName) == 0)
-        {
-            type = GL_UNSIGNED_BYTE;
-            typeSize = 1;
-        }
-        else if(strcmp("UNSIGNED_INT", typeName) == 0)
-        {
-            type = GL_UNSIGNED_INT;
-            typeSize = 4;
-        }
-        loader.triangles(type, typeSize, groups);
-    }
-    else if(strcmp("Group", name) == 0)
-    {
-        const GLchar* name = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "name");
-        GLsizei count = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "count") );
-
-        loader.group( name, count );
-    }
-}
-
-Mesh::Mesh(const char* metafilename, const char* datafilename, ProgramSimple* p) : prog(p) 
-{
-
-    Loader loader(this, datafilename, prog);
-
-    xmlTextReaderPtr reader = xmlReaderForFile(metafilename, NULL, 0);
-    assert(reader != NULL);
-    int ret = xmlTextReaderRead(reader);
-    while (ret == 1)
-    {
-        processNode(reader, loader);
-        ret = xmlTextReaderRead(reader);
-    }
-    xmlFreeTextReader(reader);
-    assert(ret == 0);
-
-    loader.finish();
 }
 
 Mesh::~Mesh() 
@@ -252,7 +67,7 @@ GLvoid Mesh::draw(GLuint index)
 
 void Mesh::bindBuffers()//GLuint position,GLuint normal, GLuint texcoord)
 {
-    for(unsigned int i = 0; i < nAttributes; ++i)
+    for(int i = 0; i < nAttributes; ++i)
     {
         GLint attrLoc = -1;
         if(attrNames[i].compare("POSITION") == 0)
@@ -279,7 +94,7 @@ void Mesh::disableBuffers()
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     
-    for(unsigned int i = 0; i < nAttributes; ++i)
+    for(int i = 0; i < nAttributes; ++i)
     {
         GLint attrLoc = -1;
         if(attrNames[i].compare("POSITION") == 0)
