@@ -51,17 +51,8 @@ struct MouseInfo
 int runLevel = 1;
 bool keys[GLFW_KEY_LAST] = {false};  // Key monitor
 
-float angleY = 0.0f;
-float viewOffset = 25.0f;
-
 //Graphics graphics;
 App app;
-const char* vertexShaderPathStr = "glsl/Simple.vert";
-const char* fragmentShaderPathStr = "glsl/Simple.frag";
-
-const char* metaPath = "";
-const char* dataPath = "";
-const char* texFolder = "";
 
 // Initializationa
 void initWindow(int scrX, int scrY, int BPP);
@@ -75,11 +66,20 @@ void resized(int width, int height);
 // Swap buffers
 void flipBuffers();
 
+void updateView();
+
 // process keys
 void processKeys(double deltaTime);
+void processMouse();//(double deltaTime);
 
 int winWidth = 800;
 int winHeight = 600;
+
+float camOffset = 25.0f;
+float lastx = 0;
+float lasty = 0;
+float camRotX = 0;
+float camRotY = 0;
 
 int main(int argc, char *argv[])
 {
@@ -154,6 +154,7 @@ int main(int argc, char *argv[])
             double currentTime = glfwGetTime();
             double dT = currentTime - time;
             processKeys(dT);
+            processMouse();//(dT);
             app.update(dT);
             time = currentTime;
 
@@ -223,17 +224,21 @@ void flipBuffers()
 // Handle keys - updates the Keys array
 void keyCallback(int key, int action)
 {
+//    std::cout << key << std::endl;
     keys[key] = (action == GLFW_PRESS);
     
     if (keys[GLFW_KEY_ESC])
         runLevel = 0;
 }
-
+bool firstDrag = false;
 // Handle mouse button events - updates the Mouse structure
 void mouseButtonCallback(int button, int action)
 {
     if (button == GLFW_MOUSE_BUTTON_LEFT)
+    {
         mouse.left = (action == GLFW_PRESS);
+        firstDrag = true;
+    }
     else if (button == GLFW_MOUSE_BUTTON_RIGHT)
         mouse.right = (action == GLFW_PRESS);
 }
@@ -254,29 +259,40 @@ void resized(int width, int height)
 
 void updateView()
 {
-    app.updateView(viewOffset,angleY);
+    app.updateView(camOffset, camRotX, camRotY);
 }
 
 void processKeys(double deltaTime)
 {
-    if(keys[GLFW_KEY_LEFT])
+    if(keys[GLFW_KEY_UP] || keys[87])
     {
-        angleY -= 1.0f*(float)deltaTime;
+        camOffset -= 50.0f*(float)deltaTime;
         updateView();
     }
-    if(keys[GLFW_KEY_RIGHT])
+    if(keys[GLFW_KEY_DOWN] || keys[83])
     {
-        angleY += 1.0f*(float)deltaTime;
+        camOffset += 50.0f*(float)deltaTime;
         updateView();
     }
-    if(keys[GLFW_KEY_UP])
+}
+
+void processMouse()//(double deltaTime)
+{
+    if(mouse.left)
     {
-        viewOffset -= 50.0f*(float)deltaTime;
+        if(firstDrag)
+        {
+            lastx=mouse.x;
+            lasty=mouse.y;
+            firstDrag = false;
+        }
+        int diffx=mouse.x-lastx;
+        int diffy=mouse.y-lasty;
+        camRotX += (float) (diffy * 0.4);
+        camRotY += (float) (diffx * 0.4);
+        lastx=mouse.x;
+        lasty=mouse.y;
         updateView();
     }
-    if(keys[GLFW_KEY_DOWN])
-    {
-        viewOffset += 50.0f*(float)deltaTime;
-        updateView();
-    }
+    
 }
