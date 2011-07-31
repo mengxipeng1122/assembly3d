@@ -52,7 +52,9 @@ using namespace std;
 Graphics::Graphics()
     : eyeX(0.0f),
       eyeY(0.0f),
-      eyeZ(25.0f)
+      eyeZ(25.0f),
+      rotX(0.0f),
+      rotY(0.0f)
 {
 }
 
@@ -107,6 +109,11 @@ void Graphics::render(int width, int height)
     glm::mat4 V = glm::lookAt(glm::vec3(eyeX, eyeY, eyeZ),
                              glm::vec3(0.0f, 0.0f, 0.0f),
                              glm::vec3(0.0f, 1.0f, 0.0f));
+
+//    V = glm::translate(V, glm::vec3(0.0, 5.0, 0.0));
+    V = glm::rotate(V, rotX, glm::vec3(1.0f, 0.0f, 0.0f));
+    V = glm::rotate(V, rotY, glm::vec3(0.0f, 1.0f, 0.0f));
+
     glm::mat4 P = glm::perspective(45.0f, aspect, 0.1f, 128.0f);
 
     simple->projection(glm::value_ptr(P));
@@ -188,4 +195,10 @@ void Graphics::updateView(float eyex, float eyey, float eyez)
     eyeX = eyex;
     eyeY = eyey;
     eyeZ = eyez;
+}
+
+void Graphics::updateView(float xrot, float yrot)
+{
+    rotX = xrot;
+    rotY = yrot;
 }

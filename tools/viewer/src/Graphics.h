@@ -58,6 +58,7 @@ public:
     void addObject(Location3D* loc, Mesh* mesh, float scale);
 
     void updateView(float eyex, float eyey, float eyez);
+    void updateView(float xrot, float yrot);
     
 private:
 
@@ -78,6 +79,9 @@ private:
     float eyeX;
     float eyeY;
     float eyeZ;
+    
+    float rotX;
+    float rotY;
 };
 
 #endif // GRAPHICS_H
