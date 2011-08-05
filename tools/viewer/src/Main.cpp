@@ -75,11 +75,13 @@ void processMouse();//(double deltaTime);
 int winWidth = 800;
 int winHeight = 600;
 
-float camOffset = 25.0f;
 float lastx = 0;
 float lasty = 0;
 float camRotX = 0;
 float camRotY = 0;
+float camOffsetX = 0.0f;
+float camOffsetY = 0.0f;
+float camOffsetZ = 25.0f;
 
 int main(int argc, char *argv[])
 {
@@ -230,17 +232,21 @@ void keyCallback(int key, int action)
     if (keys[GLFW_KEY_ESC])
         runLevel = 0;
 }
-bool firstDrag = false;
+bool firstDragL = false;
+bool firstDragR = false;
 // Handle mouse button events - updates the Mouse structure
 void mouseButtonCallback(int button, int action)
 {
     if (button == GLFW_MOUSE_BUTTON_LEFT)
     {
         mouse.left = (action == GLFW_PRESS);
-        firstDrag = true;
+        firstDragL = true;
     }
     else if (button == GLFW_MOUSE_BUTTON_RIGHT)
+    {
         mouse.right = (action == GLFW_PRESS);
+        firstDragR = true;
+    }
 }
 
 // Handle mouse motion - updates the Mouse structure
@@ -259,19 +265,19 @@ void resized(int width, int height)
 
 void updateView()
 {
-    app.updateView(camOffset, camRotX, camRotY);
+    app.updateView(camOffsetX, camOffsetY, camOffsetZ, camRotX, camRotY);
 }
 
 void processKeys(double deltaTime)
 {
     if(keys[GLFW_KEY_UP] || keys[87])
     {
-        camOffset -= 50.0f*(float)deltaTime;
+        camOffsetZ -= 50.0f*(float)deltaTime;
         updateView();
     }
     if(keys[GLFW_KEY_DOWN] || keys[83])
     {
-        camOffset += 50.0f*(float)deltaTime;
+        camOffsetZ += 50.0f*(float)deltaTime;
         updateView();
     }
 }
@@ -280,16 +286,33 @@ void processMouse()//(double deltaTime)
 {
     if(mouse.left)
     {
-        if(firstDrag)
+        if(firstDragL)
         {
             lastx=mouse.x;
             lasty=mouse.y;
-            firstDrag = false;
+            firstDragL = false;
         }
         int diffx=mouse.x-lastx;
         int diffy=mouse.y-lasty;
         camRotX += (float) (diffy * 0.4);
         camRotY += (float) (diffx * 0.4);
+        lastx=mouse.x;
+        lasty=mouse.y;
+        updateView();
+    }
+    if(mouse.right)
+    {
+        if(firstDragR)
+        {
+            lastx = mouse.x;
+            lasty = mouse.y;
+            firstDragR = false;
+            
+        }
+        int diffx=mouse.x-lastx;
+        int diffy=mouse.y-lasty;
+        camOffsetX -= (float) (diffx * 0.01);
+        camOffsetY += (float) (diffy * 0.01);
         lastx=mouse.x;
         lasty=mouse.y;
         updateView();

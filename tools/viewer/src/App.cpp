@@ -73,10 +73,12 @@ void App::update(float deltaTime)
 {
 }
 
-void App::updateView(float offset, float angleX, float angleY)
+void App::updateView(float offsetX, float offsetY, float offsetZ, 
+                     float angleX, float angleY)
 {
 //    graphics->updateView(offset * sin(angleY), 0.0f, offset * cos(angleY));
-    graphics->updateView(0.0f, 0.0f, offset);
+//    graphics->updateView(0.0f, 0.0f, offsetZ);
+    graphics->updateView(offsetX, offsetY, offsetZ);
     graphics->updateView(angleX, angleY);
 }
 
