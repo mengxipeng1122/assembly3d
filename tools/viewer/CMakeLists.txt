@@ -20,6 +20,8 @@ endif(MSVC)
 
 ####################
 
+option(A3D_USE_GL_VAO "Use OpenGL vertex array." NO)
+
 find_package(GLEW REQUIRED)
 
 find_package(LibXml2 REQUIRED)
@@ -43,6 +45,10 @@ find_package(GLM REQUIRED)
 set(TCLAP_INCLUDE ${CMAKE_SOURCE_DIR}/external_libs/tclap-1.2.1/include)
 
 add_definitions(${GLFW_CFLAGS_OTHER})
+
+if(A3D_USE_GL_VAO)
+    add_definitions( "-DA3D_GL_USE_VAO")
+endif(A3D_USE_GL_VAO)
 
 include_directories(${GLFW_INCLUDE_DIRS}
                     ${GLEW_INCLUDE_PATH}

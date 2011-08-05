@@ -71,7 +71,8 @@ Graphics::~Graphics()
 
     if(simple)
     {
-        delete simple; simple = NULL;
+        delete simple; 
+        simple = NULL;
     }
 }
 
@@ -107,7 +108,7 @@ void Graphics::render(int width, int height)
 //    glm::mat4 P = glm::frustum(-1.0f,1.0f, -1.0f, 2.0f/aspect-1.0f, near, far);
 //    0.0f, 0.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f
     glm::mat4 V = glm::lookAt(glm::vec3(eyeX, eyeY, eyeZ),
-                             glm::vec3(0.0f, 0.0f, 0.0f),
+                             glm::vec3(eyeX, eyeY, 0.0f),
                              glm::vec3(0.0f, 1.0f, 0.0f));
 
 //    V = glm::translate(V, glm::vec3(0.0, 5.0, 0.0));
@@ -155,8 +156,23 @@ Texture Graphics::loadTexture(const char* texName)
 
     GLFWimage img;
 
-    glfwReadImage(texName, &img, GLFW_BUILD_MIPMAPS_BIT);
-
+    int res = glfwReadImage(texName, &img, GLFW_BUILD_MIPMAPS_BIT);
+    
+    if(res == 0)
+    {
+        float r, g, b;
+        r = b = 120;
+        g = 200;
+        img.Format = GL_RGB;
+        img.Width = 1;
+        img.Height = 1;
+        img.Data = new unsigned char[img.Width*img.Height*3];
+        img.Data[0] = (unsigned char)r;
+        img.Data[1] = (unsigned char)g;
+        img.Data[2] = (unsigned char)b;
+        
+    }
+        
     GLuint texture = 0;
     glGenTextures(1, &texture);
 
