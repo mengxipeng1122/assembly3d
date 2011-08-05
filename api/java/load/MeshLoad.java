@@ -32,9 +32,10 @@
  */
 package org.interaction3d.assembly.load;
 
+import org.interaction3d.assembly.Assembler;
+import java.io.InputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import org.interaction3d.assembly.structs.Assembler;
 import org.interaction3d.assembly.CoordinateType;
 import org.interaction3d.assembly.IndexType;
 import org.interaction3d.assembly.Mesh;
@@ -55,6 +56,11 @@ public class MeshLoad implements Assembler<Mesh>
   public MeshLoad(String uri)
   {
     this.inputSource = new InputSource(uri);
+  }
+
+  public MeshLoad(InputStream in)
+  {
+    this.inputSource = new InputSource(in);
   }
 
   @Override

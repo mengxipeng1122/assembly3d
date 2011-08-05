@@ -32,11 +32,12 @@
  */
 package org.interaction3d.assembly.load;
 
+import org.interaction3d.assembly.Assembler;
 import org.interaction3d.assembly.CoordinateType;
+import java.io.InputStream;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.interaction3d.assembly.Animation;
-import org.interaction3d.assembly.structs.Assembler;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -55,6 +56,11 @@ public class AnimLoad implements Assembler<Animation>
   public AnimLoad(String uri)
   {
     inputSource = new InputSource(uri);
+  }
+
+  public AnimLoad(InputStream in)
+  {
+    this.inputSource = new InputSource(in);
   }
 
   @Override
