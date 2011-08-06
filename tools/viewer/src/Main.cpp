@@ -62,6 +62,7 @@ void keyCallback(int key, int action);
 void mouseButtonCallback(int button, int action);
 void mousePosCallback(int x, int y);
 void resized(int width, int height);
+void mouseWheel(int pos);
 
 // Swap buffers
 void flipBuffers();
@@ -82,6 +83,7 @@ float camRotY = 0;
 float camOffsetX = 0.0f;
 float camOffsetY = 0.0f;
 float camOffsetZ = 25.0f;
+float lastWheel = 0.0f;
 
 int main(int argc, char *argv[])
 {
@@ -185,8 +187,8 @@ int main(int argc, char *argv[])
 // Initialize the window, can throw if something goes wrong.
 void initWindow(int scrX, int scrY, int BPP)
 {
-    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 2);
-    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 1);
+//    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 2);
+//    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 1);
 
     // Initialize the GLFW library
     if (glfwInit() != GL_TRUE)
@@ -204,6 +206,7 @@ void initWindow(int scrX, int scrY, int BPP)
     glfwSetMouseButtonCallback(mouseButtonCallback);
     glfwSetMousePosCallback(mousePosCallback);
     glfwSetWindowSizeCallback(resized);
+    glfwSetMouseWheelCallback(mouseWheel);
     
 //    glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK)
@@ -263,6 +266,13 @@ void resized(int width, int height)
     glViewport(0, 0, width, height);
 }
 
+void mouseWheel(int pos)
+{
+    float diffWheel = pos - lastWheel;
+    camOffsetZ -= diffWheel;
+    lastWheel = pos;
+}
+
 void updateView()
 {
     app.updateView(camOffsetX, camOffsetY, camOffsetZ, camRotX, camRotY);
@@ -298,7 +308,7 @@ void processMouse()//(double deltaTime)
         camRotY += (float) (diffx * 0.4);
         lastx=mouse.x;
         lasty=mouse.y;
-        updateView();
+        //updateView();
     }
     if(mouse.right)
     {
@@ -315,7 +325,9 @@ void processMouse()//(double deltaTime)
         camOffsetY += (float) (diffy * 0.01);
         lastx=mouse.x;
         lasty=mouse.y;
-        updateView();
+        //updateView();
     }
+    updateView();
+
     
 }
