@@ -40,6 +40,7 @@
 //#include "Graphics.h"
 #include "App.h"
 #include <tclap/CmdLine.h>
+#include "Utils.h"
 
 
 // Globals
@@ -107,6 +108,11 @@ int main(int argc, char *argv[])
         cmd.parse(argc, argv);
 
         r.meshPath = metaFileArg.getValue();
+        if(Utils::checkIfFileExists(r.meshPath.c_str()) == false)
+        {
+            std::cout << "Mesh file not found!" << std::endl;
+            return 1;
+        }
         if(dataFileArg.isSet())
         {
             r.dataPath = dataFileArg.getValue();
@@ -117,6 +123,12 @@ int main(int argc, char *argv[])
             r.dataPath = r.meshPath.substr(0, pos);
             r.dataPath.append(".dat");
         }
+        if(Utils::checkIfFileExists(r.dataPath.c_str()) == false)
+        {
+            std::cout << "Mesh file not found!" << std::endl;
+            return 1;
+        }
+        
         r.scale = meshScaleArg.getValue();
 
         size_t pos = r.meshPath.find_last_of("/");
