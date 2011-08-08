@@ -40,9 +40,12 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "FreeImage.h"
-
 #include <GL/glew.h>
+#include <GL/glfw.h>
+
+#ifdef A3D_USE_FREEIMAGE
+#include "FreeImage.h"
+#endif
 
 using namespace std;
 
@@ -147,6 +150,7 @@ Mesh* Graphics::loadMesh(const char* meta, const char* data)//, Resources& r)
     return mesh;
 }
 
+#ifdef A3D_USE_FREEIMAGE
 static FIBITMAP* GenericLoader(const char* lpszPathName, int flag = 0) {
 	FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
 	// check the file signature and deduce its format
@@ -166,46 +170,48 @@ static FIBITMAP* GenericLoader(const char* lpszPathName, int flag = 0) {
 	}
 	return NULL;
 }
+#endif
 
 Texture Graphics::loadTexture(const char* texName)
 {
-    int imgWidth, imgHeight;
-    int imgFormat;
-    int imgBytesPerPixel;
-    unsigned char *imgData;
-    
+    GLFWimage img;
+
+#ifdef A3D_USE_FREEIMAGE
     FIBITMAP *bitmap = GenericLoader(texName);
     if(bitmap)
     {
-        imgWidth = FreeImage_GetWidth(bitmap);
-        imgHeight = FreeImage_GetHeight(bitmap);
+        img.Width = FreeImage_GetWidth(bitmap);
+        img.Height = FreeImage_GetHeight(bitmap);
         
         bitmap = FreeImage_ConvertTo32Bits(bitmap);
-        imgFormat = GL_RGBA;
-        imgBytesPerPixel = 4;
-        imgData = new unsigned char[imgBytesPerPixel*imgWidth*imgHeight];
+        img.Format = GL_RGBA;
+        img.BytesPerPixel = 4;
+        img.Data = new unsigned char[img.BytesPerPixel*img.Width*img.Height];
         char* pixels = (char*)FreeImage_GetBits(bitmap);
         //FreeImage loads in BGR format, so you need to swap some bytes(Or use GL_BGR).
-        for(int j= 0; j<imgWidth*imgHeight; j++){
-            imgData[j*4+0]= pixels[j*4+2];
-            imgData[j*4+1]= pixels[j*4+1];
-            imgData[j*4+2]= pixels[j*4+0];
-            imgData[j*4+3]= pixels[j*4+3];
+        for(int j= 0; j<img.Width*img.Height; j++){
+            img.Data[j*4+0]= pixels[j*4+2];
+            img.Data[j*4+1]= pixels[j*4+1];
+            img.Data[j*4+2]= pixels[j*4+0];
+            img.Data[j*4+3]= pixels[j*4+3];
         }
         FreeImage_Unload(bitmap);
     }
     else
+#else
+    if(glfwReadImage(texName, &img, GLFW_BUILD_MIPMAPS_BIT) == 0)
+#endif
     {
         float r, g, b;
         r = b = 120;
         g = 200;
-        imgFormat = GL_RGB;
-        imgWidth = 1;
-        imgHeight = 1;
-        imgData = new unsigned char[imgWidth*imgHeight*3];
-        imgData[0] = (unsigned char)r;
-        imgData[1] = (unsigned char)g;
-        imgData[2] = (unsigned char)b;
+        img.Format = GL_RGB;
+        img.Width = 1;
+        img.Height = 1;
+        img.Data = new unsigned char[img.Width*img.Height*3];
+        img.Data[0] = (unsigned char)r;
+        img.Data[1] = (unsigned char)g;
+        img.Data[2] = (unsigned char)b;
     }
 
     GLuint texture = 0;
@@ -213,7 +219,7 @@ Texture Graphics::loadTexture(const char* texName)
 
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, imgFormat, imgWidth, imgHeight, 0, imgFormat, GL_UNSIGNED_BYTE, imgData);
+    glTexImage2D(GL_TEXTURE_2D, 0, img.Format, img.Width, img.Height, 0, img.Format, GL_UNSIGNED_BYTE, img.Data);
     
     // texture parameters
     {
@@ -226,11 +232,7 @@ Texture Graphics::loadTexture(const char* texName)
 
     glBindTexture(GL_TEXTURE_2D, 0);
     
-    if(imgData) 
-    {
-        delete imgData;
-        imgData = NULL;
-    }
+    glfwFreeImage(&img);
 
     textures.push_back(texture);
     return texture;
