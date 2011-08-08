@@ -24,12 +24,7 @@ option(A3D_USE_GL_VAO "Use OpenGL vertex array." NO)
 
 find_package(GLEW REQUIRED)
 
-find_package(FreeImage REQUIRED)
-
 find_package(LibXml2 REQUIRED)
-message(STATUS ${LIBXML2_LIBRARIES})
-message(STATUS ${LIBXML2_INCLUDE_DIR})
-message(STATUS ${LIBXML2_DEFINITIONS})
 
 find_package(PkgConfig REQUIRED)
 pkg_search_module(GLFW REQUIRED libglfw)
@@ -37,6 +32,14 @@ pkg_search_module(GLFW REQUIRED libglfw)
 if(GLFW_FOUND)
     message(STATUS "Found GLFW")
 endif(GLFW_FOUND)
+
+find_package(FreeImage)
+if(FreeImage_FOUND)
+    message(STATUS "Using FreeImage for image loading")
+    add_definitions("-DA3D_USE_FREEIMAGE")
+else(FreeImage_FOUND)
+    message(STATUS "Using glfw for image loading")
+endif(FreeImage_FOUND)
 
 set(GLM_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/external_libs/glm-0.9.2.3)
 find_package(GLM REQUIRED)
