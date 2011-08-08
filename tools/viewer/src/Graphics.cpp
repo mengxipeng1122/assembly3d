@@ -199,7 +199,7 @@ Texture Graphics::loadTexture(const char* texName)
     }
     else
 #else
-    if(glfwReadImage(texName, &img, GLFW_BUILD_MIPMAPS_BIT) == 0)
+    if(glfwReadImage(texName, &img, GLFW_BUILD_MIPMAPS_BIT) == GL_FALSE)
 #endif
     {
         float r, g, b;

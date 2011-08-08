@@ -21,6 +21,7 @@ endif(MSVC)
 ####################
 
 option(A3D_USE_GL_VAO "Use OpenGL vertex array." NO)
+option(A3D_USE_FREEIMAGE "Use FreeImage for loading texture images." YES)
 
 find_package(GLEW REQUIRED)
 
@@ -34,12 +35,12 @@ if(GLFW_FOUND)
 endif(GLFW_FOUND)
 
 find_package(FreeImage)
-if(FreeImage_FOUND)
+if(FreeImage_FOUND AND A3D_USE_FREEIMAGE)
     message(STATUS "Using FreeImage for image loading")
     add_definitions("-DA3D_USE_FREEIMAGE")
-else(FreeImage_FOUND)
+else(FreeImage_FOUND AND A3D_USE_FREEIMAGE)
     message(STATUS "Using glfw for image loading")
-endif(FreeImage_FOUND)
+endif(FreeImage_FOUND AND A3D_USE_FREEIMAGE)
 
 set(GLM_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/external_libs/glm-0.9.2.3)
 find_package(GLM REQUIRED)
