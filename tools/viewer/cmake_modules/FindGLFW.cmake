@@ -19,12 +19,6 @@
 # TODO:
 # Allow the user to select to link to a shared library or to a static library.
 
-
-# Macro to print some message to stdout, useful for debugging purpose.
-MACRO(DBG_MSG _MSG)
-  MESSAGE(STATUS "${CMAKE_CURRENT_LIST_FILE}(${CMAKE_CURRENT_LIST_LINE}): ${_MSG}")
-ENDMACRO(DBG_MSG)
-
 #Search for the include file...
 FIND_PATH(GLFW_INCLUDE_DIR glfw.h DOC "Path to GLFW include directory."
   HINTS
@@ -40,7 +34,6 @@ FIND_PATH(GLFW_INCLUDE_DIR glfw.h DOC "Path to GLFW include directory."
   ${PROJECT_ROOT_DIR}/3pp/include/GL/ # added by ptr
 
 )
-DBG_MSG("GLFW_INCLUDE_DIR = ${GLFW_INCLUDE_DIR}")
 
 FIND_LIBRARY(GLFW_LIBRARY DOC "Absolute path to GLFW library."
   NAMES glfw
@@ -52,10 +45,9 @@ FIND_LIBRARY(GLFW_LIBRARY DOC "Absolute path to GLFW library."
   /usr/lib
   ${PROJECT_ROOT_DIR}/3pp/lib/ # added by ptr
 )
-DBG_MSG("GLFW_LIBRARY = ${GLFW_LIBRARY}")
 
 SET(GLFW_FOUND 0)
 IF(GLFW_LIBRARY AND GLFW_INCLUDE_DIR)
   SET(GLFW_FOUND 1)
-  DBG_MSG("GLFW found!")
+  message(STATUS "GLFW found!")
 ENDIF(GLFW_LIBRARY AND GLFW_INCLUDE_DIR)
