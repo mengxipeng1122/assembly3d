@@ -24,6 +24,8 @@ option(A3D_USE_GL_VAO "Use OpenGL vertex array." NO)
 
 find_package(GLEW REQUIRED)
 
+find_package(FreeImage REQUIRED)
+
 find_package(LibXml2 REQUIRED)
 message(STATUS ${LIBXML2_LIBRARIES})
 message(STATUS ${LIBXML2_INCLUDE_DIR})
@@ -53,7 +55,8 @@ endif(A3D_USE_GL_VAO)
 include_directories(${GLFW_INCLUDE_DIRS}
                     ${GLEW_INCLUDE_PATH}
                     ${LIBXML2_INCLUDE_DIR}
-                    ${TCLAP_INCLUDE})
+                    ${TCLAP_INCLUDE}
+                    ${FreeImage_INCLUDE_DIRS})
 
 link_directories(${GLFW_LIBRARY_DIRS})
 
@@ -71,6 +74,7 @@ set(A3DViewer_HEADER src/App.h
                      src/Resources.h
                      src/Location3D.h
                      src/MeshLoader.h
+                     src/Utils.h
    )
 
 set(A3DViewer_SOURCE src/Main.cpp
@@ -80,6 +84,7 @@ set(A3DViewer_SOURCE src/Main.cpp
                      src/ShaderUtils.cpp
                      src/ProgramSimple.cpp
                      src/MeshLoader.cpp
+                     src/Utils.cpp
    )
 
 add_executable(A3DViewer
@@ -92,4 +97,5 @@ target_link_libraries(A3DViewer
                       ${EXTRA_LIBS}
                       ${GLEW_LIBRARY}
                       ${LIBXML2_LIBRARIES}
+                      ${FreeImage_LIBRARIES}
                       )
