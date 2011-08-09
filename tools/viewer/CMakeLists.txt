@@ -35,12 +35,14 @@ if(GLFW_FOUND)
 endif(GLFW_FOUND)
 
 find_package(FreeImage)
-if(FreeImage_FOUND AND A3D_USE_FREEIMAGE)
+if(FREEIMAGE_FOUND AND A3D_USE_FREEIMAGE)
+    message(STATUS "Found FreeImage")
     message(STATUS "Using FreeImage for image loading")
     add_definitions("-DA3D_USE_FREEIMAGE")
-else(FreeImage_FOUND AND A3D_USE_FREEIMAGE)
+else(FREEIMAGE_FOUND AND A3D_USE_FREEIMAGE)
+    message(STATUS "FreeImage not found/using")
     message(STATUS "Using glfw for image loading")
-endif(FreeImage_FOUND AND A3D_USE_FREEIMAGE)
+endif(FREEIMAGE_FOUND AND A3D_USE_FREEIMAGE)
 
 set(GLM_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/external_libs/glm-0.9.2.3)
 find_package(GLM REQUIRED)
@@ -60,7 +62,7 @@ include_directories(${GLFW_INCLUDE_DIRS}
                     ${GLEW_INCLUDE_PATH}
                     ${LIBXML2_INCLUDE_DIR}
                     ${TCLAP_INCLUDE}
-                    ${FreeImage_INCLUDE_DIRS})
+                    ${FREEIMAGE_INCLUDE_DIRS})
 
 link_directories(${GLFW_LIBRARY_DIRS})
 
@@ -101,5 +103,5 @@ target_link_libraries(A3DViewer
                       ${EXTRA_LIBS}
                       ${GLEW_LIBRARY}
                       ${LIBXML2_LIBRARIES}
-                      ${FreeImage_LIBRARIES}
+                      ${FREEIMAGE_LIBRARY}
                       )

@@ -1,58 +1,55 @@
-#-------------------------------------------------------------------
-# This file is part of the CMake build system for OGRE
-#     (Object-oriented Graphics Rendering Engine)
-# For the latest info, see http://www.ogre3d.org/
+
 #
-# The contents of this file are placed in the public domain. Feel
-# free to make use of it in any way you like.
-#-------------------------------------------------------------------
-
-# - Try to find FreeImage
-# Once done, this will define
+# Try to find the FreeImage library and include path.
+# Once done this will define
 #
-#  FreeImage_FOUND - system has FreeImage
-#  FreeImage_INCLUDE_DIRS - the FreeImage include directories 
-#  FreeImage_LIBRARIES - link these to use FreeImage
+# FREEIMAGE_FOUND
+# FREEIMAGE_INCLUDE_DIRS
+# FREEIMAGE_LIBRARY
+# 
 
-include(FindPkgMacros)
-findpkg_begin(FreeImage)
+IF (WIN32)
+	FIND_PATH( FREEIMAGE_INCLUDE_DIRS FreeImage.h
+		${FREEIMAGE_ROOT_DIR}/include
+		${FREEIMAGE_ROOT_DIR}
+		DOC "The directory where FreeImage.h resides")
+	FIND_LIBRARY( FREEIMAGE_LIBRARY
+		NAMES FreeImage freeimage
+		PATHS
+		${FREEIMAGE_ROOT_DIR}/lib
+		${FREEIMAGE_ROOT_DIR}
+		DOC "The FreeImage library")
+ELSE (WIN32)
+	FIND_PATH( FREEIMAGE_INCLUDE_DIRS FreeImage.h
+		/usr/include
+		/usr/local/include
+		/sw/include
+		/opt/local/include
+		DOC "The directory where FreeImage.h resides")
+    # prefer static library
+	FIND_LIBRARY( FREEIMAGE_LIBRARY
+        NAMES libfreeimage.a FreeImage
+		PATHS
+		/usr/lib64
+		/usr/lib
+		/usr/local/lib64
+		/usr/local/lib
+		/sw/lib
+		/opt/local/lib
+		DOC "The FreeImage library")
+ENDIF (WIN32)
 
-# Get path, convert backslashes as ${ENV_${var}}
-getenv_path(FREEIMAGE_HOME)
+SET(FREEIMAGE_LIBRARIES ${FREEIMAGE_LIBRARY})
 
-# construct search paths
-set(FreeImage_PREFIX_PATH ${FREEIMAGE_HOME} ${ENV_FREEIMAGE_HOME})
-create_search_paths(FreeImage)
-# redo search if prefix path changed
-clear_if_changed(FreeImage_PREFIX_PATH
-  FreeImage_LIBRARY_FWK
-  FreeImage_LIBRARY_REL
-  FreeImage_LIBRARY_DBG
-  FreeImage_INCLUDE_DIR
-)
+IF (FREEIMAGE_INCLUDE_DIRS AND FREEIMAGE_LIBRARY)
+	SET( FREEIMAGE_FOUND TRUE CACHE BOOL "Set to TRUE if FreeImage is found, FALSE otherwise")
+ELSE (FREEIMAGE_INCLUDE_DIRS AND FREEIMAGE_LIBRARY)
+	SET( FREEIMAGE_FOUND FALSE CACHE BOOL "Set to TRUE if FreeImage is found, FALSE otherwise")
+ENDIF (FREEIMAGE_INCLUDE_DIRS AND FREEIMAGE_LIBRARY)
 
-set(FreeImage_LIBRARY_NAMES freeimage freeimageLib)
-get_debug_names(FreeImage_LIBRARY_NAMES)
-
-use_pkgconfig(FreeImage_PKGC freeimage)
-
-findpkg_framework(FreeImage)
-
-find_path(FreeImage_INCLUDE_DIR NAMES FreeImage.h HINTS ${FreeImage_INC_SEARCH_PATH} ${FreeImage_PKGC_INCLUDE_DIRS})
-
-if (SYMBIAN) 
-set(ORIGINAL_CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH})
-set(CMAKE_PREFIX_PATH ${CMAKE_SYSYEM_OUT_DIR})
-message(STATUS "Lib will be searched in Symbian out dir: ${CMAKE_SYSYEM_OUT_DIR}")
-endif (SYMBIAN)
-find_library(FreeImage_LIBRARY_REL NAMES ${FreeImage_LIBRARY_NAMES} HINTS ${FreeImage_LIB_SEARCH_PATH} ${FreeImage_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" release relwithdebinfo minsizerel)
-find_library(FreeImage_LIBRARY_DBG NAMES ${FreeImage_LIBRARY_NAMES_DBG} HINTS ${FreeImage_LIB_SEARCH_PATH} ${FreeImage_PKGC_LIBRARY_DIRS} PATH_SUFFIXES "" debug)
-if (SYMBIAN) 
-set(FreeImage_LIBRARY_REL "${FreeImage_LIBRARY_REL} LibJPEG.lib LibOpenJPEG.lib LibPNG.lib ZLib-freeImage.lib")
-set(CMAKE_PREFIX_PATH ${ORIGINAL_CMAKE_PREFIX_PATH})
-endif (SYMBIAN)
-
-make_library_set(FreeImage_LIBRARY)
-
-findpkg_finish(FreeImage)
+#MARK_AS_ADVANCED(
+#	FREEIMAGE_FOUND
+#	FREEIMAGE_LIBRARY
+#	FREEIMAGE_LIBRARIES
+#	FREEIMAGE_INCLUDE_DIRS)
 
