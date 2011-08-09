@@ -40,6 +40,7 @@
 using namespace assembly3d;
 using namespace assembly3d::wiz;
 
+
 TransformTool::TransformTool()
 {
 }
@@ -78,9 +79,9 @@ void TransformTool::rotate(Mesh::Attribute *attribute, float rangle, float rx,
     float c = cosf(2.0f*PIf*rangle/360.0f);
     float t = 1.0f - c;
 
-    float matrix[3][4] = {{rx*rx*t + c, rx*ry*t - rz*s, rx*rz*t + ry*s, 0.0f},
-                           {rx*rz*t + ry*s, ry*ry*t + c, ry*rz*t - rx*s, 0.0f},
-                           {rz*rx*t - ry*s, rz*ry*t + rx*s, rz*rz*t + c, 0.0f}};
+    float matrix[3][4] = {{rx*rx*t + c,     rx*ry*t - rz*s, rx*rz*t + ry*s, 0.0f},
+                          {rx*ry*t + rz*s,  ry*ry*t + c,    ry*rz*t - rx*s, 0.0f},
+                          {rz*rx*t - ry*s,  rz*ry*t + rx*s, rz*rz*t + c,    0.0f}};
 
     transform(attribute, matrix);
 }
@@ -203,12 +204,12 @@ void TransformTool::transform(Mesh::Attribute *attribute, float matrix[3][4])
     for(int i = 0; i < attribute->count/4; ++i)
     {
 		float x,y,z,w;
-		x = data[i*4+0]; y = data[i*4+1]; z = data[i*4+2], w = data[i*4+3];
-		data[i*4+0] = x*matrix[0][0] + y*matrix[0][1] + z*matrix[0][2] + w*matrix[0][3];
-		data[i*4+1] = x*matrix[1][0] + y*matrix[1][1] + z*matrix[1][2] + w*matrix[1][3];
-		data[i*4+2] = x*matrix[2][0] + y*matrix[2][1] + z*matrix[2][2] + w*matrix[2][3];
+        x = data[i*4+0]; y = data[i*4+1]; z = data[i*4+2]; w = data[i*4+3];
+        data[i*4+0] = x*matrix[0][0] + y*matrix[0][1] + z*matrix[0][2] + w*matrix[0][3];
+        data[i*4+1] = x*matrix[1][0] + y*matrix[1][1] + z*matrix[1][2] + w*matrix[1][3];
+        data[i*4+2] = x*matrix[2][0] + y*matrix[2][1] + z*matrix[2][2] + w*matrix[2][3];
     }
-	
+
 	if(attribute->type == Mesh::NORMAL ||
 	   attribute->type == Mesh::TANGENT ||
 	   attribute->type == Mesh::BITANGENT)
@@ -218,7 +219,5 @@ void TransformTool::transform(Mesh::Attribute *attribute, float matrix[3][4])
 			normalize(&data[i*4], attribute->size);
 		}
 	}
-	
-	
 }
 
