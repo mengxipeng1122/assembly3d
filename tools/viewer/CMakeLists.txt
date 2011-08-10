@@ -52,6 +52,8 @@ if(FREEIMAGE_FOUND AND A3D_USE_FREEIMAGE)
     message(STATUS "Found FreeImage")
     message(STATUS "Using FreeImage for image loading")
     add_definitions("-DA3D_USE_FREEIMAGE")
+    set(FREEIMAGE_INCLUDES ${FREEIMAGE_INCLUDE_DIRS})
+    set(FREEIMAGE_LIBS ${FREEIMAGE_LIBRARY})
 else(FREEIMAGE_FOUND AND A3D_USE_FREEIMAGE)
     message(STATUS "FreeImage not found/using")
     message(STATUS "Using glfw for image loading")
@@ -75,7 +77,7 @@ include_directories(${GLFW_INCLUDE_DIRS}
                     ${GLEW_INCLUDE_PATH}
                     ${LIBXML2_INCLUDE_DIR}
                     ${TCLAP_INCLUDE}
-                    ${FREEIMAGE_INCLUDE_DIRS})
+                    ${FREEIMAGE_INCLUDES})
 
 link_directories(${GLFW_LIBRARY_DIRS})
 
@@ -118,5 +120,5 @@ target_link_libraries(A3DViewer
                       ${EXTRA_LIBS}
                       ${GLEW_LIBRARY}
                       ${LIBXML2_LIBRARIES}
-                      ${FREEIMAGE_LIBRARY}
+                      ${FREEIMAGE_LIBS}
                       )
