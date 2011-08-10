@@ -19,6 +19,7 @@ IF(WIN32)
         $ENV{PROGRAMFILES}/GLEW/lib
         ${PROJECT_SOURCE_DIR}/src/nvgl/glew/bin
         ${PROJECT_SOURCE_DIR}/src/nvgl/glew/lib
+		${GLEW_ROOT_DIR}/lib
         DOC "The GLEW library")
 ELSE(WIN32)
 	FIND_PATH( GLEW_INCLUDE_PATH GL/glew.h

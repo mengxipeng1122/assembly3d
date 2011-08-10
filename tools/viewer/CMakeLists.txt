@@ -15,7 +15,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if(MSVC)
-  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+  add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CONSOLE)
 endif(MSVC)
 
 ####################
@@ -23,16 +23,29 @@ endif(MSVC)
 option(A3D_USE_GL_VAO "Use OpenGL vertex array." NO)
 option(A3D_USE_FREEIMAGE "Use FreeImage for loading texture images." YES)
 
-find_package(GLEW REQUIRED)
-
-find_package(LibXml2 REQUIRED)
-
-find_package(PkgConfig REQUIRED)
-pkg_search_module(GLFW REQUIRED libglfw)
+if(MSVC)
+	set(GLEW_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external_libs/glew-1.6.0)
+	set(GLFW_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external_libs/glfw-2.7.1.bin.WIN32)
+	set(FREEIMAGE_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external_libs/FreeImage/Dist)
+	set(LIBXML2_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external_libs/libxml2-2.7.8.win32)
+	set(ICONV_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external_libs/iconv-1.9.2.win32)
+	set(ZLIB_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/external_libs/zlib-1.2.5)
+	
+	set(LIBXML2_INCLUDE_DIR ${LIBXML2_ROOT_DIR}/include/ ${ICONV_ROOT_DIR}/include ${ZLIB_ROOT_DIR}/include)
+	set(LIBXML2_LIBRARIES ${LIBXML2_ROOT_DIR}/lib/libxml2.lib ${ICONV_ROOT_DIR}/lib/iconv_a.lib ${ZLIB_ROOT_DIR}/lib/zlib.lib)
+	set(LIBXML2_XMLLINT_EXECUTABLE ${LIBXML2_ROOT_DIR}/bin)
+	find_package(GLFW REQUIRED)
+else(MSVC)
+	find_package(LibXml2 REQUIRED)
+	find_package(PkgConfig REQUIRED)
+	pkg_search_module(GLFW REQUIRED libglfw)
+endif(MSVC)
 
 if(GLFW_FOUND)
     message(STATUS "Found GLFW")
 endif(GLFW_FOUND)
+
+find_package(GLEW REQUIRED)
 
 find_package(FreeImage)
 if(FREEIMAGE_FOUND AND A3D_USE_FREEIMAGE)
@@ -68,6 +81,8 @@ link_directories(${GLFW_LIBRARY_DIRS})
 
 IF(APPLE)
     SET(EXTRA_LIBS "-framework Cocoa -framework OpenGL")
+ELSEIF(MSVC)
+	SET(EXTRA_LIBS "glu32.lib" "opengl32.lib")
 ELSE(APPLE)
     SET(EXTRA_LIBS ${GLFW_LDFLAGS_OTHER})
 ENDIF(APPLE)
