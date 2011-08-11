@@ -163,11 +163,11 @@ void Mesh::bounds(float center[3], float &width, float &height,
 
     int numVerts = static_cast<int>(m_positions.size());
 
-    for (int i = 0; i < numVerts; ++i)
+    for (int i = 0; i < numVerts/4; ++i)
     {
-        x = m_positions[i + 0];
-        y = m_positions[i + 1];
-        z = m_positions[i + 2];
+        x = m_positions[i*4 + 0];
+        y = m_positions[i*4 + 1];
+        z = m_positions[i*4 + 2];
 
         if (x < xMin)
             xMin = x;
