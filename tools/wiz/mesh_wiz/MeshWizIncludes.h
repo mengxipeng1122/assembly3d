@@ -47,8 +47,8 @@ namespace assembly3d
         namespace ProjectInfo
         {
             const char* const  projectName    = "MeshWiz";
-            const char* const  versionString  = "1.3.1";
-            const int          versionNumber  = 0x10301;
+            const char* const  versionString  = "1.3.2";
+            const int          versionNumber  = 0x10302;
         }
     }
 }
