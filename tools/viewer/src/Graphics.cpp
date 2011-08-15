@@ -175,6 +175,7 @@ static FIBITMAP* GenericLoader(const char* lpszPathName, int flag = 0) {
 Texture Graphics::loadTexture(const char* texName)
 {
     GLFWimage img;
+    GLint internalImgFormat;
 
 #ifdef A3D_USE_FREEIMAGE
     FIBITMAP *bitmap = GenericLoader(texName);
@@ -184,28 +185,34 @@ Texture Graphics::loadTexture(const char* texName)
         img.Height = FreeImage_GetHeight(bitmap);
         
         bitmap = FreeImage_ConvertTo32Bits(bitmap);
-        img.Format = GL_RGBA;
+        img.Format = GL_BGRA;
+        internalImgFormat = GL_RGBA;
         img.BytesPerPixel = 4;
         img.Data = new unsigned char[img.BytesPerPixel*img.Width*img.Height];
         char* pixels = (char*)FreeImage_GetBits(bitmap);
+        memcpy(img.Data, pixels, img.BytesPerPixel*img.Width*img.Height);
         //FreeImage loads in BGR format, so you need to swap some bytes(Or use GL_BGR).
-        for(int j= 0; j<img.Width*img.Height; j++){
-            img.Data[j*4+0]= pixels[j*4+2];
-            img.Data[j*4+1]= pixels[j*4+1];
-            img.Data[j*4+2]= pixels[j*4+0];
-            img.Data[j*4+3]= pixels[j*4+3];
-        }
+//        for(int j= 0; j<img.Width*img.Height; j++){
+//            img.Data[j*4+0]= pixels[j*4+2];
+//            img.Data[j*4+1]= pixels[j*4+1];
+//            img.Data[j*4+2]= pixels[j*4+0];
+//            img.Data[j*4+3]= pixels[j*4+3];
+//        }
         FreeImage_Unload(bitmap);
     }
-    else
 #else
-    if(glfwReadImage(texName, &img, GLFW_BUILD_MIPMAPS_BIT) == GL_FALSE)
+    if(glfwReadImage(texName, &img, GLFW_BUILD_MIPMAPS_BIT))
+    {
+        internalImgFormat = img.Format;
+    }
 #endif
+    else
     {
         float r, g, b;
         r = b = 120;
         g = 200;
         img.Format = GL_RGB;
+        internalImgFormat = img.Format;
         img.Width = 1;
         img.Height = 1;
         img.Data = new unsigned char[img.Width*img.Height*3];
@@ -219,7 +226,7 @@ Texture Graphics::loadTexture(const char* texName)
 
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, img.Format, img.Width, img.Height, 0, img.Format, GL_UNSIGNED_BYTE, img.Data);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalImgFormat, img.Width, img.Height, 0, img.Format, GL_UNSIGNED_BYTE, img.Data);
     
     // texture parameters
     {
