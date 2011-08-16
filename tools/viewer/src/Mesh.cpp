@@ -40,7 +40,7 @@ Mesh::Mesh(Attributes attribs) : attributes(attribs)
 
 Mesh::~Mesh() 
 {
-#if (A3D_USE_GL_VAO == 1)
+#ifdef A3D_GL_VAO
     glDeleteVertexArrays(1, &vertexArray);
 #endif
     glDeleteBuffers(nAttributes, buffers);
@@ -51,6 +51,7 @@ Mesh::~Mesh()
     delete attrTypes;
     attrNames.clear();
     groupNames.clear();
+    attrLocs.clear();
 }
 
 GLvoid Mesh::draw() 
@@ -70,7 +71,7 @@ GLvoid Mesh::draw(GLuint index)
 
 GLvoid Mesh::bind() 
 {
-#if (A3D_USE_GL_VAO == 1)
+#ifdef A3D_GL_VAO
     glBindVertexArray(vertexArray);
 #else
     bindBuffers();
@@ -79,7 +80,7 @@ GLvoid Mesh::bind()
 
 GLvoid Mesh::unbind() 
 {
-#if (A3D_USE_GL_VAO == 1)
+#ifdef A3D_GL_VAO
     glBindVertexArray(0);
 #else
     disableBuffers();
@@ -90,22 +91,9 @@ void Mesh::bindBuffers()
 {
     for(int i = 0; i < nAttributes; ++i)
     {
-        GLint attrLoc = -1;
-        if(attrNames[i].compare("POSITION") == 0)
-        {
-            attrLoc = attributes.position;
-        }
-        else if(attrNames[i].compare("NORMAL") == 0)
-        {
-            attrLoc = attributes.normal;
-        }
-        else if(attrNames[i].compare("TEXCOORD") == 0)
-        {
-            attrLoc = attributes.texcoord;
-        }
         glBindBuffer(GL_ARRAY_BUFFER, buffers[i]);
-        glVertexAttribPointer(attrLoc, attrSizes[i], attrTypes[i], GL_FALSE, 0, (GLvoid*) 0);
-        glEnableVertexAttribArray(attrLoc);
+        glVertexAttribPointer(attrLocs[i], attrSizes[i], attrTypes[i], GL_FALSE, 0, (GLvoid*) 0);
+        glEnableVertexAttribArray(attrLocs[i]);
     }
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[nAttributes]);
@@ -117,21 +105,7 @@ void Mesh::disableBuffers()
     
     for(int i = 0; i < nAttributes; ++i)
     {
-        GLint attrLoc = -1;
-        if(attrNames[i].compare("POSITION") == 0)
-        {
-            attrLoc = attributes.position;
-        }
-        else if(attrNames[i].compare("NORMAL") == 0)
-        {
-            attrLoc = attributes.normal;
-        }
-        else if(attrNames[i].compare("TEXCOORD") == 0)
-        {
-            attrLoc = attributes.texcoord;
-        }
-        
-        glDisableVertexAttribArray(attrLoc);
+        glDisableVertexAttribArray(attrLocs[i]);
     }
 }
 

@@ -1,8 +1,8 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
-#cmakedefine A3D_USE_FREEIMAGE @HAVE_FREEIMAGE@
+#cmakedefine A3D_FREEIMAGE
 
-#cmakedefine A3D_USE_GL_VAO @USE_VAO@
+#cmakedefine A3D_GL_VAO
 
 #endif // _CONFIG_H_

@@ -44,7 +44,7 @@
 #include <GL/glfw.h>
 #include "config.h"
 
-#if (A3D_USE_FREEIMAGE == 1)
+#ifdef A3D_FREEIMAGE
 #include "FreeImage.h"
 #endif
 
@@ -146,7 +146,7 @@ Mesh* Graphics::loadMesh(const char* meta, const char* data)//, Resources& r)
     return mesh;
 }
 
-#if A3D_USE_FREEIMAGE == 1
+#ifdef A3D_FREEIMAGE
 static FIBITMAP* GenericLoader(const char* lpszPathName, int flag = 0) {
 	FREE_IMAGE_FORMAT fif = FIF_UNKNOWN;
 	// check the file signature and deduce its format
@@ -173,7 +173,7 @@ Texture Graphics::loadTexture(const char* texName)
     GLFWimage img;
     GLint internalImgFormat;
 
-#if A3D_USE_FREEIMAGE == 1
+#ifdef A3D_FREEIMAGE
     FIBITMAP *bitmap = GenericLoader(texName);
     if(bitmap)
     {
@@ -226,7 +226,7 @@ Texture Graphics::loadTexture(const char* texName)
 
     glTexImage2D(GL_TEXTURE_2D, 0, internalImgFormat, img.Width, img.Height, 0, img.Format, GL_UNSIGNED_BYTE, img.Data);
 
-#if A3D_USE_FREEIMAGE == 1
+#ifdef A3D_FREEIMAGE
     FreeImage_Unload(bitmap);
 #else
     glfwFreeImage(&img);
