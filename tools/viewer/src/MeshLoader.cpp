@@ -96,9 +96,8 @@ static void processNode(xmlTextReaderPtr reader, MeshLoader* loader) {
 
 MeshLoader::MeshLoader(Mesh *m,
                        const char *metafilename,
-                       const char *datafilename,
-                       ProgramSimple* p)
-    : mesh(m), prog(p)
+                       const char *datafilename)
+    : mesh(m)
 {
     file = fopen(datafilename, "r");
     assert(file != NULL);
@@ -161,15 +160,15 @@ void MeshLoader::attribute(const GLchar *name, GLsizei size, GLenum type, GLsize
     GLint attrLoc = -1;
     if(strcmp("POSITION", name) == 0)
     {
-        attrLoc = prog->position();
+        attrLoc = mesh->getAttributes().position;
     }
     else if(strcmp("NORMAL", name) == 0)
     {
-        attrLoc = prog->normal();
+        attrLoc = mesh->getAttributes().normal;
     }
     else if(strcmp("TEXCOORD", name) == 0)
     {
-        attrLoc = prog->texCoord();
+        attrLoc = mesh->getAttributes().texcoord;
     }
     glEnableVertexAttribArray(attrLoc);
     glVertexAttribPointer(attrLoc, size, type, GL_FALSE, 0, (GLvoid*) 0);

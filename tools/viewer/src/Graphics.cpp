@@ -44,7 +44,7 @@
 #include <GL/glfw.h>
 #include "config.h"
 
-#if A3D_USE_FREEIMAGE == 1
+#if (A3D_USE_FREEIMAGE == 1)
 #include "FreeImage.h"
 #endif
 
@@ -136,8 +136,12 @@ void Graphics::render(int width, int height)
 
 Mesh* Graphics::loadMesh(const char* meta, const char* data)//, Resources& r)
 {
-    Mesh* mesh = new Mesh(simple);
-    MeshLoader ml(mesh, meta, data, simple);
+    Mesh::Attributes attribs;
+    attribs.position = simple->position();
+    attribs.normal = simple->normal();
+    attribs.texcoord = simple->texCoord();
+    Mesh* mesh = new Mesh(attribs);
+    MeshLoader ml(mesh, meta, data);
     meshes.push_back(mesh);
     return mesh;
 }

@@ -48,8 +48,7 @@ public:
 
     MeshLoader(Mesh *m,
                const char *metafilename,
-               const char *datafilename,
-               ProgramSimple* p);// //TODO: GLint position, GLint normal, GLint texcoord); or struct Attributes { .. }
+               const char *datafilename);
 
     void vertices(GLsizei count, GLsizei attributes);
 
@@ -66,8 +65,6 @@ private:
     FILE * file;
     Mesh *mesh;
     Resources* r;
-    ProgramSimple* prog;
-
 };
 
 #endif // MESHLOADER_H

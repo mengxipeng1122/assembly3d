@@ -34,13 +34,13 @@
 #include "Mesh.h"
 #include "ProgramSimple.h"
 
-Mesh::Mesh(ProgramSimple* p) : prog(p)
+Mesh::Mesh(Attributes attribs) : attributes(attribs)
 {
 }
 
 Mesh::~Mesh() 
 {
-#if A3D_USE_GL_VAO == 1
+#if (A3D_USE_GL_VAO == 1)
     glDeleteVertexArrays(1, &vertexArray);
 #endif
     glDeleteBuffers(nAttributes, buffers);
@@ -70,7 +70,7 @@ GLvoid Mesh::draw(GLuint index)
 
 GLvoid Mesh::bind() 
 {
-#if A3D_USE_GL_VAO == 1
+#if (A3D_USE_GL_VAO == 1)
     glBindVertexArray(vertexArray);
 #else
     bindBuffers();
@@ -79,7 +79,7 @@ GLvoid Mesh::bind()
 
 GLvoid Mesh::unbind() 
 {
-#if A3D_USE_GL_VAO == 1
+#if (A3D_USE_GL_VAO == 1)
     glBindVertexArray(0);
 #else
     disableBuffers();
@@ -93,15 +93,15 @@ void Mesh::bindBuffers()
         GLint attrLoc = -1;
         if(attrNames[i].compare("POSITION") == 0)
         {
-            attrLoc = prog->position();
+            attrLoc = attributes.position;
         }
         else if(attrNames[i].compare("NORMAL") == 0)
         {
-            attrLoc = prog->normal();
+            attrLoc = attributes.normal;
         }
         else if(attrNames[i].compare("TEXCOORD") == 0)
         {
-            attrLoc = prog->texCoord();
+            attrLoc = attributes.texcoord;
         }
         glBindBuffer(GL_ARRAY_BUFFER, buffers[i]);
         glVertexAttribPointer(attrLoc, attrSizes[i], attrTypes[i], GL_FALSE, 0, (GLvoid*) 0);
@@ -120,15 +120,15 @@ void Mesh::disableBuffers()
         GLint attrLoc = -1;
         if(attrNames[i].compare("POSITION") == 0)
         {
-            attrLoc = prog->position();
+            attrLoc = attributes.position;
         }
         else if(attrNames[i].compare("NORMAL") == 0)
         {
-            attrLoc = prog->normal();
+            attrLoc = attributes.normal;
         }
         else if(attrNames[i].compare("TEXCOORD") == 0)
         {
-            attrLoc = prog->texCoord();
+            attrLoc = attributes.texcoord;
         }
         
         glDisableVertexAttribArray(attrLoc);
