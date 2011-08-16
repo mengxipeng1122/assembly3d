@@ -6,7 +6,7 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_scripts
                       ${CMAKE_MODULE_PATH})
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -71,7 +71,7 @@ else(A3D_USE_GL_VAO)
     set(USE_VAO 0)
 endif(A3D_USE_GL_VAO)
 
-configure_file(${CMAKE_SOURCE_DIR}/cmake/config.h.in ${CMAKE_SOURCE_DIR}/src/config.h)
+configure_file(${CMAKE_SOURCE_DIR}/cmake_scripts/config.h.in ${CMAKE_SOURCE_DIR}/src/config.h)
 
 #set(GLI_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/external_libs/gli-0.3.0.3)
 #find_package(GLI REQUIRED)
