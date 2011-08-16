@@ -40,7 +40,7 @@ Mesh::Mesh(ProgramSimple* p) : prog(p)
 
 Mesh::~Mesh() 
 {
-#ifdef A3D_GL_USE_VAO
+#if A3D_USE_GL_VAO == 1
     glDeleteVertexArrays(1, &vertexArray);
 #endif
     glDeleteBuffers(nAttributes, buffers);
@@ -55,22 +55,22 @@ Mesh::~Mesh()
 
 GLvoid Mesh::draw() 
 {
-		bind();
+    bind();
     glDrawElements(GL_TRIANGLES, 3*nTotalTriangles, indexType, (GLvoid*) 0);
-		unbind();
+    unbind();
 }
 
 GLvoid Mesh::draw(GLuint index) 
 {
-		bind();
+    bind();
     GLsizei count = nTriangles[index+1] - nTriangles[index];
     glDrawElements(GL_TRIANGLES, 3*count, indexType, (GLvoid*) (nTriangles[index]*3*indexSize));
-		unbind();
+    unbind();
 }
 
 GLvoid Mesh::bind() 
 {
-#ifdef A3D_GL_USE_VAO
+#if A3D_USE_GL_VAO == 1
     glBindVertexArray(vertexArray);
 #else
     bindBuffers();
@@ -79,7 +79,7 @@ GLvoid Mesh::bind()
 
 GLvoid Mesh::unbind() 
 {
-#ifdef A3D_GL_USE_VAO
+#if A3D_USE_GL_VAO == 1
     glBindVertexArray(0);
 #else
     disableBuffers();

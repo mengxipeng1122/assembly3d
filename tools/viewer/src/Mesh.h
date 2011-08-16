@@ -37,6 +37,7 @@
 #include <GL/glew.h>
 #include <string>
 #include <vector>
+#include "config.h"
 
 //#define A3D_GL_USE_VAO
 
@@ -70,7 +71,7 @@ private:
     void disableBuffers();
 
     ProgramSimple* prog;
-#ifdef A3D_GL_USE_VAO
+#if A3D_USE_GL_VAO == 1
     GLuint vertexArray;
 #endif
     GLuint* buffers;

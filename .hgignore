@@ -19,6 +19,7 @@ gdbserver
 
 *~
 .DS_Store
+*/config.h
 
 # codelite noise
 *.project
