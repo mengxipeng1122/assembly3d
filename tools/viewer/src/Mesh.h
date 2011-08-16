@@ -77,7 +77,7 @@ private:
     void bindBuffers();
     void disableBuffers();
 
-#if (A3D_USE_GL_VAO == 1)
+#ifdef A3D_GL_VAO
    GLuint vertexArray;
 #endif
     GLuint* buffers;
@@ -92,6 +92,7 @@ private:
     std::vector<std::string> attrNames;
     //int positionIndex, normalIndex, texcoordIndex;
     Attributes attributes;
+    std::vector<GLint> attrLocs;
 
 };
 

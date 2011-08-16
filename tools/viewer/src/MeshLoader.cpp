@@ -132,7 +132,7 @@ void MeshLoader::vertices(GLsizei count, GLsizei attributes)
     mesh->attrTypeSizes = new GLsizei[attributes];
     mesh->attrNames.clear();
     
-#if A3D_USE_GL_VAO == 1
+#ifdef A3D_GL_VAO
     glGenVertexArrays(1, &mesh->vertexArray);
     glBindVertexArray(mesh->vertexArray);
 #endif
@@ -156,7 +156,6 @@ void MeshLoader::attribute(const GLchar *name, GLsizei size, GLenum type, GLsize
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
     glBufferData(GL_ARRAY_BUFFER, mesh->nVertices*stride, (GLvoid*) 0, GL_STATIC_DRAW);
 
-#if A3D_USE_GL_VAO == 1
     GLint attrLoc = -1;
     if(strcmp("POSITION", name) == 0)
     {
@@ -170,6 +169,9 @@ void MeshLoader::attribute(const GLchar *name, GLsizei size, GLenum type, GLsize
     {
         attrLoc = mesh->getAttributes().texcoord;
     }
+    mesh->attrLocs.push_back(attrLoc);
+
+#ifdef A3D_GL_VAO
     glEnableVertexAttribArray(attrLoc);
     glVertexAttribPointer(attrLoc, size, type, GL_FALSE, 0, (GLvoid*) 0);
 #endif
@@ -223,7 +225,7 @@ void MeshLoader::finish()
     fread(data, mesh->indexSize, mesh->nTotalTriangles*3, file);
     glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 
-#if A3D_USE_GL_VAO == 1
+#ifdef A3D_GL_VAO
     glBindVertexArray(0);
 #endif
     
