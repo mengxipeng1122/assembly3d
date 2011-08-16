@@ -36,8 +36,6 @@
 
 #include <GL/glew.h>
 
-enum A3D_STOCK_SHADER { A3D_SHADER_SIMPLE_TEXTURE };
-
 class ShaderUtils
 {
 private:
@@ -48,8 +46,6 @@ public:
 
     static GLuint createProgram(GLuint vertexShader, GLuint fragmentShader);
 
-    static GLuint createStockShader(A3D_STOCK_SHADER shaderId);
-private:
     static GLuint createProgramFromSrcPair(const GLchar* vertexShaderSrc,
                                            const GLchar* fragmentShaderSrc);
 };

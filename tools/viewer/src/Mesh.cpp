@@ -55,28 +55,30 @@ Mesh::~Mesh()
 
 GLvoid Mesh::draw() 
 {
-#ifdef A3D_GL_USE_VAO
-    glBindVertexArray(vertexArray);
-#else
-    bindBuffers();
-#endif
+		bind();
     glDrawElements(GL_TRIANGLES, 3*nTotalTriangles, indexType, (GLvoid*) 0);
-#ifdef A3D_GL_USE_VAO
-    glBindVertexArray(0);
-#else
-    disableBuffers();
-#endif
+		unbind();
 }
 
 GLvoid Mesh::draw(GLuint index) 
+{
+		bind();
+    GLsizei count = nTriangles[index+1] - nTriangles[index];
+    glDrawElements(GL_TRIANGLES, 3*count, indexType, (GLvoid*) (nTriangles[index]*3*indexSize));
+		unbind();
+}
+
+GLvoid Mesh::bind() 
 {
 #ifdef A3D_GL_USE_VAO
     glBindVertexArray(vertexArray);
 #else
     bindBuffers();
 #endif
-    GLsizei count = nTriangles[index+1] - nTriangles[index];
-    glDrawElements(GL_TRIANGLES, 3*count, indexType, (GLvoid*) (nTriangles[index]*3*indexSize));
+}
+
+GLvoid Mesh::unbind() 
+{
 #ifdef A3D_GL_USE_VAO
     glBindVertexArray(0);
 #else
@@ -84,7 +86,7 @@ GLvoid Mesh::draw(GLuint index)
 #endif
 }
 
-void Mesh::bindBuffers()//GLuint position,GLuint normal, GLuint texcoord)
+void Mesh::bindBuffers()
 {
     for(int i = 0; i < nAttributes; ++i)
     {

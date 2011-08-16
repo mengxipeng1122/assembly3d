@@ -94,30 +94,20 @@ void Graphics::init()
 void Graphics::render(int width, int height)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //glViewport(0, 0, width, height);
+	  glViewport(0, 0, width, height);
     
     glUseProgram(simple->programName());
     glUniform1i(simple->texCoord(), 0);
 
-//    float viewOffset = 25.0f;
-//    float camZ = 25.0f;
-//    float near = 3.0f; float far = 100.0f;
     float aspect = width/(GLfloat)height;
+    glm::mat4 P = glm::perspective(45.0f, aspect, 0.1f, 128.0f);
+    simple->projection(glm::value_ptr(P));
 
-//    glm::mat4 V = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -camZ));
-//    glm::mat4 P = glm::frustum(-1.0f,1.0f, -1.0f, 2.0f/aspect-1.0f, near, far);
-//    0.0f, 0.0f, 10.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f
-    glm::mat4 V = glm::lookAt(glm::vec3(eyeX, eyeY, eyeZ),
-                             glm::vec3(eyeX, eyeY, 0.0f),
-                             glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 V = glm::translate(glm::mat4(1.0f), glm::vec3(-eyeX, -eyeY, -eyeZ));
 
-//    V = glm::translate(V, glm::vec3(0.0, 5.0, 0.0));
     V = glm::rotate(V, rotX, glm::vec3(1.0f, 0.0f, 0.0f));
     V = glm::rotate(V, rotY, glm::vec3(0.0f, 1.0f, 0.0f));
 
-    glm::mat4 P = glm::perspective(45.0f, aspect, 0.1f, 128.0f);
-
-    simple->projection(glm::value_ptr(P));
 
     for(unsigned int i = 0; i < shapes.size(); ++i)
     {
@@ -131,15 +121,16 @@ void Graphics::render(int width, int height)
 
         glm::mat4 MV = V*M;
         simple->modelView(glm::value_ptr(MV));
+        shapes[i].mesh->bind();
         for (unsigned int j = 0; j < shapes[i].textures.size(); ++j) {
             glBindTexture(GL_TEXTURE_2D, shapes[i].textures[j]);
             shapes[i].mesh->draw(j);
-            glBindTexture(GL_TEXTURE_2D, 0);
         }
+        shapes[i].mesh->unbind();
+        glBindTexture(GL_TEXTURE_2D, 0);        
     }
 
     glUseProgram(0);
-
 }
 
 Mesh* Graphics::loadMesh(const char* meta, const char* data)//, Resources& r)
@@ -233,8 +224,8 @@ Texture Graphics::loadTexture(const char* texName)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     }
 
     glBindTexture(GL_TEXTURE_2D, 0);

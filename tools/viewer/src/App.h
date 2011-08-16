@@ -45,7 +45,6 @@ public:
 
     void init(Resources r);
     void render(int width, int height);
-    void update(float deltaTime);
 
     void updateView(float offsetX, float offsetY, float offsetZ, 
                     float angleX, float angleY);

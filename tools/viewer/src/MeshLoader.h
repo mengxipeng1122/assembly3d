@@ -49,7 +49,7 @@ public:
     MeshLoader(Mesh *m,
                const char *metafilename,
                const char *datafilename,
-               ProgramSimple* p);
+               ProgramSimple* p);// //TODO: GLint position, GLint normal, GLint texcoord); or struct Attributes { .. }
 
     void vertices(GLsizei count, GLsizei attributes);
 

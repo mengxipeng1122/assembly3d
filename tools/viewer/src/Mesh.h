@@ -52,9 +52,12 @@ class Mesh
 {
     friend class MeshLoader;
 public:
-//    Mesh(const char* meta, const char* data, ProgramSimple* p);
+		//TODO: Mesh(GLint position, GLint normal, GLint texcoord); or struct Attributes { .. }
     Mesh(ProgramSimple* p);
     ~Mesh();
+
+    GLvoid bind();
+    GLvoid unbind();    
 
     GLvoid draw();
     GLvoid draw(GLuint index);
@@ -80,6 +83,7 @@ private:
     GLenum indexType;
     std::vector<std::string> groupNames;
     std::vector<std::string> attrNames;
+    //int positionIndex, normalIndex, texcoordIndex;
 
 };
 
