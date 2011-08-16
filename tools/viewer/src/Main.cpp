@@ -39,8 +39,7 @@
 
 //#include "Graphics.h"
 #include "App.h"
-#include <tclap/CmdLine.h>
-#include "Utils.h"
+#include "Settings.h"
 
 
 // Globals
@@ -65,14 +64,11 @@ void mousePosCallback(int x, int y);
 void resized(int width, int height);
 void mouseWheel(int pos);
 
-// Swap buffers
-void flipBuffers();
-
 void updateView();
 
 // process keys
 void processKeys(double deltaTime);
-void processMouse();//(double deltaTime);
+void processMouse(double deltaTime);
 
 int winWidth = 800;
 int winHeight = 600;
@@ -92,57 +88,9 @@ int main(int argc, char *argv[])
     // Cmd argument parsing
     //----------------------------------------
     Resources r;
-
-    try {
-        using namespace TCLAP;
-        CmdLine cmd("Assembly3D Viewer", '=', "1.0.0");
-
-        UnlabeledValueArg<std::string> metaFileArg("input-file", "Input file.", true, "", "path/to/mesh");
-        ValueArg<std::string> dataFileArg("b", "binary-file", "Binary file.", false, "", "path/to/binary");
-        ValueArg<float> meshScaleArg("s", "scale", "Scale.", false, 1.0f, "scale");
-
-        cmd.add(meshScaleArg);
-        cmd.add(dataFileArg);
-        cmd.add(metaFileArg);
-
-        cmd.parse(argc, argv);
-
-        r.meshPath = metaFileArg.getValue();
-        if(Utils::checkIfFileExists(r.meshPath.c_str()) == false)
-        {
-            std::cout << "Mesh file not found!" << std::endl;
-            return 1;
-        }
-        if(dataFileArg.isSet())
-        {
-            r.dataPath = dataFileArg.getValue();
-        }
-        else
-        {
-            size_t pos = r.meshPath.find(".xml");
-            r.dataPath = r.meshPath.substr(0, pos);
-            r.dataPath.append(".dat");
-        }
-        if(Utils::checkIfFileExists(r.dataPath.c_str()) == false)
-        {
-            std::cout << "Mesh file not found!" << std::endl;
-            return 1;
-        }
-        
-        r.scale = meshScaleArg.getValue();
-
-        size_t pos = r.meshPath.find_last_of("/");
-        if(pos == std::string::npos)
-        {
-            r.texPath = "./";
-        }
-        else
-        {
-            r.texPath = r.meshPath.substr(0, pos+1);
-        }
-
-    } catch (TCLAP::ArgException &e)  // catch any exceptions
-    { std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; return 1;}
+		if(!loadSettings(r, argc, argv))
+			return 1;
+		
     //----------------------------------------
     // Start loop
     //----------------------------------------
@@ -152,33 +100,30 @@ int main(int argc, char *argv[])
     {
         // Initialize the window
         initWindow(winWidth, winHeight, 32);
-        // Pass control to the render function
         
         //----------------------------------------
         // Initializing app
         //----------------------------------------
-
         app.init(r);
 
         //----------------------------------------
 
         while(runLevel)
         {
-            if(keys[GLFW_KEY_ESC]) // Esc Key
+            if(keys[GLFW_KEY_ESC] || glfwGetWindowParam(GLFW_OPENED) != GL_TRUE) // Esc Key
                 runLevel=0;
             
             double currentTime = glfwGetTime();
             double dT = currentTime - time;
             processKeys(dT);
-            processMouse();//(dT);
-            app.update(dT);
+            processMouse(dT);
             time = currentTime;
 
             app.render(winWidth, winHeight);
 
             // We're using double buffers, so we need to swap to see our stuff
-            flipBuffers();
-        }
+				    glfwSwapBuffers();
+	        }
         
     }
     catch (const char* error)
@@ -226,17 +171,6 @@ void initWindow(int scrX, int scrY, int BPP)
 
 }
 
-// Wrapper for buffer swapping
-void flipBuffers()
-{
-    glfwSwapBuffers();
-    // glfwSwapBuffers also automatically polls for input
-    
-    // If the window was closed we quit
-    if (glfwGetWindowParam(GLFW_OPENED) != GL_TRUE)
-        runLevel = 0;
-
-}
 
 // Handle keys - updates the Keys array
 void keyCallback(int key, int action)
@@ -275,7 +209,6 @@ void resized(int width, int height)
 {
     winWidth = width;
     winHeight = height;
-    glViewport(0, 0, width, height);
 }
 
 void mouseWheel(int pos)
@@ -304,7 +237,7 @@ void processKeys(double deltaTime)
     }
 }
 
-void processMouse()//(double deltaTime)
+void processMouse(double deltaTime)
 {
     if(mouse.left)
     {
@@ -316,8 +249,8 @@ void processMouse()//(double deltaTime)
         }
         int diffx=mouse.x-lastx;
         int diffy=mouse.y-lasty;
-        camRotX += (float) (diffy * 0.4);
-        camRotY += (float) (diffx * 0.4);
+        camRotX += (float) (diffy * 200 * deltaTime);
+        camRotY += (float) (diffx * 200 * deltaTime);
         lastx=mouse.x;
         lasty=mouse.y;
         //updateView();
@@ -333,8 +266,8 @@ void processMouse()//(double deltaTime)
         }
         int diffx=mouse.x-lastx;
         int diffy=mouse.y-lasty;
-        camOffsetX -= (float) (diffx * 0.01);
-        camOffsetY += (float) (diffy * 0.01);
+        camOffsetX -= (float) (diffx * 20 * deltaTime);
+        camOffsetY += (float) (diffy * 20 * deltaTime);
         lastx=mouse.x;
         lasty=mouse.y;
         //updateView();

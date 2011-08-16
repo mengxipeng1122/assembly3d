@@ -69,9 +69,6 @@ void App::render(int width, int height)
     graphics->render(width, height);
 }
 
-void App::update(float deltaTime)
-{
-}
 
 void App::updateView(float offsetX, float offsetY, float offsetZ, 
                      float angleX, float angleY)

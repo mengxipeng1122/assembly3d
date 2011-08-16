@@ -36,6 +36,33 @@
 
 #include <algorithm>
 
+//TODO: lighting uniform matrix for shader
+
+static const GLchar* szSimpleShaderVert = "uniform mat4 projection;"
+                                        "uniform mat4 modelView;"
+                                        "attribute vec4 vertex;"
+                                        "attribute vec3 normal;"
+                                        "attribute vec2 texCoord;"
+                                        "varying vec3 fragmentNormal;"
+                                        "varying vec2 fragmentTexCoord;"
+                                        "void main(void)"
+                                        "{"
+                                        "fragmentTexCoord = texCoord;"
+                                        "vec4 n = modelView*vec4(normal, 0.0);"
+                                        "fragmentNormal = normalize(n.xyz);"
+                                        "gl_Position = projection*modelView*vertex;"
+                                        "}";
+
+static const GLchar* szSimpleShaderFrag = "uniform sampler2D firstTexture;"
+                                        "varying vec3 fragmentNormal;"
+                                        "varying vec2 fragmentTexCoord;"
+                                        "void main(void)"
+                                        "{"
+                                        "float intensity = max(dot(fragmentNormal, vec3(0.0, 0.0, 1.0)), 0.0);"
+                                        "gl_FragColor = texture2D(firstTexture, fragmentTexCoord)*intensity;"
+                                        "}";
+
+
 //#include "glm/glm.hpp"
 //#include "glm/gtc/type_ptr.hpp"
 //#include "glm/gtc/matrix_transform.hpp"
@@ -46,7 +73,7 @@ ProgramSimple::ProgramSimple()
 //    GLuint fs = ShaderUtils::createFragmentShader("glsl/Simple.frag");
 
 //    program = ShaderUtils::createProgram(vs, fs);
-    program = ShaderUtils::createStockShader(A3D_SHADER_SIMPLE_TEXTURE);
+    program = ShaderUtils::createProgramFromSrcPair(szSimpleShaderVert, szSimpleShaderFrag);
 
     projectionLoc = glGetUniformLocation(program, "projection");
     modelViewLoc = glGetUniformLocation(program, "modelView");

@@ -95,6 +95,7 @@ set(A3DViewer_HEADER src/App.h
                      src/ShaderUtils.h
                      src/ProgramSimple.h
                      src/Resources.h
+                     src/Settings.h
                      src/Location3D.h
                      src/MeshLoader.h
                      src/Utils.h
