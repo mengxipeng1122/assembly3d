@@ -37,6 +37,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "config.h"
 
 static void processNode(xmlTextReaderPtr reader, MeshLoader* loader) {
 
@@ -132,7 +133,7 @@ void MeshLoader::vertices(GLsizei count, GLsizei attributes)
     mesh->attrTypeSizes = new GLsizei[attributes];
     mesh->attrNames.clear();
     
-#ifdef A3D_GL_USE_VAO
+#if A3D_USE_GL_VAO == 1
     glGenVertexArrays(1, &mesh->vertexArray);
     glBindVertexArray(mesh->vertexArray);
 #endif
@@ -156,7 +157,7 @@ void MeshLoader::attribute(const GLchar *name, GLsizei size, GLenum type, GLsize
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
     glBufferData(GL_ARRAY_BUFFER, mesh->nVertices*stride, (GLvoid*) 0, GL_STATIC_DRAW);
 
-#ifdef A3D_GL_USE_VAO
+#if A3D_USE_GL_VAO == 1
     GLint attrLoc = -1;
     if(strcmp("POSITION", name) == 0)
     {
@@ -223,7 +224,7 @@ void MeshLoader::finish()
     fread(data, mesh->indexSize, mesh->nTotalTriangles*3, file);
     glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 
-#ifdef A3D_GL_USE_VAO
+#if A3D_USE_GL_VAO == 1
     glBindVertexArray(0);
 #endif
     

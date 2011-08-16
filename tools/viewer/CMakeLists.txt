@@ -6,7 +6,7 @@ if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake
                       ${CMAKE_MODULE_PATH})
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -48,19 +48,30 @@ endif(GLFW_FOUND)
 find_package(GLEW REQUIRED)
 
 find_package(FreeImage)
+#set(FREEIMAGE_FOUND 0)
 if(FREEIMAGE_FOUND AND A3D_USE_FREEIMAGE)
     message(STATUS "Found FreeImage")
     message(STATUS "Using FreeImage for image loading")
-    add_definitions("-DA3D_USE_FREEIMAGE")
+    #add_definitions("-DA3D_USE_FREEIMAGE")
+    set(HAVE_FREEIMAGE 1)
     set(FREEIMAGE_INCLUDES ${FREEIMAGE_INCLUDE_DIRS})
     set(FREEIMAGE_LIBS ${FREEIMAGE_LIBRARY})
 else(FREEIMAGE_FOUND AND A3D_USE_FREEIMAGE)
     message(STATUS "FreeImage not found/using")
     message(STATUS "Using glfw for image loading")
+    set(HAVE_FREEIMAGE 0)
 endif(FREEIMAGE_FOUND AND A3D_USE_FREEIMAGE)
 
 set(GLM_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/external_libs/glm-0.9.2.3)
 find_package(GLM REQUIRED)
+
+if(A3D_USE_GL_VAO)
+    set(USE_VAO 1)
+else(A3D_USE_GL_VAO)
+    set(USE_VAO 0)
+endif(A3D_USE_GL_VAO)
+
+configure_file(${CMAKE_SOURCE_DIR}/cmake/config.h.in ${CMAKE_SOURCE_DIR}/src/config.h)
 
 #set(GLI_PACKAGE_DIR ${CMAKE_SOURCE_DIR}/external_libs/gli-0.3.0.3)
 #find_package(GLI REQUIRED)
@@ -69,9 +80,6 @@ set(TCLAP_INCLUDE ${CMAKE_SOURCE_DIR}/external_libs/tclap-1.2.1/include)
 
 add_definitions(${GLFW_CFLAGS_OTHER})
 
-if(A3D_USE_GL_VAO)
-    add_definitions( "-DA3D_GL_USE_VAO")
-endif(A3D_USE_GL_VAO)
 
 include_directories(${GLFW_INCLUDE_DIRS}
                     ${GLEW_INCLUDE_PATH}
