@@ -53,8 +53,14 @@ class Mesh
 {
     friend class MeshLoader;
 public:
-		//TODO: Mesh(GLint position, GLint normal, GLint texcoord); or struct Attributes { .. }
-    Mesh(ProgramSimple* p);
+    struct Attributes
+    {
+        GLint position;
+        GLint normal;
+        GLint texcoord;
+    };
+
+    Mesh(Attributes attribs);
     ~Mesh();
 
     GLvoid bind();
@@ -65,14 +71,14 @@ public:
 
     const char* getGroupName(int idx) { return groupNames[idx].c_str(); }
     int getNGroups() { return nGroups; }
+    Attributes getAttributes() { return attributes; }
 
 private:
     void bindBuffers();
     void disableBuffers();
 
-    ProgramSimple* prog;
-#if A3D_USE_GL_VAO == 1
-    GLuint vertexArray;
+#if (A3D_USE_GL_VAO == 1)
+   GLuint vertexArray;
 #endif
     GLuint* buffers;
     GLsizei* attrSizes;
@@ -85,6 +91,7 @@ private:
     std::vector<std::string> groupNames;
     std::vector<std::string> attrNames;
     //int positionIndex, normalIndex, texcoordIndex;
+    Attributes attributes;
 
 };
 
