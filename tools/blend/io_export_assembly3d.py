@@ -75,9 +75,45 @@ def isOne(a, eps=0.0001):
     
 def save(settings):
 	print( "SAVE")
-	save_mesh(settings)
-	save_anim(settings)
+	save_world(settings)
+#	save_mesh(settings)
+#	save_anim(settings)
 
+
+def save_world(settings):	
+	if settings and not os.path.exists(settings.savepath):
+		os.makedirs(settings.savepath)
+
+	objects = []
+
+	for obj in bpy.context.selected_objects:
+		
+		if ((obj.type != 'MESH') or ( len(obj.data.vertices.values()) == 0 )):
+			continue
+		
+		objects.append(obj)
+
+
+	file_xml = open(settings.savepath + ".world.xml", 'w')
+	file_xml.write( '<?xml version="1.0" encoding="UTF-8"?>\n' )
+	file_xml.write( '<World xmlns="http://assembly.interaction3d.org/world" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://assembly.interaction3d.org/world http://assembly.interaction3d.org/world.xsd">\n' )
+	file_xml.write( '\t<Scene objects="%d">\n' % (len(objects)) )
+
+	for obj in objects:
+		translation, rotation, scale = obj.matrix_world.decompose()
+		if scale[0] != 1 and scale[0] == scale[1] and scale[1] == scale[2]:
+			file_xml.write( '\t\t<Object name="%s" scale="%f">\n' % (obj.name, scale[0]) )
+		else:
+			file_xml.write( '\t\t<Object name="%s">\n' % (obj.name) )
+			
+		file_xml.write( '\t\t\t<Position x="%f" y="%f" z="%f"/>\n' % (translation[0], translation[1], translation[2]) )
+#		file_xml.write( '\t\t\t<Orientation x="%f" y="%f" z="%f" w="%f"/>\n' % (rotation[1], rotation[2], rotation[3], rotation[0]) )
+		file_xml.write( '\t\t\t<Orientation x="%f" y="%f" z="%f"/>\n' % (rotation[1], rotation[2], rotation[3]) )
+		file_xml.write( '\t\t</Object>\n' )
+		
+	file_xml.write( '\t</Scene>\n' )
+	file_xml.write( '</World>\n' )
+	file_xml.close();
 
 def save_mesh(settings):
 
@@ -316,6 +352,10 @@ def save_anim(settings):
 			continue		
 		
 		
+		anim_name = obj.name
+		if obj.animation_data.action:
+			anim_name = obj.animation_data.action.name
+		
 		useTranslation = False
 		useRotation = False
 		useScale = False
@@ -349,7 +389,7 @@ def save_anim(settings):
 		if not (useTranslation or useRotation or useScale):
 			continue
 		
-		file_dat = open(settings.savepath + os.sep + obj.name + ".anim.dat", 'wb')
+		file_dat = open(settings.savepath + os.sep + anim_name + ".anim.dat", 'wb')
 		
 		num_attributes = 0;
 		if useTranslation:
@@ -365,7 +405,7 @@ def save_anim(settings):
 		file_dat.close();
 		
 
-		file_xml = open(settings.savepath + os.sep + obj.name + ".anim.xml", 'w')
+		file_xml = open(settings.savepath + os.sep + anim_name + ".anim.xml", 'w')
 		file_xml.write( '<?xml version="1.0" encoding="UTF-8"?>\n' )
 		file_xml.write( '<Animation xmlns="http://assembly.interaction3d.org/anim" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://assembly.interaction3d.org/anim http://assembly.interaction3d.org/anim.xsd">\n' )	  
 		file_xml.write( '\t<Sampler duration="%f" channels="%d">\n' %  (frame_count * frame_duration, 1) )
@@ -386,7 +426,7 @@ def save_anim(settings):
 	
 	bpy.context.scene.frame_set(frame_current)
 
-  
+
 ##########
 #export class registration and interface
 from bpy.props import *
