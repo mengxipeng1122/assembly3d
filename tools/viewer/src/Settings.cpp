@@ -35,6 +35,7 @@
 #include <tclap/CmdLine.h>
 #include "Utils.h"
 #include "Resources.h"
+#include <vector>
 
 Settings::Settings()
 {
@@ -43,54 +44,67 @@ Settings::Settings()
 bool Settings::load(Resources* r, int argc, char *argv[])
 {
     try {
-       using namespace TCLAP;
-       CmdLine cmd("Assembly3D Viewer", '=', "1.0.0");
+        using namespace std;
+        using namespace TCLAP;
+        CmdLine cmd("Assembly3D Viewer", '=', "1.0.0");
 
-       UnlabeledValueArg<std::string> metaFileArg("input-file", "Input file.", true, "", "path/to/mesh");
-       ValueArg<std::string> dataFileArg("b", "binary-file", "Binary file.", false, "", "path/to/binary");
-       ValueArg<float> meshScaleArg("s", "scale", "Scale.", false, 1.0f, "scale");
+        ValueArg<string> sceneFileArg("s", "scene-file", "Scene file.", false, "", "path/to/scene");
+        ValueArg<string> metaFileArg("m", "mesh-file", "Mesh file.", false, "", "path/to/mesh");
+        ValueArg<string> dataFileArg("b", "binary-file", "Binary file.", false, "", "path/to/binary");
+        ValueArg<float> meshScaleArg("", "scale", "Scale.", false, 1.0f, "scale");
 
-       cmd.add(meshScaleArg);
-       cmd.add(dataFileArg);
-       cmd.add(metaFileArg);
+        cmd.add(meshScaleArg);
+        cmd.add(dataFileArg);
+        cmd.add(metaFileArg);
+        cmd.add(sceneFileArg);
 
-       cmd.parse(argc, argv);
+        cmd.parse(argc, argv);
 
-       r->meshPath = metaFileArg.getValue();
-       if(Utils::checkIfFileExists(r->meshPath.c_str()) == false)
-       {
-           std::cout << "Mesh file not found!" << std::endl;
-           return 1;
-       }
-       if(dataFileArg.isSet())
-       {
-           r->dataPath = dataFileArg.getValue();
-       }
-       else
-       {
-           size_t pos = r->meshPath.find(".xml");
-           r->dataPath = r->meshPath.substr(0, pos);
-           r->dataPath.append(".dat");
-       }
-       if(Utils::checkIfFileExists(r->dataPath.c_str()) == false)
-       {
-           std::cout << "Mesh file not found!" << std::endl;
-           return 1;
-       }
+        if(metaFileArg.isSet() == false && sceneFileArg.isSet() == false)
+        {
+            StdOutput stdOut;
+            ArgException ex("No mesh file or scene file provided!");
+            stdOut.failure(cmd, ex);
+            return false;
+        }
+        r->meshPath = metaFileArg.getValue();
+        if(Utils::checkIfFileExists(r->meshPath.c_str()) == false)
+        {
+            cout << "Mesh file not found!" << endl;
+            return false;
+        }
+        if(dataFileArg.isSet())
+        {
+            r->dataPath = dataFileArg.getValue();
+        }
+        else
+        {
+            size_t pos = r->meshPath.find(".xml");
+            r->dataPath = r->meshPath.substr(0, pos);
+            r->dataPath.append(".dat");
+        }
+        if(Utils::checkIfFileExists(r->dataPath.c_str()) == false)
+        {
+            std::cout << "Binary file not found!" << std::endl;
+            return false;
+        }
 
-       r->scale = meshScaleArg.getValue();
+        r->scale = meshScaleArg.getValue();
 
-       size_t pos = r->meshPath.find_last_of("/");
-       if(pos == std::string::npos)
-       {
-           r->texPath = "./";
-       }
-       else
-       {
-           r->texPath = r->meshPath.substr(0, pos+1);
-       }
-       return true;
-     } catch (TCLAP::ArgException &e)  // catch any exceptions
-     { std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl; return false;}
-
+        size_t pos = r->meshPath.find_last_of("/");
+        if(pos == std::string::npos)
+        {
+            r->texPath = "./";
+        }
+        else
+        {
+            r->texPath = r->meshPath.substr(0, pos+1);
+        }
+        return true;
+    }
+    catch (TCLAP::ArgException &e)  // catch any exceptions
+    {
+        std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
+        return false;
+    }
 }
