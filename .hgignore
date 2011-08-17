@@ -1,0 +1,63 @@
+# use glob syntax.
+syntax: glob
+
+hs_err_pid*.log
+lib/
+target/
+*target/
+build/
+*build/
+
+dist/
+*dist/
+
+tools/bin
+
+
+gdb.setup
+gdbserver
+
+*~
+.DS_Store
+*/config.h
+
+# codelite noise
+*.project
+cscope.out
+cscope_file.list
+*_wsp.mk
+tags
+*.tags
+*.mk
+*.session
+*.workspace.*
+*.batch_build
+
+# misc
+bin/*
+Debug/*
+Release/*
+.dep.inc
+*_app
+
+# Visual Studio noise
+*.ncb
+*.suo
+*.user
+*.exe
+*.pdb
+*.ilk
+
+# other stuff
+*/build/*
+*release/*
+*debug/*
+*/codelite_workspace/*
+*/external_libs/*
+*testdata/
+*/docs/html/
+
+# switch to regexp syntax.
+#syntax: regexp
+#^\.pc/
+
