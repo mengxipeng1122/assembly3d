@@ -88,8 +88,8 @@ int main(int argc, char *argv[])
     // Cmd argument parsing
     //----------------------------------------
     Resources r;
-		if(!loadSettings(r, argc, argv))
-			return 1;
+    if(Settings::load(&r, argc, argv) == false)
+        return 1;
 		
     //----------------------------------------
     // Start loop
@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
             app.render(winWidth, winHeight);
 
             // We're using double buffers, so we need to swap to see our stuff
-				    glfwSwapBuffers();
+            glfwSwapBuffers();
 	        }
         
     }
