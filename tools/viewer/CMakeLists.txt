@@ -117,6 +117,7 @@ set(A3DViewer_SOURCE src/Main.cpp
                      src/ProgramSimple.cpp
                      src/MeshLoader.cpp
                      src/Utils.cpp
+                     src/Settings.cpp
    )
 
 add_executable(A3DViewer
