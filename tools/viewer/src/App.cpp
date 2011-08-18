@@ -44,28 +44,28 @@ App::~App()
 
 }
 
-void App::init(Resources r)
+void App::init(Resources* r)
 {
     graphics = new Graphics();
 
     graphics->init();
 
-    for(size_t i = 0; i < r.meshPaths.size(); ++i)
+    for(size_t i = 0; i < r->meshPaths.size(); ++i)
     {
         Location3D* loc = new Location3D();
-        loc->x = r.positions[i][0];
-        loc->y = r.positions[i][1];
-        loc->z = r.positions[i][2];
+        loc->x = r->positions[i][0];
+        loc->y = r->positions[i][1];
+        loc->z = r->positions[i][2];
 //    loc->x = 2.0f;
 //    loc->y = -1.0f;
 //    loc->rotY = 1.0f;
 //    loc->rotAngle = 60.0f;
-        Mesh* mesh = graphics->loadMesh(r.meshPaths[i].c_str(), r.dataPaths[i].c_str());
+        Mesh* mesh = graphics->loadMesh(r->meshPaths[i].c_str(), r->dataPaths[i].c_str());
         for (int j = 0; j < mesh->getNGroups(); ++j) {
-            std::string tPath = r.texPaths[i] + std::string(mesh->getGroupName(j));
+            std::string tPath = r->texPaths[i] + std::string(mesh->getGroupName(j));
             graphics->loadTexture(tPath.c_str());
         }
-        graphics->addObject(loc, mesh, r.scales[i]);
+        graphics->addObject(loc, mesh, r->scales[i]);
     }
 
 }

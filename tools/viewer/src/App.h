@@ -43,7 +43,7 @@ public:
     App();
     ~App();
 
-    void init(Resources r);
+    void init(Resources* r);
     void render(int width, int height);
 
     void updateView(float offsetX, float offsetY, float offsetZ, 
