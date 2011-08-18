@@ -36,6 +36,16 @@
 #include "Utils.h"
 #include "Resources.h"
 #include <vector>
+#include <libxml/xmlreader.h>
+#include <assert.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+
+using namespace std;
+using namespace TCLAP;
+
+static void processNode(xmlTextReaderPtr reader, Resources* r);
 
 Settings::Settings()
 {
@@ -44,8 +54,6 @@ Settings::Settings()
 bool Settings::load(Resources* r, int argc, char *argv[])
 {
     try {
-        using namespace std;
-        using namespace TCLAP;
         CmdLine cmd("Assembly3D Viewer", '=', "1.0.0");
 
         ValueArg<string> sceneFileArg("s", "scene-file", "Scene file.", false, "", "path/to/scene");
@@ -67,44 +75,176 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             stdOut.failure(cmd, ex);
             return false;
         }
-        r->meshPath = metaFileArg.getValue();
-        if(Utils::checkIfFileExists(r->meshPath.c_str()) == false)
+        if(sceneFileArg.isSet())
         {
-            cout << "Mesh file not found!" << endl;
-            return false;
+            r->hasScene = true;
+            r->scenePath = sceneFileArg.getValue();
+            
+            size_t pos = r->scenePath.find_last_of("/");
+            if(pos == std::string::npos)
+            {
+                r->sceneDir = "./";
+            }
+            else
+            {
+                r->sceneDir = r->scenePath.substr(0, pos+1);
+            }
+            
+            if(Utils::checkIfFileExists(r->scenePath.c_str()) == false)
+            {
+                cout << "Scene file not found!" << endl;
+                return false;
+            }
+            
+            // parse scene file
+            xmlTextReaderPtr reader = xmlReaderForFile(r->scenePath.c_str(), NULL, 0);
+            assert(reader != NULL);
+            int ret = xmlTextReaderRead(reader);
+            while (ret == 1)
+            {
+                processNode(reader, r);
+                ret = xmlTextReaderRead(reader);
+            }
+            xmlFreeTextReader(reader);
+            assert(ret == 0);
+            
+            for (size_t i = 0; i < r->meshPaths.size(); ++i) 
+            {
+                size_t posExt = r->meshPaths[i].find(".xml");
+                std::string dPath = r->meshPaths[i].substr(0, posExt);
+                dPath.append(".dat");
+                r->dataPaths.push_back(dPath);
+                
+                if(Utils::checkIfFileExists(r->dataPaths[i].c_str()) == false)
+                {
+                    std::cout << "Binary file not found!" << std::endl;
+                    return false;
+                }
+                
+                size_t posSlash = r->meshPaths[i].find_last_of("/");
+                if(posSlash == std::string::npos)
+                {
+                    r->texPaths.push_back("./");
+                }
+                else
+                {
+                    r->texPaths.push_back(r->meshPaths[i].substr(0, posSlash+1));
+                }
+                
+            }
+            return true;
+            
         }
-        if(dataFileArg.isSet())
+        else 
         {
-            r->dataPath = dataFileArg.getValue();
+            r->hasScene = false;
+            r->meshPaths.push_back(metaFileArg.getValue());
+            
+            if(Utils::checkIfFileExists(r->meshPaths[0].c_str()) == false)
+            {
+                cout << "Mesh file not found!" << endl;
+                return false;
+            }
+            if(dataFileArg.isSet())
+            {
+                r->dataPaths.push_back(dataFileArg.getValue());
+            }
+            else
+            {
+                size_t pos = r->meshPaths[0].find(".xml");
+                std::string dPath = r->meshPaths[0].substr(0, pos);
+                dPath.append(".dat");
+                r->dataPaths.push_back(dPath);
+            }
+            if(Utils::checkIfFileExists(r->dataPaths[0].c_str()) == false)
+            {
+                std::cout << "Binary file not found!" << std::endl;
+                return false;
+            }
+            
+            r->scales.push_back(meshScaleArg.getValue());
+            
+            size_t pos = r->meshPaths[0].find_last_of("/");
+            if(pos == std::string::npos)
+            {
+                r->texPaths.push_back("./");
+            }
+            else
+            {
+                r->texPaths.push_back(r->meshPaths[0].substr(0, pos+1));
+            }
+            return true;
+            
+            std::vector<float> tmpPos;
+            tmpPos.push_back(0.0f);
+            tmpPos.push_back(0.0f);
+            tmpPos.push_back(0.0f);
+            r->positions.push_back(tmpPos);
+            std::vector<float> tmpOrientation;
+            tmpOrientation.push_back(0.0f);
+            tmpOrientation.push_back(0.0f);
+            tmpOrientation.push_back(0.0f);
+            tmpOrientation.push_back(0.0f);
+            r->orientations.push_back(tmpOrientation);
         }
-        else
-        {
-            size_t pos = r->meshPath.find(".xml");
-            r->dataPath = r->meshPath.substr(0, pos);
-            r->dataPath.append(".dat");
-        }
-        if(Utils::checkIfFileExists(r->dataPath.c_str()) == false)
-        {
-            std::cout << "Binary file not found!" << std::endl;
-            return false;
-        }
-
-        r->scale = meshScaleArg.getValue();
-
-        size_t pos = r->meshPath.find_last_of("/");
-        if(pos == std::string::npos)
-        {
-            r->texPath = "./";
-        }
-        else
-        {
-            r->texPath = r->meshPath.substr(0, pos+1);
-        }
-        return true;
     }
     catch (TCLAP::ArgException &e)  // catch any exceptions
     {
         std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
         return false;
+    }
+}
+
+static void processNode(xmlTextReaderPtr reader, Resources* r)
+{
+    const char *name = (const char*)xmlTextReaderConstName(reader);
+    assert (name != NULL);
+    
+    int nodeType = xmlTextReaderNodeType(reader);
+    if(nodeType != 1)
+    {
+        return;
+    }
+
+    if(strcmp("Scene", name) == 0)
+    {
+        r->numObj = atoi ((const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "objcount"));
+    }
+    else if(strcmp("Object", name) == 0)
+    {
+        const char* name = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "name");
+        string meshPath;
+        meshPath = r->sceneDir;
+        meshPath.append(name);
+        r->meshPaths.push_back(meshPath);
+        float scale = atof ((const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "scale"));
+        r->scales.push_back(scale);
+        
+    }
+    else if(strcmp("Position", name) == 0)
+    {
+        float x, y, z;
+        x = atof ((const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "x"));
+        y = atof ((const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "y"));
+        z = atof ((const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "z"));
+        std::vector<float> tmp;
+        tmp.push_back(x);
+        tmp.push_back(y);
+        tmp.push_back(z);
+        r->positions.push_back(tmp);
+    }
+    else if(strcmp("Orientation", name) == 0)
+    {
+        float x, y, z, w;
+        x = atof ((const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "x"));
+        y = atof ((const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "y"));
+        z = atof ((const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "z"));
+        w = atof ((const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "w"));
+        std::vector<float> tmp;
+        tmp.push_back(x);
+        tmp.push_back(y);
+        tmp.push_back(z);
+        tmp.push_back(w);
+        r->orientations.push_back(tmp);
     }
 }

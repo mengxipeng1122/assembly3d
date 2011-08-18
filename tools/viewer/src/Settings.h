@@ -42,7 +42,6 @@ private:
     Settings();
 public:
     static bool load(Resources* r, int argc, char *argv[]);
-
 };
 
 #endif // SETTINGS_H
