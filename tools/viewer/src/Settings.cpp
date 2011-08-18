@@ -173,8 +173,6 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             {
                 r->texPaths.push_back(r->meshPaths[0].substr(0, pos+1));
             }
-            return true;
-            
             std::vector<float> tmpPos;
             tmpPos.push_back(0.0f);
             tmpPos.push_back(0.0f);
@@ -186,6 +184,9 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             tmpOrientation.push_back(0.0f);
             tmpOrientation.push_back(0.0f);
             r->orientations.push_back(tmpOrientation);
+
+            return true;
+            
         }
     }
     catch (TCLAP::ArgException &e)  // catch any exceptions
