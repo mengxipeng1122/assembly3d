@@ -39,11 +39,17 @@
 
 struct Resources
 {
-    std::string meshPath;
-    std::string dataPath;
-    std::string texPath;
-    std::vector<std::string> textureNames;
-    float scale;
+    bool hasScene;
+    std::string scenePath;
+    std::string sceneDir;
+    int numObj;
+    std::vector<std::string> meshPaths;
+    std::vector<std::string> dataPaths;
+    std::vector<std::string> texPaths;
+    std::vector<std::vector<std::string> > textureNames;
+    std::vector<float> scales;
+    std::vector<std::vector<float> > positions;
+    std::vector<std::vector<float> > orientations;
 };
 
 
