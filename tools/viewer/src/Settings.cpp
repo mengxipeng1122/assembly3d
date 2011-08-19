@@ -174,20 +174,12 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             {
                 r->texPaths.push_back(r->meshPaths[0].substr(0, pos+1));
             }
-            std::vector<float> tmpPos;
-            tmpPos.push_back(0.0f);
-            tmpPos.push_back(0.0f);
-            tmpPos.push_back(0.0f);
+            std::vector<float> tmpPos(3, 0.0f);
             r->positions.push_back(tmpPos);
-            std::vector<float> tmpOrientation;
-            tmpOrientation.push_back(0.0f);
-            tmpOrientation.push_back(0.0f);
-            tmpOrientation.push_back(0.0f);
-            tmpOrientation.push_back(0.0f);
+            std::vector<float> tmpOrientation(4, 0.0f);
             r->orientations.push_back(tmpOrientation);
 
             return true;
-            
         }
     }
     catch (TCLAP::ArgException &e)  // catch any exceptions
@@ -225,28 +217,33 @@ static void processNode(xmlTextReaderPtr reader, Resources* r)
     }
     else if(strcmp("Position", name) == 0)
     {
-        float x, y, z;
-        x = atof ((const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "x"));
-        y = atof ((const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "y"));
-        z = atof ((const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "z"));
-        std::vector<float> tmp;
-        tmp.push_back(x);
-        tmp.push_back(y);
-        tmp.push_back(z);
-        r->positions.push_back(tmp);
+        std::vector<float> positionValues(3, 0.0f);
+        int attributeCount = xmlTextReaderAttributeCount(reader);
+        try {
+            for (int i = 0; i < attributeCount; ++i) {
+                positionValues.at(i) = atof ((const char*) xmlTextReaderGetAttributeNo(reader, i));
+            }
+        }
+        catch (exception e) {
+            cerr << "XML Error: Tag '" << name << "' in Object '";
+            cerr << r->meshPaths.back() << "' has too many attributes" << endl;
+        }
+        r->positions.push_back(positionValues);
     }
     else if(strcmp("Orientation", name) == 0)
     {
-        float x, y, z, w;
-        x = atof ((const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "x"));
-        y = atof ((const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "y"));
-        z = atof ((const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "z"));
-        w = atof ((const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "w"));
-        std::vector<float> tmp;
-        tmp.push_back(x);
-        tmp.push_back(y);
-        tmp.push_back(z);
-        tmp.push_back(w);
-        r->orientations.push_back(tmp);
+        std::vector<float> orientationValues(4, 0.0f);
+        int attributeCount = xmlTextReaderAttributeCount(reader);
+
+        try {
+            for (int i = 0; i < attributeCount; ++i) {
+                orientationValues.at(i) = atof ((const char*) xmlTextReaderGetAttributeNo(reader, i));
+            }
+        }
+        catch (exception e) {
+            cerr << "XML Error: Tag '" << name << "' in Object '";
+            cerr << r->meshPaths.back() << "' has too many attributes" << endl;
+        }
+        r->orientations.push_back(orientationValues);
     }
 }
