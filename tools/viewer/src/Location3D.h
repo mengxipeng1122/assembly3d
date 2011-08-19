@@ -43,8 +43,10 @@ public:
     float x, y, z;
     float quatW, quatX, quatY, quatZ;
     
+    // http://tfc.duke.free.fr/coding/md5-specs-en.html
     void calculateQuaternionW()
     {
+
         float t = 1.0f - (quatX * quatX) - (quatY * quatY) - (quatZ * quatZ);
         if (t < 0.0f)
             quatW = 0.0f;
