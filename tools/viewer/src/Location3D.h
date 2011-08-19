@@ -34,11 +34,23 @@
 #ifndef LOCATION3D_H
 #define LOCATION3D_H
 
-struct Location3D
+#include <math.h>
+
+class Location3D
 {
+public:
     Location3D() : x(0), y(0), z(0), quatW(0), quatX(0), quatY(0), quatZ(0) {}
     float x, y, z;
     float quatW, quatX, quatY, quatZ;
+    
+    void calculateQuaternionW()
+    {
+        float t = 1.0f - (quatX * quatX) - (quatY * quatY) - (quatZ * quatZ);
+        if (t < 0.0f)
+            quatW = 0.0f;
+        else
+            quatW = -sqrt(t);
+    }
 };
 
 #endif // LOCATION3D_H
