@@ -121,6 +121,7 @@ void Graphics::render(int width, int height)
         
         // Rotation with quaternion
         M = M * glm::mat4_cast(glm::normalize(glm::quat(loc->quatW, loc->quatX, loc->quatY, loc->quatZ)));
+        //M = M * glm::mat4_cast(glm::quat(loc->quatW, loc->quatX, loc->quatY, loc->quatZ));
 
         //M = glm::rotate(M, loc->rotAngle, glm::vec3(loc->rotX, loc->rotY, loc->rotZ));
         M = glm::scale(M, glm::vec3(shapes[i].scale, shapes[i].scale, shapes[i].scale));

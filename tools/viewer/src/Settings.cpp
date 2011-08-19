@@ -176,7 +176,7 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             }
             std::vector<float> tmpPos(3, 0.0f);
             r->positions.push_back(tmpPos);
-            std::vector<float> tmpOrientation(4, 0.0f);
+            std::vector<float> tmpOrientation(3, 0.0f);
             r->orientations.push_back(tmpOrientation);
 
             return true;
@@ -232,7 +232,7 @@ static void processNode(xmlTextReaderPtr reader, Resources* r)
     }
     else if(strcmp("Orientation", name) == 0)
     {
-        std::vector<float> orientationValues(4, 0.0f);
+        std::vector<float> orientationValues(3, 0.0f);
         int attributeCount = xmlTextReaderAttributeCount(reader);
 
         try {
