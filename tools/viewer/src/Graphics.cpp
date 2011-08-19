@@ -140,9 +140,18 @@ Mesh* Graphics::loadMesh(const char* meta, const char* data)//, Resources& r)
     attribs.position = simple->position();
     attribs.normal = simple->normal();
     attribs.texcoord = simple->texCoord();
-    Mesh* mesh = new Mesh(attribs);
-    MeshLoader ml(mesh, meta, data);
-    meshes.push_back(mesh);
+    Mesh* mesh;
+    int meshIdx = getMeshIndex(meta);
+    if(meshIdx != -1)
+    {
+        mesh = meshes.at(meshIdx);
+    }
+    else
+    {
+        mesh = new Mesh(attribs);
+        MeshLoader ml(mesh, meta, data);
+        meshes.push_back(mesh);
+    }
     return mesh;
 }
 
@@ -247,11 +256,15 @@ Texture Graphics::loadTexture(const char* texName)
     return texture;
 }
 
-void Graphics::addObject(Location3D *loc, Mesh *mesh, float scale)
+void Graphics::addObject(Location3D *loc, Mesh *mesh, float scale, std::vector<std::string> texturePaths)
 {
     Shape3D shape;
     shape.location = loc;
-    shape.textures = textures;
+    shape.textures.clear();
+    for(size_t i = 0; i < texturePaths.size();++i)
+    {
+        shape.textures.push_back(loadTexture(texturePaths.at(i).c_str()));
+    }
     shape.mesh = mesh;
     shape.scale = scale;
     shapes.push_back(shape);
@@ -268,4 +281,13 @@ void Graphics::updateView(float xrot, float yrot)
 {
     rotX = xrot;
     rotY = yrot;
+}
+int Graphics::getMeshIndex(std::string meshName)
+{
+    for(size_t i = 0; i < meshes.size(); ++i)
+    {
+        if(strcmp(meshName.c_str(), meshes[i]->getName()) == 0)
+            return i;
+    }
+    return -1;
 }

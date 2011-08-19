@@ -72,7 +72,10 @@ public:
     const char* getGroupName(int idx) { return groupNames[idx].c_str(); }
     int getNGroups() { return nGroups; }
     Attributes getAttributes() { return attributes; }
+    const char* getName() { return name.c_str(); }
 
+    bool operator==(const Mesh &other) const;
+    bool operator!=(const Mesh &other) const;
 private:
     void bindBuffers();
     void disableBuffers();
@@ -93,6 +96,7 @@ private:
     //int positionIndex, normalIndex, texcoordIndex;
     Attributes attributes;
     std::vector<GLint> attrLocs;
+    std::string name;
 
 };
 
