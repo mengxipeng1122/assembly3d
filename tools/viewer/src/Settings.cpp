@@ -138,6 +138,7 @@ bool Settings::load(Resources* r, int argc, char *argv[])
         else 
         {
             r->hasScene = false;
+            r->numObj = 1;
             r->meshPaths.push_back(metaFileArg.getValue());
             
             if(Utils::checkIfFileExists(r->meshPaths[0].c_str()) == false)
