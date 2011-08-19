@@ -182,6 +182,7 @@ Texture Graphics::loadTexture(const char* texName)
     GLFWimage img;
     GLint internalImgFormat;
 
+    std::string textureName = texName;
 #ifdef A3D_FREEIMAGE
     FIBITMAP *bitmap = GenericLoader(texName);
     if(bitmap)
@@ -226,6 +227,7 @@ Texture Graphics::loadTexture(const char* texName)
         img.Data[0] = (unsigned char)r;
         img.Data[1] = (unsigned char)g;
         img.Data[2] = (unsigned char)b;
+        textureName = "default";
     }
 
     GLuint texture = 0;
@@ -252,6 +254,7 @@ Texture Graphics::loadTexture(const char* texName)
 
     glBindTexture(GL_TEXTURE_2D, 0);
     
+    texNames.push_back(textureName);
     textures.push_back(texture);
     return texture;
 }
@@ -263,7 +266,15 @@ void Graphics::addObject(Location3D *loc, Mesh *mesh, float scale, std::vector<s
     shape.textures.clear();
     for(size_t i = 0; i < texturePaths.size();++i)
     {
-        shape.textures.push_back(loadTexture(texturePaths.at(i).c_str()));
+        int texIdx = getTextureIndex(texturePaths.at(i));
+        if(texIdx != -1)
+        {
+            shape.textures.push_back(textures.at(texIdx));
+        }
+        else
+        {
+            shape.textures.push_back(loadTexture(texturePaths.at(i).c_str()));
+        }
     }
     shape.mesh = mesh;
     shape.scale = scale;
@@ -287,6 +298,16 @@ int Graphics::getMeshIndex(std::string meshName)
     for(size_t i = 0; i < meshes.size(); ++i)
     {
         if(strcmp(meshName.c_str(), meshes[i]->getName()) == 0)
+            return i;
+    }
+    return -1;
+}
+
+int Graphics::getTextureIndex(std::string texName)
+{
+    for(size_t i = 0; i < texNames.size(); ++i)
+    {
+        if(texName.compare(texNames[i]) == 0)
             return i;
     }
     return -1;

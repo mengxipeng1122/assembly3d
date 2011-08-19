@@ -64,6 +64,8 @@ public:
 private:
 
     int getMeshIndex(std::string meshName);
+    int getTextureIndex(std::string texName);
+
     struct Shape3D
     {
         std::vector<Texture> textures;
@@ -74,6 +76,7 @@ private:
 
     std::vector<Mesh*> meshes;
     std::vector<Texture> textures;
+    std::vector<std::string> texNames;
     std::vector<Shape3D> shapes;
 
     ProgramSimple* simple;
