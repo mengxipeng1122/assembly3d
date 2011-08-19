@@ -39,6 +39,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include <GL/glew.h>
 #include <GL/glfw.h>
@@ -117,7 +118,11 @@ void Graphics::render(int width, int height)
         glm::mat4 M = glm::mat4(1.0f);
 
         M = glm::translate(M, glm::vec3(loc->x, loc->y, loc->z));
-        M = glm::rotate(M, loc->rotAngle, glm::vec3(loc->rotX, loc->rotY, loc->rotZ));
+        
+        // Rotation with quaternion
+        M = M * glm::mat4_cast(glm::normalize(glm::quat(loc->quatW, loc->quatX, loc->quatY, loc->quatZ)));
+
+        //M = glm::rotate(M, loc->rotAngle, glm::vec3(loc->rotX, loc->rotY, loc->rotZ));
         M = glm::scale(M, glm::vec3(shapes[i].scale, shapes[i].scale, shapes[i].scale));
 
         glm::mat4 MV = V*M;

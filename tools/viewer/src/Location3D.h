@@ -36,9 +36,9 @@
 
 struct Location3D
 {
-    Location3D() : x(0), y(0), z(0), rotX(0), rotY(0), rotZ(1), rotAngle(0) {}
+    Location3D() : x(0), y(0), z(0), quatW(0), quatX(0), quatY(0), quatZ(0) {}
     float x, y, z;
-    float rotX, rotY, rotZ, rotAngle;
+    float quatW, quatX, quatY, quatZ;
 };
 
 #endif // LOCATION3D_H

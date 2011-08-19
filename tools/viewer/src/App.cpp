@@ -58,6 +58,11 @@ void App::init(Resources* r)
         loc->x = r->positions[i][0];
         loc->y = r->positions[i][1];
         loc->z = r->positions[i][2];
+        
+        loc->quatW = r->orientations[i][0];
+        loc->quatX = r->orientations[i][1];
+        loc->quatY = r->orientations[i][2];
+        loc->quatZ = r->orientations[i][3];
 
         Mesh* mesh;
         mesh = graphics->loadMesh(r->meshPaths[i].c_str(), r->dataPaths[i].c_str());
