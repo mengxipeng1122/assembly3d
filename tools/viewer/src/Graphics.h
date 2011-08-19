@@ -54,14 +54,16 @@ public:
     void render(int width, int height);
     
     Mesh* loadMesh(const char* meta, const char* data);
+    Mesh* getMesh(int index) { return meshes.at(index); }
     Texture loadTexture(const char* texName);
-    void addObject(Location3D* loc, Mesh* mesh, float scale);
+    void addObject(Location3D* loc, Mesh* mesh, float scale, std::vector<std::string> texturePaths);
 
     void updateView(float eyex, float eyey, float eyez);
     void updateView(float xrot, float yrot);
     
 private:
 
+    int getMeshIndex(std::string meshName);
     struct Shape3D
     {
         std::vector<Texture> textures;

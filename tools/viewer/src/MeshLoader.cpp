@@ -114,6 +114,7 @@ MeshLoader::MeshLoader(Mesh *m,
     assert(ret == 0);
 
     finish();
+    mesh->name = metafilename;
 
 }
 
