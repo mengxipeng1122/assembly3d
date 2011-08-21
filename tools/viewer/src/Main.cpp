@@ -144,13 +144,10 @@ int main(int argc, char *argv[])
 // Initialize the window, can throw if something goes wrong.
 void initWindow(int scrX, int scrY, int BPP)
 {
-//    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 2);
-//    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 1);
-
     // Initialize the GLFW library
     if (glfwInit() != GL_TRUE)
         throw "Failed to initialize GLFW.";
-    
+
     // Create a window (8-bit depth-buffer, no alpha and stencil buffers, windowed)
     if (glfwOpenWindow(scrX, scrY, BPP/3, BPP/3, BPP/3, 0, 8, 0, GLFW_WINDOW) != GL_TRUE)
         throw "Failed to open window.";

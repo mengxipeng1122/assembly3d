@@ -113,7 +113,7 @@ bool Mesh::operator==(const Mesh &other) const {
     if(this->name.compare(other.name) == 0)
         return true;
     else
-        false;
+        return false;
 }
 
 bool Mesh::operator!=(const Mesh &other) const {
