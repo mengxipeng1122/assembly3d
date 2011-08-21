@@ -52,7 +52,7 @@ void App::init(Resources* r)
 
     graphics->init();
 
-    for(size_t i = 0; i < r->numObj; ++i)
+    for(int i = 0; i < r->numObj; ++i)
     {
         Location3D* loc = new Location3D();
         loc->x = r->positions[i][0];
