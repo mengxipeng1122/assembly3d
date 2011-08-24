@@ -50,6 +50,7 @@ struct Resources
     std::vector<float> scales;
     std::vector<std::vector<float> > positions;
     std::vector<std::vector<float> > orientations;
+    float sceneScale;
 };
 
 

@@ -116,6 +116,7 @@ void Graphics::render(int width, int height)
         Location3D *loc = shapes[i].location;
 
         glm::mat4 M = glm::mat4(1.0f);
+        M = glm::scale(M, glm::vec3(sceneScale, sceneScale, sceneScale));
 
         M = glm::translate(M, glm::vec3(loc->x, loc->y, loc->z));
         
@@ -125,6 +126,7 @@ void Graphics::render(int width, int height)
 
         //M = glm::rotate(M, loc->rotAngle, glm::vec3(loc->rotX, loc->rotY, loc->rotZ));
         M = glm::scale(M, glm::vec3(shapes[i].scale, shapes[i].scale, shapes[i].scale));
+
 
         glm::mat4 MV = V*M;
         simple->modelView(glm::value_ptr(MV));
@@ -317,4 +319,9 @@ int Graphics::getTextureIndex(std::string texName)
             return i;
     }
     return -1;
+}
+
+void Graphics::setSceneScale(float val)
+{
+    sceneScale = val;
 }

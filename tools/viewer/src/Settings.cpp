@@ -57,13 +57,17 @@ bool Settings::load(Resources* r, int argc, char *argv[])
         CmdLine cmd("Assembly3D Viewer", '=', "1.0.0");
 
         ValueArg<string> sceneFileArg("s", "scene-file", "Scene file.", false, "", "path/to/scene");
+        ValueArg<string> meshDirArg("d", "mesh-dir", "Mesh directory.", false, "", "path/to/meshes");
         ValueArg<string> metaFileArg("m", "mesh-file", "Mesh file.", false, "", "path/to/mesh");
         ValueArg<string> dataFileArg("b", "binary-file", "Binary file.", false, "", "path/to/binary");
         ValueArg<float> meshScaleArg("", "scale", "Scale.", false, 1.0f, "scale");
+        ValueArg<float> sceneScaleArg("", "scene-scale", "Scene scale.", false, 1.0f, "scale");
 
+        cmd.add(sceneScaleArg);
         cmd.add(meshScaleArg);
         cmd.add(dataFileArg);
         cmd.add(metaFileArg);
+        cmd.add(meshDirArg);
         cmd.add(sceneFileArg);
 
         cmd.parse(argc, argv);
@@ -80,14 +84,26 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             r->hasScene = true;
             r->scenePath = sceneFileArg.getValue();
             
-            size_t pos = r->scenePath.find_last_of("/");
-            if(pos == std::string::npos)
+            if(meshDirArg.isSet())
             {
-                r->sceneDir = "./";
+                string meshDir = meshDirArg.getValue();
+                char lastChar = meshDir.at(meshDir.length()-1);
+                if(lastChar != '/')
+                    meshDir.append("/");
+                r->sceneDir = meshDir;
             }
             else
             {
-                r->sceneDir = r->scenePath.substr(0, pos+1);
+                size_t pos = r->scenePath.find_last_of("/");
+                if(pos == std::string::npos)
+                {
+                    r->sceneDir = "./";
+                }
+                else
+                {
+                    r->sceneDir = r->scenePath.substr(0, pos+1);
+                }
+
             }
             
             if(Utils::checkIfFileExists(r->scenePath.c_str()) == false)
@@ -96,6 +112,8 @@ bool Settings::load(Resources* r, int argc, char *argv[])
                 return false;
             }
             
+            r->sceneScale = sceneScaleArg.getValue();
+
             // parse scene file
             xmlTextReaderPtr reader = xmlReaderForFile(r->scenePath.c_str(), NULL, 0);
             assert(reader != NULL);
@@ -140,6 +158,7 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             r->hasScene = false;
             r->numObj = 1;
             r->meshPaths.push_back(metaFileArg.getValue());
+            r->sceneScale = 1.0f;
             
             if(Utils::checkIfFileExists(r->meshPaths[0].c_str()) == false)
             {
