@@ -53,6 +53,7 @@ public:
     void init();
     void render(int width, int height);
     
+    void setSceneScale(float val);
     Mesh* loadMesh(const char* meta, const char* data);
     Mesh* getMesh(int index) { return meshes.at(index); }
     Texture loadTexture(const char* texName);
@@ -87,6 +88,8 @@ private:
     
     float rotX;
     float rotY;
+
+    float sceneScale;
 };
 
 #endif // GRAPHICS_H

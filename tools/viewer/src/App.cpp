@@ -52,6 +52,8 @@ void App::init(Resources* r)
 
     graphics->init();
 
+    graphics->setSceneScale(r->sceneScale);
+
     for(int i = 0; i < r->numObj; ++i)
     {
         Location3D* loc = new Location3D();
