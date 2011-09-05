@@ -41,8 +41,8 @@
 
 #include "config.h"
 #ifdef A3D_FREEIMAGE
-static const int FREEIMAGE_FORMAT_COUNT = 44;
-static const char * const FREEIMAGE_FORMATS[] = {"bmp","dds","exr","g3","gif",
+static const int IMAGE_FORMAT_COUNT = 44;
+static const char * const IMAGE_FORMATS[] = {"bmp","dds","exr","g3","gif",
                                                  "hdr","ico","iff","lbm","j2k",
                                                  "j2c","jng","jp2","jpg","jif",
                                                  "jpeg","jpe","koa","mng","pbm",
@@ -51,6 +51,9 @@ static const char * const FREEIMAGE_FORMATS[] = {"bmp","dds","exr","g3","gif",
                                                  "ppm","ppm","psd","ras", "sgi",
                                                  "tga","targa","tif","tiff","wap",
                                                  "wbmp","wbm","xbm","xpm"};
+#else
+static const int IMAGE_FORMAT_COUNT = 1;
+static const char * const IMAGE_FORMATS[] = {"tga"};
 #endif
 
 bool Utils::checkIfFileExists(const char* path)
@@ -70,23 +73,16 @@ std::string Utils::getTextureImagePathWithExt(const char* path)
 {
     using namespace std;
     string result;
-#ifdef A3D_FREEIMAGE
-
-    for(int i = 0; i < FREEIMAGE_FORMAT_COUNT; ++i)
+    for(int i = 0; i < IMAGE_FORMAT_COUNT; ++i)
     {
         string pathWithExt = path;
         pathWithExt.append(".");
-        pathWithExt.append(FREEIMAGE_FORMATS[i]);
+        pathWithExt.append(IMAGE_FORMATS[i]);
         if(checkIfFileExists(pathWithExt.c_str()) == true)
         {
             result = pathWithExt;
             break;
         }
     }
-#else
-    result = path;
-    result.append(".tga");
-#endif
-
     return result;
 }
