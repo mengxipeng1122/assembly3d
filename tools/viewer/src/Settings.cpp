@@ -41,11 +41,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include "SceneLoader.h"
 
 using namespace std;
 using namespace TCLAP;
-
-static void processNode(xmlTextReaderPtr reader, Resources* r);
 
 Settings::Settings()
 {
@@ -114,22 +113,12 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             
             r->sceneScale = sceneScaleArg.getValue();
 
-            // parse scene file
-            xmlTextReaderPtr reader = xmlReaderForFile(r->scenePath.c_str(), NULL, 0);
-            if(reader == NULL)
+            bool sceneLoadOk = SceneLoader::load(r->scenePath.c_str(), r);
+            if( sceneLoadOk == false)
             {
                 std::cout << "Could not load scene file!" << std::endl;
                 return false;
             }
-            int ret = xmlTextReaderRead(reader);
-            while (ret == 1)
-            {
-                processNode(reader, r);
-                ret = xmlTextReaderRead(reader);
-            }
-            xmlFreeTextReader(reader);
-            assert(ret == 0);
-            
             for (size_t i = 0; i < r->meshPaths.size(); ++i) 
             {
                 string meshName = r->meshPaths[i];
@@ -216,75 +205,5 @@ bool Settings::load(Resources* r, int argc, char *argv[])
     {
         std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
         return false;
-    }
-}
-
-static void processNode(xmlTextReaderPtr reader, Resources* r)
-{
-    const char *name = (const char*)xmlTextReaderConstName(reader);
-    assert (name != NULL);
-    
-    int nodeType = xmlTextReaderNodeType(reader);
-    if(nodeType != 1)
-    {
-        return;
-    }
-
-    if(strcmp("World", name) == 0)
-    {
-        int numObjects = 0;
-        xmlChar* numVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "objects");
-        if(numVal)
-            numObjects = atoi ((const char*) numVal);
-        r->numObj = numObjects;
-    }
-    else if(strcmp("Object", name) == 0)
-    {
-        const char* name = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "name");
-        string meshPath;
-        meshPath = r->sceneDir;
-        if(name)
-            meshPath.append(name);
-        r->meshPaths.push_back(meshPath);
-
-        float scale = 1.0f;
-        xmlChar* attribScale = xmlTextReaderGetAttribute(reader, (xmlChar*) "scale");
-        if(attribScale)
-            scale = atof ((const char*) attribScale );
-
-        r->scales.push_back(scale);
-        
-    }
-    else if(strcmp("Position", name) == 0)
-    {
-        std::vector<float> positionValues(3, 0.0f);
-        xmlChar* xVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "x");
-        xmlChar* yVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "y");
-        xmlChar* zVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "z");
-
-        if(xVal)
-            positionValues[0] = atof((const char*) xVal );
-        if(yVal)
-            positionValues[1] = atof((const char*) yVal );
-        if(zVal)
-            positionValues[2] = atof((const char*) zVal );
-
-        r->positions.push_back(positionValues);
-    }
-    else if(strcmp("Orientation", name) == 0)
-    {
-        std::vector<float> orientationValues(3, 0.0f);
-        xmlChar* xVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "x");
-        xmlChar* yVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "y");
-        xmlChar* zVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "z");
-
-        if(xVal)
-            orientationValues[0] = atof((const char*) xVal );
-        if(yVal)
-            orientationValues[1] = atof((const char*) yVal );
-        if(zVal)
-            orientationValues[2] = atof((const char*) zVal );
-
-        r->orientations.push_back(orientationValues);
     }
 }
