@@ -35,6 +35,7 @@
 #include "Location3D.h"
 #include <cmath>
 #include <algorithm>
+#include "Utils.h"
 
 using namespace std;
 App::App()
@@ -72,7 +73,8 @@ void App::init(Resources* r)
         std::vector<std::string> texPaths;
         for (int j = 0; j < mesh->getNGroups(); ++j) {
             std::string tPath = r->texPaths[i] + std::string(mesh->getGroupName(j));
-            texPaths.push_back(tPath);
+            std::string tPathWithExt = Utils::getTextureImagePathWithExt(tPath.c_str());
+            texPaths.push_back(tPathWithExt);
             //graphics->loadTexture(tPath.c_str());
         }
         graphics->addObject(loc, mesh, r->scales[i], texPaths);
