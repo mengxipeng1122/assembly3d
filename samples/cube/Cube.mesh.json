@@ -14,12 +14,12 @@
 		"type": "UNSIGNED_BYTE", 
 		"groups": 
 		[
-			{ "name": "NEGATIVE_X", "count": 2 }, 
-			{ "name": "POSITIVE_X", "count": 2 },
-			{ "name": "NEGATIVE_Y", "count": 2 }, 
-			{ "name": "POSITIVE_Y", "count": 2 }, 
-			{ "name": "NEGATIVE_Z", "count": 2 }, 
-			{ "name": "POSITIVE_Z", "count": 2 }
+			{ "name": "left", "count": 2 }, 
+			{ "name": "right", "count": 2 },
+			{ "name": "bottom", "count": 2 }, 
+			{ "name": "top", "count": 2 }, 
+			{ "name": "back", "count": 2 }, 
+			{ "name": "front", "count": 2 }
 		]
 	}
 }
