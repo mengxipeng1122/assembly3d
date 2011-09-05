@@ -65,7 +65,10 @@ void App::init(Resources* r)
         loc->quatX = r->orientations[i][0];
         loc->quatY = r->orientations[i][1];
         loc->quatZ = r->orientations[i][2];
-        loc->calculateQuaternionW();
+        if(r->orientations[i].size() == 4)
+            loc->quatW = r->orientations[i][3];
+        else
+            loc->calculateQuaternionW();
         
         Mesh* mesh;
         mesh = graphics->loadMesh(r->meshPaths[i].c_str(), r->dataPaths[i].c_str());

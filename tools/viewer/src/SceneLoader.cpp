@@ -130,6 +130,7 @@ static void processSceneNode(xmlTextReaderPtr reader, Resources* r)
         xmlChar* xVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "x");
         xmlChar* yVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "y");
         xmlChar* zVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "z");
+        xmlChar* wVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "w");
 
         if(xVal)
             orientationValues[0] = atof((const char*) xVal );
@@ -137,6 +138,8 @@ static void processSceneNode(xmlTextReaderPtr reader, Resources* r)
             orientationValues[1] = atof((const char*) yVal );
         if(zVal)
             orientationValues[2] = atof((const char*) zVal );
+        if(wVal)
+            orientationValues.push_back(atof((const char*) wVal ));
 
         r->orientations.push_back(orientationValues);
     }
