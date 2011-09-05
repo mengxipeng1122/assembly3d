@@ -39,7 +39,7 @@
 #include <stdio.h>
 #include "config.h"
 
-static void processNode(xmlTextReaderPtr reader, MeshLoader* loader) {
+static void processMeshNode(xmlTextReaderPtr reader, MeshLoader* loader) {
 
     const char *name = (const char*)xmlTextReaderConstName(reader);
     assert (name != NULL);
@@ -107,7 +107,7 @@ MeshLoader::MeshLoader(Mesh *m,
     int ret = xmlTextReaderRead(reader);
     while (ret == 1)
     {
-        processNode(reader, this);
+        processMeshNode(reader, this);
         ret = xmlTextReaderRead(reader);
     }
     xmlFreeTextReader(reader);
