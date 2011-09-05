@@ -7,6 +7,6 @@
     <Attribute name="TEXCOORD" size="2" type="FLOAT"/>
   </Vertices>
   <Triangles type="UNSIGNED_SHORT" groups="1">
-    <Group name="Infinite" count="17684"/>
+    <Group name="diffuse" count="17684"/>
   </Triangles>
 </Mesh>
