@@ -31,10 +31,12 @@
  *
  */
 
+#include <string>
+
 class Utils {
 private:
     Utils();
 public:
     static bool checkIfFileExists(const char* path);
-    
+    static std::string getTextureImagePathWithExt(const char* path);
 };
