@@ -116,7 +116,11 @@ bool Settings::load(Resources* r, int argc, char *argv[])
 
             // parse scene file
             xmlTextReaderPtr reader = xmlReaderForFile(r->scenePath.c_str(), NULL, 0);
-            assert(reader != NULL);
+            if(reader == NULL)
+            {
+                std::cout << "Could not load scene file!" << std::endl;
+                return false;
+            }
             int ret = xmlTextReaderRead(reader);
             while (ret == 1)
             {
@@ -128,9 +132,16 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             
             for (size_t i = 0; i < r->meshPaths.size(); ++i) 
             {
-                size_t posExt = r->meshPaths[i].find(".xml");
-                std::string dPath = r->meshPaths[i].substr(0, posExt);
-                dPath.append(".dat");
+                string meshName = r->meshPaths[i];
+                r->meshPaths[i].append(".mesh.xml");
+                if(Utils::checkIfFileExists(r->meshPaths[i].c_str()) == false)
+                {
+                    std::cout << "Mesh file not found!" << std::endl;
+                    return false;
+                }
+
+                std::string dPath = meshName;
+                dPath.append(".mesh.dat");
                 r->dataPaths.push_back(dPath);
                 
                 if(Utils::checkIfFileExists(r->dataPaths[i].c_str()) == false)
