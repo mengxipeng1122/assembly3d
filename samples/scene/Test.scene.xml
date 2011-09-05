@@ -1,34 +1,36 @@
-<Scene>
+<?xml version="1.0" encoding="UTF-8"?>
+<Scene xmlns="http://assembly.interaction3d.org/scene" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://assembly.interaction3d.org/scene http://assembly.interaction3d.org/scene.xsd">
     <World objects="8">
-        <Object name="Cube.mesh.xml" scale="1.0">
-            <Position x="-2" y="-2" z="2" />
+        <Object name="Cube" scale="1.0">
+            <Position x="-2.0" y="-2.0" z="2.0" />
+            <Orientation x="0.0" y="0.0" z="0.0" w="1.0"/>
+        </Object> 
+        <Object name="Cube"  scale="1">
+            <Position x="2" y="-2" z="2"/>
             <Orientation x="0" y="0" z="0" />
         </Object> 
-        <Object name="Cube.mesh.xml" scale="1.0">
-            <Position x="2" y="-2" z="2" />
-            <Orientation x="0" y="0" z="0" />
-        </Object> 
-        <Object name="Cube.mesh.xml" scale="1.0">
+        <Object name="Cube">
             <Position x="-2" y="2" z="2" />
             <Orientation x="0" y="0" z="0" />
         </Object> 
-        <Object name="Cube.mesh.xml" scale="1.0">
+        <Object name="Cube">
             <Position x="2" y="2" z="2" />
             <Orientation x="0" y="0" z="0" />
         </Object> 
-        <Object name="Cube.mesh.xml" scale="1.0">
+        <Object name="Cube">
             <Position x="-2" y="-2" z="-2" />
             <Orientation x="0" y="0" z="0" />
         </Object> 
-        <Object name="Cube.mesh.xml" scale="1.0">
+        <Object name="Cube">
             <Position x="2" y="-2" z="-2" />
             <Orientation x="0" y="0" z="0" />
         </Object> 
-        <Object name="Cube.mesh.xml" scale="1.0">
+        <Object name="Cube" scale="1.0">
             <Position x="-2" y="2" z="-2" />
             <Orientation x="0" y="0" z="0" />
         </Object> 
-        <Object name="Cube.mesh.xml" scale="1.0">
+        <Object name="Cube" scale="1.0">
             <Position x="2" y="2" z="-2" />
             <Orientation x="0" y="0" z="0" />
         </Object> 
