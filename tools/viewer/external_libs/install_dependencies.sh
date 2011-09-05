@@ -2,7 +2,7 @@
 
 ####################################################
 
-GLM_VERSION=0.9.2.3
+GLM_VERSION=0.9.2.4
 GLM_URL="http://sourceforge.net/projects/ogl-math/files/glm-$GLM_VERSION/glm-$GLM_VERSION.zip"
 GLM_ARCHIVE="glm-$GLM_VERSION.zip"
 
