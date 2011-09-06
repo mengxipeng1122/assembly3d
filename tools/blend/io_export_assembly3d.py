@@ -63,8 +63,6 @@ class Settings:
 
 
 
-
-
 def isZero(a, eps=0.0001):
   return abs(a) < eps
 
@@ -72,17 +70,61 @@ def isOne(a, eps=0.0001):
   return abs(a - 1) < eps
 
 
-    
+
 def save(settings):
 	print( "SAVE")
-	save_world(settings)
-#	save_mesh(settings)
-#	save_anim(settings)
-
-
-def save_world(settings):	
+	
 	if settings and not os.path.exists(settings.savepath):
 		os.makedirs(settings.savepath)
+
+	save_test(settings)
+	save_scene(settings)
+	save_meshes(settings)
+	save_anim(settings)
+
+
+def save_test(settings):	
+
+	objects = []
+
+	for obj in bpy.context.scene.objects:
+		
+		if ((obj.type == 'MESH') and ( len(obj.data.vertices.values()) > 0 )):
+			objects.append(obj)
+
+
+	armatures = set([])
+
+	for obj in objects:
+
+		print(obj.name)
+		if obj.parent:
+			print("\t" + obj.parent_type)
+			if obj.parent_type == 'BONE':
+				print("\t" + obj.parent_bone)
+				armatures.add(obj.parent)
+			elif obj.parent_type == 'ARMATURE':
+				print("\t" + obj.parent_bone)
+				armatures.add(obj.parent)
+			elif obj.parent_type == 'OBJECT' and obj.parent.type == 'ARMATURE':
+				print("\t" + obj.parent.name)
+				armatures.add(obj.parent)
+
+	for obj in armatures:
+		save_armature(obj)
+
+
+
+def save_armature(armature):
+	for bone in armature.data.bones:
+		print(bone.name)
+#		if(bone.parent):
+#			print(bone.parent_index(bone.parent))
+
+
+
+
+def save_scene(settings):	
 
 	objects = []
 
@@ -91,13 +133,20 @@ def save_world(settings):
 		if ((obj.type != 'MESH') or ( len(obj.data.vertices.values()) == 0 )):
 			continue
 		
+		print(obj.name)
+		if obj.parent:
+			print("\t" + obj.parent_type)
+			if obj.parent_type == 'BONE':
+				print("\t" + obj.parent_bone)
+		
 		objects.append(obj)
+
 
 
 	file_xml = open(settings.savepath + ".world.xml", 'w')
 	file_xml.write( '<?xml version="1.0" encoding="UTF-8"?>\n' )
-	file_xml.write( '<World xmlns="http://assembly.interaction3d.org/world" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://assembly.interaction3d.org/world http://assembly.interaction3d.org/world.xsd">\n' )
-	file_xml.write( '\t<Scene objects="%d">\n' % (len(objects)) )
+	file_xml.write( '<Scene xmlns="http://assembly.interaction3d.org/scene" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://assembly.interaction3d.org/scene http://assembly.interaction3d.org/scene.xsd">\n' )
+	file_xml.write( '\t<World objects="%d">\n' % (len(objects)) )
 
 	for obj in objects:
 		translation, rotation, scale = obj.matrix_world.decompose()
@@ -111,15 +160,22 @@ def save_world(settings):
 		file_xml.write( '\t\t\t<Orientation x="%f" y="%f" z="%f"/>\n' % (rotation[1], rotation[2], rotation[3]) )
 		file_xml.write( '\t\t</Object>\n' )
 		
-	file_xml.write( '\t</Scene>\n' )
-	file_xml.write( '</World>\n' )
+	file_xml.write( '\t</World>\n' )
+	file_xml.write( '</Scene>\n' )
 	file_xml.close();
 
-def save_mesh(settings):
+def save_meshes(settings):
 
-	if settings and not os.path.exists(settings.savepath):
-		os.makedirs(settings.savepath)
+	for obj in bpy.context.selected_objects:
+		
+		if ((obj.type != 'MESH') or ( len(obj.data.vertices.values()) == 0 )):
+			continue
 
+		save_mesh(obj, settings.savepath)
+
+
+
+def save_mesh(obj, savepath):
 
 	class Face:
 		def __init__(self, a, b, c):
@@ -137,42 +193,36 @@ def save_mesh(settings):
 			self.split_normals = []
 			self.split_texcoords = []
 
+	mesh = obj.data
 
-	for obj in bpy.context.selected_objects:
-		
-		if ((obj.type != 'MESH') or ( len(obj.data.vertices.values()) == 0 )):
-			continue
-
-		mesh = obj.data
-
-		matrix_world = obj.matrix_world
-		matrix_normal = matrix_world.copy();
-		matrix_normal.invert();
-		matrix_normal.transpose();
-		
-		#shape keys
+	matrix_world = obj.matrix_world
+	matrix_normal = matrix_world.copy();
+	matrix_normal.invert();
+	matrix_normal.transpose();
+	
+	#shape keys
 #		if mesh.shape_keys:
 #			print(mesh.shape_keys)
 
-		has_uv = len(mesh.uv_textures) > 0
-		has_materials = len(obj.material_slots) > 0
+	has_uv = len(mesh.uv_textures) > 0
+	has_materials = len(obj.material_slots) > 0
 
-		vertices = [None] * len(mesh.vertices)
-		split_normals = []
-		split_texcoords = []
+	vertices = [None] * len(mesh.vertices)
+	split_normals = []
+	split_texcoords = []
 
-		face_groups = []
-		for i in range(max(1, len(obj.material_slots))):
-			face_groups.append( [] )
+	face_groups = []
+	for i in range(max(1, len(obj.material_slots))):
+		face_groups.append( [] )
 
-		for face_index, face in enumerate(mesh.faces):
-	
-			if len(face.vertices) < 3:
-				print("warning: face has less than 3 vertices")
-				continue
+	for face_index, face in enumerate(mesh.faces):
 
-			faces = face_groups[face.material_index]
-			face_vertices = []
+		if len(face.vertices) < 3:
+			print("warning: face has less than 3 vertices")
+			continue
+
+		faces = face_groups[face.material_index]
+		face_vertices = []
 
 #			normal = None
 #			if not face.use_smooth:
@@ -180,161 +230,158 @@ def save_mesh(settings):
 #				print(normal)
 #			print(face.edge_keys[0])
 
-			for i in range(len(face.vertices)):
-				v = face.vertices[i]
-				
-				position = mesh.vertices[v].co
-				normal = None
-				texcoord = None
-				
-				if face.use_smooth:
-					normal = mesh.vertices[v].normal
-				else:
-					normal= face.normal
-				
-				if has_uv:
-					uv = mesh.uv_textures.active.data[face_index].uv[i]
-					texcoord = mathutils.Vector((uv[0], uv[1]))
-				else:
-					texcoord = mathutils.Vector((0, 0))
-				
-				#print("V: p(%s) n(%s) t(%s)" % (str(position),str(normal),str(texcoord)) )
-				vertex = Vertex(position, normal, texcoord)
-				
-				if not vertices[v]:
-					vertices[v] = vertex
-					face_vertices.append( (v, 0) )
-					continue
-				
-				
-				if not face.use_smooth:
-					face_vertices.append( (len(split_normals), 1) ) 
-					#vertices[v].split_normals.append ( vertex )
-					split_normals.append( vertex )
-					continue
-				
-				if (texcoord.x != vertices[v].texcoord.x) or (texcoord.y != vertices[v].texcoord.y):
-					split = True
-					for clone_index, clone in enumerate(split_texcoords):
-						uv = clone.texcoord;
-						if (texcoord.x == clone.texcoord.x) and (texcoord.y == clone.texcoord.y) and (normal.x == clone.normal.x) and (normal.y == clone.normal.y) and (normal.z == clone.normal.z) and (position.x == clone.position.x) and (position.y == clone.position.y) and (position.z == clone.position.z):
-							split = False
-							face_vertices.append( (clone_index, 2) )
-							break
+		for i in range(len(face.vertices)):
+			v = face.vertices[i]
+			
+			position = mesh.vertices[v].co
+			normal = None
+			texcoord = None
+			
+			if face.use_smooth:
+				normal = mesh.vertices[v].normal
+			else:
+				normal= face.normal
+			
+			if has_uv:
+				uv = mesh.uv_textures.active.data[face_index].uv[i]
+				texcoord = mathutils.Vector((uv[0], uv[1]))
+			else:
+				texcoord = mathutils.Vector((0, 0))
+			
+			#print("V: p(%s) n(%s) t(%s)" % (str(position),str(normal),str(texcoord)) )
+			vertex = Vertex(position, normal, texcoord)
+			
+			if not vertices[v]:
+				vertices[v] = vertex
+				face_vertices.append( (v, 0) )
+				continue
+			
+			
+			if not face.use_smooth:
+				face_vertices.append( (len(split_normals), 1) ) 
+				#vertices[v].split_normals.append ( vertex )
+				split_normals.append( vertex )
+				continue
+			
+			if (texcoord.x != vertices[v].texcoord.x) or (texcoord.y != vertices[v].texcoord.y):
+				split = True
+				for clone_index, clone in enumerate(split_texcoords):
+					uv = clone.texcoord;
+					if (texcoord.x == clone.texcoord.x) and (texcoord.y == clone.texcoord.y) and (normal.x == clone.normal.x) and (normal.y == clone.normal.y) and (normal.z == clone.normal.z) and (position.x == clone.position.x) and (position.y == clone.position.y) and (position.z == clone.position.z):
+						split = False
+						face_vertices.append( (clone_index, 2) )
+						break
 #					for clone in vertices[v].split_texcoords:
 #						uv = clone.texcoord;
 #						if (texcoord.x == uv.x) and (texcoord.y == uv.y):
 #							split = False
 #							break
-					
-					if split:
-						face_vertices.append( (len(split_texcoords), 2) ) 
-						#vertices[v].split_texcoords.append ( vertex )
-						split_texcoords.append( vertex )
-						continue
-					
-				else:
-					face_vertices.append( (v, 0) )
 				
-			assert len(face.vertices) == len(face_vertices)
+				if split:
+					face_vertices.append( (len(split_texcoords), 2) ) 
+					#vertices[v].split_texcoords.append ( vertex )
+					split_texcoords.append( vertex )
+					continue
+				
+			else:
+				face_vertices.append( (v, 0) )
 			
-			for i in range(1, len(face.vertices) - 1):
-				faces.append ( Face(face_vertices[0], face_vertices[i], face_vertices[i+1]) )
-			
-		print("split v(%s) n(%s) t(%s)" % (str(len(vertices)), str(len(split_normals)), str(len(split_texcoords))) )
-		print("groups: " + str(len(face_groups)) )
-		for faces in face_groups:
-			print("\tgroup: " + str(len(faces)) )
-
-		totalVertices = len(vertices) + len(split_normals) + len(split_texcoords)
-		print("total: " + str(totalVertices))
+		assert len(face.vertices) == len(face_vertices)
 		
-		positions = array.array('f', [0.0] * 3 * totalVertices)
-		normals = array.array('f', [0.0] * 3 * totalVertices)
-		texcoords = array.array('f', [0.0] * 2 * totalVertices)
+		for i in range(1, len(face.vertices) - 1):
+			faces.append ( Face(face_vertices[0], face_vertices[i], face_vertices[i+1]) )
+		
+	print("split v(%s) n(%s) t(%s)" % (str(len(vertices)), str(len(split_normals)), str(len(split_texcoords))) )
+	print("groups: " + str(len(face_groups)) )
+	for faces in face_groups:
+		print("\tgroup: " + str(len(faces)) )
+
+	totalVertices = len(vertices) + len(split_normals) + len(split_texcoords)
+	print("total: " + str(totalVertices))
 	
-		s_vec3 = struct.Struct('<fff')
-		s_vec2 = struct.Struct('<ff')
-		index = 0
-		for vertex in list(itertools.chain(*[vertices, split_normals, split_texcoords])):
-			#print(str(vertex.texcoord))
-			s_vec3.pack_into(positions, s_vec3.size*index, *vertex.position.xyz)
-			s_vec3.pack_into(normals, s_vec3.size*index, *vertex.normal.xyz)
-			s_vec2.pack_into(texcoords, s_vec2.size*index, *vertex.texcoord.xy)
-			index += 1
-		
-		totalFaces = 0
-		for faces in face_groups:
-			totalFaces += len(faces)
-		
-		accum = [ 0, len(vertices), len(vertices)+len(split_normals) ]
-		faces = array.array('d', [0] * 3 * totalFaces)
+	positions = array.array('f', [0.0] * 3 * totalVertices)
+	normals = array.array('f', [0.0] * 3 * totalVertices)
+	texcoords = array.array('f', [0.0] * 2 * totalVertices)
 
-		s_int = 'I'
-		index_type = "UNSIGNED_INT"
-		if totalVertices < 256:
-			s_int = 'B'
-			index_type = "UNSIGNED_BYTE"
-		elif totalVertices < 65536:
-			s_int = 'H'
-			index_type = "UNSIGNED_SHORT"
-
-		s_int3 = struct.Struct('<' + s_int + s_int + s_int)
-		
-		faces = array.array(s_int, [0] * 3 * totalFaces)
-		
-		index = 0
-		for face in list(itertools.chain(*face_groups)):
-			a = face.a[0]+accum[face.a[1]]
-			b = face.b[0]+accum[face.b[1]]
-			c = face.c[0]+accum[face.c[1]]
-			#print("%d %d %d" % (a , b, c ) )
-			s_int3.pack_into(faces, s_int3.size*index, *[a,b,c])
-			index += 1
-
-		if not settings:
-			return
-
-		file_dat = open(settings.savepath + os.sep + obj.name + ".mesh.dat", 'wb')
-		positions.tofile(file_dat)
-		normals.tofile(file_dat)
-		if has_uv:
-			texcoords.tofile(file_dat)
-		faces.tofile(file_dat)
-		file_dat.close();
-		
-		file_xml = open(settings.savepath + os.sep + obj.name + ".mesh.xml", 'w')
-		file_xml.write( '<?xml version="1.0" encoding="UTF-8"?>\n' )
-		file_xml.write( '<Mesh xmlns="http://assembly.interaction3d.org/mesh" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://assembly.interaction3d.org/mesh http://assembly.interaction3d.org/mesh.xsd">\n' )	  
-		totalAttributes = 2
-		if has_uv:
-			totalAttributes += 1
-		file_xml.write( '\t<Vertices count="%d" attributes="%d">\n' %  (totalVertices, totalAttributes) )
-
-		file_xml.write( '\t\t<Attribute name="%s" size="%d" type="FLOAT"/>\n' %  ("POSITION", 3) )
-		file_xml.write( '\t\t<Attribute name="%s" size="%d" type="FLOAT"/>\n' %  ("NORMAL", 3) )
-		if has_uv:
-			file_xml.write( '\t\t<Attribute name="%s" size="%d" type="FLOAT"/>\n' %  ("TEXCOORD", 2) )
-			
-		file_xml.write( '\t</Vertices>\n' )
-
-		file_xml.write( '\t<Triangles type="%s" groups="%d">\n' %  (index_type, len(face_groups)) )
-		if not has_materials:
-			file_xml.write( '\t<Group name="%s" count="%d"/>\n' %  ("default", totalFaces) )
-		else:
-			for i in range(len(face_groups)):
-				file_xml.write( '\t\t<Group name="%s" count="%d"/>\n' %  (obj.material_slots[i].material.name, len(face_groups[i])) )
-
-		file_xml.write( '\t</Triangles>\n' )
-		file_xml.write( '</Mesh>\n' )
-		file_xml.close();
-
-
-def save_anim(settings):	
+	s_vec3 = struct.Struct('<fff')
+	s_vec2 = struct.Struct('<ff')
+	index = 0
+	for vertex in list(itertools.chain(*[vertices, split_normals, split_texcoords])):
+		#print(str(vertex.texcoord))
+		s_vec3.pack_into(positions, s_vec3.size*index, *vertex.position.xyz)
+		s_vec3.pack_into(normals, s_vec3.size*index, *vertex.normal.xyz)
+		s_vec2.pack_into(texcoords, s_vec2.size*index, *vertex.texcoord.xy)
+		index += 1
 	
-	if settings and not os.path.exists(settings.savepath):
-		os.makedirs(settings.savepath)
+	totalFaces = 0
+	for faces in face_groups:
+		totalFaces += len(faces)
 	
+	accum = [ 0, len(vertices), len(vertices)+len(split_normals) ]
+	faces = array.array('d', [0] * 3 * totalFaces)
+
+	s_int = 'I'
+	index_type = "UNSIGNED_INT"
+	if totalVertices < 256:
+		s_int = 'B'
+		index_type = "UNSIGNED_BYTE"
+	elif totalVertices < 65536:
+		s_int = 'H'
+		index_type = "UNSIGNED_SHORT"
+
+	s_int3 = struct.Struct('<' + s_int + s_int + s_int)
+	
+	faces = array.array(s_int, [0] * 3 * totalFaces)
+	
+	index = 0
+	for face in list(itertools.chain(*face_groups)):
+		a = face.a[0]+accum[face.a[1]]
+		b = face.b[0]+accum[face.b[1]]
+		c = face.c[0]+accum[face.c[1]]
+		#print("%d %d %d" % (a , b, c ) )
+		s_int3.pack_into(faces, s_int3.size*index, *[a,b,c])
+		index += 1
+
+	if not savepath:
+		return
+
+	file_dat = open(savepath + os.sep + obj.name + ".mesh.dat", 'wb')
+	positions.tofile(file_dat)
+	normals.tofile(file_dat)
+	if has_uv:
+		texcoords.tofile(file_dat)
+	faces.tofile(file_dat)
+	file_dat.close();
+	
+	file_xml = open(savepath + os.sep + obj.name + ".mesh.xml", 'w')
+	file_xml.write( '<?xml version="1.0" encoding="UTF-8"?>\n' )
+	file_xml.write( '<Mesh xmlns="http://assembly.interaction3d.org/mesh" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://assembly.interaction3d.org/mesh http://assembly.interaction3d.org/mesh.xsd">\n' )	  
+	totalAttributes = 2
+	if has_uv:
+		totalAttributes += 1
+	file_xml.write( '\t<Vertices count="%d" attributes="%d">\n' %  (totalVertices, totalAttributes) )
+
+	file_xml.write( '\t\t<Attribute name="%s" size="%d" type="FLOAT"/>\n' %  ("POSITION", 3) )
+	file_xml.write( '\t\t<Attribute name="%s" size="%d" type="FLOAT"/>\n' %  ("NORMAL", 3) )
+	if has_uv:
+		file_xml.write( '\t\t<Attribute name="%s" size="%d" type="FLOAT"/>\n' %  ("TEXCOORD", 2) )
+		
+	file_xml.write( '\t</Vertices>\n' )
+
+	file_xml.write( '\t<Triangles type="%s" groups="%d">\n' %  (index_type, len(face_groups)) )
+	if not has_materials:
+		file_xml.write( '\t<Group name="%s" count="%d"/>\n' %  ("default", totalFaces) )
+	else:
+		for i in range(len(face_groups)):
+			file_xml.write( '\t\t<Group name="%s" count="%d"/>\n' %  (obj.material_slots[i].material.name, len(face_groups[i])) )
+
+	file_xml.write( '\t</Triangles>\n' )
+	file_xml.write( '</Mesh>\n' )
+	file_xml.close();
+
+
+
+def save_anim(settings):
 	
 	frame_start = bpy.context.scene.frame_start
 	frame_end = bpy.context.scene.frame_end
