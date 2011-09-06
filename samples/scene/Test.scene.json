@@ -1,0 +1,45 @@
+{
+  "objects":
+  [
+    { 
+      "name": "Cube", "scale": 1.0, 
+      "position": [ -2.0, -2.0, 2.0 ], 
+      "orientation": [ 0.0, 0.0, 0.0, 1.0 ] 
+    },
+    { 
+      "name": "Cube", "scale": 1, 
+      "position": [ 2, -2, 2 ], 
+      "orientation": [ 0, 0, 0 ] 
+    },
+    { 
+      "name": "Cube", 
+      "position": [ -2, 2, 2 ], 
+      "orientation": [ 0, 0, 0 ] 
+    },
+    { 
+      "name": "Cube", 
+      "position": [ 2, 2, 2 ], 
+      "orientation": [ 0, 0, 0 ] 
+    },
+    { 
+      "name": "Cube", 
+      "position": [ -2, -2, -2 ], 
+      "orientation": [ 0, 0, 0 ] 
+    },
+    { 
+      "name": "Cube", 
+      "position": [ 2, -2, -2 ], 
+      "orientation": [ 0, 0, 0 ] 
+    },
+    { 
+      "name": "Cube", 
+      "position": [ -2, 2, -2 ], 
+      "orientation": [ 0, 0, 0 ] 
+    },
+    { 
+      "name": "Cube", 
+      "position": [ 2, 2, -2 ], 
+      "orientation": [ 0, 0, 0 ] 
+    }
+  ]
+}
