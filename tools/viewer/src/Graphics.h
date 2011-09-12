@@ -39,6 +39,8 @@
 #include "Mesh.h"
 #include "ProgramSimple.h"
 #include <vector>
+#include <map>
+#include "Animation.h"
 
 typedef GLuint Texture;
 
@@ -57,8 +59,10 @@ public:
     Mesh* loadMesh(const char* meta, const char* data);
     Mesh* getMesh(int index) { return meshes.at(index); }
     Texture loadTexture(const char* texName);
-    void addObject(Location3D* loc, Mesh* mesh, float scale, std::vector<std::string> texturePaths);
+    void addObject(std::string name, Location3D* loc, Mesh* mesh, float scale, std::vector<std::string> texturePaths);
+    void addAnim(const std::string& name, AnimationChannel* anim);
 
+    void update(float dT);
     void updateView(float eyex, float eyey, float eyez);
     void updateView(float xrot, float yrot);
     
@@ -90,6 +94,10 @@ private:
     float rotY;
 
     float sceneScale;
+
+    std::map<std::string, Location3D*> scene;
+//    std::vector<std::map<std::string, AnimationChannel*> > sampler;
+    std::map<std::string, AnimationChannel*> animation;
 };
 
 #endif // GRAPHICS_H

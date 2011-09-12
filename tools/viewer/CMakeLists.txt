@@ -108,6 +108,8 @@ set(A3DViewer_HEADER src/App.h
                      src/MeshLoader.h
                      src/Utils.h
                      src/SceneLoader.h
+                     src/AnimationLoader.h
+                     src/Animation.h
    )
 
 set(A3DViewer_SOURCE src/Main.cpp
@@ -120,6 +122,8 @@ set(A3DViewer_SOURCE src/Main.cpp
                      src/Utils.cpp
                      src/Settings.cpp
                      src/SceneLoader.cpp
+                     src/AnimationLoader.cpp
+                     src/Animation.cpp
    )
 
 add_executable(A3DViewer

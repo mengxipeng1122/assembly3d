@@ -34,7 +34,6 @@
 #include "Settings.h"
 #include <tclap/CmdLine.h>
 #include "Utils.h"
-#include "Resources.h"
 #include <vector>
 #include <libxml/xmlreader.h>
 #include <assert.h>
@@ -42,6 +41,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "SceneLoader.h"
+#include "Resources.h"
 
 using namespace std;
 using namespace TCLAP;
@@ -61,6 +61,7 @@ bool Settings::load(Resources* r, int argc, char *argv[])
         ValueArg<string> dataFileArg("b", "binary-file", "Binary file.", false, "", "path/to/binary");
         ValueArg<float> meshScaleArg("", "scale", "Scale.", false, 1.0f, "scale");
         ValueArg<float> sceneScaleArg("", "scene-scale", "Scene scale.", false, 1.0f, "scale");
+        ValueArg<string> animArg("a", "anim-file", "Animation file.", false, "", "path/to/animatoion");
 
         cmd.add(sceneScaleArg);
         cmd.add(meshScaleArg);
@@ -68,6 +69,7 @@ bool Settings::load(Resources* r, int argc, char *argv[])
         cmd.add(metaFileArg);
         cmd.add(meshDirArg);
         cmd.add(sceneFileArg);
+        cmd.add(animArg);
 
         cmd.parse(argc, argv);
 
@@ -150,7 +152,6 @@ bool Settings::load(Resources* r, int argc, char *argv[])
                 }
                 
             }
-            return true;
             
         }
         else 
@@ -158,6 +159,8 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             r->hasScene = false;
             r->numObj = 1;
             r->meshPaths.push_back(metaFileArg.getValue());
+            r->names.clear();
+            r->names.push_back("");
             r->sceneScale = 1.0f;
             
             if(Utils::checkIfFileExists(r->meshPaths[0].c_str()) == false)
@@ -165,6 +168,21 @@ bool Settings::load(Resources* r, int argc, char *argv[])
                 cout << "Mesh file not found!" << endl;
                 return false;
             }
+
+//            size_t posext = r->meshPaths[0].find(".xml");
+            std::string meshName = r->meshPaths[0].substr(0, r->meshPaths[0].find(".mesh.xml"));
+            size_t posslash = meshName.find_last_of("/");
+
+            if(posslash == std::string::npos)
+            {
+                r->names[0] = meshName;
+            }
+            else
+            {
+                r->names[0] = meshName.substr(posslash+1);
+            }
+
+
             if(dataFileArg.isSet())
             {
                 r->dataPaths.push_back(dataFileArg.getValue());
@@ -198,8 +216,31 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             std::vector<float> tmpOrientation(3, 0.0f);
             r->orientations.push_back(tmpOrientation);
 
-            return true;
         }
+        if(animArg.isSet())
+        {
+            std::string animPathMeta = animArg.getValue();
+            if(Utils::checkIfFileExists(animPathMeta.c_str()) )
+            {
+                r->animPathMeta = animPathMeta;
+            }
+            else
+            {
+                r->animPathMeta = string();
+                return false;
+            }
+            size_t pos = r->animPathMeta.find(".xml");
+            std::string animPathData = r->animPathMeta.substr(0, pos);
+            animPathData.append(".dat");
+            r->animPathData = animPathData;
+            if( ! Utils::checkIfFileExists(animPathData.c_str()) )
+            {
+                r->animPathData = string();
+                return false;
+            }
+        }
+        return true;
+
     }
     catch (TCLAP::ArgException &e)  // catch any exceptions
     {

@@ -1,22 +1,22 @@
 /*
  * Copyright (c) 2011 Peter Vasil
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
+ * 
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- *
+ * 
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
+ * 
  * Neither the name of the project's author nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -31,13 +31,27 @@
  *
  */
 
-#include <string>
+#include "Animation.h"
+#include <math.h>
+#include "Location3D.h"
+#include <iostream>
 
-class Utils {
-private:
-    Utils();
-public:
-    static bool checkIfFileExists(const char* path);
-    static std::string getTextureImagePathWithExt(const char* path);
-    static float calculateQuaternionW(float x, float y, float z);
-};
+AnimationChannel::AnimationChannel()
+    :
+      elapsedTime(0.0f)
+{
+}
+
+void AnimationChannel::update(float dTime, Location3D& loc)
+{
+    elapsedTime += dTime;
+    float remainder = fmodf(elapsedTime, duration);
+    int idx = (remainder * keyframes) / duration;
+    loc.x = positions[idx][0];
+    loc.y = positions[idx][1];
+    loc.z = positions[idx][2];
+    loc.quatX = orientations[idx][0];
+    loc.quatY = orientations[idx][1];
+    loc.quatZ = orientations[idx][2];
+    loc.quatW = orientations[idx][3];
+}

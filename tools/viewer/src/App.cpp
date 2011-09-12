@@ -36,6 +36,8 @@
 #include <cmath>
 #include <algorithm>
 #include "Utils.h"
+#include "Animation.h"
+#include "AnimationLoader.h"
 
 using namespace std;
 App::App()
@@ -44,7 +46,15 @@ App::App()
 
 App::~App()
 {
-
+    for (size_t i = 0; i < locs.size(); ++i) {
+        if(locs[i])
+        {
+            delete locs[i];
+            locs[i] = 0;
+        }
+    }
+    if(graphics)
+        delete graphics; graphics = NULL;
 }
 
 void App::init(Resources* r)
@@ -68,21 +78,33 @@ void App::init(Resources* r)
         if(r->orientations[i].size() == 4)
             loc->quatW = r->orientations[i][3];
         else
-            loc->calculateQuaternionW();
+            loc->quatW = Utils::calculateQuaternionW(loc->quatX, loc->quatY, loc->quatZ);
         
         Mesh* mesh;
         mesh = graphics->loadMesh(r->meshPaths[i].c_str(), r->dataPaths[i].c_str());
 
         std::vector<std::string> texPaths;
         for (int j = 0; j < mesh->getNGroups(); ++j) {
-            std::string tPath = r->texPaths[i] + std::string(mesh->getGroupName(j));
-            std::string tPathWithExt = Utils::getTextureImagePathWithExt(tPath.c_str());
+            string tPath = r->texPaths[i] + string(mesh->getGroupName(j));
+            string tPathWithExt = Utils::getTextureImagePathWithExt(tPath.c_str());
             texPaths.push_back(tPathWithExt);
             //graphics->loadTexture(tPath.c_str());
         }
-        graphics->addObject(loc, mesh, r->scales[i], texPaths);
+        string objName = r->names[i];
+        graphics->addObject(objName, loc, mesh, r->scales[i], texPaths);
+        locs.push_back(loc);
     }
+    if( ! r->animPathMeta.empty() && ! r->animPathData.empty())
+    {
+        Animation* anim = new Animation();
+        AnimationLoader al(anim,r->animPathMeta.c_str(), r->animPathData.c_str());
 
+        for(size_t i = 0; i < anim->channels.size(); ++i)
+        {
+            graphics->addAnim(anim->channels[i]->getName(), anim->channels[i]);
+        }
+        delete anim;
+    }
 }
 
 void App::render(int width, int height)
@@ -98,5 +120,10 @@ void App::updateView(float offsetX, float offsetY, float offsetZ,
 //    graphics->updateView(0.0f, 0.0f, offsetZ);
     graphics->updateView(offsetX, offsetY, offsetZ);
     graphics->updateView(angleX, angleY);
+}
+
+void App::update(float dT)
+{
+    graphics->update(dT);
 }
 

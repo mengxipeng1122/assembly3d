@@ -99,6 +99,7 @@ static void processSceneNode(xmlTextReaderPtr reader, Resources* r)
         if(name)
             meshPath.append(name);
         r->meshPaths.push_back(meshPath);
+        r->names.push_back(name);
 
         float scale = 1.0f;
         xmlChar* attribScale = xmlTextReaderGetAttribute(reader, (xmlChar*) "scale");

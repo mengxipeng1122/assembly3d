@@ -178,8 +178,12 @@ void MeshLoader::attribute(const GLchar *name, GLsizei size, GLenum type, GLsize
 #endif
     
     char* data = (char*) glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-    bool done = fread(data, stride, mesh->nVertices, file) == mesh->nVertices;
-    assert( done );
+    size_t result = fread(data, stride, mesh->nVertices, file);
+    if(result != static_cast<size_t>(mesh->nVertices))
+    {
+        fputs ("Reading error",stderr);
+        exit(3);
+    }
     glUnmapBuffer(GL_ARRAY_BUFFER);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -224,8 +228,12 @@ void MeshLoader::finish()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh->nTotalTriangles*3*mesh->indexSize, (GLvoid*) 0, GL_STATIC_DRAW);
 
     char* data = (char*) glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
-    bool done = fread(data, mesh->indexSize, mesh->nTotalTriangles*3, file) == mesh->nTotalTriangles*3;
-    assert( done );
+    size_t result = fread(data, mesh->indexSize, mesh->nTotalTriangles*3, file);
+    if(result != static_cast<size_t>(mesh->nTotalTriangles*3))
+    {
+        fputs ("Reading error",stderr);
+        exit(3);
+    }
     glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 
 #ifdef A3D_GL_VAO
