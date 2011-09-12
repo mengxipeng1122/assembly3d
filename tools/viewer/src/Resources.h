@@ -51,6 +51,10 @@ struct Resources
     std::vector<std::vector<float> > positions;
     std::vector<std::vector<float> > orientations;
     float sceneScale;
+    std::vector<std::string> names;
+
+    std::string animPathMeta;
+    std::string animPathData;
 };
 
 

@@ -45,12 +45,15 @@ public:
 
     void init(Resources* r);
     void render(int width, int height);
+    void update(float dT);
 
     void updateView(float offsetX, float offsetY, float offsetZ, 
                     float angleX, float angleY);
 
 private:
     Graphics* graphics;
+    std::vector<Location3D*> locs;
+//    std::vector<Animation*> animations;
 };
 
 #endif // APP_H

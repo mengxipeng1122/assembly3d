@@ -41,7 +41,7 @@ class SceneLoader
 private:
     SceneLoader();
 public:
-    static bool load(const char* scenePath, Resources* r);
+    static bool load(const char *scenePath, Resources* r);
 };
 
 #endif // SCENELOADER_H

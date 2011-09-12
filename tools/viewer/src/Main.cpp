@@ -117,13 +117,14 @@ int main(int argc, char *argv[])
             double dT = currentTime - time;
             processKeys(dT);
             processMouse(dT);
+            app.update(dT);
             time = currentTime;
 
             app.render(winWidth, winHeight);
 
             // We're using double buffers, so we need to swap to see our stuff
             glfwSwapBuffers();
-	        }
+        }
         
     }
     catch (const char* error)

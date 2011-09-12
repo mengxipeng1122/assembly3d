@@ -78,6 +78,11 @@ Graphics::~Graphics()
         delete simple; 
         simple = NULL;
     }
+    for(map<string, AnimationChannel*>::iterator it=animation.begin(); it != animation.end(); ++it)
+    {
+        if(it->second)
+            delete it->second; it->second = NULL;
+    }
 }
 
 void Graphics::init()
@@ -164,6 +169,7 @@ Mesh* Graphics::loadMesh(const char* meta, const char* data)//, Resources& r)
     }
     return mesh;
 }
+
 
 #ifdef A3D_FREEIMAGE
 static FIBITMAP* GenericLoader(const char* lpszPathName, int flag = 0) {
@@ -269,7 +275,7 @@ Texture Graphics::loadTexture(const char* texName)
     return texture;
 }
 
-void Graphics::addObject(Location3D *loc, Mesh *mesh, float scale, std::vector<std::string> texturePaths)
+void Graphics::addObject(std::string name, Location3D *loc, Mesh *mesh, float scale, std::vector<std::string> texturePaths)
 {
     Shape3D shape;
     shape.location = loc;
@@ -289,6 +295,7 @@ void Graphics::addObject(Location3D *loc, Mesh *mesh, float scale, std::vector<s
     shape.mesh = mesh;
     shape.scale = scale;
     shapes.push_back(shape);
+    scene.insert(pair<string, Location3D*>(name, loc));
 }
 
 void Graphics::updateView(float eyex, float eyey, float eyez)
@@ -326,4 +333,19 @@ int Graphics::getTextureIndex(std::string texName)
 void Graphics::setSceneScale(float val)
 {
     sceneScale = val;
+}
+
+void Graphics::update(float dT)
+{
+    for(map<string, AnimationChannel*>::iterator it=animation.begin(); it != animation.end(); ++it)
+    {
+        it->second->update(dT, *scene[it->first]);
+    }
+}
+
+
+void Graphics::addAnim(const std::string& name, AnimationChannel *anim)
+{
+    animation.insert(pair<string, AnimationChannel*>(name, anim));
+//    sampler[samplerIdx].insert(pair<string, AnimationChannel*>(name, anim));
 }

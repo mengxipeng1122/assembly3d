@@ -32,6 +32,7 @@
  */
 
 #include "Utils.h"
+#include <math.h>
 
 #ifdef TARGET_WIN32
 #include <direct.h>
@@ -85,4 +86,14 @@ std::string Utils::getTextureImagePathWithExt(const char* path)
         }
     }
     return result;
+}
+
+float Utils::calculateQuaternionW(float x, float y, float z)
+{
+    // http://tfc.duke.free.fr/coding/md5-specs-en.html
+    float t = 1.0f - (x * x) - (y * y) - (z * z);
+    if (t < 0.0f)
+        return 0.0f;
+    else
+        return -sqrt(t);
 }

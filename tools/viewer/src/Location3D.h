@@ -42,17 +42,6 @@ public:
     Location3D() : x(0), y(0), z(0), quatW(0), quatX(0), quatY(0), quatZ(0) {}
     float x, y, z;
     float quatW, quatX, quatY, quatZ;
-    
-    // http://tfc.duke.free.fr/coding/md5-specs-en.html
-    void calculateQuaternionW()
-    {
-
-        float t = 1.0f - (quatX * quatX) - (quatY * quatY) - (quatZ * quatZ);
-        if (t < 0.0f)
-            quatW = 0.0f;
-        else
-            quatW = -sqrt(t);
-    }
 };
 
 #endif // LOCATION3D_H

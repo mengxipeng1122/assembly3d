@@ -1,22 +1,22 @@
 /*
  * Copyright (c) 2011 Peter Vasil
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
+ * 
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- *
+ * 
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
+ * 
  * Neither the name of the project's author nor the names of its
  * contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -31,13 +31,42 @@
  *
  */
 
+#ifndef ANIMATION_H
+#define ANIMATION_H
+
+#include <vector>
+
+class AnimationChannel;
+
+struct Animation
+{
+    float duration;
+    int countChannels;
+    std::vector<AnimationChannel*> channels;
+};
+
+#include <vector>
 #include <string>
 
-class Utils {
-private:
-    Utils();
+class Location3D;
+class AnimationLoader;
+
+class AnimationChannel
+{
+    friend class AnimationLoader;
 public:
-    static bool checkIfFileExists(const char* path);
-    static std::string getTextureImagePathWithExt(const char* path);
-    static float calculateQuaternionW(float x, float y, float z);
+    AnimationChannel();
+    void update(float dTime, Location3D& loc);
+    const std::string& getName() { return name; }
+private:
+    std::string name;
+    int keyframes;
+    int countAttributes;
+    float duration;
+    std::vector<std::vector<float> > positions;
+    std::vector<std::vector<float> > orientations;
+    float elapsedTime;
+
 };
+
+#endif // ANIMATION_H
