@@ -44,14 +44,14 @@
 #ifdef A3D_FREEIMAGE
 static const int IMAGE_FORMAT_COUNT = 44;
 static const char * const IMAGE_FORMATS[] = {"bmp","dds","exr","g3","gif",
-                                                 "hdr","ico","iff","lbm","j2k",
-                                                 "j2c","jng","jp2","jpg","jif",
-                                                 "jpeg","jpe","koa","mng","pbm",
-                                                 "pbm","pcd","pcx","pfm","pgm",
-                                                 "pgm","pct","pict","pic","png",
-                                                 "ppm","ppm","psd","ras", "sgi",
-                                                 "tga","targa","tif","tiff","wap",
-                                                 "wbmp","wbm","xbm","xpm"};
+                                             "hdr","ico","iff","lbm","j2k",
+                                             "j2c","jng","jp2","jpg","jif",
+                                             "jpeg","jpe","koa","mng","pbm",
+                                             "pbm","pcd","pcx","pfm","pgm",
+                                             "pgm","pct","pict","pic","png",
+                                             "ppm","ppm","psd","ras", "sgi",
+                                             "tga","targa","tif","tiff","wap",
+                                             "wbmp","wbm","xbm","xpm"};
 #else
 static const int IMAGE_FORMAT_COUNT = 1;
 static const char * const IMAGE_FORMATS[] = {"tga"};

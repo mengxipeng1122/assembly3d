@@ -86,7 +86,7 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             r->scenePath = sceneFileArg.getValue();
             size_t sceneNamePos = r->scenePath.find_last_of("/");
             string sceneName;
-            if(sceneNamePos == std::string::npos)
+            if(sceneNamePos == string::npos)
             {
                 size_t posext = r->scenePath.find_first_of(".");
                 sceneName = r->scenePath.substr(0, posext);
@@ -105,12 +105,11 @@ bool Settings::load(Resources* r, int argc, char *argv[])
                 if(lastChar != '/')
                     meshDir.append("/");
                 r->sceneDir = meshDir;
-//                r->useMeshDir = true;
             }
             else
             {
                 size_t pos = r->scenePath.find_last_of("/");
-                if(pos == std::string::npos)
+                if(pos == string::npos)
                 {
                     r->sceneDir = "./"+sceneName+"/";
                 }
@@ -119,7 +118,6 @@ bool Settings::load(Resources* r, int argc, char *argv[])
                     r->sceneDir = r->scenePath.substr(0, pos);
                     r->sceneDir.append("/"+sceneName+"/");
                 }
-                //r->useMeshDir = false;
             }
             
             if(Utils::checkIfFileExists(r->scenePath.c_str()) == false)
@@ -133,7 +131,7 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             bool sceneLoadOk = SceneLoader::load(r->scenePath.c_str(), r);
             if( sceneLoadOk == false)
             {
-                std::cout << "Could not load scene file!" << std::endl;
+                cout << "Could not load scene file!" << endl;
                 return false;
             }
             for (size_t i = 0; i < r->meshPaths.size(); ++i) 
@@ -142,25 +140,22 @@ bool Settings::load(Resources* r, int argc, char *argv[])
                 r->meshPaths[i].append(".mesh.xml");
                 if(Utils::checkIfFileExists(r->meshPaths[i].c_str()) == false)
                 {
-                    std::cout << "Mesh file not found!" << std::endl;
+                    cout << "Mesh file not found!" << endl;
                     return false;
                 }
 
-                std::string dPath = meshName;
+                string dPath = meshName;
                 dPath.append(".mesh.dat");
                 r->dataPaths.push_back(dPath);
                 
                 if(Utils::checkIfFileExists(r->dataPaths[i].c_str()) == false)
                 {
-                    std::cout << "Binary file not found!" << std::endl;
+                    cout << "Binary file not found!" << endl;
                     return false;
                 }
                 
-//                r->sceneDir.append(meshName+"/");
-//                r->sceneDir.append();
-
                 size_t posSlash = r->meshPaths[i].find_last_of("/");
-                if(posSlash == std::string::npos)
+                if(posSlash == string::npos)
                 {
                     r->texPaths.push_back("./");
                 }
@@ -173,7 +168,7 @@ bool Settings::load(Resources* r, int argc, char *argv[])
                 {
                     r->animMetas.push_back(animPath);
                     size_t pos = r->animMetas.back().find(".xml");
-                    std::string animPathData = r->animMetas.back().substr(0, pos);
+                    string animPathData = r->animMetas.back().substr(0, pos);
                     animPathData.append(".dat");
                     if(Utils::checkIfFileExists(animPathData.c_str()) )
                     {
@@ -193,10 +188,10 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             r->hasScene = false;
             r->numObj = 1;
             r->meshPaths.push_back(metaFileArg.getValue());
-            r->names = std::vector<std::string>(1,"");
+            r->names = vector<string>(1,"");
             r->sceneScale = 1.0f;
-            r->animMetas = std::vector<std::string>(1,"");
-            r->animDatas = std::vector<std::string>(1,"");
+            r->animMetas = vector<string>(1,"");
+            r->animDatas = vector<string>(1,"");
             
             if(Utils::checkIfFileExists(r->meshPaths[0].c_str()) == false)
             {
@@ -205,10 +200,10 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             }
 
 //            size_t posext = r->meshPaths[0].find(".xml");
-            std::string meshName = r->meshPaths[0].substr(0, r->meshPaths[0].find(".mesh.xml"));
+            string meshName = r->meshPaths[0].substr(0, r->meshPaths[0].find(".mesh.xml"));
             size_t posslash = meshName.find_last_of("/");
 
-            if(posslash == std::string::npos)
+            if(posslash == string::npos)
             {
                 r->names[0] = meshName;
             }
@@ -225,20 +220,20 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             else
             {
                 size_t pos = r->meshPaths[0].find(".xml");
-                std::string dPath = r->meshPaths[0].substr(0, pos);
+                string dPath = r->meshPaths[0].substr(0, pos);
                 dPath.append(".dat");
                 r->dataPaths.push_back(dPath);
             }
             if(Utils::checkIfFileExists(r->dataPaths[0].c_str()) == false)
             {
-                std::cout << "Binary file not found!" << std::endl;
+                cout << "Binary file not found!" << endl;
                 return false;
             }
             
             r->scales.push_back(meshScaleArg.getValue());
             
             size_t pos = r->meshPaths[0].find_last_of("/");
-            if(pos == std::string::npos)
+            if(pos == string::npos)
             {
                 r->texPaths.push_back("./");
             }
@@ -246,13 +241,13 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             {
                 r->texPaths.push_back(r->meshPaths[0].substr(0, pos+1));
             }
-            std::vector<float> tmpPos(3, 0.0f);
+            vector<float> tmpPos(3, 0.0f);
             r->positions.push_back(tmpPos);
-            std::vector<float> tmpOrientation(3, 0.0f);
+            vector<float> tmpOrientation(3, 0.0f);
             r->orientations.push_back(tmpOrientation);
             if(animArg.isSet())
             {
-                std::string animPathMeta = animArg.getValue();
+                string animPathMeta = animArg.getValue();
                 if(Utils::checkIfFileExists(animPathMeta.c_str()) )
                 {
                     r->animMetas[0] = animPathMeta;
@@ -263,7 +258,7 @@ bool Settings::load(Resources* r, int argc, char *argv[])
                     return false;
                 }
                 size_t pos = r->animMetas[0].find(".xml");
-                std::string animPathData = r->animMetas[0].substr(0, pos);
+                string animPathData = r->animMetas[0].substr(0, pos);
                 animPathData.append(".dat");
                 r->animDatas[0] = animPathData;
                 if( ! Utils::checkIfFileExists(animPathData.c_str()) )
@@ -279,7 +274,7 @@ bool Settings::load(Resources* r, int argc, char *argv[])
     }
     catch (TCLAP::ArgException &e)  // catch any exceptions
     {
-        std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
+        cerr << "error: " << e.error() << " for arg " << e.argId() << endl;
         return false;
     }
 }

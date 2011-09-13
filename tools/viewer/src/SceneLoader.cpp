@@ -111,7 +111,7 @@ static void processSceneNode(xmlTextReaderPtr reader, Resources* r)
     }
     else if(strcmp("Position", name) == 0)
     {
-        std::vector<float> positionValues(3, 0.0f);
+        vector<float> positionValues(3, 0.0f);
         xmlChar* xVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "x");
         xmlChar* yVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "y");
         xmlChar* zVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "z");
@@ -127,7 +127,7 @@ static void processSceneNode(xmlTextReaderPtr reader, Resources* r)
     }
     else if(strcmp("Orientation", name) == 0)
     {
-        std::vector<float> orientationValues(3, 0.0f);
+        vector<float> orientationValues(3, 0.0f);
         xmlChar* xVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "x");
         xmlChar* yVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "y");
         xmlChar* zVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "z");

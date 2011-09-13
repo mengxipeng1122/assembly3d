@@ -155,7 +155,7 @@ void AnimationLoader::attribute(const char* name, int size)
     {
         for(int j = 0; j < ch->keyframes; ++j)
         {
-            std::vector<float> tmpP;
+            vector<float> tmpP;
             for(int i = 0; i < size; ++i)
             {
                 float x = 0.0f;
@@ -169,7 +169,7 @@ void AnimationLoader::attribute(const char* name, int size)
     {
         for(int j = 0; j < ch->keyframes; ++j)
         {
-            std::vector<float> tmpO;
+            vector<float> tmpO;
             for(int i = 0; i < size; ++i)
             {
                 float x = 0.0f;

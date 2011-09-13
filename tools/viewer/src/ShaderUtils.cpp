@@ -35,6 +35,7 @@
 #include <fstream>
 #include <iostream>
 
+using namespace std;
 
 ShaderUtils::ShaderUtils()
 {
@@ -42,9 +43,9 @@ ShaderUtils::ShaderUtils()
 
 GLuint ShaderUtils::createVertexShader(const char *vsSrc)
 {
-    std::ifstream vsFile(vsSrc, std::ifstream::in);
-    std::string vertexShaderSource = std::string(std::istreambuf_iterator<char>(vsFile),
-                                                 std::istreambuf_iterator<char>());
+    ifstream vsFile(vsSrc, ifstream::in);
+    string vertexShaderSource = string(istreambuf_iterator<char>(vsFile),
+                                       istreambuf_iterator<char>());
 
     GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
@@ -61,13 +62,13 @@ GLuint ShaderUtils::createVertexShader(const char *vsSrc)
     {
         int logLength = 0;
         glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &logLength);
-        std::string infoLog(logLength, ' ');
+        string infoLog(logLength, ' ');
         glGetShaderInfoLog(vertexShader, logLength, 0, &infoLog[0]);
-        std::cout << "Vertex-shader compile error:\n\n" << infoLog.c_str() << std::endl;
+        cout << "Vertex-shader compile error:\n\n" << infoLog.c_str() << endl;
     }
 //    else
 //    {
-//        std::cout << "Vertex-shader loaded and compiled successfully." << std::endl;
+//        cout << "Vertex-shader loaded and compiled successfully." << endl;
 //    }
 
     return vertexShader;
@@ -77,8 +78,9 @@ GLuint ShaderUtils::createFragmentShader(const char *fsSrc)
 {
     GLuint fragmentShader = 0;
 
-    std::ifstream fsFile(fsSrc, std::ifstream::in);
-    std::string fragmentShaderSource = std::string(std::istreambuf_iterator<char>(fsFile), std::istreambuf_iterator<char>());
+    ifstream fsFile(fsSrc, ifstream::in);
+    string fragmentShaderSource = string(istreambuf_iterator<char>(fsFile),
+                                         istreambuf_iterator<char>());
 
     fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
@@ -94,13 +96,13 @@ GLuint ShaderUtils::createFragmentShader(const char *fsSrc)
     {
         int logLength = 0;
         glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &logLength);
-        std::string info_log(logLength, ' ');
+        string info_log(logLength, ' ');
         glGetShaderInfoLog(fragmentShader, logLength, 0, &info_log[0]);
-        std::cout << "Fragment-shader compile error:\n\n" << info_log.c_str() << std::endl;
+        cout << "Fragment-shader compile error:\n\n" << info_log.c_str() << endl;
     }
 //	else
 //	{
-//		std::cout << "Fragment-shader loaded and compiled successfully." << std::endl;
+//		cout << "Fragment-shader loaded and compiled successfully." << endl;
 //	}
 
     return fragmentShader;
@@ -125,13 +127,13 @@ GLuint ShaderUtils::createProgram(GLuint vertexShader, GLuint fragmentShader)
     {
         int logLength = 0;
         glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &logLength);
-        std::string info_log(logLength, ' ');
+        string info_log(logLength, ' ');
         glGetProgramInfoLog(shaderProgram, logLength, 0, &info_log[0]);
-        std::cout << "Shader-program link error:\n\n" << info_log.c_str() << std::endl;
+        cout << "Shader-program link error:\n\n" << info_log.c_str() << endl;
     }
 //    else
 //    {
-//        std::cout << "Shader-program linked successfully.\n" << std::endl;
+//        cout << "Shader-program linked successfully.\n" << endl;
 //    }
 
     glDeleteShader(vertexShader);
@@ -163,13 +165,13 @@ GLuint ShaderUtils::createProgramFromSrcPair(const GLchar* vertexShaderSrc,
     {
         int logLength = 0;
         glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &logLength);
-        std::string infoLog(logLength, ' ');
+        string infoLog(logLength, ' ');
         glGetShaderInfoLog(vertexShader, logLength, 0, &infoLog[0]);
-        std::cout << "Vertex-shader compile error:\n\n" << infoLog.c_str() << std::endl;
+        cout << "Vertex-shader compile error:\n\n" << infoLog.c_str() << endl;
     }
 //    else
 //    {
-//        std::cout << "Vertex-shader loaded and compiled successfully." << std::endl;
+//        cout << "Vertex-shader loaded and compiled successfully." << endl;
 //    }
 
     // -- fragment shader --
@@ -187,13 +189,13 @@ GLuint ShaderUtils::createProgramFromSrcPair(const GLchar* vertexShaderSrc,
     {
         int logLength = 0;
         glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &logLength);
-        std::string info_log(logLength, ' ');
+        string info_log(logLength, ' ');
         glGetShaderInfoLog(fragmentShader, logLength, 0, &info_log[0]);
-        std::cout << "Fragment-shader compile error:\n\n" << info_log.c_str() << std::endl;
+        cout << "Fragment-shader compile error:\n\n" << info_log.c_str() << endl;
     }
 //    else
 //    {
-//        std::cout << "Fragment-shader loaded and compiled successfully." << std::endl;
+//        cout << "Fragment-shader loaded and compiled successfully." << endl;
 //    }
 
     // -- link shader-program --
@@ -210,13 +212,13 @@ GLuint ShaderUtils::createProgramFromSrcPair(const GLchar* vertexShaderSrc,
     {
         int logLength = 0;
         glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &logLength);
-        std::string info_log(logLength, ' ');
+        string info_log(logLength, ' ');
         glGetProgramInfoLog(shaderProgram, logLength, 0, &info_log[0]);
-        std::cout << "Shader-program link error:\n\n" << info_log.c_str() << std::endl;
+        cout << "Shader-program link error:\n\n" << info_log.c_str() << endl;
     }
 //    else
 //    {
-//        std::cout << "Shader-program linked successfully.\n" << std::endl;
+//        cout << "Shader-program linked successfully.\n" << endl;
 //    }
 
     glDeleteShader(vertexShader);
