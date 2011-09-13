@@ -53,8 +53,9 @@ struct Resources
     float sceneScale;
     std::vector<std::string> names;
 
-    std::string animPathMeta;
-    std::string animPathData;
+    int numSampler;
+    std::vector<std::string> animMetas;
+    std::vector<std::string> animDatas;
 };
 
 

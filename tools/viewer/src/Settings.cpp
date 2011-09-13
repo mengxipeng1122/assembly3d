@@ -84,6 +84,19 @@ bool Settings::load(Resources* r, int argc, char *argv[])
         {
             r->hasScene = true;
             r->scenePath = sceneFileArg.getValue();
+            size_t sceneNamePos = r->scenePath.find_last_of("/");
+            string sceneName;
+            if(sceneNamePos == std::string::npos)
+            {
+                size_t posext = r->scenePath.find_first_of(".");
+                sceneName = r->scenePath.substr(0, posext);
+            }
+            else
+            {
+                string tmp = r->scenePath.substr(sceneNamePos+1);
+                size_t posext = tmp.find_first_of(".");
+                sceneName = tmp.substr(0, posext);
+            }
             
             if(meshDirArg.isSet())
             {
@@ -92,19 +105,21 @@ bool Settings::load(Resources* r, int argc, char *argv[])
                 if(lastChar != '/')
                     meshDir.append("/");
                 r->sceneDir = meshDir;
+//                r->useMeshDir = true;
             }
             else
             {
                 size_t pos = r->scenePath.find_last_of("/");
                 if(pos == std::string::npos)
                 {
-                    r->sceneDir = "./";
+                    r->sceneDir = "./"+sceneName+"/";
                 }
                 else
                 {
-                    r->sceneDir = r->scenePath.substr(0, pos+1);
+                    r->sceneDir = r->scenePath.substr(0, pos);
+                    r->sceneDir.append("/"+sceneName+"/");
                 }
-
+                //r->useMeshDir = false;
             }
             
             if(Utils::checkIfFileExists(r->scenePath.c_str()) == false)
@@ -141,6 +156,9 @@ bool Settings::load(Resources* r, int argc, char *argv[])
                     return false;
                 }
                 
+//                r->sceneDir.append(meshName+"/");
+//                r->sceneDir.append();
+
                 size_t posSlash = r->meshPaths[i].find_last_of("/");
                 if(posSlash == std::string::npos)
                 {
@@ -150,7 +168,23 @@ bool Settings::load(Resources* r, int argc, char *argv[])
                 {
                     r->texPaths.push_back(r->meshPaths[i].substr(0, posSlash+1));
                 }
-                
+                string animPath = meshName+"Action.anim.xml";
+                if(Utils::checkIfFileExists(animPath.c_str()))
+                {
+                    r->animMetas.push_back(animPath);
+                    size_t pos = r->animMetas.back().find(".xml");
+                    std::string animPathData = r->animMetas.back().substr(0, pos);
+                    animPathData.append(".dat");
+                    if(Utils::checkIfFileExists(animPathData.c_str()) )
+                    {
+                        r->animDatas.push_back(animPathData);
+                    }
+                    else
+                    {
+                        r->animDatas.push_back(string());
+                        return false;
+                    }
+                }
             }
             
         }
@@ -159,9 +193,10 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             r->hasScene = false;
             r->numObj = 1;
             r->meshPaths.push_back(metaFileArg.getValue());
-            r->names.clear();
-            r->names.push_back("");
+            r->names = std::vector<std::string>(1,"");
             r->sceneScale = 1.0f;
+            r->animMetas = std::vector<std::string>(1,"");
+            r->animDatas = std::vector<std::string>(1,"");
             
             if(Utils::checkIfFileExists(r->meshPaths[0].c_str()) == false)
             {
@@ -215,29 +250,29 @@ bool Settings::load(Resources* r, int argc, char *argv[])
             r->positions.push_back(tmpPos);
             std::vector<float> tmpOrientation(3, 0.0f);
             r->orientations.push_back(tmpOrientation);
+            if(animArg.isSet())
+            {
+                std::string animPathMeta = animArg.getValue();
+                if(Utils::checkIfFileExists(animPathMeta.c_str()) )
+                {
+                    r->animMetas[0] = animPathMeta;
+                }
+                else
+                {
+                    r->animMetas[0] = string();
+                    return false;
+                }
+                size_t pos = r->animMetas[0].find(".xml");
+                std::string animPathData = r->animMetas[0].substr(0, pos);
+                animPathData.append(".dat");
+                r->animDatas[0] = animPathData;
+                if( ! Utils::checkIfFileExists(animPathData.c_str()) )
+                {
+                    r->animDatas[0] = string();
+                    return false;
+                }
+            }
 
-        }
-        if(animArg.isSet())
-        {
-            std::string animPathMeta = animArg.getValue();
-            if(Utils::checkIfFileExists(animPathMeta.c_str()) )
-            {
-                r->animPathMeta = animPathMeta;
-            }
-            else
-            {
-                r->animPathMeta = string();
-                return false;
-            }
-            size_t pos = r->animPathMeta.find(".xml");
-            std::string animPathData = r->animPathMeta.substr(0, pos);
-            animPathData.append(".dat");
-            r->animPathData = animPathData;
-            if( ! Utils::checkIfFileExists(animPathData.c_str()) )
-            {
-                r->animPathData = string();
-                return false;
-            }
         }
         return true;
 

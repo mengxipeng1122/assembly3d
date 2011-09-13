@@ -335,7 +335,7 @@ void Graphics::setSceneScale(float val)
     sceneScale = val;
 }
 
-void Graphics::update(float dT)
+void Graphics::updateAnimation(float dT)
 {
     for(map<string, AnimationChannel*>::iterator it=animation.begin(); it != animation.end(); ++it)
     {

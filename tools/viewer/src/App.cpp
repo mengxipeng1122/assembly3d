@@ -40,6 +40,9 @@
 #include "AnimationLoader.h"
 
 using namespace std;
+
+extern bool playAnimation;
+
 App::App()
 {
 }
@@ -94,16 +97,19 @@ void App::init(Resources* r)
         graphics->addObject(objName, loc, mesh, r->scales[i], texPaths);
         locs.push_back(loc);
     }
-    if( ! r->animPathMeta.empty() && ! r->animPathData.empty())
+    for(size_t j = 0; j < r->animMetas.size(); ++j)
     {
-        Animation* anim = new Animation();
-        AnimationLoader al(anim,r->animPathMeta.c_str(), r->animPathData.c_str());
-
-        for(size_t i = 0; i < anim->channels.size(); ++i)
+        if( ! r->animMetas[j].empty() && ! r->animDatas[j].empty())
         {
-            graphics->addAnim(anim->channels[i]->getName(), anim->channels[i]);
+            Animation* anim = new Animation();
+            AnimationLoader al(anim,r->animMetas[j].c_str(), r->animDatas[j].c_str());
+
+            for(size_t i = 0; i < anim->channels.size(); ++i)
+            {
+                graphics->addAnim(anim->channels[i]->getName(), anim->channels[i]);
+            }
+            delete anim;
         }
-        delete anim;
     }
 }
 
@@ -124,6 +130,7 @@ void App::updateView(float offsetX, float offsetY, float offsetZ,
 
 void App::update(float dT)
 {
-    graphics->update(dT);
+    if(playAnimation)
+        graphics->updateAnimation(dT);
 }
 

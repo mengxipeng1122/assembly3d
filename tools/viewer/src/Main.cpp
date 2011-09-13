@@ -81,6 +81,7 @@ float camOffsetX = 0.0f;
 float camOffsetY = 0.0f;
 float camOffsetZ = 25.0f;
 float lastWheel = 0.0f;
+bool playAnimation = true;
 
 int main(int argc, char *argv[])
 {
@@ -178,6 +179,10 @@ void keyCallback(int key, int action)
     
     if (keys[GLFW_KEY_ESC])
         runLevel = 0;
+
+    if(keys[GLFW_KEY_SPACE])
+        playAnimation = !playAnimation;
+
 }
 bool firstDragL = false;
 bool firstDragR = false;

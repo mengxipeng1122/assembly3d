@@ -35,6 +35,7 @@
 #define ANIMATION_H
 
 #include <vector>
+#include <string>
 
 class AnimationChannel;
 
@@ -44,9 +45,6 @@ struct Animation
     int countChannels;
     std::vector<AnimationChannel*> channels;
 };
-
-#include <vector>
-#include <string>
 
 class Location3D;
 class AnimationLoader;

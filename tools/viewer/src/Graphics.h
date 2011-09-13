@@ -62,7 +62,7 @@ public:
     void addObject(std::string name, Location3D* loc, Mesh* mesh, float scale, std::vector<std::string> texturePaths);
     void addAnim(const std::string& name, AnimationChannel* anim);
 
-    void update(float dT);
+    void updateAnimation(float dT);
     void updateView(float eyex, float eyey, float eyez);
     void updateView(float xrot, float yrot);
     
