@@ -10,7 +10,7 @@
 		<xs:sequence>
 			<xs:element name="Vertices" type="vertices"/>
 			<xs:element name="Triangles" type="triangles" />
-			<xs:element name="Data" type="xs:string" minOccurs="0"/>
+<!-->			<xs:element name="Data" type="xs:string" minOccurs="0"/>-->
 		</xs:sequence>
 	</xs:complexType>
 	

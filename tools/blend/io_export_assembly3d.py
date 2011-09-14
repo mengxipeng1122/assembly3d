@@ -38,8 +38,8 @@ bl_info = {
     "description": "Export to Assembly3D xml and binary formats",
     "warning": "",
 #    "wiki_url": "http://wiki.blender.org/index.php/Extensions:2.5/Py/"\
-#        "Scripts/File_I-O/idTech4_md5",
-#    "tracker_url": "http://www.katsbits.com",
+#        "Scripts/File_I-O/io_export_assembly3d",
+#    "tracker_url": "http://www.interaction3d.org",
     "category": "Import-Export"}
 
 # To support reload properly, try to access a package var, if it's there, reload everything (F8)
@@ -477,7 +477,9 @@ def save_anim(settings):
 ##########
 #export class registration and interface
 from bpy.props import *
-class ExportAssembly3D(bpy.types.Operator):
+from bpy_extras.io_utils import (ExportHelper, path_reference_mode, axis_conversion)
+                                 
+class ExportAssembly3D(bpy.types.Operator):#, ExportHelper):
   '''Export to Assembly3D formats (.xml)'''
   bl_idname = "assembly.3d"
   bl_label = 'Export Assembly3D'
