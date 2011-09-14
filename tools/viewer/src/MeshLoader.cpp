@@ -52,24 +52,40 @@ static void processMeshNode(xmlTextReaderPtr reader, MeshLoader* loader) {
 
     if(strcmp("Vertices", name) == 0)
     {
-        GLsizei count = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "count") );
-        GLsizei attributes = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "attributes") );
+        xmlChar* countVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "count");
+        xmlChar* attributesVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "attributes");
+
+        GLsizei count = atoi ( (const char*) countVal );
+        GLsizei attributes = atoi ( (const char*) attributesVal);
+
         loader->vertices( count, attributes );
+
+        xmlFree(countVal);
+        xmlFree(attributesVal);
     }
     else if(strcmp("Attribute", name) == 0)
     {
-        const GLchar* name = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "name");
-        GLsizei size = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "size") );
+        xmlChar* attribNameVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "name");
+        xmlChar* attribSizeVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "size") ;
+
+        const GLchar* name = (const char*) attribNameVal;
+        GLsizei size = atoi ( (const char*) attribSizeVal);
         //const char* typeName = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "type");
         //assert(strcmp("FLOAT", typeName) == 0);
         GLenum type = GL_FLOAT;
         GLsizei typeSize = 4;
         loader->attribute( name, size, type, typeSize );
+
+        xmlFree(attribNameVal);
+        xmlFree(attribSizeVal);
     }
     else if(strcmp("Triangles", name) == 0)
     {
-        const char* typeName = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "type");
-        GLsizei groups = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "groups") );
+        xmlChar* typeNameVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "type");
+        xmlChar* groupsVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "groups");
+
+        const char* typeName = (const char*) typeNameVal;
+        GLsizei groups = atoi ( (const char*)  groupsVal);
 
         GLenum type = GL_UNSIGNED_SHORT;
         GLsizei typeSize = 2;
@@ -84,13 +100,21 @@ static void processMeshNode(xmlTextReaderPtr reader, MeshLoader* loader) {
             typeSize = 4;
         }
         loader->triangles(type, typeSize, groups);
+
+        xmlFree(typeNameVal);
+        xmlFree(groupsVal);
     }
     else if(strcmp("Group", name) == 0)
     {
-        const GLchar* name = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "name");
-        GLsizei count = atoi ( (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "count") );
+        xmlChar* groupNameVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "name");
+        xmlChar* countVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "count");
+        const GLchar* groupName = (const char*) groupNameVal;
+        GLsizei count = atoi ( (const char*) countVal );
 
-        loader->group( name, count );
+        loader->group( groupName, count );
+
+        xmlFree(groupNameVal);
+        xmlFree(countVal);
     }
 }
 

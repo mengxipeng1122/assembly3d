@@ -74,7 +74,7 @@ bool SceneLoader::load(const char *scenePath, Resources* r)
 
 static void processSceneNode(xmlTextReaderPtr reader, Resources* r)
 {
-    const char *name = (const char*)xmlTextReaderConstName(reader);
+    const xmlChar* name = xmlTextReaderConstName(reader);
     assert (name != NULL);
 
     int nodeType = xmlTextReaderNodeType(reader);
@@ -83,23 +83,24 @@ static void processSceneNode(xmlTextReaderPtr reader, Resources* r)
         return;
     }
 
-    if(strcmp("World", name) == 0)
+    if(strcmp("World", (const char*)name) == 0)
     {
         int numObjects = 0;
         xmlChar* numVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "objects");
         if(numVal)
             numObjects = atoi ((const char*) numVal);
         r->numObj = numObjects;
+        xmlFree(numVal);
     }
-    else if(strcmp("Object", name) == 0)
+    else if(strcmp("Object", (const char*)name) == 0)
     {
-        const char* name = (const char*) xmlTextReaderGetAttribute(reader, (xmlChar*) "name");
+        xmlChar* objName = xmlTextReaderGetAttribute(reader, (xmlChar*) "name");
         string meshPath;
         meshPath = r->sceneDir;
-        if(name)
-            meshPath.append(name);
+        if(objName)
+            meshPath.append((const char*)objName);
         r->meshPaths.push_back(meshPath);
-        r->names.push_back(name);
+        r->names.push_back((const char*)objName);
 
         float scale = 1.0f;
         xmlChar* attribScale = xmlTextReaderGetAttribute(reader, (xmlChar*) "scale");
@@ -108,8 +109,10 @@ static void processSceneNode(xmlTextReaderPtr reader, Resources* r)
 
         r->scales.push_back(scale);
 
+        xmlFree(objName);
+        xmlFree(attribScale);
     }
-    else if(strcmp("Position", name) == 0)
+    else if(strcmp("Position", (const char*)name) == 0)
     {
         vector<float> positionValues(3, 0.0f);
         xmlChar* xVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "x");
@@ -124,8 +127,11 @@ static void processSceneNode(xmlTextReaderPtr reader, Resources* r)
             positionValues[2] = atof((const char*) zVal );
 
         r->positions.push_back(positionValues);
+        xmlFree(xVal);
+        xmlFree(yVal);
+        xmlFree(zVal);
     }
-    else if(strcmp("Orientation", name) == 0)
+    else if(strcmp("Orientation", (const char*)name) == 0)
     {
         vector<float> orientationValues(3, 0.0f);
         xmlChar* xVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "x");
@@ -143,5 +149,9 @@ static void processSceneNode(xmlTextReaderPtr reader, Resources* r)
             orientationValues.push_back(atof((const char*) wVal ));
 
         r->orientations.push_back(orientationValues);
+        xmlFree(xVal);
+        xmlFree(yVal);
+        xmlFree(zVal);
+        xmlFree(wVal);
     }
 }

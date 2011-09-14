@@ -44,11 +44,11 @@ Mesh::~Mesh()
     glDeleteVertexArrays(1, &vertexArray);
 #endif
     glDeleteBuffers(nAttributes, buffers);
-    delete buffers;
-    delete nTriangles;
-    delete attrSizes;
-    delete attrTypeSizes;
-    delete attrTypes;
+    delete[] buffers;
+    delete[] nTriangles;
+    delete[] attrSizes;
+    delete[] attrTypeSizes;
+    delete[] attrTypes;
     attrNames.clear();
     groupNames.clear();
     attrLocs.clear();
