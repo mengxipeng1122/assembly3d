@@ -144,6 +144,8 @@ void AnimationLoader::channel(const char *name, int keyframes, int countAttribut
     channel->keyframes = keyframes;
     channel->duration = animation->duration;
     channel->countAttributes = countAttributes;
+    channel->positions = new float[keyframes*3];
+    channel->orientations = new float[keyframes*4];
     animation->channels.push_back(channel);
 }
 
@@ -155,33 +157,31 @@ void AnimationLoader::attribute(const char* name, int size)
     {
         for(int j = 0; j < ch->keyframes; ++j)
         {
-            vector<float> tmpP;
             for(int i = 0; i < size; ++i)
             {
-                float x = 0.0f;
-                file.read((char *)(&x), sizeof(x));
-                tmpP.push_back(x);
+                float value = 0.0f;
+                file.read((char *)(&value), sizeof(value));
+                ch->positions[j*3+i] = value;
             }
-            ch->positions.push_back(tmpP);
         }
     }
     else if(string(name).compare("ORIENTATION") == 0)
     {
         for(int j = 0; j < ch->keyframes; ++j)
         {
-            vector<float> tmpO;
             for(int i = 0; i < size; ++i)
             {
-                float x = 0.0f;
-                file.read((char *)(&x), sizeof(x));
-                tmpO.push_back(x);
+                float value = 0.0f;
+                file.read((char *)(&value), sizeof(value));
+                ch->orientations[j*4+i] = value;
             }
             if(size == 3)
             {
-                float w = Utils::calculateQuaternionW(tmpO[0], tmpO[1], tmpO[2]);
-                tmpO.push_back(w);
+                float w = Utils::calculateQuaternionW(ch->orientations[j*4+0],
+                                                      ch->orientations[j*4+1],
+                                                      ch->orientations[j*4+2]);
+                ch->orientations[j*4+3] = w;
             }
-            ch->orientations.push_back(tmpO);
         }
     }
 }

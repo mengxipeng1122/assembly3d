@@ -98,6 +98,8 @@ private:
     std::map<std::string, Location3D*> scene;
 //    std::vector<std::map<std::string, AnimationChannel*> > sampler;
     std::map<std::string, AnimationChannel*> animation;
+
+    float elapsedTime;
 };
 
 #endif // GRAPHICS_H

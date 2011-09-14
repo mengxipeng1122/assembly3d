@@ -54,17 +54,16 @@ class AnimationChannel
     friend class AnimationLoader;
 public:
     AnimationChannel();
-    void update(float dTime, Location3D& loc);
+    ~AnimationChannel();
+    void update(float elapsedTime, Location3D& loc);
     const std::string& getName() { return name; }
 private:
     std::string name;
     int keyframes;
     int countAttributes;
     float duration;
-    std::vector<std::vector<float> > positions;
-    std::vector<std::vector<float> > orientations;
-    float elapsedTime;
-
+    float* positions;
+    float* orientations;
 };
 
 #endif // ANIMATION_H

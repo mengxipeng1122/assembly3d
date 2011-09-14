@@ -37,21 +37,26 @@
 #include <iostream>
 
 AnimationChannel::AnimationChannel()
-    :
-      elapsedTime(0.0f)
 {
 }
-
-void AnimationChannel::update(float dTime, Location3D& loc)
+AnimationChannel::~AnimationChannel()
 {
-    elapsedTime += dTime;
+    if(positions)
+        delete[] positions; positions = 0;
+    if(orientations)
+        delete[] orientations; orientations = 0;
+}
+
+void AnimationChannel::update(float elapsedTime, Location3D& loc)
+{
+//    elapsedTime += dTime;
     float remainder = fmodf(elapsedTime, duration);
     int idx = (remainder * keyframes) / duration;
-    loc.x = positions[idx][0];
-    loc.y = positions[idx][1];
-    loc.z = positions[idx][2];
-    loc.quatX = orientations[idx][0];
-    loc.quatY = orientations[idx][1];
-    loc.quatZ = orientations[idx][2];
-    loc.quatW = orientations[idx][3];
+    loc.x = positions[idx*3+0];
+    loc.y = positions[idx*3+1];
+    loc.z = positions[idx*3+2];
+    loc.quatX = orientations[idx*4+0];
+    loc.quatY = orientations[idx*4+1];
+    loc.quatZ = orientations[idx*4+2];
+    loc.quatW = orientations[idx*4+3];
 }

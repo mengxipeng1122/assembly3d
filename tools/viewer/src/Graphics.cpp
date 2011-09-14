@@ -58,7 +58,8 @@ Graphics::Graphics()
       eyeY(0.0f),
       eyeZ(25.0f),
       rotX(0.0f),
-      rotY(0.0f)
+      rotY(0.0f),
+      elapsedTime(0.0f)
 {
 }
 
@@ -337,9 +338,11 @@ void Graphics::setSceneScale(float val)
 
 void Graphics::updateAnimation(float dT)
 {
+    elapsedTime += dT;
     for(map<string, AnimationChannel*>::iterator it=animation.begin(); it != animation.end(); ++it)
     {
-        it->second->update(dT, *scene[it->first]);
+        AnimationChannel* ch = it->second;
+        ch->update(elapsedTime, *scene[it->first]);
     }
 }
 
