@@ -276,7 +276,8 @@ Texture Graphics::loadTexture(const char* texName)
     return texture;
 }
 
-void Graphics::addObject(std::string name, Location3D *loc, Mesh *mesh, float scale, std::vector<std::string> texturePaths)
+void Graphics::addObject(std::string name, Location3D *loc, Mesh *mesh,
+                         float scale, std::vector<std::string> texturePaths)
 {
     Shape3D shape;
     shape.location = loc;
@@ -338,10 +339,15 @@ void Graphics::setSceneScale(float val)
 
 void Graphics::updateAnimation(float dT)
 {
-    elapsedTime += dT;
+
     for(map<string, AnimationChannel*>::iterator it=animation.begin(); it != animation.end(); ++it)
     {
+        elapsedTime += dT;
         AnimationChannel* ch = it->second;
+        while(elapsedTime >= ch->getDuration())
+        {
+            elapsedTime -= ch->getDuration();
+        }
         ch->update(elapsedTime, *scene[it->first]);
     }
 }
