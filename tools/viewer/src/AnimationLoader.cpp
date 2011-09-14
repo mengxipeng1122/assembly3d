@@ -89,6 +89,8 @@ static void processAnimamtionNode(xmlTextReaderPtr reader, AnimationLoader* load
         if(numChVal)
             channelCount = atoi ((const char*) numChVal);
         loader->sampler(duration, channelCount);
+        xmlFree(durVal);
+        xmlFree(numChVal);
 
     }
     else if(strcmp("Channel", name) == 0)
@@ -108,6 +110,9 @@ static void processAnimamtionNode(xmlTextReaderPtr reader, AnimationLoader* load
             countAttributes = atoi((const char*) attributesVal);
 
         loader->channel(chName, keyframes, countAttributes);
+        xmlFree(nameVal);
+        xmlFree(keyFramesVal);
+        xmlFree(attributesVal);
     }
     else if(strcmp("Attribute", name) == 0)
     {
@@ -126,6 +131,9 @@ static void processAnimamtionNode(xmlTextReaderPtr reader, AnimationLoader* load
             attributeType = (const char*) typeVal;
 
         loader->attribute(attributeName, attributeSize);
+        xmlFree(nameVal);
+        xmlFree(sizeVal);
+        xmlFree(typeVal);
     }
 
 }
