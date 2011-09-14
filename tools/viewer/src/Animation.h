@@ -57,6 +57,7 @@ public:
     ~AnimationChannel();
     void update(float elapsedTime, Location3D& loc);
     const std::string& getName() { return name; }
+    float getDuration() const { return duration; }
 private:
     std::string name;
     int keyframes;

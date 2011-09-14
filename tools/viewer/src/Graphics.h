@@ -59,7 +59,8 @@ public:
     Mesh* loadMesh(const char* meta, const char* data);
     Mesh* getMesh(int index) { return meshes.at(index); }
     Texture loadTexture(const char* texName);
-    void addObject(std::string name, Location3D* loc, Mesh* mesh, float scale, std::vector<std::string> texturePaths);
+    void addObject(std::string name, Location3D* loc, Mesh* mesh,
+                   float scale, std::vector<std::string> texturePaths);
     void addAnim(const std::string& name, AnimationChannel* anim);
 
     void updateAnimation(float dT);
