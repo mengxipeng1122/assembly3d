@@ -49,9 +49,15 @@ AnimationChannel::~AnimationChannel()
 
 void AnimationChannel::update(float elapsedTime, Location3D& loc)
 {
-//    elapsedTime += dTime;
     float remainder = fmodf(elapsedTime, duration);
-    int idx = (remainder * keyframes) / duration;
+    float dur2 = toTime - fromTime;
+    float pos = 0.0f;
+    if(remainder > fromTime)
+        pos = remainder-fromTime;
+    int idx = (pos * keyframes) / dur2;
+    if(pos > dur2)
+        idx = keyframes;
+
     loc.x = positions[idx*3+0];
     loc.y = positions[idx*3+1];
     loc.z = positions[idx*3+2];

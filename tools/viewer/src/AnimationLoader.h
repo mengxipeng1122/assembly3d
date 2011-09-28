@@ -48,7 +48,7 @@ public:
                const char* datafilename);
 
     void sampler(float duration, int countChannels);
-    void channel(const char* name, int keyframes, int countAttributes);
+    void channel(const char* name, int keyframes, float from, float to, int countAttributes);
     void attribute(const char* name, int size);
 
 private:

@@ -80,7 +80,6 @@ set(TCLAP_INCLUDE ${CMAKE_SOURCE_DIR}/external_libs/tclap-1.2.1/include)
 
 add_definitions(${GLFW_CFLAGS_OTHER})
 
-
 include_directories(${GLFW_INCLUDE_DIRS}
                     ${GLEW_INCLUDE_PATH}
                     ${LIBXML2_INCLUDE_DIR}
@@ -130,6 +129,10 @@ add_executable(A3DViewer
                ${A3DViewer_SOURCE}
                ${A3DViewer_HEADER}
               )
+
+message(STATUS ${EXTRA_LIBS})
+message(STATUS ${GLEW_LIBRARY})
+message(STATUS ${GLFW_LIBRARIES})
 
 target_link_libraries(A3DViewer
                       ${GLFW_LIBRARIES}

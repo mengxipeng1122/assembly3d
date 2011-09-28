@@ -65,6 +65,8 @@ private:
     float duration;
     float* positions;
     float* orientations;
+    float fromTime;
+    float toTime;
 };
 
 #endif // ANIMATION_H

@@ -97,21 +97,31 @@ static void processAnimamtionNode(xmlTextReaderPtr reader, AnimationLoader* load
     {
         xmlChar* nameVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "name");
         xmlChar* keyFramesVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "keyframes");
+        xmlChar* fromVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "from");
+        xmlChar* toVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "to");
         xmlChar* attributesVal = xmlTextReaderGetAttribute(reader, (xmlChar*) "attributes");
 
         const char* chName = "";
         int keyframes = 0;
+        float from = 0.0f;
+        float to = 1.0f;
         int countAttributes = 0;
         if(nameVal)
             chName = (const char*) nameVal;
         if(keyFramesVal)
-            keyframes = atof((const char*) keyFramesVal);
+            keyframes = atoi((const char*) keyFramesVal);
+        if(fromVal)
+            from = atof((const char*) fromVal);
+        if(toVal)
+            to = atof((const char*) toVal);
         if(attributesVal)
             countAttributes = atoi((const char*) attributesVal);
 
-        loader->channel(chName, keyframes, countAttributes);
+        loader->channel(chName, keyframes, from, to, countAttributes);
         xmlFree(nameVal);
         xmlFree(keyFramesVal);
+        xmlFree(fromVal);
+        xmlFree(toVal);
         xmlFree(attributesVal);
     }
     else if(strcmp("Attribute", name) == 0)
@@ -145,7 +155,7 @@ void AnimationLoader::sampler(float duration, int countChannels)
     animation->channels.clear();
 }
 
-void AnimationLoader::channel(const char *name, int keyframes, int countAttributes)
+void AnimationLoader::channel(const char *name, int keyframes, float from, float to, int countAttributes)
 {
     AnimationChannel* channel = new AnimationChannel();
     channel->name = name;
@@ -154,6 +164,8 @@ void AnimationLoader::channel(const char *name, int keyframes, int countAttribut
     channel->countAttributes = countAttributes;
     channel->positions = new float[keyframes*3];
     channel->orientations = new float[keyframes*4];
+    channel->fromTime = from;
+    channel->toTime = to;
     animation->channels.push_back(channel);
 }
 
